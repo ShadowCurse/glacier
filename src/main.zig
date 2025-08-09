@@ -2,13 +2,58 @@ const std = @import("std");
 const vk = @import("volk.zig");
 const log = @import("log.zig");
 
+const args_parser = @import("args_parser.zig");
+
 const Allocator = std.mem.Allocator;
 
 pub const log_options = log.Options{
     .level = .Debug,
 };
 
+const Args = struct {
+    help: bool = false,
+    device_index: u32 = 0,
+    enable_validation: bool = false,
+    spirv_val: bool = false,
+    on_disk_pipeline_cache: []const u8 = &.{},
+    on_disk_validation_cache: []const u8 = &.{},
+    on_disk_validation_blacklist: []const u8 = &.{},
+    on_disk_validation_whitelist: []const u8 = &.{},
+    on_disk_replay_whitelist: []const u8 = &.{},
+    on_disk_replay_whitelist_mask: []const u8 = &.{},
+    num_threads: u32 = 0,
+    loop: u32 = 0,
+    pipeline_hash: u32 = 0,
+    graphics_pipeline_range: u32 = 0,
+    compute_pipeline_range: u32 = 0,
+    raytracing_pipeline_range: u32 = 0,
+    enable_pipeline_stats: []const u8 = &.{},
+    on_disk_module_identifier: []const u8 = &.{},
+    quiet_slave: bool = false,
+    master_process: bool = false,
+    slave_process: bool = false,
+    progress: bool = false,
+    shmem_fd: u32 = 0,
+    control_fd: u32 = 0,
+    shader_cache_size: u32 = 0,
+    // Deprecated
+    ignore_derived_pipelines: void = {},
+    log_memory: bool = false,
+    null_device: bool = false,
+    timeout_seconds: u32 = 0,
+    implicit_whitelist: u32 = 0,
+    replayer_cache: []const u8 = &.{},
+    disable_signal_handler: bool = false,
+    disable_rate_limiter: bool = false,
+};
+
 pub fn main() !void {
+    const args = try args_parser.parse(Args);
+    if (args.help) {
+        try args_parser.print_help(Args);
+        return;
+    }
+
     var gpa = std.heap.DebugAllocator(.{}).init;
     const gpa_alloc = gpa.allocator();
     var arena = std.heap.ArenaAllocator.init(gpa_alloc);
