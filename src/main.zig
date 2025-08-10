@@ -45,7 +45,7 @@ const Args = struct {
     replayer_cache: ?[]const u8 = null,
     disable_signal_handler: bool = false,
     disable_rate_limiter: bool = false,
-    database_path: args_parser.LastArg = .{},
+    database_paths: args_parser.LastArgs = .{},
 };
 
 pub fn main() !void {

@@ -1,24 +1,33 @@
 const std = @import("std");
 
-pub const LastArg = struct { value: []const u8 = &.{} };
+pub const LastArgs = struct { values: []const [*:0]const u8 = &.{} };
 
 pub fn parse(comptime T: type) !T {
     const type_fields = @typeInfo(T).@"struct".fields;
 
     var t: T = .{};
-    inline for (type_fields) |field| {
-        if (field.type == LastArg) {
-            @field(t, field.name).value = std.mem.span(std.os.argv[std.os.argv.len - 1]);
+    // The first arg is the binary name, so skip it.
+    var args_consumed: u32 = 1;
+    inline for (type_fields, 0..) |field, i| {
+        if (field.type == LastArgs) {
+            if (i != type_fields.len - 1)
+                @compileError("The LastArgs valum must be last in the args type definition");
+            @field(t, field.name).values = std.os.argv[args_consumed..];
         } else if (find_arg(field)) |arg| {
             switch (field.type) {
-                void => {},
+                void => {
+                    args_consumed += 1;
+                },
                 bool => {
+                    args_consumed += 1;
                     @field(t, field.name) = true;
                 },
                 ?u32 => {
+                    args_consumed += 2;
                     @field(t, field.name) = try std.fmt.parseInt(u32, arg, 10);
                 },
                 ?[]const u8 => {
+                    args_consumed += 2;
                     @field(t, field.name) = arg;
                 },
                 else => unreachable,
