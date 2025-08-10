@@ -11,10 +11,10 @@ pub fn parse(comptime T: type) !T {
                 bool => {
                     @field(t, field.name) = true;
                 },
-                u32 => {
+                ?u32 => {
                     @field(t, field.name) = try std.fmt.parseInt(u32, arg, 10);
                 },
-                []const u8 => {
+                ?[]const u8 => {
                     @field(t, field.name) = arg;
                 },
                 else => unreachable,
@@ -25,11 +25,14 @@ pub fn parse(comptime T: type) !T {
 }
 
 fn find_arg(comptime field: std.builtin.Type.StructField) ?[]const u8 {
-    const arg_name = std.fmt.comptimePrint("--{s}", .{field.name});
+    const name = std.fmt.comptimePrint("--{s}", .{field.name});
+    var arg_name: [name.len]u8 = undefined;
+    _ = std.mem.replace(u8, name, "_", "-", &arg_name);
+
     var args_iter = std.process.args();
 
     while (args_iter.next()) |arg| {
-        if (std.mem.eql(u8, arg, arg_name)) {
+        if (std.mem.eql(u8, arg, &arg_name)) {
             return switch (field.type) {
                 void, bool => field.name,
                 else => args_iter.next(),
@@ -47,6 +50,9 @@ pub fn print_help(comptime T: type) !void {
     try writer.print("Usage:\n", .{});
 
     inline for (type_fields) |field| {
-        try writer.print("\t--{s}\n", .{ field.name });
+        const name = std.fmt.comptimePrint("--{s}", .{field.name});
+        var arg_name: [name.len]u8 = undefined;
+        _ = std.mem.replace(u8, name, "_", "-", &arg_name);
+        try writer.print("\t{s}\n", .{arg_name});
     }
 }
