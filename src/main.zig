@@ -60,24 +60,151 @@ pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(gpa_alloc);
     const arena_alloc = arena.allocator();
 
-    try vk.check_result(vk.volkInitialize());
-    const api_version = vk.volkGetInstanceVersion();
-    log.info(
-        @src(),
-        "Vulkan version: {d}.{d}.{d}",
-        .{
-            vk.VK_API_VERSION_MAJOR(api_version),
-            vk.VK_API_VERSION_MINOR(api_version),
-            vk.VK_API_VERSION_PATCH(api_version),
-        },
+    const db_path = std.mem.span(args.database_paths.values[0]);
+    const db = try open_database(gpa_alloc, arena_alloc, db_path);
+    _ = db;
+
+    // try vk.check_result(vk.volkInitialize());
+    // const api_version = vk.volkGetInstanceVersion();
+    // log.info(
+    //     @src(),
+    //     "Vulkan version: {d}.{d}.{d}",
+    //     .{
+    //         vk.VK_API_VERSION_MAJOR(api_version),
+    //         vk.VK_API_VERSION_MINOR(api_version),
+    //         vk.VK_API_VERSION_PATCH(api_version),
+    //     },
+    // );
+    //
+    // const vk_instance = try create_vk_instance(arena_alloc, api_version);
+    // vk.volkLoadInstance(vk_instance);
+    //
+    // const physical_device = try select_physical_device(arena_alloc, vk_instance);
+    // const vk_device = try create_vk_device(arena_alloc, &physical_device);
+    // _ = vk_device;
+}
+
+pub fn mmap_file(path: []const u8) ![]const u8 {
+    const fd = try std.posix.open(path, .{ .ACCMODE = .RDONLY }, 0);
+    defer std.posix.close(fd);
+
+    const stat = try std.posix.fstat(fd);
+    const mem = try std.posix.mmap(
+        null,
+        @intCast(stat.size),
+        std.posix.PROT.READ,
+        .{ .TYPE = .PRIVATE },
+        fd,
+        0,
     );
+    return mem;
+}
 
-    const vk_instance = try create_vk_instance(arena_alloc, api_version);
-    vk.volkLoadInstance(vk_instance);
+pub const Database = struct {
+    file_mem: []const u8,
+    entries: []EntryPtr,
 
-    const physical_device = try select_physical_device(arena_alloc, vk_instance);
-    const vk_device = try create_vk_device(arena_alloc, &physical_device);
-    _ = vk_device;
+    pub const MAGIC = "\x81FOSSILIZEDB";
+    pub const Header = extern struct {
+        magic: [12]u8,
+        unused_1: u8,
+        unused_2: u8,
+        unused_3: u8,
+        version: u8,
+    };
+
+    pub const EntryPtr = [*]const u8;
+    pub const Entry = extern struct {
+        // 8 bytes: ???
+        // 16 bytes: tag
+        // 16 bytes: value
+        tag_hash: [40]u8,
+        stored_size: u32,
+        flags: u32,
+        crc: u32,
+        decompressed_size: u32,
+        // payload of `stored_size` size
+
+        pub const Tag = enum(u8) {
+            APPLICATION_INFO = 0,
+            SAMPLER = 1,
+            DESCRIPTOR_SET_LAYOUT = 2,
+            PIPELINE_LAYOUT = 3,
+            SHADER_MODULE = 4,
+            RENDER_PASS = 5,
+            GRAPHICS_PIPELINE = 6,
+            COMPUTE_PIPELINE = 7,
+            APPLICATION_BLOB_LINK = 8,
+            RAYTRACING_PIPELINE = 9,
+        };
+
+        pub fn get_tag(entry: *const Entry) !Tag {
+            const tag_str = entry.tag_hash[8..24];
+            const tag_value = try std.fmt.parseInt(u8, tag_str, 16);
+            return @enumFromInt(tag_value);
+        }
+
+        pub fn get_value(entry: *const Entry) !u64 {
+            const value_str = entry.tag_hash[24..];
+            return std.fmt.parseInt(u64, value_str, 16);
+        }
+
+        pub fn from_ptr(ptr: EntryPtr) Entry {
+            var entry: Entry = undefined;
+            const entry_bytes = std.mem.asBytes(&entry);
+            var ptr_bytes: []const u8 = undefined;
+            ptr_bytes.ptr = ptr;
+            ptr_bytes.len = @sizeOf(Entry);
+            @memcpy(entry_bytes, ptr_bytes);
+            return entry;
+        }
+
+        pub fn format(
+            value: *const Entry,
+            comptime fmt: []const u8,
+            options: std.fmt.FormatOptions,
+            writer: anytype,
+        ) !void {
+            _ = fmt;
+            _ = options;
+            try writer.print("tag: {s:<21} value: 0x{x:<16} stored_size: {d:<6} flags: {d} crc: {d:<10} decompressed_size: {d}", .{
+                @tagName(try value.get_tag()),
+                try value.get_value(),
+                value.stored_size,
+                value.flags,
+                value.crc,
+                value.decompressed_size,
+            });
+        }
+    };
+};
+
+pub fn open_database(gpa_alloc: Allocator, arena_alloc: Allocator, path: []const u8) !Database {
+    log.info(@src(), "Openning database as path: {s}", .{path});
+    const file_mem = try mmap_file(path);
+
+    const header: *const Database.Header = @ptrCast(file_mem.ptr);
+    if (!std.mem.eql(u8, &header.magic, Database.MAGIC))
+        return error.InvalidMagicValue;
+
+    log.info(@src(), "Stored header version: {d}", .{header.version});
+
+    var entries: std.ArrayListUnmanaged(Database.EntryPtr) = .empty;
+    var remaining_file_mem = file_mem[@sizeOf(Database.Header)..];
+
+    while (0 < remaining_file_mem.len) {
+        const entry_ptr: Database.EntryPtr = @alignCast(@ptrCast(remaining_file_mem.ptr));
+        const entry: Database.Entry = .from_ptr(entry_ptr);
+        log.info(@src(), "Found entry: {}", .{entry});
+
+        try entries.append(arena_alloc, entry_ptr);
+        remaining_file_mem = remaining_file_mem[@sizeOf(Database.Entry) + entry.stored_size ..];
+    }
+
+    return .{
+        .file_mem = file_mem,
+        .entries = try gpa_alloc.dupe(Database.EntryPtr, entries.items),
+    };
 }
 
 const VK_VALIDATION_LAYERS_NAMES = [_][*c]const u8{"VK_LAYER_KHRONOS_validation"};
