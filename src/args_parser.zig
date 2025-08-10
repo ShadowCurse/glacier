@@ -1,11 +1,15 @@
 const std = @import("std");
 
+pub const LastArg = struct { value: []const u8 = &.{} };
+
 pub fn parse(comptime T: type) !T {
     const type_fields = @typeInfo(T).@"struct".fields;
 
     var t: T = .{};
     inline for (type_fields) |field| {
-        if (find_arg(field)) |arg| {
+        if (field.type == LastArg) {
+            @field(t, field.name).value = std.mem.span(std.os.argv[std.os.argv.len - 1]);
+        } else if (find_arg(field)) |arg| {
             switch (field.type) {
                 void => {},
                 bool => {
