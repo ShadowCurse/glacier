@@ -1,7 +1,7 @@
 const std = @import("std");
 const vk = @import("volk.zig");
 const log = @import("log.zig");
-
+const miniz = @import("miniz.zig");
 const args_parser = @import("args_parser.zig");
 
 const Allocator = std.mem.Allocator;

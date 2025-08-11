@@ -1,3 +1,6 @@
 [submodule "thirdparty/volk"]
 	path = thirdparty/volk
 	url = https://github.com/zeux/volk.git
+[submodule "thirdparty/miniz"]
+	path = thirdparty/miniz
+	url = https://github.com/richgel999/miniz
