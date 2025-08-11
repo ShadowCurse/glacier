@@ -102,7 +102,8 @@ pub fn mmap_file(path: []const u8) ![]const u8 {
 
 pub const Database = struct {
     file_mem: []const u8,
-    entries: []EntryPtr,
+    entries: std.EnumArray(Entry.Tag, []EntryPtr),
+    arena: std.heap.ArenaAllocator,
 
     pub const MAGIC = "\x81FOSSILIZEDB";
     pub const Header = extern struct {
@@ -179,7 +180,7 @@ pub const Database = struct {
     };
 };
 
-pub fn open_database(gpa_alloc: Allocator, arena_alloc: Allocator, path: []const u8) !Database {
+pub fn open_database(gpa_alloc: Allocator, scratch_alloc: Allocator, path: []const u8) !Database {
     log.info(@src(), "Openning database as path: {s}", .{path});
     const file_mem = try mmap_file(path);
 
@@ -189,7 +190,8 @@ pub fn open_database(gpa_alloc: Allocator, arena_alloc: Allocator, path: []const
 
     log.info(@src(), "Stored header version: {d}", .{header.version});
 
-    var entries: std.ArrayListUnmanaged(Database.EntryPtr) = .empty;
+    var entries: std.EnumArray(Database.Entry.Tag, std.ArrayListUnmanaged(Database.EntryPtr)) =
+        .initFill(.empty);
     var remaining_file_mem = file_mem[@sizeOf(Database.Header)..];
 
     while (0 < remaining_file_mem.len) {
@@ -197,13 +199,21 @@ pub fn open_database(gpa_alloc: Allocator, arena_alloc: Allocator, path: []const
         const entry: Database.Entry = .from_ptr(entry_ptr);
         log.info(@src(), "Found entry: {}", .{entry});
 
-        try entries.append(arena_alloc, entry_ptr);
+        try entries.getPtr(try entry.get_tag()).append(scratch_alloc, entry_ptr);
         remaining_file_mem = remaining_file_mem[@sizeOf(Database.Entry) + entry.stored_size ..];
     }
 
+    var arena = std.heap.ArenaAllocator.init(gpa_alloc);
+    const arena_alloc = arena.allocator();
+
+    var final_entries: std.EnumArray(Database.Entry.Tag, []Database.EntryPtr) = undefined;
+    var fe_iter = final_entries.iterator();
+    while (fe_iter.next()) |e|
+        e.value.* = try arena_alloc.dupe(Database.EntryPtr, entries.getPtrConst(e.key).items);
     return .{
         .file_mem = file_mem,
-        .entries = try gpa_alloc.dupe(Database.EntryPtr, entries.items),
+        .entries = final_entries,
+        .arena = arena,
     };
 }
 
