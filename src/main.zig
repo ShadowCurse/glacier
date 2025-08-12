@@ -102,7 +102,7 @@ pub fn mmap_file(path: []const u8) ![]const u8 {
 
 pub const Database = struct {
     file_mem: []const u8,
-    entries: std.EnumArray(Entry.Tag, []EntryPtr),
+    entries: std.EnumArray(Entry.Tag, []EntryMeta),
     arena: std.heap.ArenaAllocator,
 
     pub const MAGIC = "\x81FOSSILIZEDB";
@@ -114,14 +114,17 @@ pub const Database = struct {
         version: u8,
     };
 
-    pub const EntryPtr = [*]const u8;
+    pub const EntryMeta = struct {
+        entry_ptr: [*]const u8,
+        payload: []const u8,
+    };
     pub const Entry = extern struct {
         // 8 bytes: ???
         // 16 bytes: tag
         // 16 bytes: value
         tag_hash: [40]u8,
         stored_size: u32,
-        flags: u32,
+        flags: Flags,
         crc: u32,
         decompressed_size: u32,
         // payload of `stored_size` size
@@ -139,6 +142,21 @@ pub const Database = struct {
             RAYTRACING_PIPELINE = 9,
         };
 
+        pub const Flags = enum(u32) {
+            NOT_COMPRESSED = 1,
+            COMPRESSED = 2,
+        };
+
+        pub fn from_ptr(ptr: [*]const u8) Entry {
+            var entry: Entry = undefined;
+            const entry_bytes = std.mem.asBytes(&entry);
+            var ptr_bytes: []const u8 = undefined;
+            ptr_bytes.ptr = ptr;
+            ptr_bytes.len = @sizeOf(Entry);
+            @memcpy(entry_bytes, ptr_bytes);
+            return entry;
+        }
+
         pub fn get_tag(entry: *const Entry) !Tag {
             const tag_str = entry.tag_hash[8..24];
             const tag_value = try std.fmt.parseInt(u8, tag_str, 16);
@@ -150,16 +168,6 @@ pub const Database = struct {
             return std.fmt.parseInt(u64, value_str, 16);
         }
 
-        pub fn from_ptr(ptr: EntryPtr) Entry {
-            var entry: Entry = undefined;
-            const entry_bytes = std.mem.asBytes(&entry);
-            var ptr_bytes: []const u8 = undefined;
-            ptr_bytes.ptr = ptr;
-            ptr_bytes.len = @sizeOf(Entry);
-            @memcpy(entry_bytes, ptr_bytes);
-            return entry;
-        }
-
         pub fn format(
             value: *const Entry,
             comptime fmt: []const u8,
@@ -168,14 +176,17 @@ pub const Database = struct {
         ) !void {
             _ = fmt;
             _ = options;
-            try writer.print("tag: {s:<21} value: 0x{x:<16} stored_size: {d:<6} flags: {d} crc: {d:<10} decompressed_size: {d}", .{
-                @tagName(try value.get_tag()),
-                try value.get_value(),
-                value.stored_size,
-                value.flags,
-                value.crc,
-                value.decompressed_size,
-            });
+            try writer.print(
+                "tag: {s:<21} value: 0x{x:<16} stored_size: {d:<6} flags: {s:<14} crc: {d:<10} decompressed_size: {d}",
+                .{
+                    @tagName(try value.get_tag()),
+                    try value.get_value(),
+                    value.stored_size,
+                    @tagName(value.flags),
+                    value.crc,
+                    value.decompressed_size,
+                },
+            );
         }
     };
 };
@@ -190,26 +201,61 @@ pub fn open_database(gpa_alloc: Allocator, scratch_alloc: Allocator, path: []con
 
     log.info(@src(), "Stored header version: {d}", .{header.version});
 
-    var entries: std.EnumArray(Database.Entry.Tag, std.ArrayListUnmanaged(Database.EntryPtr)) =
+    // All database related allocations will be in this arena.
+    var arena = std.heap.ArenaAllocator.init(gpa_alloc);
+    const arena_alloc = arena.allocator();
+
+    var entries: std.EnumArray(Database.Entry.Tag, std.ArrayListUnmanaged(Database.EntryMeta)) =
         .initFill(.empty);
     var remaining_file_mem = file_mem[@sizeOf(Database.Header)..];
 
     while (0 < remaining_file_mem.len) {
-        const entry_ptr: Database.EntryPtr = @alignCast(@ptrCast(remaining_file_mem.ptr));
+        const entry_ptr = remaining_file_mem.ptr;
         const entry: Database.Entry = .from_ptr(entry_ptr);
+        const entry_tag = try entry.get_tag();
         log.info(@src(), "Found entry: {}", .{entry});
 
-        try entries.getPtr(try entry.get_tag()).append(scratch_alloc, entry_ptr);
+        const payload_start: [*]const u8 =
+            @ptrFromInt(@as(usize, @intFromPtr(entry_ptr)) + @sizeOf(Database.Entry));
+        // CRC validation
+        if (entry.crc != 0) {
+            const calculated_crc = miniz.mz_crc32(miniz.MZ_CRC32_INIT, payload_start, entry.stored_size);
+            if (calculated_crc != entry.crc)
+                return error.crc_missmatch;
+        }
+        const payload = switch (entry.flags) {
+            .NOT_COMPRESSED => blk: {
+                var payload: []const u8 = undefined;
+                payload.ptr = payload_start;
+                payload.len = entry.stored_size;
+                break :blk payload;
+            },
+            .COMPRESSED => blk: {
+                const decompressed_payload = try arena_alloc.alloc(u8, entry.decompressed_size);
+                var decompressed_len: u64 = entry.decompressed_size;
+                if (miniz.mz_uncompress(
+                    decompressed_payload.ptr,
+                    &decompressed_len,
+                    payload_start,
+                    entry.stored_size,
+                ) != miniz.MZ_OK)
+                    return error.cannot_uncompress_payload;
+                if (decompressed_len != entry.decompressed_size)
+                    return error.decompressed_size_missmatch;
+                break :blk decompressed_payload;
+            },
+        };
+        try entries.getPtr(entry_tag).append(scratch_alloc, .{
+            .entry_ptr = entry_ptr,
+            .payload = payload,
+        });
         remaining_file_mem = remaining_file_mem[@sizeOf(Database.Entry) + entry.stored_size ..];
     }
 
-    var arena = std.heap.ArenaAllocator.init(gpa_alloc);
-    const arena_alloc = arena.allocator();
-
-    var final_entries: std.EnumArray(Database.Entry.Tag, []Database.EntryPtr) = undefined;
+    var final_entries: std.EnumArray(Database.Entry.Tag, []Database.EntryMeta) = undefined;
     var fe_iter = final_entries.iterator();
     while (fe_iter.next()) |e|
-        e.value.* = try arena_alloc.dupe(Database.EntryPtr, entries.getPtrConst(e.key).items);
+        e.value.* = try arena_alloc.dupe(Database.EntryMeta, entries.getPtrConst(e.key).items);
     return .{
         .file_mem = file_mem,
         .entries = final_entries,
