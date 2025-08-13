@@ -210,8 +210,18 @@ pub fn open_database(gpa_alloc: Allocator, scratch_alloc: Allocator, path: []con
     var remaining_file_mem = file_mem[@sizeOf(Database.Header)..];
 
     while (0 < remaining_file_mem.len) {
+        // If entry is incomplete, stop
+        if (remaining_file_mem.len < @sizeOf(Database.Entry))
+            break;
+
         const entry_ptr = remaining_file_mem.ptr;
         const entry: Database.Entry = .from_ptr(entry_ptr);
+        const total_entry_size = @sizeOf(Database.Entry) + entry.stored_size;
+
+        // If payload for the entry is incomplete, stop
+        if (remaining_file_mem.len < total_entry_size)
+            break;
+
         const entry_tag = try entry.get_tag();
         log.info(@src(), "Found entry: {}", .{entry});
 
@@ -249,7 +259,7 @@ pub fn open_database(gpa_alloc: Allocator, scratch_alloc: Allocator, path: []con
             .entry_ptr = entry_ptr,
             .payload = payload,
         });
-        remaining_file_mem = remaining_file_mem[@sizeOf(Database.Entry) + entry.stored_size ..];
+        remaining_file_mem = remaining_file_mem[total_entry_size..];
     }
 
     var final_entries: std.EnumArray(Database.Entry.Tag, []Database.EntryMeta) = undefined;
