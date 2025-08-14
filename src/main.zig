@@ -62,7 +62,14 @@ pub fn main() !void {
 
     const db_path = std.mem.span(args.database_paths.values[0]);
     const db = try open_database(gpa_alloc, arena_alloc, db_path);
-    _ = db;
+
+    const app_infos = db.entries.getPtrConst(.APPLICATION_INFO);
+    if (app_infos.len != 0) {
+        const app_info_json = app_infos.*[app_infos.len - 1].payload;
+        const vk_app_info = try parse_application_info(arena_alloc, app_info_json);
+        log.info(@src(), "app name {s}", .{vk_app_info.pApplicationName});
+        log.info(@src(), "engine name {s}", .{vk_app_info.pEngineName});
+    }
 
     // try vk.check_result(vk.volkInitialize());
     // const api_version = vk.volkGetInstanceVersion();
@@ -82,6 +89,159 @@ pub fn main() !void {
     // const physical_device = try select_physical_device(arena_alloc, vk_instance);
     // const vk_device = try create_vk_device(arena_alloc, &physical_device);
     // _ = vk_device;
+}
+
+// Example json
+// {
+//   "version": 6,
+//   "applicationInfo": {
+//     "applicationName": "citadel",
+//     "engineName": "Source2",
+//     "applicationVersion": 1,
+//     "engineVersion": 1,
+//     "apiVersion": 4202496
+//   },
+//   "physicalDeviceFeatures": {
+//     "robustBufferAccess": 0,
+//     "pNext": [
+//       {
+//         "sType": 1000328000,
+//         "taskShader": 1,
+//         "meshShader": 1,
+//         "multiviewMeshShader": 1,
+//         "primitiveFragmentShadingRateMeshShader": 0,
+//         "meshShaderQueries": 1
+//       },
+//       {
+//         "sType": 1000226003,
+//         "pipelineFragmentShadingRate": 1,
+//         "primitiveFragmentShadingRate": 1,
+//         "attachmentFragmentShadingRate": 1
+//       }
+//     ]
+//   }
+// }
+pub fn parse_application_info(
+    arena_alloc: Allocator,
+    json_str: []const u8,
+) !*const vk.VkApplicationInfo {
+    const Inner = struct {
+        fn parse_app_info(
+            aa: Allocator,
+            scanner: *std.json.Scanner,
+            vk_application_info: *vk.VkApplicationInfo,
+        ) !void {
+            while (true) {
+                switch (try scanner.next()) {
+                    .string => |s| {
+                        if (std.mem.eql(u8, s, "applicationName")) {
+                            switch (try scanner.next()) {
+                                .string => |name| {
+                                    const n = try aa.dupeZ(u8, name);
+                                    vk_application_info.pApplicationName = @ptrCast(n.ptr);
+                                },
+                                else => return error.InvalidJson,
+                            }
+                        } else if (std.mem.eql(u8, s, "engineName")) {
+                            switch (try scanner.next()) {
+                                .string => |name| {
+                                    const n = try aa.dupeZ(u8, name);
+                                    vk_application_info.pEngineName = @ptrCast(n.ptr);
+                                },
+                                else => return error.InvalidJson,
+                            }
+                        } else if (std.mem.eql(u8, s, "applicationVersion")) {
+                            switch (try scanner.next()) {
+                                .number => |v| {
+                                    vk_application_info.applicationVersion =
+                                        try std.fmt.parseInt(u32, v, 10);
+                                },
+                                else => return error.InvalidJson,
+                            }
+                        } else if (std.mem.eql(u8, s, "engineVersion")) {
+                            switch (try scanner.next()) {
+                                .number => |v| {
+                                    vk_application_info.engineVersion =
+                                        try std.fmt.parseInt(u32, v, 10);
+                                },
+                                else => return error.InvalidJson,
+                            }
+                        } else if (std.mem.eql(u8, s, "apiVersion")) {
+                            switch (try scanner.next()) {
+                                .number => |v| {
+                                    vk_application_info.apiVersion =
+                                        try std.fmt.parseInt(u32, v, 10);
+                                },
+                                else => return error.InvalidJson,
+                            }
+                        }
+                    },
+                    .object_begin => {},
+                    .object_end => break,
+                    else => return error.InvalidJson,
+                }
+            }
+        }
+        fn parse_device_features(
+            aa: Allocator,
+            scanner: *std.json.Scanner,
+            vk_physical_device_features2: *vk.VkPhysicalDeviceFeatures2,
+        ) !void {
+            while (true) {
+                switch (try scanner.next()) {
+                    .string => |s| {
+                        if (std.mem.eql(u8, s, "robustBufferAccess")) {
+                            switch (try scanner.next()) {
+                                .number => |v| {
+                                    vk_physical_device_features2.features.robustBufferAccess =
+                                        try std.fmt.parseInt(u32, v, 10);
+                                },
+                                else => return error.InvalidJson,
+                            }
+                        } else {
+                            _ = aa;
+                        }
+                    },
+                    .object_begin => {},
+                    .object_end => break,
+                    else => return error.InvalidJson,
+                }
+            }
+        }
+    };
+
+    var scanner = std.json.Scanner.initCompleteInput(arena_alloc, json_str);
+    const vk_application_info = try arena_alloc.create(vk.VkApplicationInfo);
+    vk_application_info.* = .{ .sType = vk.VK_STRUCTURE_TYPE_APPLICATION_INFO };
+    const vk_physical_device_features2 = try arena_alloc.create(vk.VkPhysicalDeviceFeatures2);
+    vk_physical_device_features2.* = .{ .sType = vk.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 };
+
+    while (true) {
+        switch (try scanner.next()) {
+            .string => |s| {
+                if (std.mem.eql(u8, s, "version")) {
+                    switch (try scanner.next()) {
+                        .number => |n| {
+                            const version = try std.fmt.parseInt(u32, n, 10);
+                            log.info(@src(), "version: {d}", .{version});
+                        },
+                        else => return error.InvalidJson,
+                    }
+                } else if (std.mem.eql(u8, s, "applicationInfo")) {
+                    try Inner.parse_app_info(arena_alloc, &scanner, vk_application_info);
+                } else if (std.mem.eql(u8, s, "physicalDeviceFeatures")) {
+                    try Inner.parse_device_features(
+                        arena_alloc,
+                        &scanner,
+                        vk_physical_device_features2,
+                    );
+                }
+            },
+            .end_of_document => break,
+            else => {},
+        }
+    }
+    return vk_application_info;
 }
 
 pub fn mmap_file(path: []const u8) ![]const u8 {
