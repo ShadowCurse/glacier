@@ -13,6 +13,9 @@ pub fn print_vk_struct(@"struct": anytype) void {
             u32, u64, vk.VkStructureType => {
                 log.info(@src(), "\t{s}: {d}", .{ field.name, @field(@"struct", field.name) });
             },
+            f32, f64 => {
+                log.info(@src(), "\t{s}: {d}", .{ field.name, @field(@"struct", field.name) });
+            },
             [*c]const u8 => {
                 log.info(@src(), "\t{s}: {s}", .{ field.name, @field(@"struct", field.name) });
             },
@@ -81,6 +84,15 @@ pub fn parse_type(
                                     .number => |v| {
                                         @field(output, nm.field_name) =
                                             try std.fmt.parseInt(nm.type, v, 10);
+                                    },
+                                    else => return error.InvalidJson,
+                                }
+                            },
+                            f32 => {
+                                switch (try scanner.next()) {
+                                    .number => |v| {
+                                        @field(output, nm.field_name) =
+                                            try std.fmt.parseFloat(nm.type, v);
                                     },
                                     else => return error.InvalidJson,
                                 }
@@ -377,4 +389,174 @@ test "parse_application_info" {
 
     const vk_app_info = try parse_application_info(arena_alloc, json);
     print_vk_chain(vk_app_info);
+}
+
+pub const ParsedSampler = struct {
+    hash: u64,
+    sampler_create_info: *const vk.VkSamplerCreateInfo,
+};
+pub fn parse_sampler(
+    arena_alloc: Allocator,
+    json_str: []const u8,
+) !ParsedSampler {
+    var scanner = std.json.Scanner.initCompleteInput(arena_alloc, json_str);
+    const vk_sampler_create_info = try arena_alloc.create(vk.VkSamplerCreateInfo);
+    vk_sampler_create_info.* = .{ .sType = vk.VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO };
+
+    var result: ParsedSampler = .{
+        .hash = 0,
+        .sampler_create_info = vk_sampler_create_info,
+    };
+
+    while (true) {
+        switch (try scanner.next()) {
+            .string => |s| {
+                if (std.mem.eql(u8, s, "version")) {
+                    switch (try scanner.next()) {
+                        .number => |n| {
+                            const version = try std.fmt.parseInt(u32, n, 10);
+                            log.info(@src(), "version: {d}", .{version});
+                        },
+                        else => return error.InvalidJson,
+                    }
+                } else if (std.mem.eql(u8, s, "samplers")) {
+                    if (try scanner.next() != .object_begin) return error.InvalidJson;
+                    switch (try scanner.next()) {
+                        .string => |ss| {
+                            const hash = try std.fmt.parseInt(u64, ss, 16);
+                            log.info(@src(), "hash: 0x{x}", .{hash});
+                            result.hash = hash;
+                        },
+                        else => return error.InvalidJson,
+                    }
+                    if (try scanner.next() != .object_begin) return error.InvalidJson;
+                    try parse_type(
+                        &.{
+                            .{
+                                .json_name = "flags",
+                                .field_name = "flags",
+                                .type = u32,
+                            },
+                            .{
+                                .json_name = "minFilter",
+                                .field_name = "minFilter",
+                                .type = u32,
+                            },
+                            .{
+                                .json_name = "magFilter",
+                                .field_name = "magFilter",
+                                .type = u32,
+                            },
+                            .{
+                                .json_name = "maxAnisotropy",
+                                .field_name = "maxAnisotropy",
+                                .type = f32,
+                            },
+                            .{
+                                .json_name = "compareOp",
+                                .field_name = "compareOp",
+                                .type = u32,
+                            },
+                            .{
+                                .json_name = "anisotropyEnable",
+                                .field_name = "anisotropyEnable",
+                                .type = u32,
+                            },
+                            .{
+                                .json_name = "mipmapMode",
+                                .field_name = "mipmapMode",
+                                .type = u32,
+                            },
+                            .{
+                                .json_name = "addressModeU",
+                                .field_name = "addressModeU",
+                                .type = u32,
+                            },
+                            .{
+                                .json_name = "addressModeV",
+                                .field_name = "addressModeV",
+                                .type = u32,
+                            },
+                            .{
+                                .json_name = "addressModeW",
+                                .field_name = "addressModeW",
+                                .type = u32,
+                            },
+                            .{
+                                .json_name = "borderColor",
+                                .field_name = "borderColor",
+                                .type = u32,
+                            },
+                            .{
+                                .json_name = "unnormalizedCoordinates",
+                                .field_name = "unnormalizedCoordinates",
+                                .type = u32,
+                            },
+                            .{
+                                .json_name = "compareEnable",
+                                .field_name = "compareEnable",
+                                .type = u32,
+                            },
+                            .{
+                                .json_name = "mipLodBias",
+                                .field_name = "mipLodBias",
+                                .type = f32,
+                            },
+                            .{
+                                .json_name = "minLod",
+                                .field_name = "minLod",
+                                .type = f32,
+                            },
+                            .{
+                                .json_name = "maxLod",
+                                .field_name = "maxLod",
+                                .type = f32,
+                            },
+                        },
+                        arena_alloc,
+                        &scanner,
+                        vk_sampler_create_info,
+                    );
+                }
+            },
+            .end_of_document => break,
+            else => {},
+        }
+    }
+    return result;
+}
+
+test "parse_sampler" {
+    const json =
+        \\ {
+        \\   "version": 6,
+        \\   "samplers": {
+        \\     "88201fb960ff6465": {
+        \\       "flags": 0,
+        \\       "minFilter": 0,
+        \\       "magFilter": 0,
+        \\       "maxAnisotropy": 0,
+        \\       "compareOp": 0,
+        \\       "anisotropyEnable": 0,
+        \\       "mipmapMode": 0,
+        \\       "addressModeU": 0,
+        \\       "addressModeV": 0,
+        \\       "addressModeW": 0,
+        \\       "borderColor": 0,
+        \\       "unnormalizedCoordinates": 0,
+        \\       "compareEnable": 0,
+        \\       "mipLodBias": 0,
+        \\       "minLod": 0,
+        \\       "maxLod": 0
+        \\     }
+        \\   }
+        \\ }
+    ;
+    var gpa = std.heap.DebugAllocator(.{}).init;
+    const gpa_alloc = gpa.allocator();
+    var arena = std.heap.ArenaAllocator.init(gpa_alloc);
+    const arena_alloc = arena.allocator();
+
+    const parsed_sampler = try parse_sampler(arena_alloc, json);
+    print_vk_struct(parsed_sampler.sampler_create_info);
 }

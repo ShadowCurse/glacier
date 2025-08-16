@@ -71,6 +71,13 @@ pub fn main() !void {
         log.info(@src(), "app name {s}", .{vk_app_info.pApplicationName});
         log.info(@src(), "engine name {s}", .{vk_app_info.pEngineName});
     }
+    const samplers = db.entries.getPtrConst(.SAMPLER);
+    for (samplers.*) |sampler| {
+        const e = Database.Entry.from_ptr(sampler.entry_ptr);
+        log.info(@src(), "Sampler entry: {any}", .{e});
+        const parsed_sampler = try parsing.parse_sampler(arena_alloc, sampler.payload);
+        parsing.print_vk_struct(parsed_sampler.sampler_create_info);
+    }
 
     // try vk.check_result(vk.volkInitialize());
     // const api_version = vk.volkGetInstanceVersion();
