@@ -61,90 +61,121 @@ pub fn print_vk_chain(chain: anytype) void {
     }
 }
 
+pub const NameMap = struct { json_name: []const u8, field_name: []const u8, type: type };
+pub fn parse_type(
+    comptime name_map: []const NameMap,
+    arena_alloc: ?Allocator,
+    scanner: *std.json.Scanner,
+    output: anytype,
+) !void {
+    var field_is_parsed: [name_map.len]bool = .{false} ** name_map.len;
+    while (true) {
+        switch (try scanner.next()) {
+            .string => |s| {
+                inline for (name_map, 0..) |nm, i| {
+                    if (!field_is_parsed[i] and std.mem.eql(u8, s, nm.json_name)) {
+                        field_is_parsed[i] = true;
+                        switch (nm.type) {
+                            u8, u32 => {
+                                switch (try scanner.next()) {
+                                    .number => |v| {
+                                        @field(output, nm.field_name) =
+                                            try std.fmt.parseInt(nm.type, v, 10);
+                                    },
+                                    else => return error.InvalidJson,
+                                }
+                            },
+                            []const u8 => {
+                                switch (try scanner.next()) {
+                                    .string => |name| {
+                                        if (arena_alloc) |aa| {
+                                            const n = try aa.dupeZ(u8, name);
+                                            @field(output, nm.field_name) = @ptrCast(n.ptr);
+                                        }
+                                    },
+                                    else => return error.InvalidJson,
+                                }
+                            },
+                            else => log.comptime_err(
+                                @src(),
+                                "Cannot parse field with type: {any}",
+                                .{nm[2]},
+                            ),
+                        }
+                    }
+                }
+            },
+            .object_begin => {},
+            .object_end => break,
+            else => return error.InvalidJson,
+        }
+    }
+}
+
 pub fn parse_physical_device_mesh_shader_features_ext(
     scanner: *std.json.Scanner,
     obj: *vk.VkPhysicalDeviceMeshShaderFeaturesEXT,
 ) !void {
-    while (true) {
-        switch (try scanner.next()) {
-            .string => |s| {
-                if (std.mem.eql(u8, s, "taskShader")) {
-                    switch (try scanner.next()) {
-                        .number => |v| {
-                            obj.taskShader = try std.fmt.parseInt(u8, v, 10);
-                        },
-                        else => return error.InvalidJson,
-                    }
-                } else if (std.mem.eql(u8, s, "meshShader")) {
-                    switch (try scanner.next()) {
-                        .number => |v| {
-                            obj.meshShader = try std.fmt.parseInt(u8, v, 10);
-                        },
-                        else => return error.InvalidJson,
-                    }
-                } else if (std.mem.eql(u8, s, "multiviewMeshShader")) {
-                    switch (try scanner.next()) {
-                        .number => |v| {
-                            obj.multiviewMeshShader = try std.fmt.parseInt(u8, v, 10);
-                        },
-                        else => return error.InvalidJson,
-                    }
-                } else if (std.mem.eql(u8, s, "primitiveFragmentShadingRateMeshShader")) {
-                    switch (try scanner.next()) {
-                        .number => |v| {
-                            obj.primitiveFragmentShadingRateMeshShader = try std.fmt.parseInt(u8, v, 10);
-                        },
-                        else => return error.InvalidJson,
-                    }
-                } else if (std.mem.eql(u8, s, "meshShaderQueries")) {
-                    switch (try scanner.next()) {
-                        .number => |v| {
-                            obj.meshShaderQueries = try std.fmt.parseInt(u8, v, 10);
-                        },
-                        else => return error.InvalidJson,
-                    }
-                } else return error.InvalidJson;
+    return parse_type(
+        &.{
+            .{
+                .json_name = "taskShader",
+                .field_name = "taskShader",
+                .type = u8,
             },
-            .object_end => return,
-            else => return error.InvalidJson,
-        }
-    }
+            .{
+                .json_name = "meshShader",
+                .field_name = "meshShader",
+                .type = u8,
+            },
+            .{
+                .json_name = "multiviewMeshShader",
+                .field_name = "multiviewMeshShader",
+                .type = u8,
+            },
+            .{
+                .json_name = "primitiveFragmentShadingRateMeshShader",
+                .field_name = "primitiveFragmentShadingRateMeshShader",
+                .type = u8,
+            },
+            .{
+                .json_name = "meshShaderQueries",
+                .field_name = "meshShaderQueries",
+                .type = u8,
+            },
+        },
+        null,
+        scanner,
+        obj,
+    );
 }
 
 pub fn parse_physical_device_fragment_shading_rate_features_khr(
     scanner: *std.json.Scanner,
     obj: *vk.VkPhysicalDeviceFragmentShadingRateFeaturesKHR,
 ) !void {
-    while (true) {
-        switch (try scanner.next()) {
-            .string => |s| {
-                if (std.mem.eql(u8, s, "pipelineFragmentShadingRate")) {
-                    switch (try scanner.next()) {
-                        .number => |v| {
-                            obj.pipelineFragmentShadingRate = try std.fmt.parseInt(u8, v, 10);
-                        },
-                        else => return error.InvalidJson,
-                    }
-                } else if (std.mem.eql(u8, s, "primitiveFragmentShadingRate")) {
-                    switch (try scanner.next()) {
-                        .number => |v| {
-                            obj.primitiveFragmentShadingRate = try std.fmt.parseInt(u8, v, 10);
-                        },
-                        else => return error.InvalidJson,
-                    }
-                } else if (std.mem.eql(u8, s, "attachmentFragmentShadingRate")) {
-                    switch (try scanner.next()) {
-                        .number => |v| {
-                            obj.attachmentFragmentShadingRate = try std.fmt.parseInt(u8, v, 10);
-                        },
-                        else => return error.InvalidJson,
-                    }
-                } else return error.InvalidJson;
+    return parse_type(
+        &.{
+            .{
+                .json_name = "pipelineFragmentShadingRate",
+                .field_name = "pipelineFragmentShadingRate",
+                .type = u8,
             },
-            .object_end => return,
-            else => return error.InvalidJson,
-        }
-    }
+            .{
+                .json_name = "primitiveFragmentShadingRate",
+                .field_name = "primitiveFragmentShadingRate",
+                .type = u8,
+            },
+            .{
+                .json_name = "attachmentFragmentShadingRate",
+                .field_name = "attachmentFragmentShadingRate",
+                .type = u8,
+            },
+        },
+        null,
+        scanner,
+        obj,
+    );
 }
 
 pub fn parse_pnext_chain(arena_alloc: Allocator, scanner: *std.json.Scanner) !?*anyopaque {
@@ -199,36 +230,6 @@ pub fn parse_pnext_chain(arena_alloc: Allocator, scanner: *std.json.Scanner) !?*
     unreachable;
 }
 
-// Example json
-// {
-//   "version": 6,
-//   "applicationInfo": {
-//     "applicationName": "citadel",
-//     "engineName": "Source2",
-//     "applicationVersion": 1,
-//     "engineVersion": 1,
-//     "apiVersion": 4202496
-//   },
-//   "physicalDeviceFeatures": {
-//     "robustBufferAccess": 0,
-//     "pNext": [
-//       {
-//         "sType": 1000328000,
-//         "taskShader": 1,
-//         "meshShader": 1,
-//         "multiviewMeshShader": 1,
-//         "primitiveFragmentShadingRateMeshShader": 0,
-//         "meshShaderQueries": 1
-//       },
-//       {
-//         "sType": 1000226003,
-//         "pipelineFragmentShadingRate": 1,
-//         "primitiveFragmentShadingRate": 1,
-//         "attachmentFragmentShadingRate": 1
-//       }
-//     ]
-//   }
-// }
 pub fn parse_application_info(
     arena_alloc: Allocator,
     json_str: []const u8,
@@ -239,56 +240,38 @@ pub fn parse_application_info(
             scanner: *std.json.Scanner,
             vk_application_info: *vk.VkApplicationInfo,
         ) !void {
-            while (true) {
-                switch (try scanner.next()) {
-                    .string => |s| {
-                        if (std.mem.eql(u8, s, "applicationName")) {
-                            switch (try scanner.next()) {
-                                .string => |name| {
-                                    const n = try aa.dupeZ(u8, name);
-                                    vk_application_info.pApplicationName = @ptrCast(n.ptr);
-                                },
-                                else => return error.InvalidJson,
-                            }
-                        } else if (std.mem.eql(u8, s, "engineName")) {
-                            switch (try scanner.next()) {
-                                .string => |name| {
-                                    const n = try aa.dupeZ(u8, name);
-                                    vk_application_info.pEngineName = @ptrCast(n.ptr);
-                                },
-                                else => return error.InvalidJson,
-                            }
-                        } else if (std.mem.eql(u8, s, "applicationVersion")) {
-                            switch (try scanner.next()) {
-                                .number => |v| {
-                                    vk_application_info.applicationVersion =
-                                        try std.fmt.parseInt(u32, v, 10);
-                                },
-                                else => return error.InvalidJson,
-                            }
-                        } else if (std.mem.eql(u8, s, "engineVersion")) {
-                            switch (try scanner.next()) {
-                                .number => |v| {
-                                    vk_application_info.engineVersion =
-                                        try std.fmt.parseInt(u32, v, 10);
-                                },
-                                else => return error.InvalidJson,
-                            }
-                        } else if (std.mem.eql(u8, s, "apiVersion")) {
-                            switch (try scanner.next()) {
-                                .number => |v| {
-                                    vk_application_info.apiVersion =
-                                        try std.fmt.parseInt(u32, v, 10);
-                                },
-                                else => return error.InvalidJson,
-                            }
-                        }
+            return parse_type(
+                &.{
+                    .{
+                        .json_name = "applicationName",
+                        .field_name = "pApplicationName",
+                        .type = []const u8,
                     },
-                    .object_begin => {},
-                    .object_end => break,
-                    else => return error.InvalidJson,
-                }
-            }
+                    .{
+                        .json_name = "engineName",
+                        .field_name = "pEngineName",
+                        .type = []const u8,
+                    },
+                    .{
+                        .json_name = "applicationVersion",
+                        .field_name = "applicationVersion",
+                        .type = u32,
+                    },
+                    .{
+                        .json_name = "engineVersion",
+                        .field_name = "engineVersion",
+                        .type = u32,
+                    },
+                    .{
+                        .json_name = "apiVersion",
+                        .field_name = "apiVersion",
+                        .type = u32,
+                    },
+                },
+                aa,
+                scanner,
+                vk_application_info,
+            );
         }
         fn parse_device_features(
             aa: Allocator,
