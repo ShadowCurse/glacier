@@ -4,6 +4,63 @@ const log = @import("log.zig");
 
 const Allocator = std.mem.Allocator;
 
+pub fn print_vk_struct(@"struct": anytype) void {
+    const t = @typeInfo(@TypeOf(@"struct")).pointer.child;
+    const fields = @typeInfo(t).@"struct".fields;
+    log.info(@src(), "Type: {s}", .{@typeName(t)});
+    inline for (fields) |field| {
+        switch (field.type) {
+            u32, u64, vk.VkStructureType => {
+                log.info(@src(), "\t{s}: {d}", .{ field.name, @field(@"struct", field.name) });
+            },
+            [*c]const u8 => {
+                log.info(@src(), "\t{s}: {s}", .{ field.name, @field(@"struct", field.name) });
+            },
+            ?*anyopaque, ?*const anyopaque => {
+                log.info(@src(), "\t{s}: {?}", .{ field.name, @field(@"struct", field.name) });
+            },
+            else => log.info(
+                @src(),
+                "\tCannot format field {s} of type {s}",
+                .{ field.name, @typeName(field.type) },
+            ),
+        }
+    }
+}
+
+pub fn print_vk_chain(chain: anytype) void {
+    var current: ?*const anyopaque = chain;
+    while (current) |c| {
+        const struct_type: *const vk.VkStructureType = @alignCast(@ptrCast(c));
+        switch (struct_type.*) {
+            vk.VK_STRUCTURE_TYPE_APPLICATION_INFO => {
+                const nn: *const vk.VkApplicationInfo = @alignCast(@ptrCast(c));
+                print_vk_struct(nn);
+                current = nn.pNext;
+            },
+            vk.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 => {
+                const nn: *const vk.VkPhysicalDeviceFeatures2 = @alignCast(@ptrCast(c));
+                print_vk_struct(nn);
+                current = nn.pNext;
+            },
+            vk.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_EXT => {
+                const nn: *const vk.VkPhysicalDeviceMeshShaderFeaturesEXT = @alignCast(@ptrCast(c));
+                print_vk_struct(nn);
+                current = nn.pNext;
+            },
+            vk.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_FEATURES_KHR => {
+                const nn: *const vk.VkPhysicalDeviceFragmentShadingRateFeaturesKHR = @alignCast(@ptrCast(c));
+                print_vk_struct(nn);
+                current = nn.pNext;
+            },
+            else => {
+                log.info(@src(), "unknown struct type: {d}", .{struct_type.*});
+                break;
+            },
+        }
+    }
+}
+
 pub fn parse_physical_device_mesh_shader_features_ext(
     scanner: *std.json.Scanner,
     obj: *vk.VkPhysicalDeviceMeshShaderFeaturesEXT,
@@ -336,33 +393,5 @@ test "parse_application_info" {
     const arena_alloc = arena.allocator();
 
     const vk_app_info = try parse_application_info(arena_alloc, json);
-
-    log.info(@src(), "app name {s}", .{vk_app_info.pApplicationName});
-    log.info(@src(), "engine name {s}", .{vk_app_info.pEngineName});
-    log.info(@src(), "pNext {*}", .{vk_app_info.pNext});
-    var pnext = vk_app_info.pNext;
-    while (pnext) |next| {
-        const n: *const vk.VkStructureType = @alignCast(@ptrCast(next));
-        switch (n.*) {
-            vk.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 => {
-                log.info(@src(), "next chain: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2", .{});
-                const nn: *const vk.VkPhysicalDeviceFeatures2 = @alignCast(@ptrCast(next));
-                pnext = nn.pNext;
-            },
-            vk.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_EXT => {
-                log.info(@src(), "next chain: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_EXT", .{});
-                const nn: *const vk.VkPhysicalDeviceMeshShaderFeaturesEXT = @alignCast(@ptrCast(next));
-                pnext = nn.pNext;
-            },
-            vk.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_FEATURES_KHR => {
-                log.info(@src(), "next chain: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_FEATURES_KHR", .{});
-                const nn: *const vk.VkPhysicalDeviceFragmentShadingRateFeaturesKHR = @alignCast(@ptrCast(next));
-                pnext = nn.pNext;
-            },
-            else => {
-                log.info(@src(), "unknown struct type: {d}", .{n.*});
-                break;
-            },
-        }
-    }
+    print_vk_chain(vk_app_info);
 }

@@ -661,3 +661,7 @@ pub fn create_vk_device(
     ));
     return vk_device;
 }
+
+test "all" {
+    _ = @import("parsing.zig");
+}
