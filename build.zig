@@ -12,25 +12,29 @@ pub fn build(b: *std.Build) !void {
         .{ .MINIZ_EXPORT = void{} },
     );
 
-    const exe = b.addExecutable(.{
-        .name = "glacier",
+    const exe_mod = b.createModule(.{
+        .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
-        .root_source_file = b.path("src/main.zig"),
     });
-    exe.addIncludePath(miniz_config_header.getOutput());
-    exe.addIncludePath(b.path("thirdparty/volk"));
-    exe.addIncludePath(b.path("thirdparty/miniz"));
-    exe.addIncludePath(.{ .cwd_relative = env_map.get("VULKAN_INCLUDE_PATH").? });
-    exe.addCSourceFile(.{ .file = b.path("thirdparty/volk/volk.c") });
-    exe.addConfigHeader(miniz_config_header);
-    exe.addCSourceFiles(.{
+    exe_mod.addIncludePath(miniz_config_header.getOutput());
+    exe_mod.addIncludePath(b.path("thirdparty/volk"));
+    exe_mod.addIncludePath(b.path("thirdparty/miniz"));
+    exe_mod.addIncludePath(.{ .cwd_relative = env_map.get("VULKAN_INCLUDE_PATH").? });
+    exe_mod.addCSourceFile(.{ .file = b.path("thirdparty/volk/volk.c") });
+    exe_mod.addConfigHeader(miniz_config_header);
+    exe_mod.addCSourceFiles(.{
         .files = &.{
             "thirdparty/miniz/miniz.c",
             "thirdparty/miniz/miniz_tdef.c",
             "thirdparty/miniz/miniz_tinfl.c",
             "thirdparty/miniz/miniz_zip.c",
         },
+    });
+
+    const exe = b.addExecutable(.{
+        .name = "glacier",
+        .root_module = exe_mod,
     });
     exe.linkLibC();
     b.installArtifact(exe);
@@ -42,4 +46,12 @@ pub fn build(b: *std.Build) !void {
     }
     const run_step = b.step("run", "Run the app");
     run_step.dependOn(&run_cmd.step);
+
+    const exe_unit_tests = b.addTest(.{
+        .root_module = exe_mod,
+    });
+    exe_unit_tests.linkLibC();
+    const run_exe_unit_tests = b.addRunArtifact(exe_unit_tests);
+    const test_step = b.step("test", "Run unit tests");
+    test_step.dependOn(&run_exe_unit_tests.step);
 }
