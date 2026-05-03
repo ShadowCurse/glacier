@@ -28,6 +28,7 @@ const Args = struct {
     no_validation: bool,
     disable_shader_cache: bool,
     shader_cache_dir: ?[]const u8,
+    custom_mesa_icd: bool,
 
     const Self = @This();
     fn init(b: *std.Build) Self {
@@ -46,6 +47,11 @@ const Args = struct {
                 "shader_cache_dir",
                 "Set MESA_SHADER_CACHE_DIR",
             ),
+            .custom_mesa_icd = b.option(
+                bool,
+                "custom_mesa_icd",
+                "Use custom_mesa_icd.json to overwrite the driver to use",
+            ) != null,
         };
     }
 };
@@ -93,6 +99,7 @@ fn create_exe(
     const run_cmd = b.addRunArtifact(exe);
     if (args.disable_shader_cache) run_cmd.setEnvironmentVariable("MESA_SHADER_CACHE_DISABLE", "1");
     if (args.shader_cache_dir) |scd| run_cmd.setEnvironmentVariable("MESA_SHADER_CACHE_DIR", scd);
+    if (args.custom_mesa_icd) run_cmd.setEnvironmentVariable("VK_DRIVER_FILES", "custom_mesa_icd.json");
     if (b.args) |a| run_cmd.addArgs(a);
     run_cmd.step.dependOn(&install_step.step);
     const run_step = b.step(name ++ "_run", "Run the `" ++ name ++ "` binary");
