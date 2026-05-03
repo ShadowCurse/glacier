@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 const std = @import("std");
+const os = @import("os.zig");
 const Database = @import("database.zig");
 
 var control_block: ?*SharedControlBlock = null;
@@ -65,14 +66,14 @@ pub const SharedControlBlock = struct {
 };
 
 fn mmap(shmem_fd: std.posix.fd_t) !*SharedControlBlock {
-    const fstat = try std.posix.fstat(shmem_fd);
-    if (fstat.size < @as(i64, @intCast(@sizeOf(SharedControlBlock))))
+    const statx = try os.statx(shmem_fd);
+    if (statx.size < @as(i64, @intCast(@sizeOf(SharedControlBlock))))
         return error.SharedMemoryIsSmallerThanControlBlock;
 
     const mem = try std.posix.mmap(
         null,
-        @intCast(fstat.size),
-        std.posix.PROT.READ | std.posix.PROT.WRITE,
+        @intCast(statx.size),
+        .{ .READ = true, .WRITE = true },
         .{ .TYPE = .SHARED },
         shmem_fd,
         0,

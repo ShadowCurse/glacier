@@ -11,6 +11,7 @@ const log = @import("log.zig");
 const parsing = @import("parsing.zig");
 const profiler = @import("profiler.zig");
 const crc32 = @import("crc32.zig");
+const os = @import("os.zig");
 
 const vk = @import("vk.zig");
 const vv = @import("vk_validation.zig");
@@ -26,7 +27,7 @@ pub const MEASUREMENTS = profiler.Measurements(
         .{"mz_uncompress"},
 );
 
-file: std.fs.File,
+file_fd: std.os.linux.fd_t,
 entries: EntriesType,
 arena: std.heap.ArenaAllocator,
 
@@ -34,7 +35,7 @@ pub const FileReadError = error{NotEnoughBytesInFile};
 pub const CrcError = error{CrcMissmatch};
 pub const MinizError = error{ CannotUncompressPayload, DecompressedSizeMissmatch };
 pub const ReadAndCheckCrcError =
-    std.fs.File.PReadError ||
+    std.posix.UnexpectedError ||
     std.mem.Allocator.Error ||
     FileReadError ||
     CrcError;
@@ -200,7 +201,7 @@ pub const Entry = struct {
         // All entries should have crc32.
         const payload = try alloc.alignedAlloc(u8, .@"64", self.payload_stored_size);
 
-        const read_bytes = try db.file.pread(payload, self.payload_file_offset);
+        const read_bytes = try os.pread(db.file_fd, payload, self.payload_file_offset);
         if (read_bytes != payload.len) return error.NotEnoughBytesInFile;
 
         if (self.payload_crc != 0) {
@@ -681,27 +682,24 @@ pub const FileEntry = extern struct {
     }
 };
 
-pub fn init(path: []const u8) !Database {
+pub fn init(path: [:0]const u8) !Database {
     const prof_point = MEASUREMENTS.start(@src());
     defer MEASUREMENTS.end(prof_point);
 
     log.info(@src(), "Openning database as path: {s}", .{path});
     // const file = try std.fs.openFileAbsolute(path, .{});
-    const file = try std.fs.cwd().openFile(path, .{});
-    const file_stat = try file.stat();
-    const file_size = file_stat.size;
+    // const file = try std.fs.cwd().openFile(path, .{});
+    const file_fd = try os.open(path, .{}, 0);
+    const statx = try os.statx(file_fd);
+    // const file_stat = try file.stat();
+    const file_size = statx.size;
     var file_offset: u64 = 0;
 
     // Initial parsing here and goes through the file sequentialy
-    _ = std.os.linux.fadvise(
-        file.handle,
-        0,
-        @intCast(file_size),
-        std.os.linux.POSIX_FADV.SEQUENTIAL,
-    );
+    try os.fadvise(file_fd, 0, @intCast(file_size), std.os.linux.POSIX_FADV.SEQUENTIAL);
 
     var header: Header = undefined;
-    log.assert(@src(), try file.pread(@ptrCast(&header), file_offset) == @sizeOf(Header), "", .{});
+    log.assert(@src(), try os.pread(file_fd, @ptrCast(&header), file_offset) == @sizeOf(Header), "", .{});
     file_offset += @sizeOf(Header);
 
     if (!std.mem.eql(u8, &header.magic, MAGIC)) return error.InvalidMagicValue;
@@ -714,14 +712,14 @@ pub fn init(path: []const u8) !Database {
 
     var entries: EntriesType = .initFill(.empty);
 
-    while (file_offset < file_stat.size) {
+    while (file_offset < statx.size) {
         // If entry is incomplete, stop
         if (file_size - file_offset < @sizeOf(FileEntry)) break;
 
         var entry: FileEntry = undefined;
         log.assert(
             @src(),
-            try file.pread(@ptrCast(&entry), file_offset) == @sizeOf(FileEntry),
+            try os.pread(file_fd, @ptrCast(&entry), file_offset) == @sizeOf(FileEntry),
             "",
             .{},
         );
@@ -768,15 +766,10 @@ pub fn init(path: []const u8) !Database {
     }
 
     // Later file is accessed by multiple threads at random offsets
-    _ = std.os.linux.fadvise(
-        file.handle,
-        0,
-        @intCast(file_stat.size),
-        std.os.linux.POSIX_FADV.RANDOM,
-    );
+    try os.fadvise(file_fd, 0, @intCast(statx.size), std.os.linux.POSIX_FADV.RANDOM);
 
     return .{
-        .file = file,
+        .file_fd = file_fd,
         .entries = entries,
         .arena = arena,
     };

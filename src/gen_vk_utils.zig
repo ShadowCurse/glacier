@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: MIT
 
 const std = @import("std");
-const Allocator = std.mem.Allocator;
-
 const root = @import("root");
+const os = @import("os.zig");
+const Allocator = std.mem.Allocator;
 const TypeDatabase = @import("vk_database.zig").TypeDatabase;
+const Writer = @import("gen_writer.zig");
 
 const IN_PATH = "thirdparty/vk.xml";
 const OUT_PATH = "src/vk_utils.zig";
@@ -25,45 +26,23 @@ pub fn main() !void {
     var tmp_arena: std.heap.ArenaAllocator = .init(std.heap.page_allocator);
     const tmp_alloc = tmp_arena.allocator();
 
-    const xml_file = try std.fs.cwd().openFile(IN_PATH, .{});
-    const buffer = try alloc.alloc(u8, (try xml_file.stat()).size);
-    _ = try xml_file.readAll(buffer);
+    const xml_fd = try os.open(IN_PATH, .{}, 0);
+    const statx = try os.statx(xml_fd);
+    const buffer = try alloc.alloc(u8, statx.size);
+    _ = try os.read(xml_fd, buffer);
 
     var type_db: TypeDatabase = try .from_xml(alloc, tmp_alloc, buffer);
 
-    std.fs.cwd().deleteFile(OUT_PATH) catch {};
-    const file = try std.fs.cwd().createFile(OUT_PATH, .{});
-    defer file.close();
-    var writer: Writer = try .init(alloc, file);
+    try os.unlink(OUT_PATH);
+    const file_fd = try os.open(OUT_PATH, .{ .CREAT = true, .ACCMODE = .WRONLY }, 0o666);
+    defer os.close(file_fd);
+    var writer: Writer = try .init(alloc, file_fd);
     defer writer.flush();
 
     writer.write(HEADER, .{@src().file});
     try write_print_struct(tmp_alloc, &writer, &type_db);
     _ = tmp_arena.reset(.retain_capacity);
 }
-
-const Writer = struct {
-    writer: std.fs.File.Writer,
-    alloc: Allocator,
-
-    const Self = @This();
-    pub fn init(alloc: Allocator, file: std.fs.File) !Self {
-        const buffer = try alloc.alloc(u8, 4096 * 12);
-        const writer = file.writer(buffer);
-        const result: Self = .{ .writer = writer, .alloc = alloc };
-        return result;
-    }
-
-    fn flush(self: *Self) void {
-        _ = self.writer.interface.flush() catch unreachable;
-    }
-
-    fn write(self: *Self, comptime fmt: []const u8, args: anytype) void {
-        const line = std.fmt.allocPrint(self.alloc, fmt, args) catch unreachable;
-        defer self.alloc.free(line);
-        _ = self.writer.interface.write(line) catch unreachable;
-    }
-};
 
 fn write_print_struct(alloc: Allocator, w: *Writer, type_db: *const TypeDatabase) !void {
     for (type_db.structs.items) |*s| {
@@ -101,15 +80,15 @@ fn write_print_struct(alloc: Allocator, w: *Writer, type_db: *const TypeDatabase
                                     }
                                 }
                             },
-                            .constant_idx => |_| {},
-                            .handle_idx => |_| {
+                            .constant_idx => {},
+                            .handle_idx => {
                                 w.write(
                                     \\    for (0..offset + 1) |_| log.output("    ", .{{}});
                                     \\    log.output("{[field_name]s}: {[field_type]s} = {{}},\n", .{{value.{[field_name]s}}});
                                     \\
                                 , .{ .field_name = sf.name, .field_type = type_str });
                             },
-                            .struct_idx => |_| {
+                            .struct_idx => {
                                 w.write(
                                     \\    print_{[field_type]s}("{[field_name]s}", &value.{[field_name]s}, offset + 1);
                                     \\
@@ -135,7 +114,7 @@ fn write_print_struct(alloc: Allocator, w: *Writer, type_db: *const TypeDatabase
                                     \\
                                 , .{});
                             },
-                            .enum_idx => |_| {
+                            .enum_idx => {
                                 w.write(
                                     \\    for (0..offset + 1) |_| log.output("    ", .{{}});
                                     \\    log.output("{[field_name]s}: {[field_type]s} = {{t}},\n", .{{value.{[field_name]s}}});
@@ -185,7 +164,7 @@ fn write_print_struct(alloc: Allocator, w: *Writer, type_db: *const TypeDatabase
                                     , .{ .field_name = sf.name, .field_type = type_str });
                                 }
                             },
-                            .function_idx => |_| {},
+                            .function_idx => {},
                         }
                     },
                     .pointer => |pointer| {
@@ -356,7 +335,7 @@ fn write_print_struct(alloc: Allocator, w: *Writer, type_db: *const TypeDatabase
                             \\
                         , .{ .field_name = sf.name, .field_type = type_str });
                     },
-                    .array => |_| {
+                    .array => {
                         w.write(
                             \\    for (0..offset + 1) |_| log.output("    ", .{{}});
                             \\    log.output("{[field_name]s}: {[field_type]s} = {{any}},\n", .{{value.{[field_name]s}}});

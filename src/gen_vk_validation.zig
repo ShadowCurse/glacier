@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: MIT
 
 const std = @import("std");
-const Allocator = std.mem.Allocator;
-
 const root = @import("root");
+const os = @import("os.zig");
+const Allocator = std.mem.Allocator;
 const TypeDatabase = @import("vk_database.zig").TypeDatabase;
+const Writer = @import("gen_writer.zig");
 
 const IN_PATH = "thirdparty/vk.xml";
 const OUT_PATH = "src/vk_validation.zig";
@@ -26,16 +27,17 @@ pub fn main() !void {
     var tmp_arena: std.heap.ArenaAllocator = .init(std.heap.page_allocator);
     const tmp_alloc = tmp_arena.allocator();
 
-    const xml_file = try std.fs.cwd().openFile(IN_PATH, .{});
-    const buffer = try alloc.alloc(u8, (try xml_file.stat()).size);
-    _ = try xml_file.readAll(buffer);
+    const xml_fd = try os.open(IN_PATH, .{}, 0);
+    const statx = try os.statx(xml_fd);
+    const buffer = try alloc.alloc(u8, statx.size);
+    _ = try os.read(xml_fd, buffer);
 
     var type_db: TypeDatabase = try .from_xml(alloc, tmp_alloc, buffer);
 
-    std.fs.cwd().deleteFile(OUT_PATH) catch {};
-    const file = try std.fs.cwd().createFile(OUT_PATH, .{});
-    defer file.close();
-    var writer: Writer = try .init(alloc, file);
+    try os.unlink(OUT_PATH);
+    const file_fd = try os.open(OUT_PATH, .{ .CREAT = true, .ACCMODE = .WRONLY }, 0o666);
+    defer os.close(file_fd);
+    var writer: Writer = try .init(alloc, file_fd);
     defer writer.flush();
 
     writer.write(HEADER, .{@src().file});
@@ -46,32 +48,9 @@ pub fn main() !void {
     try write_additional_types(tmp_alloc, &writer, &type_db);
     _ = tmp_arena.reset(.retain_capacity);
     try write_spirv_validation(&writer, &type_db);
-    _ = writer.writer.interface.write(VALIDATE_SHADER_CODE) catch unreachable;
-    _ = writer.writer.interface.write(VALIDATION_STRUCT) catch unreachable;
+    _ = writer.write_bytes(VALIDATE_SHADER_CODE);
+    _ = writer.write_bytes(VALIDATION_STRUCT);
 }
-
-const Writer = struct {
-    writer: std.fs.File.Writer,
-    alloc: Allocator,
-
-    const Self = @This();
-    pub fn init(alloc: Allocator, file: std.fs.File) !Self {
-        const buffer = try alloc.alloc(u8, 4096 * 12);
-        const writer = file.writer(buffer);
-        const result: Self = .{ .writer = writer, .alloc = alloc };
-        return result;
-    }
-
-    fn flush(self: *Self) void {
-        _ = self.writer.interface.flush() catch unreachable;
-    }
-
-    fn write(self: *Self, comptime fmt: []const u8, args: anytype) void {
-        const line = std.fmt.allocPrint(self.alloc, fmt, args) catch unreachable;
-        defer self.alloc.free(line);
-        _ = self.writer.interface.write(line) catch unreachable;
-    }
-};
 
 const VALIDATE_SHADER_CODE =
     \\// From SPIRV-Headers/include/spirv/unified1/spirv.h
@@ -163,10 +142,18 @@ fn vk_version_to_api_version(s: []const u8) ?[]const u8 {
 // ((VK_KHR_get_physical_device_properties2,VK_VERSION_1_1)+VK_KHR_dynamic_rendering),VK_VERSION_1_3
 // into:
 // ((self.instance.VK_KHR_get_physical_device_properties2 or vk.VK_API_VERSION_1_1 <= api_version) and self.device.VK_KHR_dynamic_rendering) or vk.VK_API_VERSION_1_3 <= api_version
-fn write_depends(alloc: Allocator, w: *Writer, instance_extensions: []*const TypeDatabase.Extension, depends: []const u8) !void {
+fn write_depends(
+    alloc: Allocator,
+    w: *Writer,
+    instance_extensions: []*const TypeDatabase.Extension,
+    depends: []const u8,
+) !void {
     w.write(" and (", .{});
-    var output: std.ArrayListUnmanaged(u8) = .empty;
-    var writer = output.writer(alloc);
+
+    var aw: std.Io.Writer.Allocating = .init(alloc);
+    defer aw.deinit();
+
+    const writer = &aw.writer;
     var i: usize = 0;
     while (i < depends.len) : (i += 1) {
         const c = depends[i];
@@ -207,7 +194,7 @@ fn write_depends(alloc: Allocator, w: *Writer, instance_extensions: []*const Typ
             },
         }
     }
-    w.write("{s})", .{output.items});
+    w.write("{s})", .{writer.buffer[0..writer.end]});
 }
 
 fn write_extension_type(alloc: Allocator, w: *Writer, type_db: *const TypeDatabase) !void {

@@ -19,20 +19,20 @@ pub const log_options = log.Options{
 };
 
 const Args = struct {
-    database_path: []const u8 = &.{},
+    database_path: [:0]const u8 = &.{},
     graph: bool = false,
     create_info: bool = false,
     hash: ?u64 = null,
     tag: ?Database.Entry.Tag = null,
 };
 
-pub fn main() !void {
+pub fn main(init: std.process.Init.Minimal) !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const arena_alloc = arena.allocator();
     var tmp_arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const tmp_alloc = tmp_arena.allocator();
 
-    const args = try args_parser.parse(Args, arena_alloc);
+    const args = try args_parser.parse(init.args, Args, arena_alloc);
     if (args.database_path.len == 0) {
         args_parser.print_help(Args);
         return;
@@ -57,17 +57,10 @@ pub fn main() !void {
     const root_entries = try root.init_root_entries(arena_alloc, &db);
     var work_queue: root.WorkQueue = .{ .entries = root_entries };
 
-    var progress = std.Progress.start(.{});
-    defer progress.end();
-    var progress_root = progress.start("processing", 0);
-    defer progress_root.end();
-
-    var shared_arena: std.heap.ThreadSafeAllocator = .{ .child_allocator = db.arena.allocator() };
-    const shared_alloc = shared_arena.allocator();
+    const shared_alloc = db.arena.allocator();
     const contexts = try root.init_contexts(
         arena_alloc,
         shared_alloc,
-        &progress_root,
         undefined,
         &db,
         &work_queue,

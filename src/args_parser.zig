@@ -7,7 +7,7 @@ const Allocator = std.mem.Allocator;
 
 pub const RemainingArgs = struct { values: []const [*:0]const u8 = &.{} };
 
-pub fn parse(comptime T: type, alloc: Allocator) !T {
+pub fn parse(args: std.process.Args, comptime T: type, alloc: Allocator) !T {
     const type_fields = @typeInfo(T).@"struct".fields;
 
     var t: T = .{};
@@ -17,17 +17,17 @@ pub fn parse(comptime T: type, alloc: Allocator) !T {
         if (field.type == RemainingArgs) {
             if (field_idx != type_fields.len - 1)
                 @compileError("The LastArgs valum must be last in the args type definition");
-            const remaining_args_len = std.os.argv.len - 1 - @popCount(consumed_args);
+            const remaining_args_len = args.vector.len - 1 - @popCount(consumed_args);
             const remaining_args = try alloc.alloc([*:0]const u8, remaining_args_len);
             var remaining_args_idx: u32 = 0;
-            for (std.os.argv[1..], 1..) |arg, i| {
+            for (args.vector[1..], 1..) |arg, i| {
                 if (consumed_args & @as(u64, 1) << @truncate(i) == 0) {
                     remaining_args[remaining_args_idx] = arg;
                     remaining_args_idx += 1;
                 }
             }
             @field(t, field.name).values = remaining_args;
-        } else if (find_arg(field)) |r| {
+        } else if (find_arg(args, field)) |r| {
             const i, const arg = r;
             const field_type_info = @typeInfo(field.type);
             switch (field_type_info) {
@@ -46,7 +46,7 @@ fn handle_arg(
     comptime field_name: []const u8,
     consumed_args: *u64,
     i: u32,
-    arg: []const u8,
+    arg: [:0]const u8,
 ) !void {
     switch (field_type) {
         void => {
@@ -64,7 +64,7 @@ fn handle_arg(
             else
                 @field(t, field_name) = try std.fmt.parseInt(field_type, arg, 10);
         },
-        []const u8 => {
+        []const u8, [:0]const u8 => {
             consumed_args.* |= @as(u64, 1) << @truncate(i);
             consumed_args.* |= @as(u64, 1) << @truncate(i + 1);
             @field(t, field_name) = arg;
@@ -93,12 +93,12 @@ fn handle_arg(
     }
 }
 
-fn find_arg(comptime field: std.builtin.Type.StructField) ?struct { u32, []const u8 } {
+fn find_arg(args: std.process.Args, comptime field: std.builtin.Type.StructField) ?struct { u32, [:0]const u8 } {
     const name = std.fmt.comptimePrint("--{s}", .{field.name});
     var arg_name: [name.len]u8 = undefined;
     _ = std.mem.replace(u8, name, "_", "-", &arg_name);
 
-    var args_iter = std.process.args();
+    var args_iter = args.iterate();
     // skip the binary name
     _ = args_iter.next();
     var i: u32 = 1;

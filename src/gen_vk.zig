@@ -2,8 +2,10 @@
 // SPDX-License-Identifier: MIT
 
 const std = @import("std");
+const os = @import("os.zig");
 const Allocator = std.mem.Allocator;
 const TypeDatabase = @import("vk_database.zig").TypeDatabase;
+const Writer = @import("gen_writer.zig");
 
 const IN_PATH = "thirdparty/vk.xml";
 const OUT_PATH = "src/vk.zig";
@@ -20,18 +22,18 @@ pub fn main() !void {
     var tmp_arena: std.heap.ArenaAllocator = .init(std.heap.page_allocator);
     const tmp_alloc = tmp_arena.allocator();
 
-    const xml_file = try std.fs.cwd().openFile(IN_PATH, .{});
-    const buffer = try alloc.alloc(u8, (try xml_file.stat()).size);
-    _ = try xml_file.readAll(buffer);
+    const xml_fd = try os.open(IN_PATH, .{}, 0);
+    const statx = try os.statx(xml_fd);
+    const buffer = try alloc.alloc(u8, statx.size);
+    _ = try os.read(xml_fd, buffer);
 
     var type_db: TypeDatabase = try .from_xml(alloc, tmp_alloc, buffer);
 
-    std.fs.cwd().deleteFile(OUT_PATH) catch {};
-    const file = try std.fs.cwd().createFile(OUT_PATH, .{});
-    defer file.close();
-    var writer: Writer = try .init(alloc, file);
+    try os.unlink(OUT_PATH);
+    const file_fd = try os.open(OUT_PATH, .{ .CREAT = true, .ACCMODE = .WRONLY }, 0o666);
+    defer os.close(file_fd);
+    var writer: Writer = try .init(alloc, file_fd);
     defer writer.flush();
-
 
     writer.write(HEADER, .{@src().file});
     write_constants(&writer, &type_db);
@@ -50,41 +52,6 @@ pub fn main() !void {
     write_unknown_types(&writer, &type_db);
     write_extensions(&writer, &type_db);
 }
-
-const Writer = struct {
-    writer: std.fs.File.Writer,
-    alloc: Allocator,
-
-    const Self = @This();
-    pub fn init(alloc: Allocator, file: std.fs.File) !Self {
-        const buffer = try alloc.alloc(u8, 4096 * 12);
-        const writer = file.writer(buffer);
-        const result: Self = .{ .writer = writer, .alloc = alloc };
-        return result;
-    }
-
-    fn flush(self: *Self) void {
-        _ = self.writer.interface.flush() catch unreachable;
-    }
-
-    fn write(self: *Self, comptime fmt: []const u8, args: anytype) void {
-        const line = std.fmt.allocPrint(self.alloc, fmt, args) catch unreachable;
-        defer self.alloc.free(line);
-        _ = self.writer.interface.write(line) catch unreachable;
-    }
-
-    fn write_comment(self: *Self, comment: []const u8, line_start: []const u8) void {
-        var iter = std.mem.splitScalar(u8, comment, '\n');
-        while (iter.next()) |line| {
-            const trimmed_line = std.mem.trimStart(u8, line, " ");
-            if (trimmed_line.len == 0) break;
-
-            _ = self.writer.interface.write(line_start) catch unreachable;
-            _ = self.writer.interface.write(trimmed_line) catch unreachable;
-            _ = self.writer.interface.write("\n") catch unreachable;
-        }
-    }
-};
 
 fn write_constants(w: *Writer, type_db: *const TypeDatabase) void {
     w.write(
@@ -435,7 +402,7 @@ fn write_single_struct_field(
     switch (t.*) {
         .base => |base| {
             switch (base) {
-                .builtin => |_| {
+                .builtin => {
                     if (std.mem.endsWith(u8, field.name, "Version")) {
                         w.write(
                             \\    {s}: ApiVersion = .{{}},
@@ -448,7 +415,7 @@ fn write_single_struct_field(
                         , .{ field.name, type_str });
                     }
                 },
-                .handle_idx => |_| {
+                .handle_idx => {
                     w.write(
                         \\    {s}: {s} = .none,
                         \\
@@ -473,7 +440,7 @@ fn write_single_struct_field(
                         \\
                     , .{ field.name, type_str, default_str });
                 },
-                .bitfield_idx => |_| {
+                .bitfield_idx => {
                     w.write(
                         \\    {s}: {s} = .{{}},
                         \\
@@ -495,7 +462,7 @@ fn write_single_struct_field(
                         , .{ field.name, type_str, e.values[0].name });
                     }
                 },
-                .union_idx => |_| {
+                .union_idx => {
                     w.write(
                         \\    {s}: {s},
                         \\
@@ -509,7 +476,7 @@ fn write_single_struct_field(
                 },
             }
         },
-        .pointer => |_| {
+        .pointer => {
             w.write(
                 \\    {s}: ?{s} = null,
                 \\

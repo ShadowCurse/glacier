@@ -55,7 +55,11 @@ else
 
 fn tsc_freq() u64 {
     const s = get_perf_counter();
-    std.Thread.sleep(1000_000);
+
+    // std.Thread.sleep(1000_000);
+    var timespec: std.os.linux.timespec = .{ .sec = 0, .nsec = 1000_000 };
+    _ = std.os.linux.clock_nanosleep(.MONOTONIC, .{ .ABSTIME = false }, &timespec, null);
+
     const e = get_perf_counter();
     return (e - s) * 1000;
 }

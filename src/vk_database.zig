@@ -2639,7 +2639,7 @@ pub const Xml = struct {
     }
 
     pub fn parse_extensions(alloc: Allocator, parser: *XmlParser) !std.ArrayListUnmanaged(Extension) {
-        if (!parser.check_peek_element_start("extensions")) return .{};
+        if (!parser.check_peek_element_start("extensions")) return .empty;
 
         _ = parser.element_start();
         _ = parser.skip_attributes();
@@ -4603,7 +4603,7 @@ pub const Xml = struct {
     }
 
     pub fn parse_commands(alloc: Allocator, parser: *XmlParser) !std.ArrayListUnmanaged(Command) {
-        if (!parser.check_peek_element_start("commands")) return .{};
+        if (!parser.check_peek_element_start("commands")) return .empty;
 
         _ = parser.element_start();
         _ = parser.skip_attributes();

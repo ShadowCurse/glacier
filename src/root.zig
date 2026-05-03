@@ -167,7 +167,6 @@ pub const Tasks = struct {
 pub const Context = struct {
     arena: std.heap.ArenaAllocator,
     shared_alloc: Allocator,
-    progress: *std.Progress.Node,
     barrier: *Barrier,
     db: *Database,
     work_queue: *WorkQueue,
@@ -179,7 +178,6 @@ pub const Context = struct {
 pub fn init_contexts(
     alloc: Allocator,
     shared_alloc: Allocator,
-    progress: *std.Progress.Node,
     barrier: *Barrier,
     db: *Database,
     work_queue: *WorkQueue,
@@ -192,7 +190,6 @@ pub fn init_contexts(
         c.* = .{
             .arena = .init(std.heap.page_allocator),
             .shared_alloc = shared_alloc,
-            .progress = progress,
             .barrier = barrier,
             .db = db,
             .work_queue = work_queue,
@@ -219,9 +216,6 @@ pub fn parse(context: *Context) !void {
 }
 
 pub fn parse_inner(comptime P: type, comptime V: type, context: *Context) !void {
-    var progress = context.progress.start("parsing", 0);
-    defer progress.end();
-
     const work_queue = context.work_queue;
     const shared_alloc = context.shared_alloc;
     const thread_alloc = context.arena.allocator();
@@ -230,8 +224,6 @@ pub fn parse_inner(comptime P: type, comptime V: type, context: *Context) !void 
     var tasks: Tasks = .{};
     for (&tasks.tasks) |*t| t.arena = .init(thread_alloc);
     while (true) {
-        defer progress.completeOne();
-
         const task = tasks.next();
         if (task.queue.items.len == 0) {
             if (work_queue.take_next_parse()) |root_entry| {
@@ -315,17 +307,12 @@ pub fn create_inner(
     comptime D: type,
     context: *Context,
 ) !void {
-    var progress = context.progress.start("creation", 0);
-    defer progress.end();
-
     const work_queue = context.work_queue;
     const thread_alloc = context.arena.allocator();
 
     var tasks: Tasks = .{};
     for (&tasks.tasks) |*t| t.arena = .init(thread_alloc);
     while (true) {
-        defer progress.completeOne();
-
         const task = tasks.next();
         if (task.queue.items.len == 0) {
             if (work_queue.take_next_create()) |root_entry| {
@@ -462,8 +449,6 @@ test "parse/create" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    var progress: std.Progress.Node = .none;
-
     var tmp_dir = std.testing.tmpDir(.{});
     defer tmp_dir.cleanup();
     const tmp_file = try tmp_dir.dir.createFile("parse_test", .{});
@@ -524,7 +509,6 @@ test "parse/create" {
         var thread_context: Context = .{
             .arena = .init(alloc),
             .shared_alloc = alloc,
-            .progress = &progress,
             .barrier = undefined,
             .db = &db,
             .work_queue = &work_queue,
@@ -612,7 +596,6 @@ test "parse/create" {
         var thread_context: Context = .{
             .arena = .init(alloc),
             .shared_alloc = alloc,
-            .progress = &progress,
             .barrier = undefined,
             .db = &db,
             .work_queue = &work_queue,
@@ -734,7 +717,6 @@ test "parse/create" {
         var thread_context: Context = .{
             .arena = .init(alloc),
             .shared_alloc = alloc,
-            .progress = &progress,
             .barrier = undefined,
             .db = &db,
             .work_queue = &work_queue,
@@ -856,7 +838,6 @@ test "parse/create" {
         var thread_context: Context = .{
             .arena = .init(alloc),
             .shared_alloc = alloc,
-            .progress = &progress,
             .barrier = undefined,
             .db = &db,
             .work_queue = &work_queue,

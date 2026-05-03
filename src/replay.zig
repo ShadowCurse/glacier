@@ -9,6 +9,7 @@ const args_parser = @import("args_parser.zig");
 const parsing = @import("parsing.zig");
 const profiler = @import("profiler.zig");
 const control_block = @import("control_block.zig");
+const os = @import("os.zig");
 
 const vk = @import("vk.zig");
 const vv = @import("vk_validation.zig");
@@ -79,7 +80,7 @@ const Args = struct {
     database_paths: args_parser.RemainingArgs = .{},
 };
 
-pub fn main() !void {
+pub fn main(init: std.process.Init.Minimal) !void {
     profiler.start_measurement();
     defer profiler.print(ALL_MEASUREMENTS);
     defer profiler.end_measurement();
@@ -92,11 +93,11 @@ pub fn main() !void {
     var tmp_arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const tmp_alloc = tmp_arena.allocator();
 
-    const args = try args_parser.parse(Args, arena_alloc);
+    const args = try args_parser.parse(init.args, Args, arena_alloc);
 
-    if (std.posix.getenv("FORNAX_LOG_PATH")) |log_path| {
-        const log_file = try std.fs.createFileAbsolute(log_path, .{});
-        log.output_fd = log_file.handle;
+    if (init.environ.getPosix("FORNAX_LOG_PATH")) |log_path| {
+        const log_fd = try os.open(log_path, .{ .CREAT = true, .ACCMODE = .WRONLY }, 0o666);
+        log.output_fd = log_fd;
         args_parser.print_args(args);
     }
 
@@ -127,18 +128,11 @@ pub fn main() !void {
     const root_entries = try root.init_root_entries(arena_alloc, &db);
     var work_queue: root.WorkQueue = .{ .entries = root_entries };
 
-    var progress = std.Progress.start(.{});
-    defer progress.end();
-    var progress_root = progress.start("processing", 0);
-    defer progress_root.end();
-
-    var shared_arena: std.heap.ThreadSafeAllocator = .{ .child_allocator = db.arena.allocator() };
-    const shared_alloc = shared_arena.allocator();
+    const shared_alloc = db.arena.allocator();
     var barrier: Barrier = .{ .total_threads = thread_count };
     const contexts = try root.init_contexts(
         arena_alloc,
         shared_alloc,
-        &progress_root,
         &barrier,
         &db,
         &work_queue,

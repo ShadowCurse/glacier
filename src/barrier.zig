@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 const std = @import("std");
+const os = @import("os.zig");
 
 total_threads: u32 = 0,
 count: std.atomic.Value(u32) = .init(0),
@@ -14,10 +15,10 @@ pub fn wait(self: *Self) void {
     const count = self.count.fetchAdd(1, .acq_rel) + 1;
     if (count == self.total_threads) {
         self.futex.store(current_futex + 1, .release);
-        std.Thread.Futex.wake(&self.futex, self.total_threads - 1);
+        _ = os.futex2_wake(&self.futex, @intCast(self.total_threads - 1)) catch unreachable;
         return;
     }
     while (self.futex.load(.acquire) == current_futex) {
-        std.Thread.Futex.wait(&self.futex, current_futex);
+        _ = os.futex2_wait(&self.futex, current_futex) catch unreachable;
     }
 }
