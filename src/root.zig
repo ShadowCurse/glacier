@@ -428,7 +428,7 @@ test "parse/create" {
                     .hash = d.hash,
                     .payload_flag = .not_compressed,
                     .payload_crc = 0,
-                    .payload_stored_size = 0,
+                    .payload_stored_size = 1,
                     .payload_decompressed_size = 0,
                     .payload_file_offset = 0,
                     .status = if (d.create_info != null) .init(.parsed) else .init(.not_parsed),
@@ -451,7 +451,8 @@ test "parse/create" {
 
     var tmp_dir = std.testing.tmpDir(.{});
     defer tmp_dir.cleanup();
-    const tmp_file = try tmp_dir.dir.createFile("parse_test", .{});
+    const tmp_file = try tmp_dir.dir.createFile(std.testing.io, "parse_test", .{ .read = true });
+    try tmp_file.setLength(std.testing.io, 1);
 
     // Simple root node with 2 deps
     {
@@ -489,7 +490,7 @@ test "parse/create" {
             }
         };
 
-        var db: Database = .{ .file = tmp_file, .entries = .initFill(.empty), .arena = arena };
+        var db: Database = .{ .file_fd = tmp_file.handle, .entries = .initFill(.empty), .arena = arena };
         try Dummy.put_pipelines(alloc, &db, &.{
             .{ .hash = 1 },
             .{ .hash = 2 },
@@ -499,7 +500,7 @@ test "parse/create" {
             .hash = 0,
             .payload_flag = .not_compressed,
             .payload_crc = 0,
-            .payload_stored_size = 0,
+            .payload_stored_size = 1,
             .payload_decompressed_size = 0,
             .payload_file_offset = 0,
         };
@@ -575,7 +576,7 @@ test "parse/create" {
             }
         };
 
-        var db: Database = .{ .file = tmp_file, .entries = .initFill(.empty), .arena = arena };
+        var db: Database = .{ .file_fd = tmp_file.handle, .entries = .initFill(.empty), .arena = arena };
         try Dummy.put_pipelines(alloc, &db, &.{
             .{ .hash = 1 },
             .{ .hash = 2 },
@@ -586,7 +587,7 @@ test "parse/create" {
             .hash = 0,
             .payload_flag = .not_compressed,
             .payload_crc = 0,
-            .payload_stored_size = 0,
+            .payload_stored_size = 1,
             .payload_decompressed_size = 0,
             .payload_file_offset = 0,
         };
@@ -682,7 +683,7 @@ test "parse/create" {
             }
         };
 
-        var db: Database = .{ .file = tmp_file, .entries = .initFill(.empty), .arena = arena };
+        var db: Database = .{ .file_fd = tmp_file.handle, .entries = .initFill(.empty), .arena = arena };
         try Dummy.put_pipelines(
             alloc,
             &db,
@@ -696,7 +697,7 @@ test "parse/create" {
             .hash = 0xA,
             .payload_flag = .not_compressed,
             .payload_crc = 0,
-            .payload_stored_size = 0,
+            .payload_stored_size = 1,
             .payload_decompressed_size = 0,
             .payload_file_offset = 0,
             .status = .init(.parsed),
@@ -803,7 +804,7 @@ test "parse/create" {
             }
         };
 
-        var db: Database = .{ .file = tmp_file, .entries = .initFill(.empty), .arena = arena };
+        var db: Database = .{ .file_fd = tmp_file.handle, .entries = .initFill(.empty), .arena = arena };
         try Dummy.put_pipelines(
             alloc,
             &db,
@@ -817,7 +818,7 @@ test "parse/create" {
             .hash = 0xA,
             .payload_flag = .not_compressed,
             .payload_crc = 0,
-            .payload_stored_size = 0,
+            .payload_stored_size = 1,
             .payload_decompressed_size = 0,
             .payload_file_offset = 0,
             .status = .init(.parsed),

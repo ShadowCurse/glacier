@@ -105,7 +105,7 @@ test "parse_application_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
 
     const result = try parse_application_info(alloc, alloc, &db, json);
     try std.testing.expectEqual(69, result.version);
@@ -184,7 +184,7 @@ test "parse_sampler" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
 
     const result = try parse_sampler(alloc, alloc, &db, json);
     try std.testing.expectEqual(69, result.version);
@@ -250,7 +250,7 @@ test "parse_descriptor_set_layout" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
 
     const result = try parse_descriptor_set_layout(alloc, alloc, &db, json);
     try std.testing.expectEqual(69, result.version);
@@ -315,7 +315,7 @@ test "parse_pipeline_layout" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
 
     const result = try parse_pipeline_layout(alloc, alloc, &db, json);
     try std.testing.expectEqual(69, result.version);
@@ -388,7 +388,7 @@ test "parse_shader_module" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
 
     const result = try parse_shader_module(alloc, alloc, &db, json);
     try std.testing.expectEqual(69, result.version);
@@ -457,7 +457,7 @@ test "parse_render_pass" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
 
     const result = try parse_render_pass(alloc, alloc, &db, json);
     try std.testing.expectEqual(69, result.version);
@@ -520,7 +520,7 @@ test "parse_compute_pipeline" {
     const alloc = arena.allocator();
 
     const db: Database = .{
-        .file = undefined,
+        .file_fd = undefined,
         .entries = .initFill(.empty),
         .arena = arena,
     };
@@ -583,7 +583,7 @@ test "parse_raytracing_pipeline" {
     const alloc = arena.allocator();
 
     const db: Database = .{
-        .file = undefined,
+        .file_fd = undefined,
         .entries = .initFill(.empty),
         .arena = arena,
     };
@@ -649,7 +649,7 @@ test "parse_graphics_pipeline" {
     const alloc = arena.allocator();
 
     const db: Database = .{
-        .file = undefined,
+        .file_fd = undefined,
         .entries = .initFill(.empty),
         .arena = arena,
     };
@@ -1128,7 +1128,7 @@ test "parse_object_array" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -1526,7 +1526,7 @@ test "test_parse_vk_pipeline_tessellation_domain_origin_state_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -1562,7 +1562,7 @@ test "test_parse_vk_pipeline_rasterization_state_stream_create_info_ext" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -1600,7 +1600,7 @@ test "test_parse_vk_pipeline_color_blend_advanced_state_create_info_ext" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -1639,7 +1639,7 @@ test "test_parse_vk_pipeline_rasterization_conservative_state_create_info_ext" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -1685,7 +1685,7 @@ test "test_parse_vk_pipeline_color_write_create_info_ext" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -1744,7 +1744,7 @@ test "test_parse_vk_sample_locations_info_ext" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -1793,7 +1793,7 @@ test "test_parse_vk_extent_2d" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -1838,7 +1838,7 @@ test "test_parse_vk_sample_location_ext" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -1888,7 +1888,7 @@ test "test_parse_vk_pipeline_sample_locations_state_create_info_ext" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -1952,7 +1952,7 @@ test "test_parse_vk_render_pass_multiview_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -1995,7 +1995,7 @@ test "test_parse_vk_attachment_description_stencil_layout" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -2031,7 +2031,7 @@ test "test_parse_vk_attachment_reference_stencil_layout" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -2080,7 +2080,7 @@ test "test_parse_vk_subpass_description_depth_stencil_resolve" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -2127,7 +2127,7 @@ test "test_parse_vk_fragment_shading_rate_attachment_info_khr" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -2165,7 +2165,7 @@ test "test_parse_vk_input_attachment_aspect_reference" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -2215,7 +2215,7 @@ test "test_parse_vk_render_pass_input_attachment_aspect_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -2264,7 +2264,7 @@ test "test_parse_vk_sampler_reduction_mode_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -2291,7 +2291,7 @@ test "test_parse_vk_component_mapping" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -2357,7 +2357,7 @@ test "test_parse_vk_sampler_ycbcr_conversion_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -2405,7 +2405,7 @@ test "test_parse_vk_clear_color_value" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -2453,7 +2453,7 @@ test "test_parse_vk_sampler_custom_border_color_create_info_ext" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -2502,7 +2502,7 @@ test "test_parse_vk_sampler_border_color_component_mapping_create_info_ext" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -2591,7 +2591,7 @@ test "test_parse_vk_mutable_descriptor_type_create_info_ext" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
 
     var scanner = Json.init(alloc, json);
     var context = Context{
@@ -2928,8 +2928,10 @@ pub fn parse_vk_application_info(
     const prof_point = MEASUREMENTS.start(@src());
     defer MEASUREMENTS.end(prof_point);
 
+    log.info(@src(), "scanner: {any}", .{context.scanner});
     item.* = .{};
     while (try scanner_object_next_field(context.scanner)) |s| {
+        log.info(@src(), "token: {s}", .{s});
         if (std.mem.eql(u8, s, "applicationName")) {
             const name_str = try scanner_next_string(context.scanner);
             const name = try context.alloc.dupeZ(u8, name_str);
@@ -2964,7 +2966,7 @@ test "test_parse_vk_application_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -3013,7 +3015,7 @@ test "test_parse_vk_physical_device_features2" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -3066,7 +3068,7 @@ test "test_parse_vk_sampler_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -3135,7 +3137,7 @@ test "test_parse_vk_descriptor_set_layout_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -3199,7 +3201,7 @@ test "test_parse_vk_descriptor_set_layout_binding" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    var db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    var db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     try db.entries.getPtr(.sampler).put(alloc, 0x1111111111111111, .{
         .tag = undefined,
         .hash = undefined,
@@ -3283,7 +3285,7 @@ test "test_parse_vk_pipeline_layout_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    var db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    var db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     try db.entries.getPtr(.descriptor_set_layout).put(alloc, 0x1111111111111111, .{
         .tag = undefined,
         .hash = undefined,
@@ -3340,7 +3342,7 @@ test "test_parse_vk_push_constant_range" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -3433,7 +3435,7 @@ test "test_parse_vk_shader_module_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
 
     var scanner = Json.init(alloc, json);
     var context = Context{
@@ -3506,7 +3508,7 @@ test "test_parse_vk_render_pass_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -3587,7 +3589,7 @@ test "test_parse_vk_render_pass_create_info2" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -3638,7 +3640,7 @@ test "test_parse_vk_subpass_dependency" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -3686,7 +3688,7 @@ test "test_parse_vk_subpass_dependency2" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -3737,7 +3739,7 @@ test "test_parse_vk_attachment_description" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -3788,7 +3790,7 @@ test "test_parse_vk_attachment_description2" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -3878,7 +3880,7 @@ test "test_parse_vk_subpass_description" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -3972,7 +3974,7 @@ test "test_parse_vk_subpass_description2" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -4020,7 +4022,7 @@ test "test_parse_vk_attachment_reference" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -4058,7 +4060,7 @@ test "test_parse_vk_attachment_reference2" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -4187,7 +4189,7 @@ test "test_parse_vk_graphics_pipeline_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    var db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    var db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     try db.entries.getPtr(.pipeline_layout).put(alloc, 0x1111111111111111, .{
         .tag = undefined,
         .hash = undefined,
@@ -4294,7 +4296,7 @@ test "test_parse_vk_pipeline_shader_stage_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    var db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    var db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     try db.entries.getPtr(.shader_module).put(alloc, 0x1111111111111111, .{
         .tag = undefined,
         .hash = undefined,
@@ -4377,7 +4379,7 @@ test "test_parse_vk_pipeline_vertex_input_state_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -4419,7 +4421,7 @@ test "test_parse_vk_pipeline_input_assembly_state_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -4458,7 +4460,7 @@ test "test_parse_vk_pipeline_tessellation_state_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -4528,7 +4530,7 @@ test "test_parse_vk_pipeline_viewport_state_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -4578,7 +4580,7 @@ test "test_parse_vk_pipeline_rasterization_state_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -4654,7 +4656,7 @@ test "test_parse_vk_pipeline_multisample_state_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -4702,7 +4704,7 @@ test "test_parse_vk_stencil_op_state" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -4779,7 +4781,7 @@ test "test_parse_vk_pipeline_depth_stencil_state_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -4861,7 +4863,7 @@ test "test_parse_vk_pipeline_color_blend_state_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -4918,7 +4920,7 @@ test "test_parse_vk_pipeline_dynamic_state_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -4959,7 +4961,7 @@ test "test_parse_vk_vertex_input_attribute_description" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -4999,7 +5001,7 @@ test "test_parse_vk_vertex_input_binding_description" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -5043,7 +5045,7 @@ test "test_parse_vk_pipeline_color_blend_attachment_state" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -5090,7 +5092,7 @@ test "test_parse_vk_viewport" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -5145,7 +5147,7 @@ test "test_parse_vk_rect_2d" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -5185,7 +5187,7 @@ test "test_parse_vk_specialization_map_entry" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -5245,7 +5247,7 @@ test "test_parse_vk_specialization_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -5310,7 +5312,7 @@ test "test_parse_vk_compute_pipeline_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    var db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    var db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     try db.entries.getPtr(.pipeline_layout).put(alloc, 0x1111111111111111, .{
         .tag = undefined,
         .hash = undefined,
@@ -5428,7 +5430,7 @@ test "test_parse_vk_raytracing_pipeline_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    var db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    var db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     try db.entries.getPtr(.pipeline_layout).put(alloc, 0x1111111111111111, .{
         .tag = undefined,
         .hash = undefined,
@@ -5495,7 +5497,7 @@ test "test_parse_vk_ray_tracing_shader_group_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
@@ -5551,7 +5553,7 @@ test "test_parse_vk_pipeline_library_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    var db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    var db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     try db.entries.getPtr(.raytracing_pipeline).put(alloc, 0x1111111111111111, .{
         .tag = undefined,
         .hash = undefined,
@@ -5606,7 +5608,7 @@ test "test_parse_vk_ray_tracing_pipeline_interface_create_info" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const alloc = arena.allocator();
 
-    const db: Database = .{ .file = undefined, .entries = .initFill(.empty), .arena = arena };
+    const db: Database = .{ .file_fd = undefined, .entries = .initFill(.empty), .arena = arena };
     var scanner = Json.init(alloc, json);
     var context = Context{
         .alloc = alloc,
