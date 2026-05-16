@@ -66,3 +66,11 @@ index 49c2861..b23291a 100644
 +        return mz_uncompress2(pDest, pDest_len, pSource, pSource_len, alloc, free, allocator);
      }
  #endif /*#ifndef MINIZ_NO_INFLATE_APIS*/
+ 
+@@ -602,4 +602,4 @@ extern "C"
+ #include "miniz_common.h"
+ #include "miniz_tdef.h"
+ #include "miniz_tinfl.h"
+-#include "miniz_zip.h"
+\ No newline at end of file
++#include "miniz_zip.h"
