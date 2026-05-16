@@ -200,5 +200,7 @@ pub fn create(context: *root.Context) void {
 comptime {
     _ = @import("parsing.zig");
     _ = @import("crc32.zig");
+    _ = @import("simd.zig");
+    _ = @import("json.zig");
     _ = @import("root.zig");
 }
