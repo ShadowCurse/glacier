@@ -6,6 +6,7 @@
 // SPDX-License-Identifier: MIT
 
 const std = @import("std");
+const builtin = @import("builtin");
 const log = @import("log.zig");
 const simd = @import("simd.zig");
 const profiler = @import("profiler.zig");
@@ -705,7 +706,13 @@ fn str_to_hash(str: []const u8) u64 {
     // zig fmt: on
     const lo_nibbles = input & @as(simd.u8x16, @splat(0x0f));
     const hi_nibbles = input >> @as(@Vector(16, u3), @splat(4));
-    const hi_result = simd.vpshufb_128(HI_NIBBLE, hi_nibbles);
+
+    const hi_result = if (builtin.cpu.arch == .x86_64)
+        simd.x86_64.vpshufb_128(HI_NIBBLE, hi_nibbles)
+    else if (builtin.cpu.arch == .aarch64)
+        simd.aarch64.tbl_128(HI_NIBBLE, hi_nibbles)
+    else
+        @compileError("Only x86_64 and aarch64 are supported");
 
     const r = lo_nibbles + hi_result;
 

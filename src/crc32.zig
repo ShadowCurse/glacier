@@ -84,8 +84,10 @@ pub fn crc32(init_crc: u32, bytes: []align(16) const u8) u32 {
 // Paper: "Fast CRC Computation for Generic Polynomials Using PCLMULQDQ Instruction" *  V. Gopal, E. Ozturk, et al., 2009
 pub const crc32_simd = if (builtin.cpu.arch == .x86_64)
     crc32_simd_x86_64
+else if (builtin.cpu.arch == .aarch64)
+    crc32_simd_aarch64
 else
-    @compileError("crc32_simd is not implemented");
+    @compileError("Only x86_64 and aarch64 are supported");
 
 fn crc32_simd_x86_64(init_crc: u32, bytes: []align(64) const u8) u32 {
     if (bytes.len < 64) return crc32(init_crc, bytes);
@@ -205,6 +207,36 @@ fn crc32_simd_x86_64(init_crc: u32, bytes: []align(64) const u8) u32 {
         return crc32(~crc, remaining_bytes_16)
     else
         return ~crc;
+}
+
+fn crc32_simd_aarch64(init_crc: u32, bytes: []align(64) const u8) u32 {
+    var crc = ~init_crc;
+
+    const u64s_len = bytes.len / @sizeOf(u64);
+    var u64s: []const u64 = undefined;
+    u64s.ptr = @ptrCast(bytes.ptr);
+    u64s.len = u64s_len;
+    for (u64s) |v| crc = simd.aarch64.crc32x(crc, v);
+
+    var rem = bytes.len % @sizeOf(u64);
+    var rem_ptr = bytes.ptr + u64s_len * @sizeOf(u64);
+    if (@sizeOf(u32) <= rem) {
+        const v: *const u32 = @ptrCast(@alignCast(rem_ptr));
+        crc = simd.aarch64.crc32w(crc, v.*);
+        rem_ptr += @sizeOf(u32);
+        rem -= @sizeOf(u32);
+    }
+    if (@sizeOf(u16) <= rem) {
+        const v: *const u16 = @ptrCast(@alignCast(rem_ptr));
+        crc = simd.aarch64.crc32h(crc, v.*);
+        rem_ptr += @sizeOf(u16);
+        rem -= @sizeOf(u16);
+    }
+    if (@sizeOf(u8) <= rem) {
+        const v: *const u8 = @ptrCast(@alignCast(rem_ptr));
+        crc = simd.aarch64.crc32b(crc, v.*);
+    }
+    return ~crc;
 }
 
 test "crc32_correctness" {

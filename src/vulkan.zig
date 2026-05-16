@@ -106,7 +106,7 @@ fn load_vulkan() !*const vk.vkGetInstanceProcAddr {
         return error.LoadVulkan;
     }
 
-    const instance_proc_addr: *const vk.vkGetInstanceProcAddr = @ptrCast(std.c.dlsym(lib, "vkGetInstanceProcAddr").?);
+    const instance_proc_addr: *const vk.vkGetInstanceProcAddr = @ptrCast(@alignCast(std.c.dlsym(lib, "vkGetInstanceProcAddr").?));
     return instance_proc_addr;
 }
 

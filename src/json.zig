@@ -24,7 +24,14 @@ const Allocator = std.mem.Allocator;
 ///
 /// Constants are created by setting bits (0, 1, 2) at nibble positons
 ///
-// zig fmt: off
+const STRUCTURAL_LO_16: simd.u8x16 = .{
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 2, 4, 1, 4, 0, 0,
+};
+const STRUCTURAL_HI_16: simd.u8x16 = .{
+    0, 0, 1, 2, 0, 4, 0, 4,
+    0, 0, 0, 0, 0, 0, 0, 0,
+};
 const STRUCTURAL_LO_32: simd.u8x32 = .{
     0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 2, 4, 1, 4, 0, 0,
@@ -37,27 +44,34 @@ const STRUCTURAL_HI_32: simd.u8x32 = .{
     0, 0, 1, 2, 0, 4, 0, 4,
     0, 0, 0, 0, 0, 0, 0, 0,
 };
-// zig fmt: on
 
 fn classify_chunk_256(chunk: simd.u8x32) struct { structural: u32, quotes: u32 } {
     const lo_nibbles = chunk & @as(simd.u8x32, @splat(0x0f));
     const hi_nibbles = chunk >> @as(@Vector(32, u3), @splat(4));
 
-    const lo_result = simd.vpshufb_256(STRUCTURAL_LO_32, lo_nibbles);
-    const hi_result = simd.vpshufb_256(STRUCTURAL_HI_32, hi_nibbles);
+    const lo_result = if (builtin.cpu.arch == .x86_64)
+        simd.x86_64.vpshufb_256(STRUCTURAL_LO_32, lo_nibbles)
+    else if (builtin.cpu.arch == .aarch64)
+        simd.aarch64.tbl_256(STRUCTURAL_LO_16, lo_nibbles)
+    else
+        @compileError("Only x86_64 and aarch64 are supported");
+
+    const hi_result = if (builtin.cpu.arch == .x86_64)
+        simd.x86_64.vpshufb_256(STRUCTURAL_HI_32, hi_nibbles)
+    else if (builtin.cpu.arch == .aarch64)
+        simd.aarch64.tbl_256(STRUCTURAL_HI_16, hi_nibbles)
+    else
+        @compileError("Only x86_64 and aarch64 are supported");
 
     // Both must match for a structural character
-    const is_structural: @Vector(32, bool) = (lo_result & hi_result) != @as(@Vector(32, u8), @splat(0));
+    const zero: simd.u8x32 = @splat(0x0);
+    const is_structural: @Vector(32, bool) = (lo_result & hi_result) != zero;
     const structural: u32 = @bitCast(is_structural);
 
     // Quote detection: compare directly with '"'
     const quote_vec: simd.u8x32 = @splat(0x22);
     const is_quote = chunk == quote_vec;
-
-    const ones: simd.u8x32 = @splat(0xff);
-    const zeros: simd.u8x32 = @splat(0);
-    const quote_mask = @select(u8, is_quote, ones, zeros);
-    const quotes = simd.vpmovmskb_256(quote_mask);
+    const quotes: u32 = @bitCast(is_quote);
 
     return .{ .structural = structural, .quotes = quotes };
 }

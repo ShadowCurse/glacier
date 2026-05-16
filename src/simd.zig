@@ -2,21 +2,12 @@
 // SPDX-License-Identifier: MIT
 
 const std = @import("std");
+const builtin = @import("builtin");
 
 pub const m128i = @Vector(2, u64);
 pub const u8x16 = @Vector(16, u8);
 pub const u8x32 = @Vector(32, u8);
 pub const u8x64 = @Vector(64, u8);
-
-// PCLMULQDQ - Carry-less multiplication
-pub inline fn pclmulqdq(a: m128i, b: m128i, comptime mask: u64) m128i {
-    const assembly = std.fmt.comptimePrint("pclmulqdq ${d}, %[b], %[a]", .{mask});
-    return asm volatile (assembly
-        : [ret] "=x" (-> m128i),
-        : [a] "0" (a),
-          [b] "x" (b),
-    );
-}
 
 // Shift the whole 16 bytes right by `bytes` nuber of bytes
 pub inline fn shift_right(a: m128i, comptime bytes: u8) m128i {
@@ -30,49 +21,145 @@ pub inline fn shift_right(a: m128i, comptime bytes: u8) m128i {
     return @bitCast(c);
 }
 
-// VPSHUFB - Packed Shuffle Bytes
-pub inline fn vpshufb_128(table: u8x16, indices: u8x16) u8x16 {
-    return asm volatile ("vpshufb %[indices], %[table], %[ret]"
-        : [ret] "=x" (-> u8x16),
-        : [table] "x" (table),
-          [indices] "x" (indices),
-    );
-}
-
-/// VPSHUFB - Packed Shuffle Bytes
-pub inline fn vpshufb_256(table: u8x32, indices: u8x32) u8x32 {
-    return asm volatile ("vpshufb %[indices], %[table], %[ret]"
-        : [ret] "=x" (-> u8x32),
-        : [table] "x" (table),
-          [indices] "x" (indices),
-    );
-}
-
-/// VPMOVMSKB - Move byte mask to integer
-pub inline fn vpmovmskb_256(v: u8x32) u32 {
-    return asm volatile ("vpmovmskb %[v], %[ret]"
-        : [ret] "=r" (-> u32),
-        : [v] "x" (v),
-    );
-}
-
-/// Prefix XOR using CLMUL
+/// Prefix XOR
 /// Each bit in result = XOR of all bits at positions <= i in input
 pub inline fn prefix_xor(mask: u64) u64 {
     const all_ones = m128i{ 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF };
     const input = m128i{ mask, 0 };
-    const result = pclmulqdq(input, all_ones, 0x00);
+    const result = if (builtin.cpu.arch == .x86_64)
+        x86_64.pclmulqdq(input, all_ones, 0x00)
+    else if (builtin.cpu.arch == .aarch64)
+        aarch64.pmull(input, all_ones)
+    else
+        @compileError("Only x86_64 and aarch64 are supported");
     return result[0];
 }
 
-test "prefix_xor" {
-    const mask: u64 = 0b100001;
-    const result = prefix_xor(mask);
-    try std.testing.expectEqual(@as(u64, 0b011111), result);
-}
+pub const x86_64 = struct {
+    // PCLMULQDQ - Carry-less multiplication
+    pub inline fn pclmulqdq(a: m128i, b: m128i, comptime mask: u64) m128i {
+        const assembly = std.fmt.comptimePrint("pclmulqdq ${d}, %[b], %[a]", .{mask});
+        return asm volatile (assembly
+            : [ret] "=x" (-> m128i),
+            : [a] "0" (a),
+              [b] "x" (b),
+        );
+    }
 
-test "prefix_xor_multiple_strings" {
-    const mask: u64 = 0b100100101;
-    const result = prefix_xor(mask);
-    try std.testing.expectEqual(@as(u64, 0b011100011), result);
+    // VPSHUFB - Packed Shuffle Bytes
+    pub inline fn vpshufb_128(table: u8x16, indices: u8x16) u8x16 {
+        return asm volatile ("vpshufb %[indices], %[table], %[ret]"
+            : [ret] "=x" (-> u8x16),
+            : [table] "x" (table),
+              [indices] "x" (indices),
+        );
+    }
+
+    /// VPSHUFB - Packed Shuffle Bytes
+    pub inline fn vpshufb_256(table: u8x32, indices: u8x32) u8x32 {
+        return asm volatile ("vpshufb %[indices], %[table], %[ret]"
+            : [ret] "=x" (-> u8x32),
+            : [table] "x" (table),
+              [indices] "x" (indices),
+        );
+    }
+
+    test "prefix_xor" {
+        const mask: u64 = 0b100001;
+        const result = prefix_xor(mask);
+        try std.testing.expectEqual(@as(u64, 0b011111), result);
+    }
+
+    test "prefix_xor_multiple_strings" {
+        const mask: u64 = 0b100100101;
+        const result = prefix_xor(mask);
+        try std.testing.expectEqual(@as(u64, 0b011100011), result);
+    }
+};
+
+pub const aarch64 = struct {
+    // CRC32X - crc32 from 64 bit reg
+    pub inline fn crc32x(crc: u32, value: u64) u32 {
+        return asm volatile ("crc32x %[ret:w], %[c:w], %[v:x]"
+            : [ret] "=r" (-> u32),
+            : [c] "r" (crc),
+              [v] "r" (value),
+        );
+    }
+
+    // CRC32X - crc32 from 32 bit reg
+    pub inline fn crc32w(crc: u32, value: u32) u32 {
+        return asm volatile ("crc32w %[ret:w], %[c:w], %[v:w]"
+            : [ret] "=r" (-> u32),
+            : [c] "r" (crc),
+              [v] "r" (value),
+        );
+    }
+
+    // CRC32X - crc32 from 16 bit reg
+    pub inline fn crc32h(crc: u32, value: u16) u32 {
+        return asm volatile ("crc32h %[ret:w], %[c:w], %[v:w]"
+            : [ret] "=r" (-> u32),
+            : [c] "r" (crc),
+              [v] "r" (value),
+        );
+    }
+
+    // CRC32X - crc32 from 8 bit reg
+    pub inline fn crc32b(crc: u32, value: u8) u32 {
+        return asm volatile ("crc32b %[ret:w], %[c:w], %[v:w]"
+            : [ret] "=r" (-> u32),
+            : [c] "r" (crc),
+              [v] "r" (value),
+        );
+    }
+
+
+    // TBL - tabel lookup on 128bit reg
+    pub inline fn tbl_128(table: u8x16, indices: u8x16) u8x16 {
+        return asm volatile ("tbl %[ret].16b, {%[table].16b}, %[indices].16b"
+            : [ret] "=w" (-> u8x16),
+            : [table] "w" (table),
+              [indices] "w" (indices),
+        );
+    }
+
+    // TBL - tabel lookup on 256bit value split into 2 128bit reg
+    pub inline fn tbl_256(table: u8x16, indices: u8x32) u8x32 {
+        const i_low: u8x16 = @as([32]u8, indices)[0..16].*;
+        const i_high: u8x16 = @as([32]u8, indices)[16..32].*;
+
+        var res_low: u8x16 = undefined;
+        var res_high: u8x16 = undefined;
+
+        asm volatile (
+            \\tbl %[res_l].16b, {%[t].16b}, %[i_l].16b
+            \\tbl %[res_h].16b, {%[t].16b}, %[i_h].16b
+            : [res_l] "=&w" (res_low),
+              [res_h] "=&w" (res_high),
+            : [t] "w" (table),
+              [i_l] "w" (i_low),
+              [i_h] "w" (i_high),
+        );
+
+        return std.simd.join(res_low, res_high);
+    }
+
+    // PMULL - Polynomial multiplication over { 0, 1 }
+    pub inline fn pmull(a: m128i, b: m128i) m128i {
+        return asm volatile ("pmull %[ret].1q, %[a].1d, %[b].1d"
+            : [ret] "=w" (-> m128i),
+            : [a] "w" (a),
+              [b] "w" (b),
+        );
+    }
+};
+
+comptime {
+    if (builtin.cpu.arch == .x86_64)
+        _ = x86_64
+    else if (builtin.cpu.arch == .aarch64)
+        _ = aarch64
+    else
+        @compileError("Only x86_64 and aarch64 are supported");
 }
