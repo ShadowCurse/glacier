@@ -11,8 +11,8 @@ pub fn build(b: *std.Build) !void {
     const miniz_mod = create_miniz_module(b, target, optimize);
 
     const imports: []const std.Build.Module.Import = &.{.{ .name = "miniz", .module = miniz_mod }};
-    create_exe(b, target, optimize, &args, "replay", "src/replay.zig", imports);
-    create_exe(b, target, optimize, &args, "print_entries", "src/print_entries.zig", imports);
+    create_exe(b, target, optimize, &args, "replay", "src/bin_replay.zig", imports);
+    create_exe(b, target, optimize, &args, "print_entries", "src/bin_print_entries.zig", imports);
 
     create_exe(b, target, optimize, &args, "gen_vk", "src/gen_vk.zig", &.{});
     create_exe(b, target, optimize, &args, "gen_vk_utils", "src/gen_vk_utils.zig", &.{});
