@@ -127,14 +127,14 @@ fn crc32_simd_x86_64(init_crc: u32, bytes: []align(64) const u8) u32 {
 
     // Parallel fold blocks of 64, if any
     for (chunks_64) |*chunk| {
-        x5 = simd.pclmulqdq(x1, x0, 0x00);
-        x6 = simd.pclmulqdq(x2, x0, 0x00);
-        x7 = simd.pclmulqdq(x3, x0, 0x00);
-        x8 = simd.pclmulqdq(x4, x0, 0x00);
-        x1 = simd.pclmulqdq(x1, x0, 0x11);
-        x2 = simd.pclmulqdq(x2, x0, 0x11);
-        x3 = simd.pclmulqdq(x3, x0, 0x11);
-        x4 = simd.pclmulqdq(x4, x0, 0x11);
+        x5 = simd.x86_64.pclmulqdq(x1, x0, 0x00);
+        x6 = simd.x86_64.pclmulqdq(x2, x0, 0x00);
+        x7 = simd.x86_64.pclmulqdq(x3, x0, 0x00);
+        x8 = simd.x86_64.pclmulqdq(x4, x0, 0x00);
+        x1 = simd.x86_64.pclmulqdq(x1, x0, 0x11);
+        x2 = simd.x86_64.pclmulqdq(x2, x0, 0x11);
+        x3 = simd.x86_64.pclmulqdq(x3, x0, 0x11);
+        x4 = simd.x86_64.pclmulqdq(x4, x0, 0x11);
 
         y5 = chunk[0];
         y6 = chunk[1];
@@ -153,16 +153,16 @@ fn crc32_simd_x86_64(init_crc: u32, bytes: []align(64) const u8) u32 {
 
     // Fold into 128-bits
     x0 = k3k4;
-    x5 = simd.pclmulqdq(x1, x0, 0x00);
-    x1 = simd.pclmulqdq(x1, x0, 0x11);
+    x5 = simd.x86_64.pclmulqdq(x1, x0, 0x00);
+    x1 = simd.x86_64.pclmulqdq(x1, x0, 0x11);
     x1 = x1 ^ x2;
     x1 = x1 ^ x5;
-    x5 = simd.pclmulqdq(x1, x0, 0x00);
-    x1 = simd.pclmulqdq(x1, x0, 0x11);
+    x5 = simd.x86_64.pclmulqdq(x1, x0, 0x00);
+    x1 = simd.x86_64.pclmulqdq(x1, x0, 0x11);
     x1 = x1 ^ x3;
     x1 = x1 ^ x5;
-    x5 = simd.pclmulqdq(x1, x0, 0x00);
-    x1 = simd.pclmulqdq(x1, x0, 0x11);
+    x5 = simd.x86_64.pclmulqdq(x1, x0, 0x00);
+    x1 = simd.x86_64.pclmulqdq(x1, x0, 0x11);
     x1 = x1 ^ x4;
     x1 = x1 ^ x5;
 
@@ -175,29 +175,29 @@ fn crc32_simd_x86_64(init_crc: u32, bytes: []align(64) const u8) u32 {
     // Single fold blocks of 16, if any
     for (chunks_16) |chunk| {
         x2 = chunk;
-        x5 = simd.pclmulqdq(x1, x0, 0x00);
-        x1 = simd.pclmulqdq(x1, x0, 0x11);
+        x5 = simd.x86_64.pclmulqdq(x1, x0, 0x00);
+        x1 = simd.x86_64.pclmulqdq(x1, x0, 0x11);
         x1 = x1 ^ x2;
         x1 = x1 ^ x5;
     }
 
     // Fold 128-bits to 64-bits
-    x2 = simd.pclmulqdq(x1, x0, 0x10);
+    x2 = simd.x86_64.pclmulqdq(x1, x0, 0x10);
     x3 = @bitCast(@Vector(4, u32){ ~@as(u32, 0), @as(u32, 0), ~@as(u32, 0), @as(u32, 0) });
     x1 = simd.shift_right(x1, 8);
     x1 = x1 ^ x2;
     x0 = k5k0;
     x2 = simd.shift_right(x1, 4);
     x1 = x1 & x3;
-    x1 = simd.pclmulqdq(x1, x0, 0x00);
+    x1 = simd.x86_64.pclmulqdq(x1, x0, 0x00);
     x1 = x1 ^ x2;
 
     // Barret reduce to 32-bits
     x0 = poly;
     x2 = x1 & x3;
-    x2 = simd.pclmulqdq(x2, x0, 0x10);
+    x2 = simd.x86_64.pclmulqdq(x2, x0, 0x10);
     x2 = x2 & x3;
-    x2 = simd.pclmulqdq(x2, x0, 0x00);
+    x2 = simd.x86_64.pclmulqdq(x2, x0, 0x00);
     x1 = x1 ^ x2;
 
     const v: [4]u32 = @bitCast(x1);
