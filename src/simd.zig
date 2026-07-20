@@ -48,20 +48,57 @@ pub const x86_64 = struct {
 
     // VPSHUFB - Packed Shuffle Bytes
     pub inline fn vpshufb_128(table: u8x16, indices: u8x16) u8x16 {
-        return asm volatile ("vpshufb %[indices], %[table], %[ret]"
-            : [ret] "=x" (-> u8x16),
-            : [table] "x" (table),
-              [indices] "x" (indices),
-        );
+        const has_avx2 = comptime std.Target.x86.featureSetHas(builtin.cpu.features, .avx2);
+        if (has_avx2) {
+            return asm volatile ("vpshufb %[indices], %[table], %[ret]"
+                : [ret] "=x" (-> u8x16),
+                : [table] "x" (table),
+                  [indices] "x" (indices),
+            );
+        } else {
+            var ret: u8x16 = table;
+            asm volatile ("pshufb %[indices], %[ret]"
+                : [ret] "+x" (ret),
+                : [indices] "x" (indices),
+            );
+            return ret;
+        }
     }
 
     /// VPSHUFB - Packed Shuffle Bytes
     pub inline fn vpshufb_256(table: u8x32, indices: u8x32) u8x32 {
-        return asm volatile ("vpshufb %[indices], %[table], %[ret]"
-            : [ret] "=x" (-> u8x32),
-            : [table] "x" (table),
-              [indices] "x" (indices),
-        );
+        const has_avx2 = comptime std.Target.x86.featureSetHas(builtin.cpu.features, .avx2);
+        if (has_avx2) {
+            return asm volatile ("vpshufb %[indices], %[table], %[ret]"
+                : [ret] "=x" (-> u8x32),
+                : [table] "x" (table),
+                  [indices] "x" (indices),
+            );
+        } else {
+            const table_low: u8x16 = @as([32]u8, table)[0..16].*;
+            const table_high: u8x16 = @as([32]u8, table)[16..32].*;
+
+            const indices_low: u8x16 = @as([32]u8, indices)[0..16].*;
+            const indices_high: u8x16 = @as([32]u8, indices)[16..32].*;
+
+            var res_low: u8x16 = undefined;
+            var res_high: u8x16 = undefined;
+
+            res_low = table_low;
+            res_high = table_high;
+            asm volatile (
+                \\pshufb %[indices_l], %[res_l]
+                \\pshufb %[indices_h], %[res_h]
+                : [res_l] "=&x" (res_low),
+                  [res_h] "=&x" (res_high),
+                : [indices_l] "x" (indices_low),
+                  [indices_h] "x" (indices_high),
+                  [table_l_tied] "0" (res_low),
+                  [table_h_tied] "1" (res_high),
+            );
+
+            return std.simd.join(res_low, res_high);
+        }
     }
 
     test "prefix_xor" {
@@ -113,7 +150,6 @@ pub const aarch64 = struct {
               [v] "r" (value),
         );
     }
-
 
     // TBL - tabel lookup on 128bit reg
     pub inline fn tbl_128(table: u8x16, indices: u8x16) u8x16 {
