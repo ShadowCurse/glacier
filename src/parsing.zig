@@ -2935,10 +2935,8 @@ pub fn parse_vk_application_info(
     const prof_point = MEASUREMENTS.start(@src());
     defer MEASUREMENTS.end(prof_point);
 
-    log.info(@src(), "scanner: {any}", .{context.scanner});
     item.* = .{};
     while (try scanner_object_next_field(context.scanner)) |s| {
-        log.info(@src(), "token: {s}", .{s});
         if (std.mem.eql(u8, s, "applicationName")) {
             const name_str = try scanner_next_string(context.scanner);
             const name = try context.alloc.dupeZ(u8, name_str);
