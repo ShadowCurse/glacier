@@ -240,6 +240,8 @@ pub fn print_VkDeviceQueueCreateInfo(name: []const u8, value: *const vk.VkDevice
     log.output("flags: VkDeviceQueueCreateFlags = {{", .{});
     if (@field(value.flags, "VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT"))
         log.output(".{s},", .{"VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT"});
+    if (@field(value.flags, "VK_DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR"))
+        log.output(".{s},", .{"VK_DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR"});
     log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("queueFamilyIndex: u32 = {d},\n", .{value.queueFamilyIndex});
@@ -934,6 +936,10 @@ pub fn print_VkBufferUsageFlags2CreateInfo(name: []const u8, value: *const vk.Vk
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_TRANSFER_SRC_BIT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_TRANSFER_SRC_BIT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_TRANSFER_SRC_BIT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_TRANSFER_SRC_BIT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_TRANSFER_SRC_BIT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_TRANSFER_DST_BIT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_TRANSFER_DST_BIT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_TRANSFER_DST_BIT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_TRANSFER_DST_BIT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_TRANSFER_DST_BIT"))
@@ -942,6 +948,10 @@ pub fn print_VkBufferUsageFlags2CreateInfo(name: []const u8, value: *const vk.Vk
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT"))
@@ -950,6 +960,10 @@ pub fn print_VkBufferUsageFlags2CreateInfo(name: []const u8, value: *const vk.Vk
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_UNIFORM_BUFFER_BIT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_UNIFORM_BUFFER_BIT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_UNIFORM_BUFFER_BIT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_UNIFORM_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_UNIFORM_BUFFER_BIT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_STORAGE_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_STORAGE_BUFFER_BIT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_STORAGE_BUFFER_BIT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_STORAGE_BUFFER_BIT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_STORAGE_BUFFER_BIT"))
@@ -958,54 +972,94 @@ pub fn print_VkBufferUsageFlags2CreateInfo(name: []const u8, value: *const vk.Vk
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_INDEX_BUFFER_BIT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_INDEX_BUFFER_BIT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_INDEX_BUFFER_BIT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_INDEX_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_INDEX_BUFFER_BIT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_VERTEX_BUFFER_BIT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_VERTEX_BUFFER_BIT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_VERTEX_BUFFER_BIT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_VERTEX_BUFFER_BIT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_VERTEX_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_VERTEX_BUFFER_BIT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_INDIRECT_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_INDIRECT_BUFFER_BIT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_INDIRECT_BUFFER_BIT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_INDIRECT_BUFFER_BIT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_INDIRECT_BUFFER_BIT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_INDIRECT_BUFFER_BIT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_VIDEO_DECODE_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_VIDEO_DECODE_DST_BIT_KHR"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_VIDEO_DECODE_DST_BIT_KHR"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_VIDEO_DECODE_DST_BIT_KHR"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_TILE_MEMORY_BIT_QCOM"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_TILE_MEMORY_BIT_QCOM"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_2_DESCRIPTOR_HEAP_BIT_EXT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_2_DESCRIPTOR_HEAP_BIT_EXT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_DATA_GRAPH_FOREIGN_DESCRIPTOR_BIT_ARM"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_2_DATA_GRAPH_FOREIGN_DESCRIPTOR_BIT_ARM"});
     if (@field(value.usage, "VK_BUFFER_USAGE_2_PREPROCESS_BUFFER_BIT_EXT"))
@@ -1108,6 +1162,8 @@ pub fn print_VkBufferCreateInfo(name: []const u8, value: *const vk.VkBufferCreat
         log.output(".{s},", .{"VK_BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_TILE_MEMORY_BIT_QCOM"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_TILE_MEMORY_BIT_QCOM"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_DESCRIPTOR_HEAP_BIT_EXT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_DESCRIPTOR_HEAP_BIT_EXT"});
     log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("sharingMode: VkSharingMode = {t},\n", .{value.sharingMode});
@@ -1747,14 +1803,18 @@ pub fn print_VkImageCreateInfo(name: []const u8, value: *const vk.VkImageCreateI
         log.output(".{s},", .{"VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT"});
     if (@field(value.flags, "VK_IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT"))
         log.output(".{s},", .{"VK_IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT"});
-    if (@field(value.flags, "VK_IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"))
-        log.output(".{s},", .{"VK_IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT"});
     if (@field(value.flags, "VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT"))
         log.output(".{s},", .{"VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT"});
     if (@field(value.flags, "VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT"))
         log.output(".{s},", .{"VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT"});
     if (@field(value.flags, "VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR"))
         log.output(".{s},", .{"VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR"});
     log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("imageType: VkImageType = {t},\n", .{value.imageType});
@@ -1854,6 +1914,120 @@ pub fn print_VkImageCreateInfo(name: []const u8, value: *const vk.VkImageCreateI
     }
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("initialLayout: VkImageLayout = {t},\n", .{value.initialLayout});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkImageCreateFlags2CreateInfoKHR(name: []const u8, value: *const vk.VkImageCreateFlags2CreateInfoKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkImageCreateFlags2CreateInfoKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("flags: VkImageCreateFlags2KHR = {{", .{});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_SPARSE_BINDING_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_SPARSE_BINDING_BIT_KHR"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_SPARSE_RESIDENCY_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_SPARSE_RESIDENCY_BIT_KHR"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_SPARSE_ALIASED_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_SPARSE_ALIASED_BIT_KHR"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_MUTABLE_FORMAT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_MUTABLE_FORMAT_BIT_KHR"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_CUBE_COMPATIBLE_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_CUBE_COMPATIBLE_BIT_KHR"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_2D_ARRAY_COMPATIBLE_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_2D_ARRAY_COMPATIBLE_BIT_KHR"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_EXTENDED_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_EXTENDED_USAGE_BIT_KHR"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_DISJOINT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_DISJOINT_BIT_KHR"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_ALIAS_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_ALIAS_BIT_KHR"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_PROTECTED_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_PROTECTED_BIT_KHR"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_CORNER_SAMPLED_BIT_NV"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_CORNER_SAMPLED_BIT_NV"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_SUBSAMPLED_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_SUBSAMPLED_BIT_EXT"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_2D_VIEW_COMPATIBLE_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_2D_VIEW_COMPATIBLE_BIT_EXT"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_VIDEO_PROFILE_INDEPENDENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_VIDEO_PROFILE_INDEPENDENT_BIT_KHR"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_2_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_2_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkImageUsageFlags2CreateInfoKHR(name: []const u8, value: *const vk.VkImageUsageFlags2CreateInfoKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkImageUsageFlags2CreateInfoKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("usage: VkImageUsageFlags2KHR = {{", .{});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_TRANSFER_SRC_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TRANSFER_SRC_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_TRANSFER_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TRANSFER_DST_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_SAMPLED_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_SAMPLED_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_STORAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_STORAGE_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_COLOR_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_COLOR_ATTACHMENT_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_TRANSIENT_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TRANSIENT_ATTACHMENT_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_INPUT_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_INPUT_ATTACHMENT_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_VIDEO_DECODE_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_DECODE_DST_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_VIDEO_DECODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_DECODE_DPB_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_DPB_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_INVOCATION_MASK_BIT_HUAWEI"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_INVOCATION_MASK_BIT_HUAWEI"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_SAMPLE_WEIGHT_BIT_QCOM"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_SAMPLE_WEIGHT_BIT_QCOM"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_SAMPLE_BLOCK_MATCH_BIT_QCOM"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_SAMPLE_BLOCK_MATCH_BIT_QCOM"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_HOST_TRANSFER_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_HOST_TRANSFER_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_TENSOR_ALIASING_BIT_ARM"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TENSOR_ALIASING_BIT_ARM"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_TILE_MEMORY_BIT_QCOM"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TILE_MEMORY_BIT_QCOM"});
+    log.output("}},\n", .{});
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
@@ -2591,8 +2765,8 @@ pub fn print_VkComputePipelineCreateInfo(name: []const u8, value: *const vk.VkCo
         log.output(".{s},", .{"VK_PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"});
-    if (@field(value.flags, "VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"))
-        log.output(".{s},", .{"VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
@@ -2645,6 +2819,10 @@ pub fn print_VkPipelineCreateFlags2CreateInfo(name: []const u8, value: *const vk
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT"))
@@ -2653,60 +2831,110 @@ pub fn print_VkPipelineCreateFlags2CreateInfo(name: []const u8, value: *const vk
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DERIVATIVE_BIT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_DERIVATIVE_BIT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DERIVATIVE_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DERIVATIVE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DERIVATIVE_BIT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DISPATCH_BASE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISPATCH_BASE_BIT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_DISPATCH_BASE_BIT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISPATCH_BASE_BIT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_DISPATCH_BASE_BIT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISPATCH_BASE_BIT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_DEFER_COMPILE_BIT_NV"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DEFER_COMPILE_BIT_NV"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DEFER_COMPILE_BIT_NV"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DEFER_COMPILE_BIT_NV"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_CAPTURE_STATISTICS_BIT_KHR"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_CAPTURE_STATISTICS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_CAPTURE_STATISTICS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_CAPTURE_STATISTICS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_LINK_TIME_OPTIMIZATION_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_LINK_TIME_OPTIMIZATION_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_LINK_TIME_OPTIMIZATION_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_LINK_TIME_OPTIMIZATION_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_LIBRARY_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_LIBRARY_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_LIBRARY_BIT_KHR"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_LIBRARY_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_AABBS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_AABBS_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_AABBS_BIT_KHR"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_AABBS_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_NV"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_NV"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_NV"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_NV"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_ALLOW_MOTION_BIT_NV"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_ALLOW_MOTION_BIT_NV"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_ALLOW_MOTION_BIT_NV"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_ALLOW_MOTION_BIT_NV"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"});
-    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"))
-        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_NO_PROTECTED_ACCESS_BIT"))
@@ -2715,6 +2943,10 @@ pub fn print_VkPipelineCreateFlags2CreateInfo(name: []const u8, value: *const vk
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_NO_PROTECTED_ACCESS_BIT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DESCRIPTOR_BUFFER_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DESCRIPTOR_BUFFER_BIT_EXT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_DESCRIPTOR_BUFFER_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DESCRIPTOR_BUFFER_BIT_EXT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_PROTECTED_ACCESS_ONLY_BIT"))
@@ -2729,14 +2961,24 @@ pub fn print_VkPipelineCreateFlags2CreateInfo(name: []const u8, value: *const vk
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_ALLOW_SPHERES_AND_LINEAR_SWEPT_SPHERES_BIT_NV"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_ENABLE_LEGACY_DITHERING_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_ENABLE_LEGACY_DITHERING_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_2_64_BIT_INDEXING_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_2_64_BIT_INDEXING_BIT_EXT"});
     log.output("}},\n", .{});
@@ -3144,8 +3386,8 @@ pub fn print_VkGraphicsPipelineCreateInfo(name: []const u8, value: *const vk.VkG
         log.output(".{s},", .{"VK_PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"});
-    if (@field(value.flags, "VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"))
-        log.output(".{s},", .{"VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
@@ -3554,6 +3796,10 @@ pub fn print_VkPipelineLayoutCreateInfo(name: []const u8, value: *const vk.VkPip
     log.output("flags: VkPipelineLayoutCreateFlags = {{", .{});
     if (@field(value.flags, "VK_PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_LAYOUT_CREATE_NO_TASK_SHADER_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_LAYOUT_CREATE_NO_TASK_SHADER_BIT_KHR"});
     log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("setLayoutCount: u32 = {d},\n", .{value.setLayoutCount});
@@ -5343,6 +5589,31 @@ pub fn print_VkWaylandSurfaceCreateInfoKHR(name: []const u8, value: *const vk.Vk
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkUbmSurfaceCreateInfoSEC(name: []const u8, value: *const vk.VkUbmSurfaceCreateInfoSEC, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkUbmSurfaceCreateInfoSEC = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("flags: VkUbmSurfaceCreateFlagsSEC = {{", .{});
+    log.output("}},\n", .{});
+    if (value.device) |v| {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("device: *ubm_device = {*},\n", .{v});
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("device: *ubm_device = null,\n", .{});
+    }
+    if (value.surface) |v| {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("surface: *ubm_surface = {*},\n", .{v});
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("surface: *ubm_surface = null,\n", .{});
+    }
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkWin32SurfaceCreateInfoKHR(name: []const u8, value: *const vk.VkWin32SurfaceCreateInfoKHR, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkWin32SurfaceCreateInfoKHR = .{{\n", .{ name });
@@ -5493,6 +5764,8 @@ pub fn print_VkSwapchainCreateInfoKHR(name: []const u8, value: *const vk.VkSwapc
         log.output(".{s},", .{"VK_SWAPCHAIN_CREATE_PRESENT_ID_2_BIT_KHR"});
     if (@field(value.flags, "VK_SWAPCHAIN_CREATE_PRESENT_WAIT_2_BIT_KHR"))
         log.output(".{s},", .{"VK_SWAPCHAIN_CREATE_PRESENT_WAIT_2_BIT_KHR"});
+    if (@field(value.flags, "VK_SWAPCHAIN_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT"))
+        log.output(".{s},", .{"VK_SWAPCHAIN_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT"});
     if (@field(value.flags, "VK_SWAPCHAIN_CREATE_PRESENT_TIMING_BIT_EXT"))
         log.output(".{s},", .{"VK_SWAPCHAIN_CREATE_PRESENT_TIMING_BIT_EXT"});
     log.output("}},\n", .{});
@@ -6237,6 +6510,42 @@ pub fn print_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV(name: []const u8,
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkPushConstantBankInfoNV(name: []const u8, value: *const vk.VkPushConstantBankInfoNV, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPushConstantBankInfoNV = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("bank: u32 = {d},\n", .{value.bank});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDevicePushConstantBankFeaturesNV(name: []const u8, value: *const vk.VkPhysicalDevicePushConstantBankFeaturesNV, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDevicePushConstantBankFeaturesNV = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("pushConstantBank: u32 = {d},\n", .{value.pushConstantBank});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDevicePushConstantBankPropertiesNV(name: []const u8, value: *const vk.VkPhysicalDevicePushConstantBankPropertiesNV, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDevicePushConstantBankPropertiesNV = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxGraphicsPushConstantBanks: u32 = {d},\n", .{value.maxGraphicsPushConstantBanks});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxComputePushConstantBanks: u32 = {d},\n", .{value.maxComputePushConstantBanks});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxGraphicsPushDataBanks: u32 = {d},\n", .{value.maxGraphicsPushDataBanks});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxComputePushDataBanks: u32 = {d},\n", .{value.maxComputePushDataBanks});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV(name: []const u8, value: *const vk.VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV = .{{\n", .{ name });
@@ -6562,14 +6871,10 @@ pub fn print_VkClusterAccelerationStructureInputInfoNV(name: []const u8, value: 
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV"))
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV"});
-    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT"))
-        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT"});
-    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT"))
-        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT"});
-    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT"))
-        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT"});
-    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT"))
-        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_KHR"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT"))
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT"))
@@ -6578,6 +6883,8 @@ pub fn print_VkClusterAccelerationStructureInputInfoNV(name: []const u8, value: 
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV"))
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_MICROMAP_LOSSY_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_MICROMAP_LOSSY_BIT_KHR"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR"))
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR"))
@@ -7110,14 +7417,18 @@ pub fn print_VkPhysicalDeviceImageFormatInfo2(name: []const u8, value: *const vk
         log.output(".{s},", .{"VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT"});
     if (@field(value.flags, "VK_IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT"))
         log.output(".{s},", .{"VK_IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT"});
-    if (@field(value.flags, "VK_IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"))
-        log.output(".{s},", .{"VK_IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT"});
     if (@field(value.flags, "VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT"))
         log.output(".{s},", .{"VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT"});
     if (@field(value.flags, "VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT"))
         log.output(".{s},", .{"VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT"});
     if (@field(value.flags, "VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR"))
         log.output(".{s},", .{"VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR"});
     log.output("}},\n", .{});
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
@@ -7621,6 +7932,8 @@ pub fn print_VkPhysicalDeviceExternalBufferInfo(name: []const u8, value: *const 
         log.output(".{s},", .{"VK_BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_TILE_MEMORY_BIT_QCOM"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_TILE_MEMORY_BIT_QCOM"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_DESCRIPTOR_HEAP_BIT_EXT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_DESCRIPTOR_HEAP_BIT_EXT"});
     log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("handleType: VkExternalMemoryHandleTypeFlags = {{", .{});
@@ -10979,6 +11292,96 @@ pub fn print_VkSharedPresentSurfaceCapabilitiesKHR(name: []const u8, value: *con
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkSwapchainFlagsSurfaceCapabilitiesEXT(name: []const u8, value: *const vk.VkSwapchainFlagsSurfaceCapabilitiesEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkSwapchainFlagsSurfaceCapabilitiesEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("swapchainSupportedFlags: VkSwapchainCreateFlagsKHR = {{", .{});
+    if (@field(value.swapchainSupportedFlags, "VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR"))
+        log.output(".{s},", .{"VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR"});
+    if (@field(value.swapchainSupportedFlags, "VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR"))
+        log.output(".{s},", .{"VK_SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR"});
+    if (@field(value.swapchainSupportedFlags, "VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR"))
+        log.output(".{s},", .{"VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR"});
+    if (@field(value.swapchainSupportedFlags, "VK_SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR"))
+        log.output(".{s},", .{"VK_SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR"});
+    if (@field(value.swapchainSupportedFlags, "VK_SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_KHR"))
+        log.output(".{s},", .{"VK_SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_KHR"});
+    if (@field(value.swapchainSupportedFlags, "VK_SWAPCHAIN_CREATE_PRESENT_ID_2_BIT_KHR"))
+        log.output(".{s},", .{"VK_SWAPCHAIN_CREATE_PRESENT_ID_2_BIT_KHR"});
+    if (@field(value.swapchainSupportedFlags, "VK_SWAPCHAIN_CREATE_PRESENT_WAIT_2_BIT_KHR"))
+        log.output(".{s},", .{"VK_SWAPCHAIN_CREATE_PRESENT_WAIT_2_BIT_KHR"});
+    if (@field(value.swapchainSupportedFlags, "VK_SWAPCHAIN_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT"))
+        log.output(".{s},", .{"VK_SWAPCHAIN_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT"});
+    if (@field(value.swapchainSupportedFlags, "VK_SWAPCHAIN_CREATE_PRESENT_TIMING_BIT_EXT"))
+        log.output(".{s},", .{"VK_SWAPCHAIN_CREATE_PRESENT_TIMING_BIT_EXT"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkSharedPresentSurfaceCapabilities2KHR(name: []const u8, value: *const vk.VkSharedPresentSurfaceCapabilities2KHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkSharedPresentSurfaceCapabilities2KHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sharedPresentSupportedUsageFlags: VkImageUsageFlags2KHR = {{", .{});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_TRANSFER_SRC_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TRANSFER_SRC_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_TRANSFER_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TRANSFER_DST_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_SAMPLED_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_SAMPLED_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_STORAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_STORAGE_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_COLOR_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_COLOR_ATTACHMENT_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_TRANSIENT_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TRANSIENT_ATTACHMENT_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_INPUT_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_INPUT_ATTACHMENT_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_VIDEO_DECODE_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_DECODE_DST_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_VIDEO_DECODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_DECODE_DPB_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_DPB_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_INVOCATION_MASK_BIT_HUAWEI"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_INVOCATION_MASK_BIT_HUAWEI"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_SAMPLE_WEIGHT_BIT_QCOM"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_SAMPLE_WEIGHT_BIT_QCOM"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_SAMPLE_BLOCK_MATCH_BIT_QCOM"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_SAMPLE_BLOCK_MATCH_BIT_QCOM"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_HOST_TRANSFER_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_HOST_TRANSFER_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_TENSOR_ALIASING_BIT_ARM"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TENSOR_ALIASING_BIT_ARM"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"});
+    if (@field(value.sharedPresentSupportedUsageFlags, "VK_IMAGE_USAGE_2_TILE_MEMORY_BIT_QCOM"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TILE_MEMORY_BIT_QCOM"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkPhysicalDevice16BitStorageFeatures(name: []const u8, value: *const vk.VkPhysicalDevice16BitStorageFeatures, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkPhysicalDevice16BitStorageFeatures = .{{\n", .{ name });
@@ -11067,8 +11470,8 @@ pub fn print_VkPhysicalDeviceSubgroupProperties(name: []const u8, value: *const 
         log.output(".{s},", .{"VK_SUBGROUP_FEATURE_CLUSTERED_BIT"});
     if (@field(value.supportedOperations, "VK_SUBGROUP_FEATURE_QUAD_BIT"))
         log.output(".{s},", .{"VK_SUBGROUP_FEATURE_QUAD_BIT"});
-    if (@field(value.supportedOperations, "VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV"))
-        log.output(".{s},", .{"VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV"});
+    if (@field(value.supportedOperations, "VK_SUBGROUP_FEATURE_PARTITIONED_BIT_EXT"))
+        log.output(".{s},", .{"VK_SUBGROUP_FEATURE_PARTITIONED_BIT_EXT"});
     if (@field(value.supportedOperations, "VK_SUBGROUP_FEATURE_ROTATE_BIT"))
         log.output(".{s},", .{"VK_SUBGROUP_FEATURE_ROTATE_BIT"});
     if (@field(value.supportedOperations, "VK_SUBGROUP_FEATURE_ROTATE_BIT"))
@@ -11297,6 +11700,67 @@ pub fn print_VkImageViewUsageCreateInfo(name: []const u8, value: *const vk.VkIma
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkImageViewUsage2CreateInfoKHR(name: []const u8, value: *const vk.VkImageViewUsage2CreateInfoKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkImageViewUsage2CreateInfoKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("usage: VkImageUsageFlags2KHR = {{", .{});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_TRANSFER_SRC_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TRANSFER_SRC_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_TRANSFER_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TRANSFER_DST_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_SAMPLED_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_SAMPLED_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_STORAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_STORAGE_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_COLOR_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_COLOR_ATTACHMENT_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_TRANSIENT_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TRANSIENT_ATTACHMENT_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_INPUT_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_INPUT_ATTACHMENT_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_VIDEO_DECODE_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_DECODE_DST_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_VIDEO_DECODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_DECODE_DPB_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_DPB_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_INVOCATION_MASK_BIT_HUAWEI"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_INVOCATION_MASK_BIT_HUAWEI"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_SAMPLE_WEIGHT_BIT_QCOM"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_SAMPLE_WEIGHT_BIT_QCOM"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_SAMPLE_BLOCK_MATCH_BIT_QCOM"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_SAMPLE_BLOCK_MATCH_BIT_QCOM"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_HOST_TRANSFER_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_HOST_TRANSFER_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_TENSOR_ALIASING_BIT_ARM"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TENSOR_ALIASING_BIT_ARM"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"});
+    if (@field(value.usage, "VK_IMAGE_USAGE_2_TILE_MEMORY_BIT_QCOM"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TILE_MEMORY_BIT_QCOM"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkImageViewSlicedCreateInfoEXT(name: []const u8, value: *const vk.VkImageViewSlicedCreateInfoEXT, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkImageViewSlicedCreateInfoEXT = .{{\n", .{ name });
@@ -11516,6 +11980,8 @@ pub fn print_VkDeviceQueueInfo2(name: []const u8, value: *const vk.VkDeviceQueue
     log.output("flags: VkDeviceQueueCreateFlags = {{", .{});
     if (@field(value.flags, "VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT"))
         log.output(".{s},", .{"VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT"});
+    if (@field(value.flags, "VK_DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR"))
+        log.output(".{s},", .{"VK_DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR"});
     log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("queueFamilyIndex: u32 = {d},\n", .{value.queueFamilyIndex});
@@ -12086,6 +12552,16 @@ pub fn print_VkPhysicalDeviceMaintenance9PropertiesKHR(name: []const u8, value: 
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkPhysicalDeviceMaintenance11FeaturesKHR(name: []const u8, value: *const vk.VkPhysicalDeviceMaintenance11FeaturesKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceMaintenance11FeaturesKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maintenance11: u32 = {d},\n", .{value.maintenance11});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkPhysicalDeviceMaintenance10PropertiesKHR(name: []const u8, value: *const vk.VkPhysicalDeviceMaintenance10PropertiesKHR, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkPhysicalDeviceMaintenance10PropertiesKHR = .{{\n", .{ name });
@@ -12117,6 +12593,15 @@ pub fn print_VkQueueFamilyOwnershipTransferPropertiesKHR(name: []const u8, value
     log.output("sType: VkStructureType = {t},\n", .{value.sType});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("optimalImageTransferToQueueFamilies: u32 = {d},\n", .{value.optimalImageTransferToQueueFamilies});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkQueueFamilyOptimalImageTransferGranularityPropertiesKHR(name: []const u8, value: *const vk.VkQueueFamilyOptimalImageTransferGranularityPropertiesKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkQueueFamilyOptimalImageTransferGranularityPropertiesKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    print_VkExtent3D("optimalImageTransferGranularity", &value.optimalImageTransferGranularity, offset + 1);
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
@@ -12306,6 +12791,16 @@ pub fn print_VkShaderStatisticsInfoAMD(name: []const u8, value: *const vk.VkShad
     log.output("numAvailableSgprs: u32 = {d},\n", .{value.numAvailableSgprs});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("computeWorkGroupSize: [3]u32 = {any},\n", .{value.computeWorkGroupSize});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM(name: []const u8, value: *const vk.VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("elapsedTimerQuery: u32 = {d},\n", .{value.elapsedTimerQuery});
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
@@ -14790,8 +15285,8 @@ pub fn print_VkRayTracingPipelineCreateInfoNV(name: []const u8, value: *const vk
         log.output(".{s},", .{"VK_PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"});
-    if (@field(value.flags, "VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"))
-        log.output(".{s},", .{"VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
@@ -14911,8 +15406,8 @@ pub fn print_VkRayTracingPipelineCreateInfoKHR(name: []const u8, value: *const v
         log.output(".{s},", .{"VK_PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"});
-    if (@field(value.flags, "VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"))
-        log.output(".{s},", .{"VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
@@ -15062,6 +15557,51 @@ pub fn print_VkAccelerationStructureInfoNV(name: []const u8, value: *const vk.Vk
     log.output("sType: VkStructureType = {t},\n", .{value.sType});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("type: VkAccelerationStructureTypeKHR = {t},\n", .{value.type});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("flags: VkBuildAccelerationStructureFlagsKHR = {{", .{});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_MICROMAP_LOSSY_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_MICROMAP_LOSSY_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_CLUSTER_OPACITY_MICROMAPS_BIT_NV"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_CLUSTER_OPACITY_MICROMAPS_BIT_NV"});
+    log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("instanceCount: u32 = {d},\n", .{value.instanceCount});
     for (0..offset + 1) |_| log.output("    ", .{});
@@ -15599,6 +16139,67 @@ pub fn print_VkImageStencilUsageCreateInfo(name: []const u8, value: *const vk.Vk
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkImageStencilUsage2CreateInfoKHR(name: []const u8, value: *const vk.VkImageStencilUsage2CreateInfoKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkImageStencilUsage2CreateInfoKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("stencilUsage: VkImageUsageFlags2KHR = {{", .{});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_TRANSFER_SRC_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TRANSFER_SRC_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_TRANSFER_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TRANSFER_DST_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_SAMPLED_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_SAMPLED_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_STORAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_STORAGE_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_COLOR_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_COLOR_ATTACHMENT_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_TRANSIENT_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TRANSIENT_ATTACHMENT_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_INPUT_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_INPUT_ATTACHMENT_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_VIDEO_DECODE_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_DECODE_DST_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_VIDEO_DECODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_DECODE_DPB_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_DPB_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_INVOCATION_MASK_BIT_HUAWEI"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_INVOCATION_MASK_BIT_HUAWEI"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_SAMPLE_WEIGHT_BIT_QCOM"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_SAMPLE_WEIGHT_BIT_QCOM"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_SAMPLE_BLOCK_MATCH_BIT_QCOM"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_SAMPLE_BLOCK_MATCH_BIT_QCOM"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_HOST_TRANSFER_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_HOST_TRANSFER_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_TENSOR_ALIASING_BIT_ARM"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TENSOR_ALIASING_BIT_ARM"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"});
+    if (@field(value.stencilUsage, "VK_IMAGE_USAGE_2_TILE_MEMORY_BIT_QCOM"))
+        log.output(".{s},", .{"VK_IMAGE_USAGE_2_TILE_MEMORY_BIT_QCOM"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkDeviceMemoryOverallocationCreateInfoAMD(name: []const u8, value: *const vk.VkDeviceMemoryOverallocationCreateInfoAMD, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkDeviceMemoryOverallocationCreateInfoAMD = .{{\n", .{ name });
@@ -15961,14 +16562,18 @@ pub fn print_VkFramebufferAttachmentImageInfo(name: []const u8, value: *const vk
         log.output(".{s},", .{"VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT"});
     if (@field(value.flags, "VK_IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT"))
         log.output(".{s},", .{"VK_IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT"});
-    if (@field(value.flags, "VK_IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"))
-        log.output(".{s},", .{"VK_IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT"});
     if (@field(value.flags, "VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT"))
         log.output(".{s},", .{"VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT"});
     if (@field(value.flags, "VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT"))
         log.output(".{s},", .{"VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT"});
     if (@field(value.flags, "VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR"))
         log.output(".{s},", .{"VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR"});
+    if (@field(value.flags, "VK_IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR"});
     log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("usage: VkImageUsageFlags = {{", .{});
@@ -17205,8 +17810,8 @@ pub fn print_VkPhysicalDeviceVulkan11Properties(name: []const u8, value: *const 
         log.output(".{s},", .{"VK_SUBGROUP_FEATURE_CLUSTERED_BIT"});
     if (@field(value.subgroupSupportedOperations, "VK_SUBGROUP_FEATURE_QUAD_BIT"))
         log.output(".{s},", .{"VK_SUBGROUP_FEATURE_QUAD_BIT"});
-    if (@field(value.subgroupSupportedOperations, "VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV"))
-        log.output(".{s},", .{"VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV"});
+    if (@field(value.subgroupSupportedOperations, "VK_SUBGROUP_FEATURE_PARTITIONED_BIT_EXT"))
+        log.output(".{s},", .{"VK_SUBGROUP_FEATURE_PARTITIONED_BIT_EXT"});
     if (@field(value.subgroupSupportedOperations, "VK_SUBGROUP_FEATURE_ROTATE_BIT"))
         log.output(".{s},", .{"VK_SUBGROUP_FEATURE_ROTATE_BIT"});
     if (@field(value.subgroupSupportedOperations, "VK_SUBGROUP_FEATURE_ROTATE_BIT"))
@@ -17831,6 +18436,301 @@ pub fn print_VkPhysicalDeviceCoherentMemoryFeaturesAMD(name: []const u8, value: 
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkGpaPerfBlockPropertiesAMD(name: []const u8, value: *const vk.VkGpaPerfBlockPropertiesAMD, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkGpaPerfBlockPropertiesAMD = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("blockType: VkGpaPerfBlockAMD = {t},\n", .{value.blockType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("flags: VkGpaPerfBlockPropertiesFlagsAMD = {{", .{});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("instanceCount: u32 = {d},\n", .{value.instanceCount});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxEventID: u32 = {d},\n", .{value.maxEventID});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxGlobalOnlyCounters: u32 = {d},\n", .{value.maxGlobalOnlyCounters});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxGlobalSharedCounters: u32 = {d},\n", .{value.maxGlobalSharedCounters});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxStreamingCounters: u32 = {d},\n", .{value.maxStreamingCounters});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceGpaFeaturesAMD(name: []const u8, value: *const vk.VkPhysicalDeviceGpaFeaturesAMD, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceGpaFeaturesAMD = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("perfCounters: u32 = {d},\n", .{value.perfCounters});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("streamingPerfCounters: u32 = {d},\n", .{value.streamingPerfCounters});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sqThreadTracing: u32 = {d},\n", .{value.sqThreadTracing});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("clockModes: u32 = {d},\n", .{value.clockModes});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceGpaPropertiesAMD(name: []const u8, value: *const vk.VkPhysicalDeviceGpaPropertiesAMD, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceGpaPropertiesAMD = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("flags: VkPhysicalDeviceGpaPropertiesFlagsAMD = {{", .{});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxSqttSeBufferSize: u64 = {d},\n", .{value.maxSqttSeBufferSize});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("shaderEngineCount: u32 = {d},\n", .{value.shaderEngineCount});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("perfBlockCount: u32 = {d},\n", .{value.perfBlockCount});
+    if (value.pPerfBlocks) |v| {
+        for (v[0..value.perfBlockCount]) |*vv| {
+            print_VkGpaPerfBlockPropertiesAMD("pPerfBlocks", vv, offset + 1);
+        }
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pPerfBlocks: [*]VkGpaPerfBlockPropertiesAMD = null,\n", .{});
+    }
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceGpaProperties2AMD(name: []const u8, value: *const vk.VkPhysicalDeviceGpaProperties2AMD, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceGpaProperties2AMD = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("revisionId: u32 = {d},\n", .{value.revisionId});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkGpaPerfCounterAMD(name: []const u8, value: *const vk.VkGpaPerfCounterAMD, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkGpaPerfCounterAMD = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("blockType: VkGpaPerfBlockAMD = {t},\n", .{value.blockType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("blockInstance: u32 = {d},\n", .{value.blockInstance});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("eventID: u32 = {d},\n", .{value.eventID});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkGpaSampleBeginInfoAMD(name: []const u8, value: *const vk.VkGpaSampleBeginInfoAMD, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkGpaSampleBeginInfoAMD = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sampleType: VkGpaSampleTypeAMD = {t},\n", .{value.sampleType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sampleInternalOperations: u32 = {d},\n", .{value.sampleInternalOperations});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("cacheFlushOnCounterCollection: u32 = {d},\n", .{value.cacheFlushOnCounterCollection});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sqShaderMaskEnable: u32 = {d},\n", .{value.sqShaderMaskEnable});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sqShaderMask: VkGpaSqShaderStageFlagsAMD = {{", .{});
+    if (@field(value.sqShaderMask, "VK_GPA_SQ_SHADER_STAGE_PS_BIT_AMD"))
+        log.output(".{s},", .{"VK_GPA_SQ_SHADER_STAGE_PS_BIT_AMD"});
+    if (@field(value.sqShaderMask, "VK_GPA_SQ_SHADER_STAGE_VS_BIT_AMD"))
+        log.output(".{s},", .{"VK_GPA_SQ_SHADER_STAGE_VS_BIT_AMD"});
+    if (@field(value.sqShaderMask, "VK_GPA_SQ_SHADER_STAGE_GS_BIT_AMD"))
+        log.output(".{s},", .{"VK_GPA_SQ_SHADER_STAGE_GS_BIT_AMD"});
+    if (@field(value.sqShaderMask, "VK_GPA_SQ_SHADER_STAGE_ES_BIT_AMD"))
+        log.output(".{s},", .{"VK_GPA_SQ_SHADER_STAGE_ES_BIT_AMD"});
+    if (@field(value.sqShaderMask, "VK_GPA_SQ_SHADER_STAGE_HS_BIT_AMD"))
+        log.output(".{s},", .{"VK_GPA_SQ_SHADER_STAGE_HS_BIT_AMD"});
+    if (@field(value.sqShaderMask, "VK_GPA_SQ_SHADER_STAGE_LS_BIT_AMD"))
+        log.output(".{s},", .{"VK_GPA_SQ_SHADER_STAGE_LS_BIT_AMD"});
+    if (@field(value.sqShaderMask, "VK_GPA_SQ_SHADER_STAGE_CS_BIT_AMD"))
+        log.output(".{s},", .{"VK_GPA_SQ_SHADER_STAGE_CS_BIT_AMD"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("perfCounterCount: u32 = {d},\n", .{value.perfCounterCount});
+    if (value.pPerfCounters) |v| {
+        for (v[0..value.perfCounterCount]) |*vv| {
+            print_VkGpaPerfCounterAMD("pPerfCounters", vv, offset + 1);
+        }
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pPerfCounters: [*]const VkGpaPerfCounterAMD = null,\n", .{});
+    }
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("streamingPerfTraceSampleInterval: u32 = {d},\n", .{value.streamingPerfTraceSampleInterval});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("perfCounterDeviceMemoryLimit: u64 = {d},\n", .{value.perfCounterDeviceMemoryLimit});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sqThreadTraceEnable: u32 = {d},\n", .{value.sqThreadTraceEnable});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sqThreadTraceSuppressInstructionTokens: u32 = {d},\n", .{value.sqThreadTraceSuppressInstructionTokens});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sqThreadTraceDeviceMemoryLimit: u64 = {d},\n", .{value.sqThreadTraceDeviceMemoryLimit});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("timingPreSample: VkPipelineStageFlags = {{", .{});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_VERTEX_INPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_VERTEX_INPUT_BIT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_VERTEX_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_VERTEX_SHADER_BIT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_TRANSFER_BIT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_HOST_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_HOST_BIT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_ALL_COMMANDS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_ALL_COMMANDS_BIT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_EXT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_TASK_SHADER_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_TASK_SHADER_BIT_EXT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_MESH_SHADER_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_MESH_SHADER_BIT_EXT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"});
+    if (@field(value.timingPreSample, "VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("timingPostSample: VkPipelineStageFlags = {{", .{});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_VERTEX_INPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_VERTEX_INPUT_BIT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_VERTEX_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_VERTEX_SHADER_BIT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_TRANSFER_BIT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_HOST_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_HOST_BIT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_ALL_COMMANDS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_ALL_COMMANDS_BIT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_EXT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_TASK_SHADER_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_TASK_SHADER_BIT_EXT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_MESH_SHADER_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_MESH_SHADER_BIT_EXT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_KHR"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"});
+    if (@field(value.timingPostSample, "VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkGpaDeviceClockModeInfoAMD(name: []const u8, value: *const vk.VkGpaDeviceClockModeInfoAMD, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkGpaDeviceClockModeInfoAMD = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("clockMode: VkGpaDeviceClockModeAMD = {t},\n", .{value.clockMode});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("memoryClockRatioToPeak: f32 = {d},\n", .{value.memoryClockRatioToPeak});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("engineClockRatioToPeak: f32 = {d},\n", .{value.engineClockRatioToPeak});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkGpaDeviceGetClockInfoAMD(name: []const u8, value: *const vk.VkGpaDeviceGetClockInfoAMD, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkGpaDeviceGetClockInfoAMD = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("memoryClockRatioToPeak: f32 = {d},\n", .{value.memoryClockRatioToPeak});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("engineClockRatioToPeak: f32 = {d},\n", .{value.engineClockRatioToPeak});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("memoryClockFrequency: u32 = {d},\n", .{value.memoryClockFrequency});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("engineClockFrequency: u32 = {d},\n", .{value.engineClockFrequency});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkGpaSessionCreateInfoAMD(name: []const u8, value: *const vk.VkGpaSessionCreateInfoAMD, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkGpaSessionCreateInfoAMD = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("secondaryCopySource: VkGpaSessionAMD = {},\n", .{value.secondaryCopySource});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkFaultData(name: []const u8, value: *const vk.VkFaultData, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkFaultData = .{{\n", .{ name });
@@ -18133,14 +19033,10 @@ pub fn print_VkAccelerationStructureBuildGeometryInfoKHR(name: []const u8, value
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV"))
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV"});
-    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT"))
-        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT"});
-    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT"))
-        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT"});
-    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT"))
-        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT"});
-    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT"))
-        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_KHR"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT"))
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT"))
@@ -18149,6 +19045,8 @@ pub fn print_VkAccelerationStructureBuildGeometryInfoKHR(name: []const u8, value
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV"))
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_MICROMAP_LOSSY_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_MICROMAP_LOSSY_BIT_KHR"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR"))
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR"))
@@ -18499,6 +19397,16 @@ pub fn print_VkPhysicalDeviceExtendedDynamicState3PropertiesEXT(name: []const u8
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkPhysicalDeviceExtendedFlagsFeaturesKHR(name: []const u8, value: *const vk.VkPhysicalDeviceExtendedFlagsFeaturesKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceExtendedFlagsFeaturesKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("extendedFlags: u32 = {d},\n", .{value.extendedFlags});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkColorBlendEquationEXT(name: []const u8, value: *const vk.VkColorBlendEquationEXT, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkColorBlendEquationEXT = .{{\n", .{ name });
@@ -18766,14 +19674,10 @@ pub fn print_VkPartitionedAccelerationStructureInstancesInputNV(name: []const u8
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV"))
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV"});
-    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT"))
-        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT"});
-    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT"))
-        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT"});
-    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT"))
-        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT"});
-    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT"))
-        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_KHR"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_KHR"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT"))
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT"))
@@ -18782,6 +19686,8 @@ pub fn print_VkPartitionedAccelerationStructureInstancesInputNV(name: []const u8
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV"))
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV"});
+    if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_MICROMAP_LOSSY_BIT_KHR"))
+        log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_MICROMAP_LOSSY_BIT_KHR"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR"))
         log.output(".{s},", .{"VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR"});
     if (@field(value.flags, "VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR"))
@@ -20669,6 +21575,10 @@ pub fn print_VkMemoryBarrier2(name: []const u8, value: *const vk.VkMemoryBarrier
         log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_READ_BIT_EXT"});
     if (@field(value.srcAccessMask, "VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"))
         log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"});
     log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("dstStageMask: VkPipelineStageFlags2 = {{", .{});
@@ -20965,6 +21875,10 @@ pub fn print_VkMemoryBarrier2(name: []const u8, value: *const vk.VkMemoryBarrier
         log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_READ_BIT_EXT"});
     if (@field(value.dstAccessMask, "VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"))
         log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"});
     log.output("}},\n", .{});
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
@@ -21269,6 +22183,10 @@ pub fn print_VkImageMemoryBarrier2(name: []const u8, value: *const vk.VkImageMem
         log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_READ_BIT_EXT"});
     if (@field(value.srcAccessMask, "VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"))
         log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"});
     log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("dstStageMask: VkPipelineStageFlags2 = {{", .{});
@@ -21565,6 +22483,10 @@ pub fn print_VkImageMemoryBarrier2(name: []const u8, value: *const vk.VkImageMem
         log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_READ_BIT_EXT"});
     if (@field(value.dstAccessMask, "VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"))
         log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"});
     log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("oldLayout: VkImageLayout = {t},\n", .{value.oldLayout});
@@ -21880,6 +22802,10 @@ pub fn print_VkBufferMemoryBarrier2(name: []const u8, value: *const vk.VkBufferM
         log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_READ_BIT_EXT"});
     if (@field(value.srcAccessMask, "VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"))
         log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"});
     log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("dstStageMask: VkPipelineStageFlags2 = {{", .{});
@@ -22176,6 +23102,10 @@ pub fn print_VkBufferMemoryBarrier2(name: []const u8, value: *const vk.VkBufferM
         log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_READ_BIT_EXT"});
     if (@field(value.dstAccessMask, "VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"))
         log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"});
     log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("srcQueueFamilyIndex: u32 = {d},\n", .{value.srcQueueFamilyIndex});
@@ -23337,6 +24267,16 @@ pub fn print_VkMultisampledRenderToSingleSampledInfoEXT(name: []const u8, value:
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT(name: []const u8, value: *const vk.VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("multisampledRenderToSwapchain: u32 = {d},\n", .{value.multisampledRenderToSwapchain});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkPhysicalDevicePipelineProtectedAccessFeatures(name: []const u8, value: *const vk.VkPhysicalDevicePipelineProtectedAccessFeatures, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkPhysicalDevicePipelineProtectedAccessFeatures = .{{\n", .{ name });
@@ -23517,14 +24457,18 @@ pub fn print_VkVideoFormatPropertiesKHR(name: []const u8, value: *const vk.VkVid
         log.output(".{s},", .{"VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT"});
     if (@field(value.imageCreateFlags, "VK_IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT"))
         log.output(".{s},", .{"VK_IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT"});
-    if (@field(value.imageCreateFlags, "VK_IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"))
-        log.output(".{s},", .{"VK_IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"});
+    if (@field(value.imageCreateFlags, "VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT"});
+    if (@field(value.imageCreateFlags, "VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT"});
     if (@field(value.imageCreateFlags, "VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT"))
         log.output(".{s},", .{"VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT"});
     if (@field(value.imageCreateFlags, "VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT"))
         log.output(".{s},", .{"VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT"});
     if (@field(value.imageCreateFlags, "VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR"))
         log.output(".{s},", .{"VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR"});
+    if (@field(value.imageCreateFlags, "VK_IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR"))
+        log.output(".{s},", .{"VK_IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR"});
     log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("imageType: VkImageType = {t},\n", .{value.imageType});
@@ -24606,6 +25550,20 @@ pub fn print_VkQueryPoolVideoEncodeFeedbackCreateInfoKHR(name: []const u8, value
         log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_BITSTREAM_BYTES_WRITTEN_BIT_KHR"});
     if (@field(value.encodeFeedbackFlags, "VK_VIDEO_ENCODE_FEEDBACK_BITSTREAM_HAS_OVERRIDES_BIT_KHR"))
         log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_BITSTREAM_HAS_OVERRIDES_BIT_KHR"});
+    if (@field(value.encodeFeedbackFlags, "VK_VIDEO_ENCODE_FEEDBACK_AVERAGE_QUANTIZATION_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_AVERAGE_QUANTIZATION_BIT_KHR"});
+    if (@field(value.encodeFeedbackFlags, "VK_VIDEO_ENCODE_FEEDBACK_MIN_QUANTIZATION_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_MIN_QUANTIZATION_BIT_KHR"});
+    if (@field(value.encodeFeedbackFlags, "VK_VIDEO_ENCODE_FEEDBACK_MAX_QUANTIZATION_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_MAX_QUANTIZATION_BIT_KHR"});
+    if (@field(value.encodeFeedbackFlags, "VK_VIDEO_ENCODE_FEEDBACK_INTRA_PIXELS_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_INTRA_PIXELS_BIT_KHR"});
+    if (@field(value.encodeFeedbackFlags, "VK_VIDEO_ENCODE_FEEDBACK_INTER_PIXELS_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_INTER_PIXELS_BIT_KHR"});
+    if (@field(value.encodeFeedbackFlags, "VK_VIDEO_ENCODE_FEEDBACK_SKIPPED_PIXELS_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_SKIPPED_PIXELS_BIT_KHR"});
+    if (@field(value.encodeFeedbackFlags, "VK_VIDEO_ENCODE_FEEDBACK_PICTURE_PARTITION_COUNT_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_PICTURE_PARTITION_COUNT_BIT_KHR"});
     log.output("}},\n", .{});
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
@@ -24745,6 +25703,68 @@ pub fn print_VkVideoEncodeCapabilitiesKHR(name: []const u8, value: *const vk.VkV
         log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_BITSTREAM_BYTES_WRITTEN_BIT_KHR"});
     if (@field(value.supportedEncodeFeedbackFlags, "VK_VIDEO_ENCODE_FEEDBACK_BITSTREAM_HAS_OVERRIDES_BIT_KHR"))
         log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_BITSTREAM_HAS_OVERRIDES_BIT_KHR"});
+    if (@field(value.supportedEncodeFeedbackFlags, "VK_VIDEO_ENCODE_FEEDBACK_AVERAGE_QUANTIZATION_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_AVERAGE_QUANTIZATION_BIT_KHR"});
+    if (@field(value.supportedEncodeFeedbackFlags, "VK_VIDEO_ENCODE_FEEDBACK_MIN_QUANTIZATION_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_MIN_QUANTIZATION_BIT_KHR"});
+    if (@field(value.supportedEncodeFeedbackFlags, "VK_VIDEO_ENCODE_FEEDBACK_MAX_QUANTIZATION_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_MAX_QUANTIZATION_BIT_KHR"});
+    if (@field(value.supportedEncodeFeedbackFlags, "VK_VIDEO_ENCODE_FEEDBACK_INTRA_PIXELS_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_INTRA_PIXELS_BIT_KHR"});
+    if (@field(value.supportedEncodeFeedbackFlags, "VK_VIDEO_ENCODE_FEEDBACK_INTER_PIXELS_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_INTER_PIXELS_BIT_KHR"});
+    if (@field(value.supportedEncodeFeedbackFlags, "VK_VIDEO_ENCODE_FEEDBACK_SKIPPED_PIXELS_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_SKIPPED_PIXELS_BIT_KHR"});
+    if (@field(value.supportedEncodeFeedbackFlags, "VK_VIDEO_ENCODE_FEEDBACK_PICTURE_PARTITION_COUNT_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_FEEDBACK_PICTURE_PARTITION_COUNT_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR(name: []const u8, value: *const vk.VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("videoEncodeFeedback2: u32 = {d},\n", .{value.videoEncodeFeedback2});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkVideoEncodeFeedback2CapabilitiesKHR(name: []const u8, value: *const vk.VkVideoEncodeFeedback2CapabilitiesKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkVideoEncodeFeedback2CapabilitiesKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxPerPartitionFeedbackEntries: u32 = {d},\n", .{value.maxPerPartitionFeedbackEntries});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("supportedPerPartitionEncodeFeedbackFlags: VkVideoEncodePerPartitionFeedbackFlagsKHR = {{", .{});
+    if (@field(value.supportedPerPartitionEncodeFeedbackFlags, "VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_STATUS_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_STATUS_BIT_KHR"});
+    if (@field(value.supportedPerPartitionEncodeFeedbackFlags, "VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_BITSTREAM_BUFFER_OFFSET_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_BITSTREAM_BUFFER_OFFSET_BIT_KHR"});
+    if (@field(value.supportedPerPartitionEncodeFeedbackFlags, "VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_BITSTREAM_BYTES_WRITTEN_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_BITSTREAM_BYTES_WRITTEN_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkQueryPoolVideoEncodePerPartitionFeedbackCreateInfoKHR(name: []const u8, value: *const vk.VkQueryPoolVideoEncodePerPartitionFeedbackCreateInfoKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkQueryPoolVideoEncodePerPartitionFeedbackCreateInfoKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxPerPartitionFeedbackEntries: u32 = {d},\n", .{value.maxPerPartitionFeedbackEntries});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("perPartitionEncodeFeedbackFlags: VkVideoEncodePerPartitionFeedbackFlagsKHR = {{", .{});
+    if (@field(value.perPartitionEncodeFeedbackFlags, "VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_STATUS_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_STATUS_BIT_KHR"});
+    if (@field(value.perPartitionEncodeFeedbackFlags, "VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_BITSTREAM_BUFFER_OFFSET_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_BITSTREAM_BUFFER_OFFSET_BIT_KHR"});
+    if (@field(value.perPartitionEncodeFeedbackFlags, "VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_BITSTREAM_BYTES_WRITTEN_BIT_KHR"))
+        log.output(".{s},", .{"VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_BITSTREAM_BYTES_WRITTEN_BIT_KHR"});
     log.output("}},\n", .{});
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
@@ -26261,6 +27281,8 @@ pub fn print_VkDescriptorBufferBindingInfoEXT(name: []const u8, value: *const vk
         log.output(".{s},", .{"VK_BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT"});
     if (@field(value.usage, "VK_BUFFER_USAGE_TILE_MEMORY_BIT_QCOM"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_TILE_MEMORY_BIT_QCOM"});
+    if (@field(value.usage, "VK_BUFFER_USAGE_DESCRIPTOR_HEAP_BIT_EXT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_DESCRIPTOR_HEAP_BIT_EXT"});
     log.output("}},\n", .{});
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
@@ -27354,6 +28376,10 @@ pub fn print_VkFormatProperties3(name: []const u8, value: *const vk.VkFormatProp
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV"});
     if (@field(value.linearTilingFeatures, "VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"});
+    if (@field(value.linearTilingFeatures, "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"});
+    if (@field(value.linearTilingFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"});
     if (@field(value.linearTilingFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"});
     if (@field(value.linearTilingFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
@@ -27374,6 +28400,12 @@ pub fn print_VkFormatProperties3(name: []const u8, value: *const vk.VkFormatProp
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR"});
     if (@field(value.linearTilingFeatures, "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"});
+    if (@field(value.linearTilingFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"});
+    if (@field(value.linearTilingFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"});
+    if (@field(value.linearTilingFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"});
     if (@field(value.linearTilingFeatures, "VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"});
     log.output("}},\n", .{});
@@ -27521,6 +28553,10 @@ pub fn print_VkFormatProperties3(name: []const u8, value: *const vk.VkFormatProp
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV"});
     if (@field(value.optimalTilingFeatures, "VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"});
+    if (@field(value.optimalTilingFeatures, "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"});
+    if (@field(value.optimalTilingFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"});
     if (@field(value.optimalTilingFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"});
     if (@field(value.optimalTilingFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
@@ -27541,6 +28577,12 @@ pub fn print_VkFormatProperties3(name: []const u8, value: *const vk.VkFormatProp
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR"});
     if (@field(value.optimalTilingFeatures, "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"});
+    if (@field(value.optimalTilingFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"});
+    if (@field(value.optimalTilingFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"});
+    if (@field(value.optimalTilingFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"});
     if (@field(value.optimalTilingFeatures, "VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"});
     log.output("}},\n", .{});
@@ -27688,6 +28730,10 @@ pub fn print_VkFormatProperties3(name: []const u8, value: *const vk.VkFormatProp
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV"});
     if (@field(value.bufferFeatures, "VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"});
+    if (@field(value.bufferFeatures, "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"});
+    if (@field(value.bufferFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"});
     if (@field(value.bufferFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"});
     if (@field(value.bufferFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
@@ -27708,8 +28754,31 @@ pub fn print_VkFormatProperties3(name: []const u8, value: *const vk.VkFormatProp
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR"});
     if (@field(value.bufferFeatures, "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"});
+    if (@field(value.bufferFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"});
+    if (@field(value.bufferFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"});
+    if (@field(value.bufferFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"});
     if (@field(value.bufferFeatures, "VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkFormatProperties4KHR(name: []const u8, value: *const vk.VkFormatProperties4KHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkFormatProperties4KHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("linearTilingFeatures: VkFormatFeatureFlags4KHR = {{", .{});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("optimalTilingFeatures: VkFormatFeatureFlags4KHR = {{", .{});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("bufferFeatures: VkFormatFeatureFlags4KHR = {{", .{});
     log.output("}},\n", .{});
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
@@ -27883,6 +28952,10 @@ pub fn print_VkDrmFormatModifierProperties2EXT(name: []const u8, value: *const v
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV"});
     if (@field(value.drmFormatModifierTilingFeatures, "VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"});
+    if (@field(value.drmFormatModifierTilingFeatures, "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"});
+    if (@field(value.drmFormatModifierTilingFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"});
     if (@field(value.drmFormatModifierTilingFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"});
     if (@field(value.drmFormatModifierTilingFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
@@ -27903,6 +28976,12 @@ pub fn print_VkDrmFormatModifierProperties2EXT(name: []const u8, value: *const v
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR"});
     if (@field(value.drmFormatModifierTilingFeatures, "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"});
+    if (@field(value.drmFormatModifierTilingFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"});
+    if (@field(value.drmFormatModifierTilingFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"});
+    if (@field(value.drmFormatModifierTilingFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"});
     if (@field(value.drmFormatModifierTilingFeatures, "VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"});
     log.output("}},\n", .{});
@@ -28062,6 +29141,10 @@ pub fn print_VkAndroidHardwareBufferFormatProperties2ANDROID(name: []const u8, v
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV"});
     if (@field(value.formatFeatures, "VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"});
+    if (@field(value.formatFeatures, "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"});
+    if (@field(value.formatFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"});
     if (@field(value.formatFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"});
     if (@field(value.formatFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
@@ -28082,6 +29165,12 @@ pub fn print_VkAndroidHardwareBufferFormatProperties2ANDROID(name: []const u8, v
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR"});
     if (@field(value.formatFeatures, "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"});
+    if (@field(value.formatFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"});
+    if (@field(value.formatFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"});
+    if (@field(value.formatFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"});
     if (@field(value.formatFeatures, "VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"});
     log.output("}},\n", .{});
@@ -28514,6 +29603,939 @@ pub fn print_VkGraphicsPipelineLibraryCreateInfoEXT(name: []const u8, value: *co
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM(name: []const u8, value: *const vk.VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("dataGraphNeuralAcceleratorStatistics: u32 = {d},\n", .{value.dataGraphNeuralAcceleratorStatistics});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDataGraphPipelineNeuralStatisticsCreateInfoARM(name: []const u8, value: *const vk.VkDataGraphPipelineNeuralStatisticsCreateInfoARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDataGraphPipelineNeuralStatisticsCreateInfoARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("allowNeuralStatistics: u32 = {d},\n", .{value.allowNeuralStatistics});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDataGraphPipelineSessionNeuralStatisticsCreateInfoARM(name: []const u8, value: *const vk.VkDataGraphPipelineSessionNeuralStatisticsCreateInfoARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDataGraphPipelineSessionNeuralStatisticsCreateInfoARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("mode: VkNeuralAcceleratorStatisticsModeARM = {t},\n", .{value.mode});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkTensorExplicitTilingFormatPropertiesARM(name: []const u8, value: *const vk.VkTensorExplicitTilingFormatPropertiesARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkTensorExplicitTilingFormatPropertiesARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("brick16TilingTensorFeatures: VkFormatFeatureFlags2 = {{", .{});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_DST_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_DST_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DISJOINT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DISJOINT_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DISJOINT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DISJOINT_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_DECODE_OUTPUT_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_DECODE_OUTPUT_BIT_KHR"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_DECODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_DECODE_DPB_BIT_KHR"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_INPUT_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_INPUT_BIT_KHR"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_DPB_BIT_KHR"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_BIT_QCOM"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TENSOR_SHADER_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_SHADER_BIT_ARM"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TENSOR_DATA_GRAPH_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_DATA_GRAPH_BIT_ARM"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_RADIUS_BUFFER_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_RADIUS_BUFFER_BIT_NV"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_COMPUTE_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_COMPUTE_QUEUE_BIT_KHR"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_TRANSFER_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_TRANSFER_QUEUE_BIT_KHR"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"});
+    if (@field(value.brick16TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("brick8TilingTensorFeatures: VkFormatFeatureFlags2 = {{", .{});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_DST_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_DST_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DISJOINT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DISJOINT_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DISJOINT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DISJOINT_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_DECODE_OUTPUT_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_DECODE_OUTPUT_BIT_KHR"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_DECODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_DECODE_DPB_BIT_KHR"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_INPUT_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_INPUT_BIT_KHR"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_DPB_BIT_KHR"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_BIT_QCOM"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TENSOR_SHADER_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_SHADER_BIT_ARM"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TENSOR_DATA_GRAPH_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_DATA_GRAPH_BIT_ARM"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_RADIUS_BUFFER_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_RADIUS_BUFFER_BIT_NV"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_COMPUTE_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_COMPUTE_QUEUE_BIT_KHR"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_TRANSFER_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_TRANSFER_QUEUE_BIT_KHR"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"});
+    if (@field(value.brick8TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("brick4TilingTensorFeatures: VkFormatFeatureFlags2 = {{", .{});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_DST_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_DST_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DISJOINT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DISJOINT_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DISJOINT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DISJOINT_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_DECODE_OUTPUT_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_DECODE_OUTPUT_BIT_KHR"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_DECODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_DECODE_DPB_BIT_KHR"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_INPUT_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_INPUT_BIT_KHR"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_DPB_BIT_KHR"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_BIT_QCOM"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TENSOR_SHADER_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_SHADER_BIT_ARM"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_TENSOR_DATA_GRAPH_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_DATA_GRAPH_BIT_ARM"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_RADIUS_BUFFER_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_RADIUS_BUFFER_BIT_NV"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_COMPUTE_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_COMPUTE_QUEUE_BIT_KHR"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_TRANSFER_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_TRANSFER_QUEUE_BIT_KHR"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"});
+    if (@field(value.brick4TilingTensorFeatures, "VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("blockUTilingTensorFeatures: VkFormatFeatureFlags2 = {{", .{});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_DST_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_DST_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DISJOINT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DISJOINT_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DISJOINT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DISJOINT_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_DECODE_OUTPUT_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_DECODE_OUTPUT_BIT_KHR"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_DECODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_DECODE_DPB_BIT_KHR"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_INPUT_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_INPUT_BIT_KHR"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_DPB_BIT_KHR"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_BIT_QCOM"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_TENSOR_SHADER_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_SHADER_BIT_ARM"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_TENSOR_DATA_GRAPH_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_DATA_GRAPH_BIT_ARM"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_RADIUS_BUFFER_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_RADIUS_BUFFER_BIT_NV"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_COMPUTE_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_COMPUTE_QUEUE_BIT_KHR"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_TRANSFER_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_TRANSFER_QUEUE_BIT_KHR"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"});
+    if (@field(value.blockUTilingTensorFeatures, "VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("blockU64kTilingTensorFeatures: VkFormatFeatureFlags2 = {{", .{});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_SRC_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_DST_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLIT_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLIT_DST_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DISJOINT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DISJOINT_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DISJOINT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DISJOINT_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_DECODE_OUTPUT_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_DECODE_OUTPUT_BIT_KHR"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_DECODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_DECODE_DPB_BIT_KHR"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_INPUT_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_INPUT_BIT_KHR"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_DPB_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_DPB_BIT_KHR"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_BIT_QCOM"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BOX_FILTER_SAMPLED_BIT_QCOM"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_LINEAR_COLOR_ATTACHMENT_BIT_NV"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_TENSOR_SHADER_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_SHADER_BIT_ARM"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_IMAGE_BIT_NV"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_TENSOR_DATA_GRAPH_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_DATA_GRAPH_BIT_ARM"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_RADIUS_BUFFER_BIT_NV"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_RADIUS_BUFFER_BIT_NV"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_COMPUTE_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_COMPUTE_QUEUE_BIT_KHR"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_TRANSFER_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_TRANSFER_QUEUE_BIT_KHR"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"});
+    if (@field(value.blockU64kTilingTensorFeatures, "VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkTensorRollingBackingCreateInfoARM(name: []const u8, value: *const vk.VkTensorRollingBackingCreateInfoARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkTensorRollingBackingCreateInfoARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("wraps: [VK_MAX_TENSOR_CREATE_INFO_ROLLING_BACKING_WRAP_COUNT_ARM]u32 = {any},\n", .{value.wraps});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE(name: []const u8, value: *const vk.VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE = .{{\n", .{ name });
@@ -28875,6 +30897,39 @@ pub fn print_VkMicromapBuildInfoEXT(name: []const u8, value: *const vk.VkMicroma
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkAccelerationStructureGeometryMicromapDataKHR(name: []const u8, value: *const vk.VkAccelerationStructureGeometryMicromapDataKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkAccelerationStructureGeometryMicromapDataKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("usageCountsCount: u32 = {d},\n", .{value.usageCountsCount});
+    if (value.pUsageCounts) |v| {
+        for (v[0..value.usageCountsCount]) |*vv| {
+            print_VkMicromapUsageKHR("pUsageCounts", vv, offset + 1);
+        }
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pUsageCounts: [*]const VkMicromapUsageKHR = null,\n", .{});
+    }
+    if (value.ppUsageCounts) |v| {
+        for (v[0..value.usageCountsCount]) |*vv| {
+            for (0..offset + 1) |_| log.output("    ", .{});
+            log.output("ppUsageCounts: [*]const *const VkMicromapUsageKHR = {any},\n", .{vv});
+        }
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("ppUsageCounts: [*]const *const VkMicromapUsageKHR = null,\n", .{});
+    }
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("data: u64 = {d},\n", .{value.data});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("triangleArray: u64 = {d},\n", .{value.triangleArray});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("triangleArrayStride: u64 = {d},\n", .{value.triangleArrayStride});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkMicromapCreateInfoEXT(name: []const u8, value: *const vk.VkMicromapCreateInfoEXT, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkMicromapCreateInfoEXT = .{{\n", .{ name });
@@ -28971,6 +31026,18 @@ pub fn print_VkMicromapBuildSizesInfoEXT(name: []const u8, value: *const vk.VkMi
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkMicromapUsageKHR(name: []const u8, value: *const vk.VkMicromapUsageKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkMicromapUsageKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("count: u32 = {d},\n", .{value.count});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("subdivisionLevel: u32 = {d},\n", .{value.subdivisionLevel});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("format: VkOpacityMicromapFormatKHR = {t},\n", .{value.format});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkMicromapUsageEXT(name: []const u8, value: *const vk.VkMicromapUsageEXT, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkMicromapUsageEXT = .{{\n", .{ name });
@@ -28983,15 +31050,25 @@ pub fn print_VkMicromapUsageEXT(name: []const u8, value: *const vk.VkMicromapUsa
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
-pub fn print_VkMicromapTriangleEXT(name: []const u8, value: *const vk.VkMicromapTriangleEXT, offset: u32) void {
+pub fn print_VkMicromapTriangleKHR(name: []const u8, value: *const vk.VkMicromapTriangleKHR, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
-    log.output("{s}: VkMicromapTriangleEXT = .{{\n", .{ name });
+    log.output("{s}: VkMicromapTriangleKHR = .{{\n", .{ name });
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("dataOffset: u32 = {d},\n", .{value.dataOffset});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("subdivisionLevel: u16 = {d},\n", .{value.subdivisionLevel});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("format: u16 = {d},\n", .{value.format});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceOpacityMicromapFeaturesKHR(name: []const u8, value: *const vk.VkPhysicalDeviceOpacityMicromapFeaturesKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceOpacityMicromapFeaturesKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("micromap: u32 = {d},\n", .{value.micromap});
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
@@ -29009,6 +31086,22 @@ pub fn print_VkPhysicalDeviceOpacityMicromapFeaturesEXT(name: []const u8, value:
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkPhysicalDeviceOpacityMicromapPropertiesKHR(name: []const u8, value: *const vk.VkPhysicalDeviceOpacityMicromapPropertiesKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceOpacityMicromapPropertiesKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxOpacity2StateSubdivisionLevel: u32 = {d},\n", .{value.maxOpacity2StateSubdivisionLevel});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxOpacity4StateSubdivisionLevel: u32 = {d},\n", .{value.maxOpacity4StateSubdivisionLevel});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxOpacityLossy4StateSubdivisionLevel: u32 = {d},\n", .{value.maxOpacityLossy4StateSubdivisionLevel});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxMicromapTriangles: u64 = {d},\n", .{value.maxMicromapTriangles});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkPhysicalDeviceOpacityMicromapPropertiesEXT(name: []const u8, value: *const vk.VkPhysicalDeviceOpacityMicromapPropertiesEXT, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkPhysicalDeviceOpacityMicromapPropertiesEXT = .{{\n", .{ name });
@@ -29018,6 +31111,24 @@ pub fn print_VkPhysicalDeviceOpacityMicromapPropertiesEXT(name: []const u8, valu
     log.output("maxOpacity2StateSubdivisionLevel: u32 = {d},\n", .{value.maxOpacity2StateSubdivisionLevel});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("maxOpacity4StateSubdivisionLevel: u32 = {d},\n", .{value.maxOpacity4StateSubdivisionLevel});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkAccelerationStructureTrianglesOpacityMicromapKHR(name: []const u8, value: *const vk.VkAccelerationStructureTrianglesOpacityMicromapKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkAccelerationStructureTrianglesOpacityMicromapKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("indexType: VkIndexType = {t},\n", .{value.indexType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("indexBuffer: u64 = {d},\n", .{value.indexBuffer});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("indexStride: u64 = {d},\n", .{value.indexStride});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("baseTriangle: u32 = {d},\n", .{value.baseTriangle});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("micromap: VkAccelerationStructureKHR = {},\n", .{value.micromap});
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
@@ -29421,6 +31532,26 @@ pub fn print_VkImageViewSampleWeightCreateInfoQCOM(name: []const u8, value: *con
     print_VkExtent2D("filterSize", &value.filterSize, offset + 1);
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("numPhases: u32 = {d},\n", .{value.numPhases});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM(name: []const u8, value: *const vk.VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("shaderMultipleWaitQueues: u32 = {d},\n", .{value.shaderMultipleWaitQueues});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceShaderMultipleWaitQueuesPropertiesQCOM(name: []const u8, value: *const vk.VkPhysicalDeviceShaderMultipleWaitQueuesPropertiesQCOM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceShaderMultipleWaitQueuesPropertiesQCOM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxShaderWaitQueues: u32 = {d},\n", .{value.maxShaderWaitQueues});
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
@@ -29833,11 +31964,11 @@ pub fn print_VkPhysicalDeviceFaultFeaturesEXT(name: []const u8, value: *const vk
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
-pub fn print_VkDeviceFaultAddressInfoEXT(name: []const u8, value: *const vk.VkDeviceFaultAddressInfoEXT, offset: u32) void {
+pub fn print_VkDeviceFaultAddressInfoKHR(name: []const u8, value: *const vk.VkDeviceFaultAddressInfoKHR, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
-    log.output("{s}: VkDeviceFaultAddressInfoEXT = .{{\n", .{ name });
+    log.output("{s}: VkDeviceFaultAddressInfoKHR = .{{\n", .{ name });
     for (0..offset + 1) |_| log.output("    ", .{});
-    log.output("addressType: VkDeviceFaultAddressTypeEXT = {t},\n", .{value.addressType});
+    log.output("addressType: VkDeviceFaultAddressTypeKHR = {t},\n", .{value.addressType});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("reportedAddress: u64 = {d},\n", .{value.reportedAddress});
     for (0..offset + 1) |_| log.output("    ", .{});
@@ -29845,15 +31976,62 @@ pub fn print_VkDeviceFaultAddressInfoEXT(name: []const u8, value: *const vk.VkDe
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
-pub fn print_VkDeviceFaultVendorInfoEXT(name: []const u8, value: *const vk.VkDeviceFaultVendorInfoEXT, offset: u32) void {
+pub fn print_VkDeviceFaultVendorInfoKHR(name: []const u8, value: *const vk.VkDeviceFaultVendorInfoKHR, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
-    log.output("{s}: VkDeviceFaultVendorInfoEXT = .{{\n", .{ name });
+    log.output("{s}: VkDeviceFaultVendorInfoKHR = .{{\n", .{ name });
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("description: [VK_MAX_DESCRIPTION_SIZE]u8 = {any},\n", .{value.description});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("vendorFaultCode: u64 = {d},\n", .{value.vendorFaultCode});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("vendorFaultData: u64 = {d},\n", .{value.vendorFaultData});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDeviceFaultInfoKHR(name: []const u8, value: *const vk.VkDeviceFaultInfoKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDeviceFaultInfoKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("flags: VkDeviceFaultFlagsKHR = {{", .{});
+    if (@field(value.flags, "VK_DEVICE_FAULT_FLAG_DEVICE_LOST_KHR"))
+        log.output(".{s},", .{"VK_DEVICE_FAULT_FLAG_DEVICE_LOST_KHR"});
+    if (@field(value.flags, "VK_DEVICE_FAULT_FLAG_MEMORY_ADDRESS_KHR"))
+        log.output(".{s},", .{"VK_DEVICE_FAULT_FLAG_MEMORY_ADDRESS_KHR"});
+    if (@field(value.flags, "VK_DEVICE_FAULT_FLAG_INSTRUCTION_ADDRESS_KHR"))
+        log.output(".{s},", .{"VK_DEVICE_FAULT_FLAG_INSTRUCTION_ADDRESS_KHR"});
+    if (@field(value.flags, "VK_DEVICE_FAULT_FLAG_VENDOR_KHR"))
+        log.output(".{s},", .{"VK_DEVICE_FAULT_FLAG_VENDOR_KHR"});
+    if (@field(value.flags, "VK_DEVICE_FAULT_FLAG_WATCHDOG_TIMEOUT_KHR"))
+        log.output(".{s},", .{"VK_DEVICE_FAULT_FLAG_WATCHDOG_TIMEOUT_KHR"});
+    if (@field(value.flags, "VK_DEVICE_FAULT_FLAG_OVERFLOW_KHR"))
+        log.output(".{s},", .{"VK_DEVICE_FAULT_FLAG_OVERFLOW_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("groupId: u64 = {d},\n", .{value.groupId});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("description: [VK_MAX_DESCRIPTION_SIZE]u8 = {any},\n", .{value.description});
+    print_VkDeviceFaultAddressInfoKHR("faultAddressInfo", &value.faultAddressInfo, offset + 1);
+    print_VkDeviceFaultAddressInfoKHR("instructionAddressInfo", &value.instructionAddressInfo, offset + 1);
+    print_VkDeviceFaultVendorInfoKHR("vendorInfo", &value.vendorInfo, offset + 1);
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDeviceFaultDebugInfoKHR(name: []const u8, value: *const vk.VkDeviceFaultDebugInfoKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDeviceFaultDebugInfoKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("vendorBinarySize: u32 = {d},\n", .{value.vendorBinarySize});
+    if (value.pVendorBinaryData) |v| {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pVendorBinaryData: *anyopaque = {*},\n", .{v});
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pVendorBinaryData: *anyopaque = null,\n", .{});
+    }
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
@@ -29879,16 +32057,16 @@ pub fn print_VkDeviceFaultInfoEXT(name: []const u8, value: *const vk.VkDeviceFau
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("description: [VK_MAX_DESCRIPTION_SIZE]u8 = {any},\n", .{value.description});
     if (value.pAddressInfos) |v| {
-        print_VkDeviceFaultAddressInfoEXT("pAddressInfos", v, offset + 1);
+        print_VkDeviceFaultAddressInfoKHR("pAddressInfos", v, offset + 1);
     } else {
         for (0..offset + 1) |_| log.output("    ", .{});
-        log.output("pAddressInfos: *VkDeviceFaultAddressInfoEXT = null,\n", .{});
+        log.output("pAddressInfos: *VkDeviceFaultAddressInfoKHR = null,\n", .{});
     }
     if (value.pVendorInfos) |v| {
-        print_VkDeviceFaultVendorInfoEXT("pVendorInfos", v, offset + 1);
+        print_VkDeviceFaultVendorInfoKHR("pVendorInfos", v, offset + 1);
     } else {
         for (0..offset + 1) |_| log.output("    ", .{});
-        log.output("pVendorInfos: *VkDeviceFaultVendorInfoEXT = null,\n", .{});
+        log.output("pVendorInfos: *VkDeviceFaultVendorInfoKHR = null,\n", .{});
     }
     if (value.pVendorBinaryData) |v| {
         for (0..offset + 1) |_| log.output("    ", .{});
@@ -29900,13 +32078,13 @@ pub fn print_VkDeviceFaultInfoEXT(name: []const u8, value: *const vk.VkDeviceFau
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
-pub fn print_VkDeviceFaultVendorBinaryHeaderVersionOneEXT(name: []const u8, value: *const vk.VkDeviceFaultVendorBinaryHeaderVersionOneEXT, offset: u32) void {
+pub fn print_VkDeviceFaultVendorBinaryHeaderVersionOneKHR(name: []const u8, value: *const vk.VkDeviceFaultVendorBinaryHeaderVersionOneKHR, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
-    log.output("{s}: VkDeviceFaultVendorBinaryHeaderVersionOneEXT = .{{\n", .{ name });
+    log.output("{s}: VkDeviceFaultVendorBinaryHeaderVersionOneKHR = .{{\n", .{ name });
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("headerSize: u32 = {d},\n", .{value.headerSize});
     for (0..offset + 1) |_| log.output("    ", .{});
-    log.output("headerVersion: VkDeviceFaultVendorBinaryHeaderVersionEXT = {t},\n", .{value.headerVersion});
+    log.output("headerVersion: VkDeviceFaultVendorBinaryHeaderVersionKHR = {t},\n", .{value.headerVersion});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("vendorID: u32 = {d},\n", .{value.vendorID});
     for (0..offset + 1) |_| log.output("    ", .{});
@@ -29925,6 +32103,32 @@ pub fn print_VkDeviceFaultVendorBinaryHeaderVersionOneEXT(name: []const u8, valu
     log.output("engineVersion: u32 = {any},\n", .{value.engineVersion});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("apiVersion: u32 = {any},\n", .{value.apiVersion});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceFaultFeaturesKHR(name: []const u8, value: *const vk.VkPhysicalDeviceFaultFeaturesKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceFaultFeaturesKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("deviceFault: u32 = {d},\n", .{value.deviceFault});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("deviceFaultVendorBinary: u32 = {d},\n", .{value.deviceFaultVendorBinary});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("deviceFaultReportMasked: u32 = {d},\n", .{value.deviceFaultReportMasked});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("deviceFaultDeviceLostOnMasked: u32 = {d},\n", .{value.deviceFaultDeviceLostOnMasked});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceFaultPropertiesKHR(name: []const u8, value: *const vk.VkPhysicalDeviceFaultPropertiesKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceFaultPropertiesKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxDeviceFaultCount: u32 = {d},\n", .{value.maxDeviceFaultCount});
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
@@ -29975,6 +32179,11 @@ pub fn print_VkDecompressMemoryRegionNV(name: []const u8, value: *const vk.VkDec
     log.output("compressedSize: u64 = {d},\n", .{value.compressedSize});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("decompressedSize: u64 = {d},\n", .{value.decompressedSize});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("decompressionMethod: VkMemoryDecompressionMethodFlagsEXT = {{", .{});
+    if (@field(value.decompressionMethod, "VK_MEMORY_DECOMPRESSION_METHOD_GDEFLATE_1_0_BIT_EXT"))
+        log.output(".{s},", .{"VK_MEMORY_DECOMPRESSION_METHOD_GDEFLATE_1_0_BIT_EXT"});
+    log.output("}},\n", .{});
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
@@ -30104,6 +32313,16 @@ pub fn print_VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT(name: 
     log.output("sType: VkStructureType = {t},\n", .{value.sType});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("dynamicRenderingUnusedAttachments: u32 = {d},\n", .{value.dynamicRenderingUnusedAttachments});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR(name: []const u8, value: *const vk.VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("internallySynchronizedQueues: u32 = {d},\n", .{value.internallySynchronizedQueues});
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
@@ -30488,6 +32707,8 @@ pub fn print_VkPhysicalDeviceExtendedSparseAddressSpacePropertiesNV(name: []cons
         log.output(".{s},", .{"VK_BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT"});
     if (@field(value.extendedSparseBufferUsageFlags, "VK_BUFFER_USAGE_TILE_MEMORY_BIT_QCOM"))
         log.output(".{s},", .{"VK_BUFFER_USAGE_TILE_MEMORY_BIT_QCOM"});
+    if (@field(value.extendedSparseBufferUsageFlags, "VK_BUFFER_USAGE_DESCRIPTOR_HEAP_BIT_EXT"))
+        log.output(".{s},", .{"VK_BUFFER_USAGE_DESCRIPTOR_HEAP_BIT_EXT"});
     log.output("}},\n", .{});
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
@@ -30706,8 +32927,18 @@ pub fn print_VkShaderCreateInfoEXT(name: []const u8, value: *const vk.VkShaderCr
         log.output(".{s},", .{"VK_SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"});
     if (@field(value.flags, "VK_SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT"))
         log.output(".{s},", .{"VK_SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT"});
+    if (@field(value.flags, "VK_SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT"))
+        log.output(".{s},", .{"VK_SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT"});
+    if (@field(value.flags, "VK_SHADER_CREATE_INSTRUMENT_SHADER_BIT_ARM"))
+        log.output(".{s},", .{"VK_SHADER_CREATE_INSTRUMENT_SHADER_BIT_ARM"});
+    if (@field(value.flags, "VK_SHADER_CREATE_INSTRUMENT_SHADER_BIT_ARM"))
+        log.output(".{s},", .{"VK_SHADER_CREATE_INSTRUMENT_SHADER_BIT_ARM"});
+    if (@field(value.flags, "VK_SHADER_CREATE_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_EXT"))
+        log.output(".{s},", .{"VK_SHADER_CREATE_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_EXT"});
     if (@field(value.flags, "VK_SHADER_CREATE_64_BIT_INDEXING_BIT_EXT"))
         log.output(".{s},", .{"VK_SHADER_CREATE_64_BIT_INDEXING_BIT_EXT"});
+    if (@field(value.flags, "VK_SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR"))
+        log.output(".{s},", .{"VK_SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR"});
     log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("stage: VkShaderStageFlags = {{", .{});
@@ -31124,6 +33355,16 @@ pub fn print_VkPhysicalDeviceCooperativeMatrixPropertiesKHR(name: []const u8, va
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM(name: []const u8, value: *const vk.VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("cooperativeMatrixConversion: u32 = {d},\n", .{value.cooperativeMatrixConversion});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkPhysicalDeviceShaderEnqueuePropertiesAMDX(name: []const u8, value: *const vk.VkPhysicalDeviceShaderEnqueuePropertiesAMDX, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkPhysicalDeviceShaderEnqueuePropertiesAMDX = .{{\n", .{ name });
@@ -31229,8 +33470,8 @@ pub fn print_VkExecutionGraphPipelineCreateInfoAMDX(name: []const u8, value: *co
         log.output(".{s},", .{"VK_PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"});
-    if (@field(value.flags, "VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"))
-        log.output(".{s},", .{"VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
         log.output(".{s},", .{"VK_PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"});
     if (@field(value.flags, "VK_PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
@@ -31895,6 +34136,20 @@ pub fn print_VkSamplerBlockMatchWindowCreateInfoQCOM(name: []const u8, value: *c
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkPhysicalDeviceImageProcessing3FeaturesQCOM(name: []const u8, value: *const vk.VkPhysicalDeviceImageProcessing3FeaturesQCOM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceImageProcessing3FeaturesQCOM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("imageGatherLinear: u32 = {d},\n", .{value.imageGatherLinear});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("imageGatherExtendedModes: u32 = {d},\n", .{value.imageGatherExtendedModes});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("blockMatchExtendedClampToEdge: u32 = {d},\n", .{value.blockMatchExtendedClampToEdge});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV(name: []const u8, value: *const vk.VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV = .{{\n", .{ name });
@@ -32153,7 +34408,37 @@ pub fn print_VkPhysicalDeviceSchedulingControlsPropertiesARM(name: []const u8, v
     log.output("schedulingControlsFlags: VkPhysicalDeviceSchedulingControlsFlagsARM = {{", .{});
     if (@field(value.schedulingControlsFlags, "VK_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM"))
         log.output(".{s},", .{"VK_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM"});
+    if (@field(value.schedulingControlsFlags, "VK_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_ARM"))
+        log.output(".{s},", .{"VK_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_ARM"});
     log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM(name: []const u8, value: *const vk.VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("schedulingControlsMaxWarpsCount: u32 = {d},\n", .{value.schedulingControlsMaxWarpsCount});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("schedulingControlsMaxQueuedBatchesCount: u32 = {d},\n", .{value.schedulingControlsMaxQueuedBatchesCount});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("schedulingControlsMaxWorkGroupBatchSize: u32 = {d},\n", .{value.schedulingControlsMaxWorkGroupBatchSize});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDispatchParametersARM(name: []const u8, value: *const vk.VkDispatchParametersARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDispatchParametersARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("workGroupBatchSize: u32 = {d},\n", .{value.workGroupBatchSize});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxQueuedWorkGroupBatches: u32 = {d},\n", .{value.maxQueuedWorkGroupBatches});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxWarpsPerShaderCore: u32 = {d},\n", .{value.maxWarpsPerShaderCore});
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
@@ -32564,6 +34849,16 @@ pub fn print_VkCooperativeMatrixFlexibleDimensionsPropertiesNV(name: []const u8,
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(name: []const u8, value: *const vk.VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("cooperativeMatrixDecodeVector: u32 = {d},\n", .{value.cooperativeMatrixDecodeVector});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkPhysicalDeviceHdrVividFeaturesHUAWEI(name: []const u8, value: *const vk.VkPhysicalDeviceHdrVividFeaturesHUAWEI, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkPhysicalDeviceHdrVividFeaturesHUAWEI = .{{\n", .{ name });
@@ -32950,6 +35245,32 @@ pub fn print_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT(name: []
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(name: []const u8, value: *const vk.VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("shaderMixedFloatDotProductFloat16AccFloat32: u32 = {d},\n", .{value.shaderMixedFloatDotProductFloat16AccFloat32});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("shaderMixedFloatDotProductFloat16AccFloat16: u32 = {d},\n", .{value.shaderMixedFloatDotProductFloat16AccFloat16});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("shaderMixedFloatDotProductBFloat16Acc: u32 = {d},\n", .{value.shaderMixedFloatDotProductBFloat16Acc});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("shaderMixedFloatDotProductFloat8AccFloat32: u32 = {d},\n", .{value.shaderMixedFloatDotProductFloat8AccFloat32});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(name: []const u8, value: *const vk.VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("primitiveRestartIndex: u32 = {d},\n", .{value.primitiveRestartIndex});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkPhysicalDeviceFormatPackFeaturesARM(name: []const u8, value: *const vk.VkPhysicalDeviceFormatPackFeaturesARM, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkPhysicalDeviceFormatPackFeaturesARM = .{{\n", .{ name });
@@ -32957,6 +35278,26 @@ pub fn print_VkPhysicalDeviceFormatPackFeaturesARM(name: []const u8, value: *con
     log.output("sType: VkStructureType = {t},\n", .{value.sType});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("formatPack: u32 = {d},\n", .{value.formatPack});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceThrottleHintFeaturesSEC(name: []const u8, value: *const vk.VkPhysicalDeviceThrottleHintFeaturesSEC, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceThrottleHintFeaturesSEC = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("throttleHint: u32 = {d},\n", .{value.throttleHint});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkThrottleHintSubmitInfoSEC(name: []const u8, value: *const vk.VkThrottleHintSubmitInfoSEC, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkThrottleHintSubmitInfoSEC = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("throttleHint: VkThrottleHintTypeSEC = {t},\n", .{value.throttleHint});
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
@@ -33018,6 +35359,8 @@ pub fn print_VkTensorCreateInfoARM(name: []const u8, value: *const vk.VkTensorCr
         log.output(".{s},", .{"VK_TENSOR_CREATE_PROTECTED_BIT_ARM"});
     if (@field(value.flags, "VK_TENSOR_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_ARM"))
         log.output(".{s},", .{"VK_TENSOR_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_ARM"});
+    if (@field(value.flags, "VK_TENSOR_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_ARM"))
+        log.output(".{s},", .{"VK_TENSOR_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_ARM"});
     log.output("}},\n", .{});
     if (value.pDescription) |v| {
         print_VkTensorDescriptionARM("pDescription", v, offset + 1);
@@ -33250,6 +35593,10 @@ pub fn print_VkTensorFormatPropertiesARM(name: []const u8, value: *const vk.VkTe
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV"});
     if (@field(value.optimalTilingTensorFeatures, "VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"});
+    if (@field(value.optimalTilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"});
+    if (@field(value.optimalTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"});
     if (@field(value.optimalTilingTensorFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"});
     if (@field(value.optimalTilingTensorFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
@@ -33270,6 +35617,12 @@ pub fn print_VkTensorFormatPropertiesARM(name: []const u8, value: *const vk.VkTe
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR"});
     if (@field(value.optimalTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"});
+    if (@field(value.optimalTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"});
+    if (@field(value.optimalTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"});
+    if (@field(value.optimalTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"});
     if (@field(value.optimalTilingTensorFeatures, "VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"});
     log.output("}},\n", .{});
@@ -33417,6 +35770,10 @@ pub fn print_VkTensorFormatPropertiesARM(name: []const u8, value: *const vk.VkTe
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV"});
     if (@field(value.linearTilingTensorFeatures, "VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM"});
+    if (@field(value.linearTilingTensorFeatures, "VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM"});
+    if (@field(value.linearTilingTensorFeatures, "VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG"});
     if (@field(value.linearTilingTensorFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"});
     if (@field(value.linearTilingTensorFeatures, "VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT"))
@@ -33437,6 +35794,12 @@ pub fn print_VkTensorFormatPropertiesARM(name: []const u8, value: *const vk.VkTe
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR"});
     if (@field(value.linearTilingTensorFeatures, "VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR"});
+    if (@field(value.linearTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM"});
+    if (@field(value.linearTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM"});
+    if (@field(value.linearTilingTensorFeatures, "VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"))
+        log.output(".{s},", .{"VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM"});
     if (@field(value.linearTilingTensorFeatures, "VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"))
         log.output(".{s},", .{"VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR"});
     log.output("}},\n", .{});
@@ -33822,6 +36185,10 @@ pub fn print_VkTensorMemoryBarrierARM(name: []const u8, value: *const vk.VkTenso
         log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_READ_BIT_EXT"});
     if (@field(value.srcAccessMask, "VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"))
         log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"});
     log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("dstStageMask: VkPipelineStageFlags2 = {{", .{});
@@ -34118,6 +36485,10 @@ pub fn print_VkTensorMemoryBarrierARM(name: []const u8, value: *const vk.VkTenso
         log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_READ_BIT_EXT"});
     if (@field(value.dstAccessMask, "VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"))
         log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"});
     log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("srcQueueFamilyIndex: u32 = {d},\n", .{value.srcQueueFamilyIndex});
@@ -34136,10 +36507,12 @@ pub fn print_VkTensorDependencyInfoARM(name: []const u8, value: *const vk.VkTens
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("tensorMemoryBarrierCount: u32 = {d},\n", .{value.tensorMemoryBarrierCount});
     if (value.pTensorMemoryBarriers) |v| {
-        print_VkTensorMemoryBarrierARM("pTensorMemoryBarriers", v, offset + 1);
+        for (v[0..value.tensorMemoryBarrierCount]) |*vv| {
+            print_VkTensorMemoryBarrierARM("pTensorMemoryBarriers", vv, offset + 1);
+        }
     } else {
         for (0..offset + 1) |_| log.output("    ", .{});
-        log.output("pTensorMemoryBarriers: *const VkTensorMemoryBarrierARM = null,\n", .{});
+        log.output("pTensorMemoryBarriers: [*]const VkTensorMemoryBarrierARM = null,\n", .{});
     }
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
@@ -34333,6 +36706,8 @@ pub fn print_VkPhysicalDeviceExternalTensorInfoARM(name: []const u8, value: *con
         log.output(".{s},", .{"VK_TENSOR_CREATE_PROTECTED_BIT_ARM"});
     if (@field(value.flags, "VK_TENSOR_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_ARM"))
         log.output(".{s},", .{"VK_TENSOR_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_ARM"});
+    if (@field(value.flags, "VK_TENSOR_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_ARM"))
+        log.output(".{s},", .{"VK_TENSOR_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_ARM"});
     log.output("}},\n", .{});
     if (value.pDescription) |v| {
         print_VkTensorDescriptionARM("pDescription", v, offset + 1);
@@ -34563,6 +36938,16 @@ pub fn print_VkDataGraphPipelineResourceInfoARM(name: []const u8, value: *const 
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkDataGraphPipelineResourceInfoImageLayoutARM(name: []const u8, value: *const vk.VkDataGraphPipelineResourceInfoImageLayoutARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDataGraphPipelineResourceInfoImageLayoutARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("layout: VkImageLayout = {t},\n", .{value.layout});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkDataGraphPipelineCompilerControlCreateInfoARM(name: []const u8, value: *const vk.VkDataGraphPipelineCompilerControlCreateInfoARM, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkDataGraphPipelineCompilerControlCreateInfoARM = .{{\n", .{ name });
@@ -34580,6 +36965,175 @@ pub fn print_VkDataGraphPipelineCreateInfoARM(name: []const u8, value: *const vk
     log.output("{s}: VkDataGraphPipelineCreateInfoARM = .{{\n", .{ name });
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("flags: VkPipelineCreateFlags2 = {{", .{});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DERIVATIVE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DERIVATIVE_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DERIVATIVE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DERIVATIVE_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DERIVATIVE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DERIVATIVE_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DISPATCH_BASE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISPATCH_BASE_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DISPATCH_BASE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISPATCH_BASE_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DISPATCH_BASE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISPATCH_BASE_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DEFER_COMPILE_BIT_NV"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DEFER_COMPILE_BIT_NV"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DEFER_COMPILE_BIT_NV"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DEFER_COMPILE_BIT_NV"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_CAPTURE_STATISTICS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_CAPTURE_STATISTICS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_CAPTURE_STATISTICS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_CAPTURE_STATISTICS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_LINK_TIME_OPTIMIZATION_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_LINK_TIME_OPTIMIZATION_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_LINK_TIME_OPTIMIZATION_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_LINK_TIME_OPTIMIZATION_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_LIBRARY_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_LIBRARY_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_LIBRARY_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_LIBRARY_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_AABBS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_AABBS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_AABBS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_AABBS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_NV"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_NV"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_NV"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_NV"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_ALLOW_MOTION_BIT_NV"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_ALLOW_MOTION_BIT_NV"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_ALLOW_MOTION_BIT_NV"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_ALLOW_MOTION_BIT_NV"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_NO_PROTECTED_ACCESS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_NO_PROTECTED_ACCESS_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_NO_PROTECTED_ACCESS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_NO_PROTECTED_ACCESS_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DESCRIPTOR_BUFFER_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DESCRIPTOR_BUFFER_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DESCRIPTOR_BUFFER_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DESCRIPTOR_BUFFER_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_PROTECTED_ACCESS_ONLY_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_PROTECTED_ACCESS_ONLY_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_PROTECTED_ACCESS_ONLY_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_PROTECTED_ACCESS_ONLY_BIT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_EXECUTION_GRAPH_BIT_AMDX"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_EXECUTION_GRAPH_BIT_AMDX"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_RAY_TRACING_ALLOW_SPHERES_AND_LINEAR_SWEPT_SPHERES_BIT_NV"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_RAY_TRACING_ALLOW_SPHERES_AND_LINEAR_SWEPT_SPHERES_BIT_NV"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_ENABLE_LEGACY_DITHERING_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_ENABLE_LEGACY_DITHERING_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_EXT"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR"});
+    if (@field(value.flags, "VK_PIPELINE_CREATE_2_64_BIT_INDEXING_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_CREATE_2_64_BIT_INDEXING_BIT_EXT"});
+    log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("layout: VkPipelineLayout = {},\n", .{value.layout});
     for (0..offset + 1) |_| log.output("    ", .{});
@@ -34634,6 +37188,8 @@ pub fn print_VkDataGraphPipelineSessionCreateInfoARM(name: []const u8, value: *c
     log.output("flags: VkDataGraphPipelineSessionCreateFlagsARM = {{", .{});
     if (@field(value.flags, "VK_DATA_GRAPH_PIPELINE_SESSION_CREATE_PROTECTED_BIT_ARM"))
         log.output(".{s},", .{"VK_DATA_GRAPH_PIPELINE_SESSION_CREATE_PROTECTED_BIT_ARM"});
+    if (@field(value.flags, "VK_DATA_GRAPH_PIPELINE_SESSION_CREATE_OPTICAL_FLOW_CACHE_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_PIPELINE_SESSION_CREATE_OPTICAL_FLOW_CACHE_BIT_ARM"});
     log.output("}},\n", .{});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("dataGraphPipeline: VkPipeline = {},\n", .{value.dataGraphPipeline});
@@ -34953,44 +37509,6 @@ pub fn print_VkPhysicalDeviceShaderUntypedPointersFeaturesKHR(name: []const u8, 
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
-pub fn print_VkNativeBufferOHOS(name: []const u8, value: *const vk.VkNativeBufferOHOS, offset: u32) void {
-    for (0..offset) |_| log.output("    ", .{});
-    log.output("{s}: VkNativeBufferOHOS = .{{\n", .{ name });
-    for (0..offset + 1) |_| log.output("    ", .{});
-    log.output("sType: VkStructureType = {t},\n", .{value.sType});
-    if (value.handle) |v| {
-        for (0..offset + 1) |_| log.output("    ", .{});
-        log.output("handle: *OHBufferHandle = {*},\n", .{v});
-    } else {
-        for (0..offset + 1) |_| log.output("    ", .{});
-        log.output("handle: *OHBufferHandle = null,\n", .{});
-    }
-    for (0..offset) |_| log.output("    ", .{});
-    log.output("}}\n", .{});
-}
-pub fn print_VkSwapchainImageCreateInfoOHOS(name: []const u8, value: *const vk.VkSwapchainImageCreateInfoOHOS, offset: u32) void {
-    for (0..offset) |_| log.output("    ", .{});
-    log.output("{s}: VkSwapchainImageCreateInfoOHOS = .{{\n", .{ name });
-    for (0..offset + 1) |_| log.output("    ", .{});
-    log.output("sType: VkStructureType = {t},\n", .{value.sType});
-    for (0..offset + 1) |_| log.output("    ", .{});
-    log.output("usage: VkSwapchainImageUsageFlagsOHOS = {{", .{});
-    if (@field(value.usage, "VK_SWAPCHAIN_IMAGE_USAGE_SHARED_BIT_OHOS"))
-        log.output(".{s},", .{"VK_SWAPCHAIN_IMAGE_USAGE_SHARED_BIT_OHOS"});
-    log.output("}},\n", .{});
-    for (0..offset) |_| log.output("    ", .{});
-    log.output("}}\n", .{});
-}
-pub fn print_VkPhysicalDevicePresentationPropertiesOHOS(name: []const u8, value: *const vk.VkPhysicalDevicePresentationPropertiesOHOS, offset: u32) void {
-    for (0..offset) |_| log.output("    ", .{});
-    log.output("{s}: VkPhysicalDevicePresentationPropertiesOHOS = .{{\n", .{ name });
-    for (0..offset + 1) |_| log.output("    ", .{});
-    log.output("sType: VkStructureType = {t},\n", .{value.sType});
-    for (0..offset + 1) |_| log.output("    ", .{});
-    log.output("sharedImage: u32 = {d},\n", .{value.sharedImage});
-    for (0..offset) |_| log.output("    ", .{});
-    log.output("}}\n", .{});
-}
 pub fn print_VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE(name: []const u8, value: *const vk.VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE = .{{\n", .{ name });
@@ -35268,6 +37786,57 @@ pub fn print_VkExternalFormatOHOS(name: []const u8, value: *const vk.VkExternalF
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkPerfHintInfoQCOM(name: []const u8, value: *const vk.VkPerfHintInfoQCOM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPerfHintInfoQCOM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("type: VkPerfHintTypeQCOM = {t},\n", .{value.type});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("scale: u32 = {d},\n", .{value.scale});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceQueuePerfHintFeaturesQCOM(name: []const u8, value: *const vk.VkPhysicalDeviceQueuePerfHintFeaturesQCOM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceQueuePerfHintFeaturesQCOM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("queuePerfHint: u32 = {d},\n", .{value.queuePerfHint});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceQueuePerfHintPropertiesQCOM(name: []const u8, value: *const vk.VkPhysicalDeviceQueuePerfHintPropertiesQCOM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceQueuePerfHintPropertiesQCOM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("supportedQueues: VkQueueFlags = {{", .{});
+    if (@field(value.supportedQueues, "VK_QUEUE_GRAPHICS_BIT"))
+        log.output(".{s},", .{"VK_QUEUE_GRAPHICS_BIT"});
+    if (@field(value.supportedQueues, "VK_QUEUE_COMPUTE_BIT"))
+        log.output(".{s},", .{"VK_QUEUE_COMPUTE_BIT"});
+    if (@field(value.supportedQueues, "VK_QUEUE_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_QUEUE_TRANSFER_BIT"});
+    if (@field(value.supportedQueues, "VK_QUEUE_SPARSE_BINDING_BIT"))
+        log.output(".{s},", .{"VK_QUEUE_SPARSE_BINDING_BIT"});
+    if (@field(value.supportedQueues, "VK_QUEUE_PROTECTED_BIT"))
+        log.output(".{s},", .{"VK_QUEUE_PROTECTED_BIT"});
+    if (@field(value.supportedQueues, "VK_QUEUE_VIDEO_DECODE_BIT_KHR"))
+        log.output(".{s},", .{"VK_QUEUE_VIDEO_DECODE_BIT_KHR"});
+    if (@field(value.supportedQueues, "VK_QUEUE_VIDEO_ENCODE_BIT_KHR"))
+        log.output(".{s},", .{"VK_QUEUE_VIDEO_ENCODE_BIT_KHR"});
+    if (@field(value.supportedQueues, "VK_QUEUE_OPTICAL_FLOW_BIT_NV"))
+        log.output(".{s},", .{"VK_QUEUE_OPTICAL_FLOW_BIT_NV"});
+    if (@field(value.supportedQueues, "VK_QUEUE_DATA_GRAPH_BIT_ARM"))
+        log.output(".{s},", .{"VK_QUEUE_DATA_GRAPH_BIT_ARM"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM(name: []const u8, value: *const vk.VkPhysicalDevicePerformanceCountersByRegionFeaturesARM, offset: u32) void {
     for (0..offset) |_| log.output("    ", .{});
     log.output("{s}: VkPhysicalDevicePerformanceCountersByRegionFeaturesARM = .{{\n", .{ name });
@@ -35326,22 +37895,26 @@ pub fn print_VkRenderPassPerformanceCountersByRegionBeginInfoARM(name: []const u
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("counterAddressCount: u32 = {d},\n", .{value.counterAddressCount});
     if (value.pCounterAddresses) |v| {
-        for (0..offset + 1) |_| log.output("    ", .{});
-        log.output("pCounterAddresses: *const u64 = {d},\n", .{v.*});
+        for (v[0..value.counterAddressCount]) |*vv| {
+            for (0..offset + 1) |_| log.output("    ", .{});
+            log.output("pCounterAddresses: [*]const u64 = {any},\n", .{vv});
+        }
     } else {
         for (0..offset + 1) |_| log.output("    ", .{});
-        log.output("pCounterAddresses: *const u64 = null,\n", .{});
+        log.output("pCounterAddresses: [*]const u64 = null,\n", .{});
     }
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("serializeRegions: u32 = {d},\n", .{value.serializeRegions});
     for (0..offset + 1) |_| log.output("    ", .{});
     log.output("counterIndexCount: u32 = {d},\n", .{value.counterIndexCount});
     if (value.pCounterIndices) |v| {
-        for (0..offset + 1) |_| log.output("    ", .{});
-        log.output("pCounterIndices: *u32 = {d},\n", .{v.*});
+        for (v[0..value.counterIndexCount]) |*vv| {
+            for (0..offset + 1) |_| log.output("    ", .{});
+            log.output("pCounterIndices: [*]u32 = {any},\n", .{vv});
+        }
     } else {
         for (0..offset + 1) |_| log.output("    ", .{});
-        log.output("pCounterIndices: *u32 = null,\n", .{});
+        log.output("pCounterIndices: [*]u32 = null,\n", .{});
     }
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
@@ -35368,6 +37941,1973 @@ pub fn print_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(name: []const u8
     for (0..offset) |_| log.output("    ", .{});
     log.output("}}\n", .{});
 }
+pub fn print_VkPhysicalDeviceShaderLongVectorFeaturesEXT(name: []const u8, value: *const vk.VkPhysicalDeviceShaderLongVectorFeaturesEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceShaderLongVectorFeaturesEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("longVector: u32 = {d},\n", .{value.longVector});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceShaderLongVectorPropertiesEXT(name: []const u8, value: *const vk.VkPhysicalDeviceShaderLongVectorPropertiesEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceShaderLongVectorPropertiesEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxVectorComponents: u32 = {d},\n", .{value.maxVectorComponents});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT(name: []const u8, value: *const vk.VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("textureCompressionASTC_3D: u32 = {d},\n", .{value.textureCompressionASTC_3D});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(name: []const u8, value: *const vk.VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("shaderSubgroupPartitioned: u32 = {d},\n", .{value.shaderSubgroupPartitioned});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkHostAddressRangeEXT(name: []const u8, value: *const vk.VkHostAddressRangeEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkHostAddressRangeEXT = .{{\n", .{ name });
+    if (value.address) |v| {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("address: *anyopaque = {*},\n", .{v});
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("address: *anyopaque = null,\n", .{});
+    }
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("size: u64 = {d},\n", .{value.size});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkHostAddressRangeConstEXT(name: []const u8, value: *const vk.VkHostAddressRangeConstEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkHostAddressRangeConstEXT = .{{\n", .{ name });
+    if (value.address) |v| {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("address: *const anyopaque = {*},\n", .{v});
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("address: *const anyopaque = null,\n", .{});
+    }
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("size: u64 = {d},\n", .{value.size});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkTexelBufferDescriptorInfoEXT(name: []const u8, value: *const vk.VkTexelBufferDescriptorInfoEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkTexelBufferDescriptorInfoEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("format: VkFormat = {t},\n", .{value.format});
+    print_VkDeviceAddressRangeKHR("addressRange", &value.addressRange, offset + 1);
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkImageDescriptorInfoEXT(name: []const u8, value: *const vk.VkImageDescriptorInfoEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkImageDescriptorInfoEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    if (value.pView) |v| {
+        print_VkImageViewCreateInfo("pView", v, offset + 1);
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pView: *const VkImageViewCreateInfo = null,\n", .{});
+    }
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("layout: VkImageLayout = {t},\n", .{value.layout});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkResourceDescriptorInfoEXT(name: []const u8, value: *const vk.VkResourceDescriptorInfoEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkResourceDescriptorInfoEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("type: VkDescriptorType = {t},\n", .{value.type});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    switch (value.type) {
+        .VK_DESCRIPTOR_TYPE_TENSOR_ARM => log.output("data: VkResourceDescriptorDataEXT = {any},\n", .{value.data.pTensorARM}),
+        else => log.output("data: VkResourceDescriptorDataEXT = ???,\n", .{}),
+    }
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkBindHeapInfoEXT(name: []const u8, value: *const vk.VkBindHeapInfoEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkBindHeapInfoEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    print_VkDeviceAddressRangeKHR("heapRange", &value.heapRange, offset + 1);
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("reservedRangeOffset: u64 = {d},\n", .{value.reservedRangeOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("reservedRangeSize: u64 = {d},\n", .{value.reservedRangeSize});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPushDataInfoEXT(name: []const u8, value: *const vk.VkPushDataInfoEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPushDataInfoEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("offset: u32 = {d},\n", .{value.offset});
+    print_VkHostAddressRangeConstEXT("data", &value.data, offset + 1);
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDescriptorMappingSourceConstantOffsetEXT(name: []const u8, value: *const vk.VkDescriptorMappingSourceConstantOffsetEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDescriptorMappingSourceConstantOffsetEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("heapOffset: u32 = {d},\n", .{value.heapOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("heapArrayStride: u32 = {d},\n", .{value.heapArrayStride});
+    if (value.pEmbeddedSampler) |v| {
+        print_VkSamplerCreateInfo("pEmbeddedSampler", v, offset + 1);
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pEmbeddedSampler: *const VkSamplerCreateInfo = null,\n", .{});
+    }
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerHeapOffset: u32 = {d},\n", .{value.samplerHeapOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerHeapArrayStride: u32 = {d},\n", .{value.samplerHeapArrayStride});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDescriptorMappingSourcePushIndexEXT(name: []const u8, value: *const vk.VkDescriptorMappingSourcePushIndexEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDescriptorMappingSourcePushIndexEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("heapOffset: u32 = {d},\n", .{value.heapOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("pushOffset: u32 = {d},\n", .{value.pushOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("heapIndexStride: u32 = {d},\n", .{value.heapIndexStride});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("heapArrayStride: u32 = {d},\n", .{value.heapArrayStride});
+    if (value.pEmbeddedSampler) |v| {
+        print_VkSamplerCreateInfo("pEmbeddedSampler", v, offset + 1);
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pEmbeddedSampler: *const VkSamplerCreateInfo = null,\n", .{});
+    }
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("useCombinedImageSamplerIndex: u32 = {d},\n", .{value.useCombinedImageSamplerIndex});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerHeapOffset: u32 = {d},\n", .{value.samplerHeapOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerPushOffset: u32 = {d},\n", .{value.samplerPushOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerHeapIndexStride: u32 = {d},\n", .{value.samplerHeapIndexStride});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerHeapArrayStride: u32 = {d},\n", .{value.samplerHeapArrayStride});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDescriptorMappingSourceIndirectIndexEXT(name: []const u8, value: *const vk.VkDescriptorMappingSourceIndirectIndexEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDescriptorMappingSourceIndirectIndexEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("heapOffset: u32 = {d},\n", .{value.heapOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("pushOffset: u32 = {d},\n", .{value.pushOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("addressOffset: u32 = {d},\n", .{value.addressOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("heapIndexStride: u32 = {d},\n", .{value.heapIndexStride});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("heapArrayStride: u32 = {d},\n", .{value.heapArrayStride});
+    if (value.pEmbeddedSampler) |v| {
+        print_VkSamplerCreateInfo("pEmbeddedSampler", v, offset + 1);
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pEmbeddedSampler: *const VkSamplerCreateInfo = null,\n", .{});
+    }
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("useCombinedImageSamplerIndex: u32 = {d},\n", .{value.useCombinedImageSamplerIndex});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerHeapOffset: u32 = {d},\n", .{value.samplerHeapOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerPushOffset: u32 = {d},\n", .{value.samplerPushOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerAddressOffset: u32 = {d},\n", .{value.samplerAddressOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerHeapIndexStride: u32 = {d},\n", .{value.samplerHeapIndexStride});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerHeapArrayStride: u32 = {d},\n", .{value.samplerHeapArrayStride});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDescriptorMappingSourceIndirectIndexArrayEXT(name: []const u8, value: *const vk.VkDescriptorMappingSourceIndirectIndexArrayEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDescriptorMappingSourceIndirectIndexArrayEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("heapOffset: u32 = {d},\n", .{value.heapOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("pushOffset: u32 = {d},\n", .{value.pushOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("addressOffset: u32 = {d},\n", .{value.addressOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("heapIndexStride: u32 = {d},\n", .{value.heapIndexStride});
+    if (value.pEmbeddedSampler) |v| {
+        print_VkSamplerCreateInfo("pEmbeddedSampler", v, offset + 1);
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pEmbeddedSampler: *const VkSamplerCreateInfo = null,\n", .{});
+    }
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("useCombinedImageSamplerIndex: u32 = {d},\n", .{value.useCombinedImageSamplerIndex});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerHeapOffset: u32 = {d},\n", .{value.samplerHeapOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerPushOffset: u32 = {d},\n", .{value.samplerPushOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerAddressOffset: u32 = {d},\n", .{value.samplerAddressOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerHeapIndexStride: u32 = {d},\n", .{value.samplerHeapIndexStride});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDescriptorMappingSourceHeapDataEXT(name: []const u8, value: *const vk.VkDescriptorMappingSourceHeapDataEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDescriptorMappingSourceHeapDataEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("heapOffset: u32 = {d},\n", .{value.heapOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("pushOffset: u32 = {d},\n", .{value.pushOffset});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDescriptorMappingSourceShaderRecordIndexEXT(name: []const u8, value: *const vk.VkDescriptorMappingSourceShaderRecordIndexEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDescriptorMappingSourceShaderRecordIndexEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("heapOffset: u32 = {d},\n", .{value.heapOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("shaderRecordOffset: u32 = {d},\n", .{value.shaderRecordOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("heapIndexStride: u32 = {d},\n", .{value.heapIndexStride});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("heapArrayStride: u32 = {d},\n", .{value.heapArrayStride});
+    if (value.pEmbeddedSampler) |v| {
+        print_VkSamplerCreateInfo("pEmbeddedSampler", v, offset + 1);
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pEmbeddedSampler: *const VkSamplerCreateInfo = null,\n", .{});
+    }
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("useCombinedImageSamplerIndex: u32 = {d},\n", .{value.useCombinedImageSamplerIndex});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerHeapOffset: u32 = {d},\n", .{value.samplerHeapOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerShaderRecordOffset: u32 = {d},\n", .{value.samplerShaderRecordOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerHeapIndexStride: u32 = {d},\n", .{value.samplerHeapIndexStride});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerHeapArrayStride: u32 = {d},\n", .{value.samplerHeapArrayStride});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDescriptorMappingSourceIndirectAddressEXT(name: []const u8, value: *const vk.VkDescriptorMappingSourceIndirectAddressEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDescriptorMappingSourceIndirectAddressEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("pushOffset: u32 = {d},\n", .{value.pushOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("addressOffset: u32 = {d},\n", .{value.addressOffset});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDescriptorSetAndBindingMappingEXT(name: []const u8, value: *const vk.VkDescriptorSetAndBindingMappingEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDescriptorSetAndBindingMappingEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("descriptorSet: u32 = {d},\n", .{value.descriptorSet});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("firstBinding: u32 = {d},\n", .{value.firstBinding});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("bindingCount: u32 = {d},\n", .{value.bindingCount});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("resourceMask: VkSpirvResourceTypeFlagsEXT = {{", .{});
+    if (@field(value.resourceMask, "VK_SPIRV_RESOURCE_TYPE_SAMPLER_BIT_EXT"))
+        log.output(".{s},", .{"VK_SPIRV_RESOURCE_TYPE_SAMPLER_BIT_EXT"});
+    if (@field(value.resourceMask, "VK_SPIRV_RESOURCE_TYPE_SAMPLED_IMAGE_BIT_EXT"))
+        log.output(".{s},", .{"VK_SPIRV_RESOURCE_TYPE_SAMPLED_IMAGE_BIT_EXT"});
+    if (@field(value.resourceMask, "VK_SPIRV_RESOURCE_TYPE_READ_ONLY_IMAGE_BIT_EXT"))
+        log.output(".{s},", .{"VK_SPIRV_RESOURCE_TYPE_READ_ONLY_IMAGE_BIT_EXT"});
+    if (@field(value.resourceMask, "VK_SPIRV_RESOURCE_TYPE_READ_WRITE_IMAGE_BIT_EXT"))
+        log.output(".{s},", .{"VK_SPIRV_RESOURCE_TYPE_READ_WRITE_IMAGE_BIT_EXT"});
+    if (@field(value.resourceMask, "VK_SPIRV_RESOURCE_TYPE_COMBINED_SAMPLED_IMAGE_BIT_EXT"))
+        log.output(".{s},", .{"VK_SPIRV_RESOURCE_TYPE_COMBINED_SAMPLED_IMAGE_BIT_EXT"});
+    if (@field(value.resourceMask, "VK_SPIRV_RESOURCE_TYPE_UNIFORM_BUFFER_BIT_EXT"))
+        log.output(".{s},", .{"VK_SPIRV_RESOURCE_TYPE_UNIFORM_BUFFER_BIT_EXT"});
+    if (@field(value.resourceMask, "VK_SPIRV_RESOURCE_TYPE_READ_ONLY_STORAGE_BUFFER_BIT_EXT"))
+        log.output(".{s},", .{"VK_SPIRV_RESOURCE_TYPE_READ_ONLY_STORAGE_BUFFER_BIT_EXT"});
+    if (@field(value.resourceMask, "VK_SPIRV_RESOURCE_TYPE_READ_WRITE_STORAGE_BUFFER_BIT_EXT"))
+        log.output(".{s},", .{"VK_SPIRV_RESOURCE_TYPE_READ_WRITE_STORAGE_BUFFER_BIT_EXT"});
+    if (@field(value.resourceMask, "VK_SPIRV_RESOURCE_TYPE_ACCELERATION_STRUCTURE_BIT_EXT"))
+        log.output(".{s},", .{"VK_SPIRV_RESOURCE_TYPE_ACCELERATION_STRUCTURE_BIT_EXT"});
+    if (@field(value.resourceMask, "VK_SPIRV_RESOURCE_TYPE_TENSOR_BIT_ARM"))
+        log.output(".{s},", .{"VK_SPIRV_RESOURCE_TYPE_TENSOR_BIT_ARM"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("source: VkDescriptorMappingSourceEXT = {t},\n", .{value.source});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    switch (value.source) {
+        .VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_CONSTANT_OFFSET_EXT => log.output("sourceData: VkDescriptorMappingSourceDataEXT = {any},\n", .{value.sourceData.constantOffset}),
+        .VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT => log.output("sourceData: VkDescriptorMappingSourceDataEXT = {any},\n", .{value.sourceData.pushIndex}),
+        .VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT => log.output("sourceData: VkDescriptorMappingSourceDataEXT = {any},\n", .{value.sourceData.indirectIndex}),
+        .VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT => log.output("sourceData: VkDescriptorMappingSourceDataEXT = {any},\n", .{value.sourceData.indirectIndexArray}),
+        .VK_DESCRIPTOR_MAPPING_SOURCE_RESOURCE_HEAP_DATA_EXT => log.output("sourceData: VkDescriptorMappingSourceDataEXT = {any},\n", .{value.sourceData.heapData}),
+        .VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_DATA_EXT => log.output("sourceData: VkDescriptorMappingSourceDataEXT = {any},\n", .{value.sourceData.pushDataOffset}),
+        .VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT => log.output("sourceData: VkDescriptorMappingSourceDataEXT = {any},\n", .{value.sourceData.pushAddressOffset}),
+        .VK_DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT => log.output("sourceData: VkDescriptorMappingSourceDataEXT = {any},\n", .{value.sourceData.indirectAddress}),
+        .VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT => log.output("sourceData: VkDescriptorMappingSourceDataEXT = {any},\n", .{value.sourceData.shaderRecordIndex}),
+        .VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT => log.output("sourceData: VkDescriptorMappingSourceDataEXT = {any},\n", .{value.sourceData.shaderRecordDataOffset}),
+        .VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT => log.output("sourceData: VkDescriptorMappingSourceDataEXT = {any},\n", .{value.sourceData.shaderRecordAddressOffset}),
+        else => log.output("sourceData: VkDescriptorMappingSourceDataEXT = ???,\n", .{}),
+    }
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkShaderDescriptorSetAndBindingMappingInfoEXT(name: []const u8, value: *const vk.VkShaderDescriptorSetAndBindingMappingInfoEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkShaderDescriptorSetAndBindingMappingInfoEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("mappingCount: u32 = {d},\n", .{value.mappingCount});
+    if (value.pMappings) |v| {
+        for (v[0..value.mappingCount]) |*vv| {
+            print_VkDescriptorSetAndBindingMappingEXT("pMappings", vv, offset + 1);
+        }
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pMappings: [*]const VkDescriptorSetAndBindingMappingEXT = null,\n", .{});
+    }
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkSamplerCustomBorderColorIndexCreateInfoEXT(name: []const u8, value: *const vk.VkSamplerCustomBorderColorIndexCreateInfoEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkSamplerCustomBorderColorIndexCreateInfoEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("index: u32 = {d},\n", .{value.index});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkOpaqueCaptureDataCreateInfoEXT(name: []const u8, value: *const vk.VkOpaqueCaptureDataCreateInfoEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkOpaqueCaptureDataCreateInfoEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    if (value.pData) |v| {
+        print_VkHostAddressRangeConstEXT("pData", v, offset + 1);
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pData: *const VkHostAddressRangeConstEXT = null,\n", .{});
+    }
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkIndirectCommandsLayoutPushDataTokenNV(name: []const u8, value: *const vk.VkIndirectCommandsLayoutPushDataTokenNV, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkIndirectCommandsLayoutPushDataTokenNV = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("pushDataOffset: u32 = {d},\n", .{value.pushDataOffset});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("pushDataSize: u32 = {d},\n", .{value.pushDataSize});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkSubsampledImageFormatPropertiesEXT(name: []const u8, value: *const vk.VkSubsampledImageFormatPropertiesEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkSubsampledImageFormatPropertiesEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("subsampledImageDescriptorCount: u32 = {d},\n", .{value.subsampledImageDescriptorCount});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceShaderSplitBarrierFeaturesEXT(name: []const u8, value: *const vk.VkPhysicalDeviceShaderSplitBarrierFeaturesEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceShaderSplitBarrierFeaturesEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("shaderSplitBarrier: u32 = {d},\n", .{value.shaderSplitBarrier});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceShaderSplitBarrierPropertiesEXT(name: []const u8, value: *const vk.VkPhysicalDeviceShaderSplitBarrierPropertiesEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceShaderSplitBarrierPropertiesEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("splitBarrierReservedSharedMemory: u32 = {d},\n", .{value.splitBarrierReservedSharedMemory});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceDescriptorHeapFeaturesEXT(name: []const u8, value: *const vk.VkPhysicalDeviceDescriptorHeapFeaturesEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceDescriptorHeapFeaturesEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("descriptorHeap: u32 = {d},\n", .{value.descriptorHeap});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("descriptorHeapCaptureReplay: u32 = {d},\n", .{value.descriptorHeapCaptureReplay});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceDescriptorHeapPropertiesEXT(name: []const u8, value: *const vk.VkPhysicalDeviceDescriptorHeapPropertiesEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceDescriptorHeapPropertiesEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerHeapAlignment: u64 = {d},\n", .{value.samplerHeapAlignment});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("resourceHeapAlignment: u64 = {d},\n", .{value.resourceHeapAlignment});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxSamplerHeapSize: u64 = {d},\n", .{value.maxSamplerHeapSize});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxResourceHeapSize: u64 = {d},\n", .{value.maxResourceHeapSize});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("minSamplerHeapReservedRange: u64 = {d},\n", .{value.minSamplerHeapReservedRange});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("minSamplerHeapReservedRangeWithEmbedded: u64 = {d},\n", .{value.minSamplerHeapReservedRangeWithEmbedded});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("minResourceHeapReservedRange: u64 = {d},\n", .{value.minResourceHeapReservedRange});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerDescriptorSize: u64 = {d},\n", .{value.samplerDescriptorSize});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("imageDescriptorSize: u64 = {d},\n", .{value.imageDescriptorSize});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("bufferDescriptorSize: u64 = {d},\n", .{value.bufferDescriptorSize});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerDescriptorAlignment: u64 = {d},\n", .{value.samplerDescriptorAlignment});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("imageDescriptorAlignment: u64 = {d},\n", .{value.imageDescriptorAlignment});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("bufferDescriptorAlignment: u64 = {d},\n", .{value.bufferDescriptorAlignment});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxPushDataSize: u64 = {d},\n", .{value.maxPushDataSize});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("imageCaptureReplayOpaqueDataSize: u64 = {d},\n", .{value.imageCaptureReplayOpaqueDataSize});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxDescriptorHeapEmbeddedSamplers: u32 = {d},\n", .{value.maxDescriptorHeapEmbeddedSamplers});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("samplerYcbcrConversionCount: u32 = {d},\n", .{value.samplerYcbcrConversionCount});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sparseDescriptorHeaps: u32 = {d},\n", .{value.sparseDescriptorHeaps});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("protectedDescriptorHeaps: u32 = {d},\n", .{value.protectedDescriptorHeaps});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkCommandBufferInheritanceDescriptorHeapInfoEXT(name: []const u8, value: *const vk.VkCommandBufferInheritanceDescriptorHeapInfoEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkCommandBufferInheritanceDescriptorHeapInfoEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    if (value.pSamplerHeapBindInfo) |v| {
+        print_VkBindHeapInfoEXT("pSamplerHeapBindInfo", v, offset + 1);
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pSamplerHeapBindInfo: *const VkBindHeapInfoEXT = null,\n", .{});
+    }
+    if (value.pResourceHeapBindInfo) |v| {
+        print_VkBindHeapInfoEXT("pResourceHeapBindInfo", v, offset + 1);
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pResourceHeapBindInfo: *const VkBindHeapInfoEXT = null,\n", .{});
+    }
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceDescriptorHeapTensorPropertiesARM(name: []const u8, value: *const vk.VkPhysicalDeviceDescriptorHeapTensorPropertiesARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceDescriptorHeapTensorPropertiesARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("tensorDescriptorSize: u64 = {d},\n", .{value.tensorDescriptorSize});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("tensorDescriptorAlignment: u64 = {d},\n", .{value.tensorDescriptorAlignment});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("tensorCaptureReplayOpaqueDataSize: u64 = {d},\n", .{value.tensorCaptureReplayOpaqueDataSize});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceShaderInstrumentationFeaturesARM(name: []const u8, value: *const vk.VkPhysicalDeviceShaderInstrumentationFeaturesARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceShaderInstrumentationFeaturesARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("shaderInstrumentation: u32 = {d},\n", .{value.shaderInstrumentation});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceShaderInstrumentationPropertiesARM(name: []const u8, value: *const vk.VkPhysicalDeviceShaderInstrumentationPropertiesARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceShaderInstrumentationPropertiesARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("numMetrics: u32 = {d},\n", .{value.numMetrics});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("perBasicBlockGranularity: u32 = {d},\n", .{value.perBasicBlockGranularity});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkShaderInstrumentationCreateInfoARM(name: []const u8, value: *const vk.VkShaderInstrumentationCreateInfoARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkShaderInstrumentationCreateInfoARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkShaderInstrumentationMetricDescriptionARM(name: []const u8, value: *const vk.VkShaderInstrumentationMetricDescriptionARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkShaderInstrumentationMetricDescriptionARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("name: [VK_MAX_DESCRIPTION_SIZE]u8 = {any},\n", .{value.name});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("description: [VK_MAX_DESCRIPTION_SIZE]u8 = {any},\n", .{value.description});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkShaderInstrumentationMetricDataHeaderARM(name: []const u8, value: *const vk.VkShaderInstrumentationMetricDataHeaderARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkShaderInstrumentationMetricDataHeaderARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("resultIndex: u32 = {d},\n", .{value.resultIndex});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("resultSubIndex: u32 = {d},\n", .{value.resultSubIndex});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("stages: VkShaderStageFlags = {{", .{});
+    if (@field(value.stages, "VK_SHADER_STAGE_VERTEX_BIT"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_VERTEX_BIT"});
+    if (@field(value.stages, "VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT"});
+    if (@field(value.stages, "VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT"});
+    if (@field(value.stages, "VK_SHADER_STAGE_GEOMETRY_BIT"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_GEOMETRY_BIT"});
+    if (@field(value.stages, "VK_SHADER_STAGE_FRAGMENT_BIT"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_FRAGMENT_BIT"});
+    if (@field(value.stages, "VK_SHADER_STAGE_COMPUTE_BIT"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_COMPUTE_BIT"});
+    if (@field(value.stages, "VK_SHADER_STAGE_TASK_BIT_EXT"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_TASK_BIT_EXT"});
+    if (@field(value.stages, "VK_SHADER_STAGE_MESH_BIT_EXT"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_MESH_BIT_EXT"});
+    if (@field(value.stages, "VK_SHADER_STAGE_RAYGEN_BIT_KHR"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_RAYGEN_BIT_KHR"});
+    if (@field(value.stages, "VK_SHADER_STAGE_RAYGEN_BIT_KHR"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_RAYGEN_BIT_KHR"});
+    if (@field(value.stages, "VK_SHADER_STAGE_ANY_HIT_BIT_KHR"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_ANY_HIT_BIT_KHR"});
+    if (@field(value.stages, "VK_SHADER_STAGE_ANY_HIT_BIT_KHR"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_ANY_HIT_BIT_KHR"});
+    if (@field(value.stages, "VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR"});
+    if (@field(value.stages, "VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR"});
+    if (@field(value.stages, "VK_SHADER_STAGE_MISS_BIT_KHR"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_MISS_BIT_KHR"});
+    if (@field(value.stages, "VK_SHADER_STAGE_MISS_BIT_KHR"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_MISS_BIT_KHR"});
+    if (@field(value.stages, "VK_SHADER_STAGE_INTERSECTION_BIT_KHR"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_INTERSECTION_BIT_KHR"});
+    if (@field(value.stages, "VK_SHADER_STAGE_INTERSECTION_BIT_KHR"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_INTERSECTION_BIT_KHR"});
+    if (@field(value.stages, "VK_SHADER_STAGE_CALLABLE_BIT_KHR"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_CALLABLE_BIT_KHR"});
+    if (@field(value.stages, "VK_SHADER_STAGE_CALLABLE_BIT_KHR"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_CALLABLE_BIT_KHR"});
+    if (@field(value.stages, "VK_SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_SUBPASS_SHADING_BIT_HUAWEI"});
+    if (@field(value.stages, "VK_SHADER_STAGE_CLUSTER_CULLING_BIT_HUAWEI"))
+        log.output(".{s},", .{"VK_SHADER_STAGE_CLUSTER_CULLING_BIT_HUAWEI"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("basicBlockIndex: u32 = {d},\n", .{value.basicBlockIndex});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDeviceAddressRangeKHR(name: []const u8, value: *const vk.VkDeviceAddressRangeKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDeviceAddressRangeKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("address: u64 = {d},\n", .{value.address});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("size: u64 = {d},\n", .{value.size});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDeviceMemoryCopyKHR(name: []const u8, value: *const vk.VkDeviceMemoryCopyKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDeviceMemoryCopyKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    print_VkDeviceAddressRangeKHR("srcRange", &value.srcRange, offset + 1);
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("srcFlags: VkAddressCommandFlagsKHR = {{", .{});
+    if (@field(value.srcFlags, "VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"});
+    if (@field(value.srcFlags, "VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"});
+    if (@field(value.srcFlags, "VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.srcFlags, "VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.srcFlags, "VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.srcFlags, "VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    log.output("}},\n", .{});
+    print_VkDeviceAddressRangeKHR("dstRange", &value.dstRange, offset + 1);
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("dstFlags: VkAddressCommandFlagsKHR = {{", .{});
+    if (@field(value.dstFlags, "VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"});
+    if (@field(value.dstFlags, "VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"});
+    if (@field(value.dstFlags, "VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.dstFlags, "VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.dstFlags, "VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.dstFlags, "VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkCopyDeviceMemoryInfoKHR(name: []const u8, value: *const vk.VkCopyDeviceMemoryInfoKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkCopyDeviceMemoryInfoKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("regionCount: u32 = {d},\n", .{value.regionCount});
+    if (value.pRegions) |v| {
+        for (v[0..value.regionCount]) |*vv| {
+            print_VkDeviceMemoryCopyKHR("pRegions", vv, offset + 1);
+        }
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pRegions: [*]const VkDeviceMemoryCopyKHR = null,\n", .{});
+    }
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDeviceMemoryImageCopyKHR(name: []const u8, value: *const vk.VkDeviceMemoryImageCopyKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDeviceMemoryImageCopyKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    print_VkDeviceAddressRangeKHR("addressRange", &value.addressRange, offset + 1);
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("addressFlags: VkAddressCommandFlagsKHR = {{", .{});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("addressRowLength: u32 = {d},\n", .{value.addressRowLength});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("addressImageHeight: u32 = {d},\n", .{value.addressImageHeight});
+    print_VkImageSubresourceLayers("imageSubresource", &value.imageSubresource, offset + 1);
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("imageLayout: VkImageLayout = {t},\n", .{value.imageLayout});
+    print_VkOffset3D("imageOffset", &value.imageOffset, offset + 1);
+    print_VkExtent3D("imageExtent", &value.imageExtent, offset + 1);
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkCopyDeviceMemoryImageInfoKHR(name: []const u8, value: *const vk.VkCopyDeviceMemoryImageInfoKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkCopyDeviceMemoryImageInfoKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("image: VkImage = {},\n", .{value.image});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("regionCount: u32 = {d},\n", .{value.regionCount});
+    if (value.pRegions) |v| {
+        for (v[0..value.regionCount]) |*vv| {
+            print_VkDeviceMemoryImageCopyKHR("pRegions", vv, offset + 1);
+        }
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pRegions: [*]const VkDeviceMemoryImageCopyKHR = null,\n", .{});
+    }
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkMemoryRangeBarriersInfoKHR(name: []const u8, value: *const vk.VkMemoryRangeBarriersInfoKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkMemoryRangeBarriersInfoKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("memoryRangeBarrierCount: u32 = {d},\n", .{value.memoryRangeBarrierCount});
+    if (value.pMemoryRangeBarriers) |v| {
+        for (v[0..value.memoryRangeBarrierCount]) |*vv| {
+            print_VkMemoryRangeBarrierKHR("pMemoryRangeBarriers", vv, offset + 1);
+        }
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pMemoryRangeBarriers: [*]const VkMemoryRangeBarrierKHR = null,\n", .{});
+    }
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkMemoryRangeBarrierKHR(name: []const u8, value: *const vk.VkMemoryRangeBarrierKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkMemoryRangeBarrierKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("srcStageMask: VkPipelineStageFlags2 = {{", .{});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_DRAW_INDIRECT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_DRAW_INDIRECT_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_DRAW_INDIRECT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_DRAW_INDIRECT_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_VERTEX_INPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_VERTEX_INPUT_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_VERTEX_INPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_VERTEX_INPUT_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_HOST_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_HOST_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_HOST_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_HOST_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_EXT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_CONDITIONAL_RENDERING_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_CONDITIONAL_RENDERING_BIT_EXT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_VIDEO_DECODE_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_VIDEO_DECODE_BIT_KHR"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_VIDEO_ENCODE_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_VIDEO_ENCODE_BIT_KHR"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_COPY_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_COPY_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_COPY_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_COPY_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_RESOLVE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_RESOLVE_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_RESOLVE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_RESOLVE_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_BLIT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_BLIT_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_BLIT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_BLIT_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_CLEAR_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_CLEAR_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_CLEAR_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_CLEAR_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_CLUSTER_CULLING_SHADER_BIT_HUAWEI"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_CLUSTER_CULLING_SHADER_BIT_HUAWEI"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_DATA_GRAPH_BIT_ARM"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_DATA_GRAPH_BIT_ARM"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_CONVERT_COOPERATIVE_VECTOR_MATRIX_BIT_NV"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_CONVERT_COOPERATIVE_VECTOR_MATRIX_BIT_NV"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_MEMORY_DECOMPRESSION_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_MEMORY_DECOMPRESSION_BIT_EXT"});
+    if (@field(value.srcStageMask, "VK_PIPELINE_STAGE_2_COPY_INDIRECT_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_COPY_INDIRECT_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("srcAccessMask: VkAccessFlags2 = {{", .{});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_INDIRECT_COMMAND_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_INDIRECT_COMMAND_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_INDIRECT_COMMAND_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_INDIRECT_COMMAND_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_INDEX_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_INDEX_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_INDEX_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_INDEX_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_UNIFORM_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_UNIFORM_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_UNIFORM_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_UNIFORM_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_INPUT_ATTACHMENT_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_INPUT_ATTACHMENT_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_INPUT_ATTACHMENT_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_INPUT_ATTACHMENT_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SHADER_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SHADER_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SHADER_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_WRITE_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SHADER_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_WRITE_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_TRANSFER_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_TRANSFER_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_TRANSFER_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_TRANSFER_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_TRANSFER_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_TRANSFER_WRITE_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_TRANSFER_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_TRANSFER_WRITE_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_HOST_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_HOST_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_HOST_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_HOST_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_HOST_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_HOST_WRITE_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_HOST_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_HOST_WRITE_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_MEMORY_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_MEMORY_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_MEMORY_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_MEMORY_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_MEMORY_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_MEMORY_WRITE_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_MEMORY_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_MEMORY_WRITE_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_COMMAND_PREPROCESS_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_COMMAND_PREPROCESS_READ_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_CONDITIONAL_RENDERING_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_CONDITIONAL_RENDERING_READ_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_KHR"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_KHR"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_FRAGMENT_DENSITY_MAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_FRAGMENT_DENSITY_MAP_READ_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_TRANSFORM_FEEDBACK_WRITE_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_TRANSFORM_FEEDBACK_WRITE_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SHADER_SAMPLED_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_SAMPLED_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SHADER_SAMPLED_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_SAMPLED_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SHADER_STORAGE_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_STORAGE_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SHADER_STORAGE_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_STORAGE_READ_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_VIDEO_DECODE_READ_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_VIDEO_DECODE_READ_BIT_KHR"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_VIDEO_DECODE_WRITE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_VIDEO_DECODE_WRITE_BIT_KHR"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_VIDEO_ENCODE_READ_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_VIDEO_ENCODE_READ_BIT_KHR"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_VIDEO_ENCODE_WRITE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_VIDEO_ENCODE_WRITE_BIT_KHR"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI"))
+        log.output(".{s},", .{"VK_ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_OPTICAL_FLOW_READ_BIT_NV"))
+        log.output(".{s},", .{"VK_ACCESS_2_OPTICAL_FLOW_READ_BIT_NV"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_OPTICAL_FLOW_WRITE_BIT_NV"))
+        log.output(".{s},", .{"VK_ACCESS_2_OPTICAL_FLOW_WRITE_BIT_NV"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_MICROMAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_MICROMAP_READ_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_DATA_GRAPH_READ_BIT_ARM"))
+        log.output(".{s},", .{"VK_ACCESS_2_DATA_GRAPH_READ_BIT_ARM"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_DATA_GRAPH_WRITE_BIT_ARM"))
+        log.output(".{s},", .{"VK_ACCESS_2_DATA_GRAPH_WRITE_BIT_ARM"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SHADER_TILE_ATTACHMENT_READ_BIT_QCOM"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_TILE_ATTACHMENT_READ_BIT_QCOM"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SHADER_TILE_ATTACHMENT_WRITE_BIT_QCOM"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_TILE_ATTACHMENT_WRITE_BIT_QCOM"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_MEMORY_DECOMPRESSION_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_READ_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"});
+    if (@field(value.srcAccessMask, "VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("dstStageMask: VkPipelineStageFlags2 = {{", .{});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_TOP_OF_PIPE_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_DRAW_INDIRECT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_DRAW_INDIRECT_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_DRAW_INDIRECT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_DRAW_INDIRECT_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_VERTEX_INPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_VERTEX_INPUT_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_VERTEX_INPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_VERTEX_INPUT_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_VERTEX_SHADER_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_TESSELLATION_CONTROL_SHADER_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_TESSELLATION_EVALUATION_SHADER_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_GEOMETRY_SHADER_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_COMPUTE_SHADER_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ALL_TRANSFER_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_BOTTOM_OF_PIPE_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_HOST_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_HOST_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_HOST_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_HOST_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ALL_GRAPHICS_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ALL_COMMANDS_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_COMMAND_PREPROCESS_BIT_EXT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_CONDITIONAL_RENDERING_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_CONDITIONAL_RENDERING_BIT_EXT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_TASK_SHADER_BIT_EXT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_MESH_SHADER_BIT_EXT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_RAY_TRACING_SHADER_BIT_KHR"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_FRAGMENT_DENSITY_PROCESS_BIT_EXT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_TRANSFORM_FEEDBACK_BIT_EXT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_BUILD_BIT_KHR"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_VIDEO_DECODE_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_VIDEO_DECODE_BIT_KHR"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_VIDEO_ENCODE_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_VIDEO_ENCODE_BIT_KHR"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_OPTICAL_FLOW_BIT_NV"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_MICROMAP_BUILD_BIT_EXT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_COPY_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_COPY_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_COPY_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_COPY_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_RESOLVE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_RESOLVE_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_RESOLVE_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_RESOLVE_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_BLIT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_BLIT_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_BLIT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_BLIT_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_CLEAR_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_CLEAR_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_CLEAR_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_CLEAR_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_INDEX_INPUT_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_PRE_RASTERIZATION_SHADERS_BIT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_SUBPASS_SHADER_BIT_HUAWEI"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_INVOCATION_MASK_BIT_HUAWEI"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_CLUSTER_CULLING_SHADER_BIT_HUAWEI"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_CLUSTER_CULLING_SHADER_BIT_HUAWEI"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_DATA_GRAPH_BIT_ARM"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_DATA_GRAPH_BIT_ARM"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_CONVERT_COOPERATIVE_VECTOR_MATRIX_BIT_NV"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_CONVERT_COOPERATIVE_VECTOR_MATRIX_BIT_NV"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_MEMORY_DECOMPRESSION_BIT_EXT"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_MEMORY_DECOMPRESSION_BIT_EXT"});
+    if (@field(value.dstStageMask, "VK_PIPELINE_STAGE_2_COPY_INDIRECT_BIT_KHR"))
+        log.output(".{s},", .{"VK_PIPELINE_STAGE_2_COPY_INDIRECT_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("dstAccessMask: VkAccessFlags2 = {{", .{});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_INDIRECT_COMMAND_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_INDIRECT_COMMAND_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_INDIRECT_COMMAND_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_INDIRECT_COMMAND_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_INDEX_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_INDEX_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_INDEX_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_INDEX_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_UNIFORM_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_UNIFORM_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_UNIFORM_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_UNIFORM_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_INPUT_ATTACHMENT_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_INPUT_ATTACHMENT_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_INPUT_ATTACHMENT_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_INPUT_ATTACHMENT_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SHADER_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SHADER_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SHADER_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_WRITE_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SHADER_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_WRITE_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_TRANSFER_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_TRANSFER_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_TRANSFER_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_TRANSFER_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_TRANSFER_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_TRANSFER_WRITE_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_TRANSFER_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_TRANSFER_WRITE_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_HOST_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_HOST_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_HOST_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_HOST_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_HOST_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_HOST_WRITE_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_HOST_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_HOST_WRITE_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_MEMORY_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_MEMORY_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_MEMORY_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_MEMORY_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_MEMORY_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_MEMORY_WRITE_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_MEMORY_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_MEMORY_WRITE_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_COMMAND_PREPROCESS_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_COMMAND_PREPROCESS_READ_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_CONDITIONAL_RENDERING_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_CONDITIONAL_RENDERING_READ_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_KHR"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_ACCELERATION_STRUCTURE_READ_BIT_KHR"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_ACCELERATION_STRUCTURE_WRITE_BIT_KHR"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_FRAGMENT_DENSITY_MAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_FRAGMENT_DENSITY_MAP_READ_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_TRANSFORM_FEEDBACK_WRITE_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_TRANSFORM_FEEDBACK_WRITE_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SHADER_SAMPLED_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_SAMPLED_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SHADER_SAMPLED_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_SAMPLED_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SHADER_STORAGE_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_STORAGE_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SHADER_STORAGE_READ_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_STORAGE_READ_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_STORAGE_WRITE_BIT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_VIDEO_DECODE_READ_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_VIDEO_DECODE_READ_BIT_KHR"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_VIDEO_DECODE_WRITE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_VIDEO_DECODE_WRITE_BIT_KHR"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_VIDEO_ENCODE_READ_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_VIDEO_ENCODE_READ_BIT_KHR"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_VIDEO_ENCODE_WRITE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_VIDEO_ENCODE_WRITE_BIT_KHR"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI"))
+        log.output(".{s},", .{"VK_ACCESS_2_INVOCATION_MASK_READ_BIT_HUAWEI"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_BINDING_TABLE_READ_BIT_KHR"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_DESCRIPTOR_BUFFER_READ_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_OPTICAL_FLOW_READ_BIT_NV"))
+        log.output(".{s},", .{"VK_ACCESS_2_OPTICAL_FLOW_READ_BIT_NV"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_OPTICAL_FLOW_WRITE_BIT_NV"))
+        log.output(".{s},", .{"VK_ACCESS_2_OPTICAL_FLOW_WRITE_BIT_NV"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_MICROMAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_MICROMAP_READ_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_MICROMAP_WRITE_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_DATA_GRAPH_READ_BIT_ARM"))
+        log.output(".{s},", .{"VK_ACCESS_2_DATA_GRAPH_READ_BIT_ARM"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_DATA_GRAPH_WRITE_BIT_ARM"))
+        log.output(".{s},", .{"VK_ACCESS_2_DATA_GRAPH_WRITE_BIT_ARM"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SHADER_TILE_ATTACHMENT_READ_BIT_QCOM"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_TILE_ATTACHMENT_READ_BIT_QCOM"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SHADER_TILE_ATTACHMENT_WRITE_BIT_QCOM"))
+        log.output(".{s},", .{"VK_ACCESS_2_SHADER_TILE_ATTACHMENT_WRITE_BIT_QCOM"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_MEMORY_DECOMPRESSION_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_READ_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT"});
+    if (@field(value.dstAccessMask, "VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("srcQueueFamilyIndex: u32 = {d},\n", .{value.srcQueueFamilyIndex});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("dstQueueFamilyIndex: u32 = {d},\n", .{value.dstQueueFamilyIndex});
+    print_VkDeviceAddressRangeKHR("addressRange", &value.addressRange, offset + 1);
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("addressFlags: VkAddressCommandFlagsKHR = {{", .{});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR(name: []const u8, value: *const vk.VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("deviceAddressCommands: u32 = {d},\n", .{value.deviceAddressCommands});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkConditionalRenderingBeginInfo2EXT(name: []const u8, value: *const vk.VkConditionalRenderingBeginInfo2EXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkConditionalRenderingBeginInfo2EXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    print_VkDeviceAddressRangeKHR("addressRange", &value.addressRange, offset + 1);
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("addressFlags: VkAddressCommandFlagsKHR = {{", .{});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("flags: VkConditionalRenderingFlagsEXT = {{", .{});
+    if (@field(value.flags, "VK_CONDITIONAL_RENDERING_INVERTED_BIT_EXT"))
+        log.output(".{s},", .{"VK_CONDITIONAL_RENDERING_INVERTED_BIT_EXT"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkAccelerationStructureCreateInfo2KHR(name: []const u8, value: *const vk.VkAccelerationStructureCreateInfo2KHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkAccelerationStructureCreateInfo2KHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("createFlags: VkAccelerationStructureCreateFlagsKHR = {{", .{});
+    if (@field(value.createFlags, "VK_ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR"))
+        log.output(".{s},", .{"VK_ACCELERATION_STRUCTURE_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_KHR"});
+    if (@field(value.createFlags, "VK_ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV"))
+        log.output(".{s},", .{"VK_ACCELERATION_STRUCTURE_CREATE_MOTION_BIT_NV"});
+    if (@field(value.createFlags, "VK_ACCELERATION_STRUCTURE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"))
+        log.output(".{s},", .{"VK_ACCELERATION_STRUCTURE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT"});
+    log.output("}},\n", .{});
+    print_VkDeviceAddressRangeKHR("addressRange", &value.addressRange, offset + 1);
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("addressFlags: VkAddressCommandFlagsKHR = {{", .{});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("type: VkAccelerationStructureTypeKHR = {t},\n", .{value.type});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkBindIndexBuffer3InfoKHR(name: []const u8, value: *const vk.VkBindIndexBuffer3InfoKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkBindIndexBuffer3InfoKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    print_VkDeviceAddressRangeKHR("addressRange", &value.addressRange, offset + 1);
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("addressFlags: VkAddressCommandFlagsKHR = {{", .{});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("indexType: VkIndexType = {t},\n", .{value.indexType});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkBindVertexBuffer3InfoKHR(name: []const u8, value: *const vk.VkBindVertexBuffer3InfoKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkBindVertexBuffer3InfoKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("setStride: u32 = {d},\n", .{value.setStride});
+    print_VkStridedDeviceAddressRangeKHR("addressRange", &value.addressRange, offset + 1);
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("addressFlags: VkAddressCommandFlagsKHR = {{", .{});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDrawIndirect2InfoKHR(name: []const u8, value: *const vk.VkDrawIndirect2InfoKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDrawIndirect2InfoKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    print_VkStridedDeviceAddressRangeKHR("addressRange", &value.addressRange, offset + 1);
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("addressFlags: VkAddressCommandFlagsKHR = {{", .{});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("drawCount: u32 = {d},\n", .{value.drawCount});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDrawIndirectCount2InfoKHR(name: []const u8, value: *const vk.VkDrawIndirectCount2InfoKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDrawIndirectCount2InfoKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    print_VkStridedDeviceAddressRangeKHR("addressRange", &value.addressRange, offset + 1);
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("addressFlags: VkAddressCommandFlagsKHR = {{", .{});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    log.output("}},\n", .{});
+    print_VkDeviceAddressRangeKHR("countAddressRange", &value.countAddressRange, offset + 1);
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("countAddressFlags: VkAddressCommandFlagsKHR = {{", .{});
+    if (@field(value.countAddressFlags, "VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"});
+    if (@field(value.countAddressFlags, "VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"});
+    if (@field(value.countAddressFlags, "VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.countAddressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.countAddressFlags, "VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.countAddressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxDrawCount: u32 = {d},\n", .{value.maxDrawCount});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDispatchIndirect2InfoKHR(name: []const u8, value: *const vk.VkDispatchIndirect2InfoKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDispatchIndirect2InfoKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    print_VkDeviceAddressRangeKHR("addressRange", &value.addressRange, offset + 1);
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("addressFlags: VkAddressCommandFlagsKHR = {{", .{});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkBindTransformFeedbackBuffer2InfoEXT(name: []const u8, value: *const vk.VkBindTransformFeedbackBuffer2InfoEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkBindTransformFeedbackBuffer2InfoEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    print_VkDeviceAddressRangeKHR("addressRange", &value.addressRange, offset + 1);
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("addressFlags: VkAddressCommandFlagsKHR = {{", .{});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.addressFlags, "VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkMemoryMarkerInfoAMD(name: []const u8, value: *const vk.VkMemoryMarkerInfoAMD, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkMemoryMarkerInfoAMD = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    print_VkDeviceAddressRangeKHR("dstRange", &value.dstRange, offset + 1);
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("dstFlags: VkAddressCommandFlagsKHR = {{", .{});
+    if (@field(value.dstFlags, "VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR"});
+    if (@field(value.dstFlags, "VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR"});
+    if (@field(value.dstFlags, "VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.dstFlags, "VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.dstFlags, "VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    if (@field(value.dstFlags, "VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"))
+        log.output(".{s},", .{"VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("marker: u32 = {d},\n", .{value.marker});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceShaderConstantDataFeaturesKHR(name: []const u8, value: *const vk.VkPhysicalDeviceShaderConstantDataFeaturesKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceShaderConstantDataFeaturesKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("shaderConstantData: u32 = {d},\n", .{value.shaderConstantData});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceShaderAbortFeaturesKHR(name: []const u8, value: *const vk.VkPhysicalDeviceShaderAbortFeaturesKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceShaderAbortFeaturesKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("shaderAbort: u32 = {d},\n", .{value.shaderAbort});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceShaderAbortPropertiesKHR(name: []const u8, value: *const vk.VkPhysicalDeviceShaderAbortPropertiesKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceShaderAbortPropertiesKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxShaderAbortMessageSize: u64 = {d},\n", .{value.maxShaderAbortMessageSize});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDeviceFaultShaderAbortMessageInfoKHR(name: []const u8, value: *const vk.VkDeviceFaultShaderAbortMessageInfoKHR, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDeviceFaultShaderAbortMessageInfoKHR = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("messageDataSize: u64 = {d},\n", .{value.messageDataSize});
+    if (value.pMessageData) |v| {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pMessageData: *anyopaque = {*},\n", .{v});
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pMessageData: *anyopaque = null,\n", .{});
+    }
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDataGraphTOSANameQualityARM(name: []const u8, value: *const vk.VkDataGraphTOSANameQualityARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDataGraphTOSANameQualityARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("name: [VK_MAX_DATA_GRAPH_TOSA_NAME_SIZE_ARM]u8 = {any},\n", .{value.name});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("qualityFlags: VkDataGraphTOSAQualityFlagsARM = {{", .{});
+    if (@field(value.qualityFlags, "VK_DATA_GRAPH_TOSA_QUALITY_ACCELERATED_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_TOSA_QUALITY_ACCELERATED_ARM"});
+    if (@field(value.qualityFlags, "VK_DATA_GRAPH_TOSA_QUALITY_CONFORMANT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_TOSA_QUALITY_CONFORMANT_ARM"});
+    if (@field(value.qualityFlags, "VK_DATA_GRAPH_TOSA_QUALITY_EXPERIMENTAL_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_TOSA_QUALITY_EXPERIMENTAL_ARM"});
+    if (@field(value.qualityFlags, "VK_DATA_GRAPH_TOSA_QUALITY_DEPRECATED_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_TOSA_QUALITY_DEPRECATED_ARM"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkQueueFamilyDataGraphTOSAPropertiesARM(name: []const u8, value: *const vk.VkQueueFamilyDataGraphTOSAPropertiesARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkQueueFamilyDataGraphTOSAPropertiesARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("profileCount: u32 = {d},\n", .{value.profileCount});
+    if (value.pProfiles) |v| {
+        for (v[0..value.profileCount]) |*vv| {
+            print_VkDataGraphTOSANameQualityARM("pProfiles", vv, offset + 1);
+        }
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pProfiles: [*]const VkDataGraphTOSANameQualityARM = null,\n", .{});
+    }
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("extensionCount: u32 = {d},\n", .{value.extensionCount});
+    if (value.pExtensions) |v| {
+        for (v[0..value.extensionCount]) |*vv| {
+            print_VkDataGraphTOSANameQualityARM("pExtensions", vv, offset + 1);
+        }
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pExtensions: [*]const VkDataGraphTOSANameQualityARM = null,\n", .{});
+    }
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("level: VkDataGraphTOSALevelARM = {t},\n", .{value.level});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDataGraphPipelineSingleNodeConnectionARM(name: []const u8, value: *const vk.VkDataGraphPipelineSingleNodeConnectionARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDataGraphPipelineSingleNodeConnectionARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("set: u32 = {d},\n", .{value.set});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("binding: u32 = {d},\n", .{value.binding});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("connection: VkDataGraphPipelineNodeConnectionTypeARM = {t},\n", .{value.connection});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM(name: []const u8, value: *const vk.VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("dataGraphOpticalFlow: u32 = {d},\n", .{value.dataGraphOpticalFlow});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkQueueFamilyDataGraphOpticalFlowPropertiesARM(name: []const u8, value: *const vk.VkQueueFamilyDataGraphOpticalFlowPropertiesARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkQueueFamilyDataGraphOpticalFlowPropertiesARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("supportedOutputGridSizes: VkDataGraphOpticalFlowGridSizeFlagsARM = {{", .{});
+    if (@field(value.supportedOutputGridSizes, "VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_1X1_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_1X1_BIT_ARM"});
+    if (@field(value.supportedOutputGridSizes, "VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_2X2_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_2X2_BIT_ARM"});
+    if (@field(value.supportedOutputGridSizes, "VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_4X4_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_4X4_BIT_ARM"});
+    if (@field(value.supportedOutputGridSizes, "VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_8X8_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_8X8_BIT_ARM"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("supportedHintGridSizes: VkDataGraphOpticalFlowGridSizeFlagsARM = {{", .{});
+    if (@field(value.supportedHintGridSizes, "VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_1X1_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_1X1_BIT_ARM"});
+    if (@field(value.supportedHintGridSizes, "VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_2X2_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_2X2_BIT_ARM"});
+    if (@field(value.supportedHintGridSizes, "VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_4X4_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_4X4_BIT_ARM"});
+    if (@field(value.supportedHintGridSizes, "VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_8X8_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_8X8_BIT_ARM"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("hintSupported: u32 = {d},\n", .{value.hintSupported});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("costSupported: u32 = {d},\n", .{value.costSupported});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("minWidth: u32 = {d},\n", .{value.minWidth});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("minHeight: u32 = {d},\n", .{value.minHeight});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxWidth: u32 = {d},\n", .{value.maxWidth});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("maxHeight: u32 = {d},\n", .{value.maxHeight});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDataGraphOpticalFlowImageFormatInfoARM(name: []const u8, value: *const vk.VkDataGraphOpticalFlowImageFormatInfoARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDataGraphOpticalFlowImageFormatInfoARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("usage: VkDataGraphOpticalFlowImageUsageFlagsARM = {{", .{});
+    if (@field(value.usage, "VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_INPUT_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_INPUT_BIT_ARM"});
+    if (@field(value.usage, "VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_OUTPUT_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_OUTPUT_BIT_ARM"});
+    if (@field(value.usage, "VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_HINT_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_HINT_BIT_ARM"});
+    if (@field(value.usage, "VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_COST_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_COST_BIT_ARM"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDataGraphOpticalFlowImageFormatPropertiesARM(name: []const u8, value: *const vk.VkDataGraphOpticalFlowImageFormatPropertiesARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDataGraphOpticalFlowImageFormatPropertiesARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("format: VkFormat = {t},\n", .{value.format});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDataGraphPipelineSingleNodeCreateInfoARM(name: []const u8, value: *const vk.VkDataGraphPipelineSingleNodeCreateInfoARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDataGraphPipelineSingleNodeCreateInfoARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("nodeType: VkDataGraphPipelineNodeTypeARM = {t},\n", .{value.nodeType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("connectionCount: u32 = {d},\n", .{value.connectionCount});
+    if (value.pConnections) |v| {
+        for (v[0..value.connectionCount]) |*vv| {
+            print_VkDataGraphPipelineSingleNodeConnectionARM("pConnections", vv, offset + 1);
+        }
+    } else {
+        for (0..offset + 1) |_| log.output("    ", .{});
+        log.output("pConnections: [*]const VkDataGraphPipelineSingleNodeConnectionARM = null,\n", .{});
+    }
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDataGraphPipelineOpticalFlowCreateInfoARM(name: []const u8, value: *const vk.VkDataGraphPipelineOpticalFlowCreateInfoARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDataGraphPipelineOpticalFlowCreateInfoARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("width: u32 = {d},\n", .{value.width});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("height: u32 = {d},\n", .{value.height});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("imageFormat: VkFormat = {t},\n", .{value.imageFormat});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("flowVectorFormat: VkFormat = {t},\n", .{value.flowVectorFormat});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("costFormat: VkFormat = {t},\n", .{value.costFormat});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("outputGridSize: VkDataGraphOpticalFlowGridSizeFlagsARM = {{", .{});
+    if (@field(value.outputGridSize, "VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_1X1_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_1X1_BIT_ARM"});
+    if (@field(value.outputGridSize, "VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_2X2_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_2X2_BIT_ARM"});
+    if (@field(value.outputGridSize, "VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_4X4_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_4X4_BIT_ARM"});
+    if (@field(value.outputGridSize, "VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_8X8_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_8X8_BIT_ARM"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("hintGridSize: VkDataGraphOpticalFlowGridSizeFlagsARM = {{", .{});
+    if (@field(value.hintGridSize, "VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_1X1_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_1X1_BIT_ARM"});
+    if (@field(value.hintGridSize, "VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_2X2_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_2X2_BIT_ARM"});
+    if (@field(value.hintGridSize, "VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_4X4_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_4X4_BIT_ARM"});
+    if (@field(value.hintGridSize, "VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_8X8_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_8X8_BIT_ARM"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("performanceLevel: VkDataGraphOpticalFlowPerformanceLevelARM = {t},\n", .{value.performanceLevel});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("flags: VkDataGraphOpticalFlowCreateFlagsARM = {{", .{});
+    if (@field(value.flags, "VK_DATA_GRAPH_OPTICAL_FLOW_CREATE_ENABLE_HINT_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_CREATE_ENABLE_HINT_BIT_ARM"});
+    if (@field(value.flags, "VK_DATA_GRAPH_OPTICAL_FLOW_CREATE_ENABLE_COST_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_CREATE_ENABLE_COST_BIT_ARM"});
+    if (@field(value.flags, "VK_DATA_GRAPH_OPTICAL_FLOW_CREATE_RESERVED_30_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_CREATE_RESERVED_30_BIT_ARM"});
+    log.output("}},\n", .{});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkDataGraphPipelineOpticalFlowDispatchInfoARM(name: []const u8, value: *const vk.VkDataGraphPipelineOpticalFlowDispatchInfoARM, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkDataGraphPipelineOpticalFlowDispatchInfoARM = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("flags: VkDataGraphOpticalFlowExecuteFlagsARM = {{", .{});
+    if (@field(value.flags, "VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_DISABLE_TEMPORAL_HINTS_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_DISABLE_TEMPORAL_HINTS_BIT_ARM"});
+    if (@field(value.flags, "VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_INPUT_UNCHANGED_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_INPUT_UNCHANGED_BIT_ARM"});
+    if (@field(value.flags, "VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_REFERENCE_UNCHANGED_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_REFERENCE_UNCHANGED_BIT_ARM"});
+    if (@field(value.flags, "VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_INPUT_IS_PREVIOUS_REFERENCE_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_INPUT_IS_PREVIOUS_REFERENCE_BIT_ARM"});
+    if (@field(value.flags, "VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_REFERENCE_IS_PREVIOUS_INPUT_BIT_ARM"))
+        log.output(".{s},", .{"VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_REFERENCE_IS_PREVIOUS_INPUT_BIT_ARM"});
+    log.output("}},\n", .{});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("meanFlowL1NormHint: u32 = {d},\n", .{value.meanFlowL1NormHint});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
+pub fn print_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(name: []const u8, value: *const vk.VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT, offset: u32) void {
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("{s}: VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT = .{{\n", .{ name });
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("sType: VkStructureType = {t},\n", .{value.sType});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("shaderFloat4: u32 = {d},\n", .{value.shaderFloat4});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("shaderFloat6: u32 = {d},\n", .{value.shaderFloat6});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("shaderFloat8UnsignedE8M0: u32 = {d},\n", .{value.shaderFloat8UnsignedE8M0});
+    for (0..offset + 1) |_| log.output("    ", .{});
+    log.output("shaderMXInt8: u32 = {d},\n", .{value.shaderMXInt8});
+    for (0..offset) |_| log.output("    ", .{});
+    log.output("}}\n", .{});
+}
 pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
     var base: *const vk.VkBaseOutStructure = @ptrCast(value);
     while(true) {
@@ -35387,6 +39927,8 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER => print_VkBufferMemoryBarrier(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER => print_VkImageMemoryBarrier(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO => print_VkImageCreateInfo(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_IMAGE_CREATE_FLAGS_2_CREATE_INFO_KHR => print_VkImageCreateFlags2CreateInfoKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_IMAGE_USAGE_FLAGS_2_CREATE_INFO_KHR => print_VkImageUsageFlags2CreateInfoKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO => print_VkImageViewCreateInfo(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_BIND_SPARSE_INFO => print_VkBindSparseInfo(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_COPY_MEMORY_INDIRECT_INFO_KHR => print_VkCopyMemoryIndirectInfoKHR(name, @ptrCast(base), 0),
@@ -35438,6 +39980,7 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR => print_VkAndroidSurfaceCreateInfoKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN => print_VkViSurfaceCreateInfoNN(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR => print_VkWaylandSurfaceCreateInfoKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_UBM_SURFACE_CREATE_INFO_SEC => print_VkUbmSurfaceCreateInfoSEC(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR => print_VkWin32SurfaceCreateInfoKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR => print_VkXlibSurfaceCreateInfoKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR => print_VkXcbSurfaceCreateInfoKHR(name, @ptrCast(base), 0),
@@ -35470,6 +40013,9 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_SCI_BUF_FEATURES_NV => print_VkPhysicalDeviceExternalMemorySciBufFeaturesNV(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV => print_VkWin32KeyedMutexAcquireReleaseInfoNV(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV => print_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PUSH_CONSTANT_BANK_INFO_NV => print_VkPushConstantBankInfoNV(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_FEATURES_NV => print_VkPhysicalDevicePushConstantBankFeaturesNV(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_PROPERTIES_NV => print_VkPhysicalDevicePushConstantBankPropertiesNV(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_COMPUTE_FEATURES_NV => print_VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO => print_VkDevicePrivateDataCreateInfo(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO => print_VkPrivateDataSlotCreateInfo(name, @ptrCast(base), 0),
@@ -35624,6 +40170,8 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR => print_VkDisplayPlaneInfo2KHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR => print_VkDisplayPlaneCapabilities2KHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR => print_VkSharedPresentSurfaceCapabilitiesKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_SWAPCHAIN_FLAGS_SURFACE_CAPABILITIES_EXT => print_VkSwapchainFlagsSurfaceCapabilitiesEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_2_KHR => print_VkSharedPresentSurfaceCapabilities2KHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES => print_VkPhysicalDevice16BitStorageFeatures(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES => print_VkPhysicalDeviceSubgroupProperties(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES => print_VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures(name, @ptrCast(base), 0),
@@ -35638,6 +40186,7 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS => print_VkMemoryDedicatedRequirements(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO => print_VkMemoryDedicatedAllocateInfo(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO => print_VkImageViewUsageCreateInfo(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_2_CREATE_INFO_KHR => print_VkImageViewUsage2CreateInfoKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_IMAGE_VIEW_SLICED_CREATE_INFO_EXT => print_VkImageViewSlicedCreateInfoEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO => print_VkPipelineTessellationDomainOriginStateCreateInfo(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO => print_VkSamplerYcbcrConversionInfo(name, @ptrCast(base), 0),
@@ -35687,15 +40236,18 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_8_FEATURES_KHR => print_VkPhysicalDeviceMaintenance8FeaturesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_FEATURES_KHR => print_VkPhysicalDeviceMaintenance9FeaturesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_PROPERTIES_KHR => print_VkPhysicalDeviceMaintenance9PropertiesKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR => print_VkPhysicalDeviceMaintenance11FeaturesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_PROPERTIES_KHR => print_VkPhysicalDeviceMaintenance10PropertiesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_FEATURES_KHR => print_VkPhysicalDeviceMaintenance10FeaturesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_QUEUE_FAMILY_OWNERSHIP_TRANSFER_PROPERTIES_KHR => print_VkQueueFamilyOwnershipTransferPropertiesKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_QUEUE_FAMILY_OPTIMAL_IMAGE_TRANSFER_GRANULARITY_PROPERTIES_KHR => print_VkQueueFamilyOptimalImageTransferGranularityPropertiesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_RENDERING_AREA_INFO => print_VkRenderingAreaInfo(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT => print_VkDescriptorSetLayoutSupport(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES => print_VkPhysicalDeviceShaderDrawParametersFeatures(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES => print_VkPhysicalDeviceShaderFloat16Int8Features(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES => print_VkPhysicalDeviceFloatControlsProperties(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES => print_VkPhysicalDeviceHostQueryResetFeatures(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ELAPSED_TIMER_QUERY_FEATURES_QCOM => print_VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO => print_VkDeviceQueueGlobalPriorityCreateInfo(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES => print_VkPhysicalDeviceGlobalPriorityQueryFeatures(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES => print_VkQueueFamilyGlobalPriorityProperties(name, @ptrCast(base), 0),
@@ -35809,6 +40361,7 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT => print_VkImageDrmFormatModifierExplicitCreateInfoEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT => print_VkImageDrmFormatModifierPropertiesEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO => print_VkImageStencilUsageCreateInfo(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_2_CREATE_INFO_KHR => print_VkImageStencilUsage2CreateInfoKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD => print_VkDeviceMemoryOverallocationCreateInfoAMD(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT => print_VkPhysicalDeviceFragmentDensityMapFeaturesEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_2_FEATURES_EXT => print_VkPhysicalDeviceFragmentDensityMap2FeaturesEXT(name, @ptrCast(base), 0),
@@ -35912,6 +40465,13 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_PROPERTIES => print_VkPhysicalDeviceVulkan14Properties(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PIPELINE_COMPILER_CONTROL_CREATE_INFO_AMD => print_VkPipelineCompilerControlCreateInfoAMD(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COHERENT_MEMORY_FEATURES_AMD => print_VkPhysicalDeviceCoherentMemoryFeaturesAMD(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_FEATURES_AMD => print_VkPhysicalDeviceGpaFeaturesAMD(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_PROPERTIES_AMD => print_VkPhysicalDeviceGpaPropertiesAMD(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_PROPERTIES_2_AMD => print_VkPhysicalDeviceGpaProperties2AMD(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_GPA_SAMPLE_BEGIN_INFO_AMD => print_VkGpaSampleBeginInfoAMD(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_GPA_DEVICE_CLOCK_MODE_INFO_AMD => print_VkGpaDeviceClockModeInfoAMD(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_GPA_DEVICE_GET_CLOCK_INFO_AMD => print_VkGpaDeviceGetClockInfoAMD(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_GPA_SESSION_CREATE_INFO_AMD => print_VkGpaSessionCreateInfoAMD(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_FAULT_DATA => print_VkFaultData(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_FAULT_CALLBACK_INFO => print_VkFaultCallbackInfo(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES => print_VkPhysicalDeviceToolProperties(name, @ptrCast(base), 0),
@@ -35940,6 +40500,7 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_2_FEATURES_EXT => print_VkPhysicalDeviceExtendedDynamicState2FeaturesEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_FEATURES_EXT => print_VkPhysicalDeviceExtendedDynamicState3FeaturesEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_PROPERTIES_EXT => print_VkPhysicalDeviceExtendedDynamicState3PropertiesEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_FLAGS_FEATURES_KHR => print_VkPhysicalDeviceExtendedFlagsFeaturesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_RENDER_PASS_TRANSFORM_BEGIN_INFO_QCOM => print_VkRenderPassTransformBeginInfoQCOM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_COPY_COMMAND_TRANSFORM_INFO_QCOM => print_VkCopyCommandTransformInfoQCOM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM => print_VkCommandBufferInheritanceRenderPassTransformInfoQCOM(name, @ptrCast(base), 0),
@@ -36057,6 +40618,7 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_PRESENT_WAIT_2_KHR => print_VkSurfaceCapabilitiesPresentWait2KHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_SUBPASS_RESOLVE_PERFORMANCE_QUERY_EXT => print_VkSubpassResolvePerformanceQueryEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_INFO_EXT => print_VkMultisampledRenderToSingleSampledInfoEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SWAPCHAIN_FEATURES_EXT => print_VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES => print_VkPhysicalDevicePipelineProtectedAccessFeatures(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_QUEUE_FAMILY_VIDEO_PROPERTIES_KHR => print_VkQueueFamilyVideoPropertiesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_QUEUE_FAMILY_QUERY_RESULT_STATUS_PROPERTIES_KHR => print_VkQueueFamilyQueryResultStatusPropertiesKHR(name, @ptrCast(base), 0),
@@ -36126,6 +40688,9 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_VIDEO_ENCODE_RATE_CONTROL_INFO_KHR => print_VkVideoEncodeRateControlInfoKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_VIDEO_ENCODE_RATE_CONTROL_LAYER_INFO_KHR => print_VkVideoEncodeRateControlLayerInfoKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_VIDEO_ENCODE_CAPABILITIES_KHR => print_VkVideoEncodeCapabilitiesKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_FEEDBACK_2_FEATURES_KHR => print_VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_VIDEO_ENCODE_FEEDBACK_2_CAPABILITIES_KHR => print_VkVideoEncodeFeedback2CapabilitiesKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_QUERY_POOL_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_CREATE_INFO_KHR => print_VkQueryPoolVideoEncodePerPartitionFeedbackCreateInfoKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_VIDEO_ENCODE_H264_CAPABILITIES_KHR => print_VkVideoEncodeH264CapabilitiesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_VIDEO_ENCODE_H264_QUALITY_LEVEL_PROPERTIES_KHR => print_VkVideoEncodeH264QualityLevelPropertiesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_VIDEO_ENCODE_H264_SESSION_CREATE_INFO_KHR => print_VkVideoEncodeH264SessionCreateInfoKHR(name, @ptrCast(base), 0),
@@ -36220,6 +40785,7 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_CUDA_LAUNCH_INFO_NV => print_VkCudaLaunchInfoNV(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RGBA10X6_FORMATS_FEATURES_EXT => print_VkPhysicalDeviceRGBA10X6FormatsFeaturesEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_3 => print_VkFormatProperties3(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_4_KHR => print_VkFormatProperties4KHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_2_EXT => print_VkDrmFormatModifierPropertiesList2EXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_2_ANDROID => print_VkAndroidHardwareBufferFormatProperties2ANDROID(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO => print_VkPipelineRenderingCreateInfo(name, @ptrCast(base), 0),
@@ -36242,6 +40808,11 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_BINARY_PROPERTIES_KHR => print_VkPhysicalDevicePipelineBinaryPropertiesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_PROPERTIES_EXT => print_VkPhysicalDeviceGraphicsPipelineLibraryPropertiesEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_LIBRARY_CREATE_INFO_EXT => print_VkGraphicsPipelineLibraryCreateInfoEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_NEURAL_ACCELERATOR_STATISTICS_FEATURES_ARM => print_VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_NEURAL_STATISTICS_CREATE_INFO_ARM => print_VkDataGraphPipelineNeuralStatisticsCreateInfoARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_NEURAL_STATISTICS_CREATE_INFO_ARM => print_VkDataGraphPipelineSessionNeuralStatisticsCreateInfoARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_TENSOR_EXPLICIT_TILING_FORMAT_PROPERTIES_ARM => print_VkTensorExplicitTilingFormatPropertiesARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_TENSOR_ROLLING_BACKING_CREATE_INFO_ARM => print_VkTensorRollingBackingCreateInfoARM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_SET_HOST_MAPPING_FEATURES_VALVE => print_VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_DESCRIPTOR_SET_BINDING_REFERENCE_VALVE => print_VkDescriptorSetBindingReferenceVALVE(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_HOST_MAPPING_INFO_VALVE => print_VkDescriptorSetLayoutHostMappingInfoVALVE(name, @ptrCast(base), 0),
@@ -36262,14 +40833,18 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_RENDER_PASS_SUBPASS_FEEDBACK_CREATE_INFO_EXT => print_VkRenderPassSubpassFeedbackCreateInfoEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_MERGE_FEEDBACK_FEATURES_EXT => print_VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_MICROMAP_BUILD_INFO_EXT => print_VkMicromapBuildInfoEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_MICROMAP_DATA_KHR => print_VkAccelerationStructureGeometryMicromapDataKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_MICROMAP_CREATE_INFO_EXT => print_VkMicromapCreateInfoEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_MICROMAP_VERSION_INFO_EXT => print_VkMicromapVersionInfoEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_COPY_MICROMAP_INFO_EXT => print_VkCopyMicromapInfoEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_COPY_MICROMAP_TO_MEMORY_INFO_EXT => print_VkCopyMicromapToMemoryInfoEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_COPY_MEMORY_TO_MICROMAP_INFO_EXT => print_VkCopyMemoryToMicromapInfoEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_MICROMAP_BUILD_SIZES_INFO_EXT => print_VkMicromapBuildSizesInfoEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_FEATURES_KHR => print_VkPhysicalDeviceOpacityMicromapFeaturesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_FEATURES_EXT => print_VkPhysicalDeviceOpacityMicromapFeaturesEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_PROPERTIES_KHR => print_VkPhysicalDeviceOpacityMicromapPropertiesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_PROPERTIES_EXT => print_VkPhysicalDeviceOpacityMicromapPropertiesEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_TRIANGLES_OPACITY_MICROMAP_KHR => print_VkAccelerationStructureTrianglesOpacityMicromapKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_TRIANGLES_OPACITY_MICROMAP_EXT => print_VkAccelerationStructureTrianglesOpacityMicromapEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DISPLACEMENT_MICROMAP_FEATURES_NV => print_VkPhysicalDeviceDisplacementMicromapFeaturesNV(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DISPLACEMENT_MICROMAP_PROPERTIES_NV => print_VkPhysicalDeviceDisplacementMicromapPropertiesNV(name, @ptrCast(base), 0),
@@ -36295,6 +40870,8 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO => print_VkPipelineRobustnessCreateInfo(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES => print_VkPhysicalDevicePipelineRobustnessProperties(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_IMAGE_VIEW_SAMPLE_WEIGHT_CREATE_INFO_QCOM => print_VkImageViewSampleWeightCreateInfoQCOM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MULTIPLE_WAIT_QUEUES_FEATURES_QCOM => print_VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MULTIPLE_WAIT_QUEUES_PROPERTIES_QCOM => print_VkPhysicalDeviceShaderMultipleWaitQueuesPropertiesQCOM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_FEATURES_QCOM => print_VkPhysicalDeviceImageProcessingFeaturesQCOM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_PROPERTIES_QCOM => print_VkPhysicalDeviceImageProcessingPropertiesQCOM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_PROPERTIES_FEATURES_QCOM => print_VkPhysicalDeviceTilePropertiesFeaturesQCOM(name, @ptrCast(base), 0),
@@ -36316,8 +40893,12 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_OPTICAL_FLOW_SESSION_CREATE_PRIVATE_DATA_INFO_NV => print_VkOpticalFlowSessionCreatePrivateDataInfoNV(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_OPTICAL_FLOW_EXECUTE_INFO_NV => print_VkOpticalFlowExecuteInfoNV(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_EXT => print_VkPhysicalDeviceFaultFeaturesEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DEVICE_FAULT_INFO_KHR => print_VkDeviceFaultInfoKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DEVICE_FAULT_DEBUG_INFO_KHR => print_VkDeviceFaultDebugInfoKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_DEVICE_FAULT_COUNTS_EXT => print_VkDeviceFaultCountsEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_DEVICE_FAULT_INFO_EXT => print_VkDeviceFaultInfoEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_KHR => print_VkPhysicalDeviceFaultFeaturesKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_PROPERTIES_KHR => print_VkPhysicalDeviceFaultPropertiesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT => print_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_DEPTH_BIAS_INFO_EXT => print_VkDepthBiasInfoEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_DEPTH_BIAS_REPRESENTATION_INFO_EXT => print_VkDepthBiasRepresentationInfoEXT(name, @ptrCast(base), 0),
@@ -36327,6 +40908,7 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_FRAME_BOUNDARY_EXT => print_VkFrameBoundaryEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAME_BOUNDARY_FEATURES_EXT => print_VkPhysicalDeviceFrameBoundaryFeaturesEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT => print_VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR => print_VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_SURFACE_PRESENT_MODE_KHR => print_VkSurfacePresentModeKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_SURFACE_PRESENT_SCALING_CAPABILITIES_KHR => print_VkSurfacePresentScalingCapabilitiesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_KHR => print_VkSurfacePresentModeCompatibilityKHR(name, @ptrCast(base), 0),
@@ -36367,6 +40949,7 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_KHR => print_VkPhysicalDeviceCooperativeMatrixFeaturesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_KHR => print_VkCooperativeMatrixPropertiesKHR(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_KHR => print_VkPhysicalDeviceCooperativeMatrixPropertiesKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_CONVERSION_FEATURES_QCOM => print_VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ENQUEUE_PROPERTIES_AMDX => print_VkPhysicalDeviceShaderEnqueuePropertiesAMDX(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ENQUEUE_FEATURES_AMDX => print_VkPhysicalDeviceShaderEnqueueFeaturesAMDX(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_EXECUTION_GRAPH_PIPELINE_CREATE_INFO_AMDX => print_VkExecutionGraphPipelineCreateInfoAMDX(name, @ptrCast(base), 0),
@@ -36395,6 +40978,7 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_2_FEATURES_QCOM => print_VkPhysicalDeviceImageProcessing2FeaturesQCOM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_2_PROPERTIES_QCOM => print_VkPhysicalDeviceImageProcessing2PropertiesQCOM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_SAMPLER_BLOCK_MATCH_WINDOW_CREATE_INFO_QCOM => print_VkSamplerBlockMatchWindowCreateInfoQCOM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_3_FEATURES_QCOM => print_VkPhysicalDeviceImageProcessing3FeaturesQCOM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_POOL_OVERALLOCATION_FEATURES_NV => print_VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LAYERED_DRIVER_PROPERTIES_MSFT => print_VkPhysicalDeviceLayeredDriverPropertiesMSFT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PER_STAGE_DESCRIPTOR_SET_FEATURES_NV => print_VkPhysicalDevicePerStageDescriptorSetFeaturesNV(name, @ptrCast(base), 0),
@@ -36415,6 +40999,8 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM => print_VkDeviceQueueShaderCoreControlCreateInfoARM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM => print_VkPhysicalDeviceSchedulingControlsFeaturesARM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM => print_VkPhysicalDeviceSchedulingControlsPropertiesARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_PROPERTIES_ARM => print_VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DISPATCH_PARAMETERS_ARM => print_VkDispatchParametersARM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RELAXED_LINE_RASTERIZATION_FEATURES_IMG => print_VkPhysicalDeviceRelaxedLineRasterizationFeaturesIMG(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_FEATURES_ARM => print_VkPhysicalDeviceRenderPassStripedFeaturesARM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_PROPERTIES_ARM => print_VkPhysicalDeviceRenderPassStripedPropertiesARM(name, @ptrCast(base), 0),
@@ -36445,6 +41031,7 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_2_FEATURES_NV => print_VkPhysicalDeviceCooperativeMatrix2FeaturesNV(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_2_PROPERTIES_NV => print_VkPhysicalDeviceCooperativeMatrix2PropertiesNV(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_FLEXIBLE_DIMENSIONS_PROPERTIES_NV => print_VkCooperativeMatrixFlexibleDimensionsPropertiesNV(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_DECODE_VECTOR_FEATURES_NV => print_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HDR_VIVID_FEATURES_HUAWEI => print_VkPhysicalDeviceHdrVividFeaturesHUAWEI(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_ROBUSTNESS_FEATURES_EXT => print_VkPhysicalDeviceVertexAttributeRobustnessFeaturesEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DENSE_GEOMETRY_FORMAT_FEATURES_AMDX => print_VkPhysicalDeviceDenseGeometryFormatFeaturesAMDX(name, @ptrCast(base), 0),
@@ -36470,7 +41057,11 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_EXTERNAL_COMPUTE_QUEUE_DATA_PARAMS_NV => print_VkExternalComputeQueueDataParamsNV(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_COMPUTE_QUEUE_PROPERTIES_NV => print_VkPhysicalDeviceExternalComputeQueuePropertiesNV(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNIFORM_BUFFER_UNSIZED_ARRAY_FEATURES_EXT => print_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE => print_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT => print_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FORMAT_PACK_FEATURES_ARM => print_VkPhysicalDeviceFormatPackFeaturesARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_THROTTLE_HINT_FEATURES_SEC => print_VkPhysicalDeviceThrottleHintFeaturesSEC(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_THROTTLE_HINT_SUBMIT_INFO_SEC => print_VkThrottleHintSubmitInfoSEC(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_TENSOR_DESCRIPTION_ARM => print_VkTensorDescriptionARM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_TENSOR_CREATE_INFO_ARM => print_VkTensorCreateInfoARM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_TENSOR_VIEW_CREATE_INFO_ARM => print_VkTensorViewCreateInfoARM(name, @ptrCast(base), 0),
@@ -36501,6 +41092,7 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CONSTANT_TENSOR_SEMI_STRUCTURED_SPARSITY_INFO_ARM => print_VkDataGraphPipelineConstantTensorSemiStructuredSparsityInfoARM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CONSTANT_ARM => print_VkDataGraphPipelineConstantARM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_RESOURCE_INFO_ARM => print_VkDataGraphPipelineResourceInfoARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_RESOURCE_INFO_IMAGE_LAYOUT_ARM => print_VkDataGraphPipelineResourceInfoImageLayoutARM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_COMPILER_CONTROL_CREATE_INFO_ARM => print_VkDataGraphPipelineCompilerControlCreateInfoARM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_CREATE_INFO_ARM => print_VkDataGraphPipelineCreateInfoARM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SHADER_MODULE_CREATE_INFO_ARM => print_VkDataGraphPipelineShaderModuleCreateInfoARM(name, @ptrCast(base), 0),
@@ -36521,9 +41113,6 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_BUILTIN_MODEL_CREATE_INFO_QCOM => print_VkDataGraphPipelineBuiltinModelCreateInfoQCOM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_MODEL_FEATURES_QCOM => print_VkPhysicalDeviceDataGraphModelFeaturesQCOM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNTYPED_POINTERS_FEATURES_KHR => print_VkPhysicalDeviceShaderUntypedPointersFeaturesKHR(name, @ptrCast(base), 0),
-            .VK_STRUCTURE_TYPE_NATIVE_BUFFER_OHOS => print_VkNativeBufferOHOS(name, @ptrCast(base), 0),
-            .VK_STRUCTURE_TYPE_SWAPCHAIN_IMAGE_CREATE_INFO_OHOS => print_VkSwapchainImageCreateInfoOHOS(name, @ptrCast(base), 0),
-            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENTATION_PROPERTIES_OHOS => print_VkPhysicalDevicePresentationPropertiesOHOS(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_RGB_CONVERSION_FEATURES_VALVE => print_VkPhysicalDeviceVideoEncodeRgbConversionFeaturesVALVE(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_VIDEO_ENCODE_RGB_CONVERSION_CAPABILITIES_VALVE => print_VkVideoEncodeRgbConversionCapabilitiesVALVE(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_VIDEO_ENCODE_PROFILE_RGB_CONVERSION_INFO_VALVE => print_VkVideoEncodeProfileRgbConversionInfoVALVE(name, @ptrCast(base), 0),
@@ -36535,6 +41124,9 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_IMPORT_NATIVE_BUFFER_INFO_OHOS => print_VkImportNativeBufferInfoOHOS(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_MEMORY_GET_NATIVE_BUFFER_INFO_OHOS => print_VkMemoryGetNativeBufferInfoOHOS(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_OHOS => print_VkExternalFormatOHOS(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PERF_HINT_INFO_QCOM => print_VkPerfHintInfoQCOM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_PERF_HINT_FEATURES_QCOM => print_VkPhysicalDeviceQueuePerfHintFeaturesQCOM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_PERF_HINT_PROPERTIES_QCOM => print_VkPhysicalDeviceQueuePerfHintPropertiesQCOM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_COUNTERS_BY_REGION_FEATURES_ARM => print_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_COUNTERS_BY_REGION_PROPERTIES_ARM => print_VkPhysicalDevicePerformanceCountersByRegionPropertiesARM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PERFORMANCE_COUNTER_ARM => print_VkPerformanceCounterARM(name, @ptrCast(base), 0),
@@ -36542,6 +41134,61 @@ pub fn print_struct(name: []const u8, value: anytype, follow_pnext: bool) void {
             .VK_STRUCTURE_TYPE_RENDER_PASS_PERFORMANCE_COUNTERS_BY_REGION_BEGIN_INFO_ARM => print_VkRenderPassPerformanceCountersByRegionBeginInfoARM(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_COMPUTE_OCCUPANCY_PRIORITY_PARAMETERS_NV => print_VkComputeOccupancyPriorityParametersNV(name, @ptrCast(base), 0),
             .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV => print_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT => print_VkPhysicalDeviceShaderLongVectorFeaturesEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_PROPERTIES_EXT => print_VkPhysicalDeviceShaderLongVectorPropertiesEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_3D_FEATURES_EXT => print_VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT => print_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_TEXEL_BUFFER_DESCRIPTOR_INFO_EXT => print_VkTexelBufferDescriptorInfoEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_IMAGE_DESCRIPTOR_INFO_EXT => print_VkImageDescriptorInfoEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_RESOURCE_DESCRIPTOR_INFO_EXT => print_VkResourceDescriptorInfoEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_BIND_HEAP_INFO_EXT => print_VkBindHeapInfoEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PUSH_DATA_INFO_EXT => print_VkPushDataInfoEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DESCRIPTOR_SET_AND_BINDING_MAPPING_EXT => print_VkDescriptorSetAndBindingMappingEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_SHADER_DESCRIPTOR_SET_AND_BINDING_MAPPING_INFO_EXT => print_VkShaderDescriptorSetAndBindingMappingInfoEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_INDEX_CREATE_INFO_EXT => print_VkSamplerCustomBorderColorIndexCreateInfoEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_OPAQUE_CAPTURE_DATA_CREATE_INFO_EXT => print_VkOpaqueCaptureDataCreateInfoEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_PUSH_DATA_TOKEN_NV => print_VkIndirectCommandsLayoutPushDataTokenNV(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_SUBSAMPLED_IMAGE_FORMAT_PROPERTIES_EXT => print_VkSubsampledImageFormatPropertiesEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SPLIT_BARRIER_FEATURES_EXT => print_VkPhysicalDeviceShaderSplitBarrierFeaturesEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SPLIT_BARRIER_PROPERTIES_EXT => print_VkPhysicalDeviceShaderSplitBarrierPropertiesEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_FEATURES_EXT => print_VkPhysicalDeviceDescriptorHeapFeaturesEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_PROPERTIES_EXT => print_VkPhysicalDeviceDescriptorHeapPropertiesEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_DESCRIPTOR_HEAP_INFO_EXT => print_VkCommandBufferInheritanceDescriptorHeapInfoEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_TENSOR_PROPERTIES_ARM => print_VkPhysicalDeviceDescriptorHeapTensorPropertiesARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INSTRUMENTATION_FEATURES_ARM => print_VkPhysicalDeviceShaderInstrumentationFeaturesARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INSTRUMENTATION_PROPERTIES_ARM => print_VkPhysicalDeviceShaderInstrumentationPropertiesARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_SHADER_INSTRUMENTATION_CREATE_INFO_ARM => print_VkShaderInstrumentationCreateInfoARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_SHADER_INSTRUMENTATION_METRIC_DESCRIPTION_ARM => print_VkShaderInstrumentationMetricDescriptionARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DEVICE_MEMORY_COPY_KHR => print_VkDeviceMemoryCopyKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_COPY_DEVICE_MEMORY_INFO_KHR => print_VkCopyDeviceMemoryInfoKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DEVICE_MEMORY_IMAGE_COPY_KHR => print_VkDeviceMemoryImageCopyKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_COPY_DEVICE_MEMORY_IMAGE_INFO_KHR => print_VkCopyDeviceMemoryImageInfoKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_MEMORY_RANGE_BARRIERS_INFO_KHR => print_VkMemoryRangeBarriersInfoKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_MEMORY_RANGE_BARRIER_KHR => print_VkMemoryRangeBarrierKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_ADDRESS_COMMANDS_FEATURES_KHR => print_VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_2_EXT => print_VkConditionalRenderingBeginInfo2EXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_2_KHR => print_VkAccelerationStructureCreateInfo2KHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_BIND_INDEX_BUFFER_3_INFO_KHR => print_VkBindIndexBuffer3InfoKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_BIND_VERTEX_BUFFER_3_INFO_KHR => print_VkBindVertexBuffer3InfoKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DRAW_INDIRECT_2_INFO_KHR => print_VkDrawIndirect2InfoKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DRAW_INDIRECT_COUNT_2_INFO_KHR => print_VkDrawIndirectCount2InfoKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DISPATCH_INDIRECT_2_INFO_KHR => print_VkDispatchIndirect2InfoKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_BIND_TRANSFORM_FEEDBACK_BUFFER_2_INFO_EXT => print_VkBindTransformFeedbackBuffer2InfoEXT(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_MEMORY_MARKER_INFO_AMD => print_VkMemoryMarkerInfoAMD(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CONSTANT_DATA_FEATURES_KHR => print_VkPhysicalDeviceShaderConstantDataFeaturesKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ABORT_FEATURES_KHR => print_VkPhysicalDeviceShaderAbortFeaturesKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ABORT_PROPERTIES_KHR => print_VkPhysicalDeviceShaderAbortPropertiesKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DEVICE_FAULT_SHADER_ABORT_MESSAGE_INFO_KHR => print_VkDeviceFaultShaderAbortMessageInfoKHR(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_TOSA_PROPERTIES_ARM => print_VkQueueFamilyDataGraphTOSAPropertiesARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SINGLE_NODE_CONNECTION_ARM => print_VkDataGraphPipelineSingleNodeConnectionARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_OPTICAL_FLOW_FEATURES_ARM => print_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_OPTICAL_FLOW_PROPERTIES_ARM => print_VkQueueFamilyDataGraphOpticalFlowPropertiesARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DATA_GRAPH_OPTICAL_FLOW_IMAGE_FORMAT_INFO_ARM => print_VkDataGraphOpticalFlowImageFormatInfoARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DATA_GRAPH_OPTICAL_FLOW_IMAGE_FORMAT_PROPERTIES_ARM => print_VkDataGraphOpticalFlowImageFormatPropertiesARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SINGLE_NODE_CREATE_INFO_ARM => print_VkDataGraphPipelineSingleNodeCreateInfoARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_OPTICAL_FLOW_CREATE_INFO_ARM => print_VkDataGraphPipelineOpticalFlowCreateInfoARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_OPTICAL_FLOW_DISPATCH_INFO_ARM => print_VkDataGraphPipelineOpticalFlowDispatchInfoARM(name, @ptrCast(base), 0),
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT => print_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(name, @ptrCast(base), 0),
             else => log.output("{s}: unknown type: {t}\n", .{name, base.sType}),
         }
         if (follow_pnext) {

@@ -39,6 +39,8 @@ pub const VK_DATA_GRAPH_MODEL_TOOLCHAIN_VERSION_LENGTH_QCOM: u32 = 3;
 pub const VK_COMPUTE_OCCUPANCY_PRIORITY_LOW_NV: f32 = 0.25;
 pub const VK_COMPUTE_OCCUPANCY_PRIORITY_NORMAL_NV: f32 = 0.5;
 pub const VK_COMPUTE_OCCUPANCY_PRIORITY_HIGH_NV: f32 = 0.75;
+pub const VK_MAX_DATA_GRAPH_TOSA_NAME_SIZE_ARM: u32 = 128;
+pub const VK_MAX_TENSOR_CREATE_INFO_ROLLING_BACKING_WRAP_COUNT_ARM: u32 = 4;
 // Versions
 pub const ApiVersion = packed struct(u32) {
     patch: u12 = 0,
@@ -226,6 +228,12 @@ pub const VkTensorViewARM = enum(u64) { none = 0, _ };
 // Type enum: VK_OBJECT_TYPE_DATA_GRAPH_PIPELINE_SESSION_ARM
 // Parent: VkDevice
 pub const VkDataGraphPipelineSessionARM = enum(u64) { none = 0, _ };
+// Type enum: VK_OBJECT_TYPE_SHADER_INSTRUMENTATION_ARM
+// Parent: VkDevice
+pub const VkShaderInstrumentationARM = enum(u64) { none = 0, _ };
+// Type enum: VK_OBJECT_TYPE_GPA_SESSION_AMD
+// Parent: VkDevice
+pub const VkGpaSessionAMD = enum(u64) { none = 0, _ };
 // Type enum: VK_OBJECT_TYPE_DISPLAY_KHR
 // Parent: VkPhysicalDevice
 pub const VkDisplayKHR = enum(u64) { none = 0, _ };
@@ -248,7 +256,7 @@ pub const VkDebugUtilsMessengerEXT = enum(u64) { none = 0, _ };
 // Parent: VkDevice
 pub const VkVideoSessionKHR = enum(u64) { none = 0, _ };
 // Type enum: VK_OBJECT_TYPE_VIDEO_SESSION_PARAMETERS_KHR
-// Parent: VkVideoSessionKHR
+// Parent: VkDevice
 pub const VkVideoSessionParametersKHR = enum(u64) { none = 0, _ };
 // Type enum: VK_OBJECT_TYPE_SEMAPHORE_SCI_SYNC_POOL_NV
 // Parent: VkDevice
@@ -308,9 +316,13 @@ pub const VkSamplerCreateFlags = packed struct(u32) {
 pub const VkPipelineLayoutCreateFlags = packed struct(u32) {
     _0: u1 = 0,
     // Extension: VK_EXT_graphics_pipeline_library
+    // Extension: VK_KHR_maintenance11
     // bit: 1
     VK_PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT: bool = false,
-    _: u30 = 0,
+    // Extension: VK_KHR_maintenance11
+    // bit: 2
+    VK_PIPELINE_LAYOUT_CREATE_NO_TASK_SHADER_BIT_KHR: bool = false,
+    _: u29 = 0,
 };
 pub const VkPipelineCacheCreateFlags = packed struct(u32) {
     // Extension: VK_COMPUTE_VERSION_1_3
@@ -418,7 +430,11 @@ pub const VkDeviceQueueCreateFlags = packed struct(u32) {
     // Extension: VK_BASE_VERSION_1_1
     // bit: 0
     VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT: bool = false,
-    _: u31 = 0,
+    _0: u1 = 0,
+    // Extension: VK_KHR_internally_synchronized_queues
+    // bit: 2
+    VK_DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR: bool = false,
+    _: u29 = 0,
 };
 pub const VkQueueFlags = packed struct(u32) {
     // Comment: Queue supports graphics operations
@@ -674,7 +690,10 @@ pub const VkBufferUsageFlags = packed struct(u32) {
     // Extension: VK_QCOM_tile_memory_heap
     // bit: 27
     VK_BUFFER_USAGE_TILE_MEMORY_BIT_QCOM: bool = false,
-    _: u4 = 0,
+    // Extension: VK_EXT_descriptor_heap
+    // bit: 28
+    VK_BUFFER_USAGE_DESCRIPTOR_HEAP_BIT_EXT: bool = false,
+    _: u3 = 0,
 };
 pub const VkBufferCreateFlags = packed struct(u32) {
     // Comment: Buffer should support sparse backing
@@ -853,24 +872,24 @@ pub const VkImageCreateFlags = packed struct(u32) {
     // Comment: Allows creating image views with cube type from the created image
     // bit: 4
     VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT: bool = false,
-    // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_maintenance1
+    // Extension: VK_BASE_VERSION_1_1
     // bit: 5
     VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT: bool = false,
-    // Extension: VK_KHR_device_group
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_device_group
     // bit: 6
     VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT: bool = false,
     // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_maintenance2
     // bit: 7
     VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT: bool = false,
-    // Extension: VK_KHR_maintenance2
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_maintenance2
     // bit: 8
     VK_IMAGE_CREATE_EXTENDED_USAGE_BIT: bool = false,
-    // Extension: VK_KHR_sampler_ycbcr_conversion
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_sampler_ycbcr_conversion
     // bit: 9
     VK_IMAGE_CREATE_DISJOINT_BIT: bool = false,
     // Extension: VK_BASE_VERSION_1_1
@@ -892,9 +911,10 @@ pub const VkImageCreateFlags = packed struct(u32) {
     // Extension: VK_EXT_fragment_density_map_offset
     // bit: 15
     VK_IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT: bool = false,
+    // Extension: VK_EXT_descriptor_heap
     // Extension: VK_EXT_descriptor_buffer
     // bit: 16
-    VK_IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT: bool = false,
+    VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT: bool = false,
     // Extension: VK_EXT_image_2d_view_of_3d
     // bit: 17
     VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT: bool = false,
@@ -905,7 +925,11 @@ pub const VkImageCreateFlags = packed struct(u32) {
     // Extension: VK_KHR_video_maintenance1
     // bit: 20
     VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR: bool = false,
-    _: u11 = 0,
+    _20: u1 = 0,
+    // Extension: VK_KHR_maintenance11
+    // bit: 22
+    VK_IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR: bool = false,
+    _: u9 = 0,
 };
 pub const VkImageViewCreateFlags = packed struct(u32) {
     // Extension: VK_EXT_fragment_density_map
@@ -997,9 +1021,9 @@ pub const VkPipelineCreateFlags = packed struct(u32) {
     // Extension: VK_EXT_graphics_pipeline_library
     // bit: 23
     VK_PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT: bool = false,
-    // Extension: VK_EXT_opacity_micromap
+    // Extension: VK_KHR_opacity_micromap
     // bit: 24
-    VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT: bool = false,
+    VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR: bool = false,
     // Extension: VK_EXT_attachment_feedback_loop_layout
     // bit: 25
     VK_PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT: bool = false,
@@ -1566,9 +1590,9 @@ pub const VkSubgroupFeatureFlags = packed struct(u32) {
     // Comment: Quad subgroup operations
     // bit: 7
     VK_SUBGROUP_FEATURE_QUAD_BIT: bool = false,
-    // Extension: VK_NV_shader_subgroup_partitioned
+    // Extension: VK_EXT_shader_subgroup_partitioned
     // bit: 8
-    VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV: bool = false,
+    VK_SUBGROUP_FEATURE_PARTITIONED_BIT_EXT: bool = false,
     // Extension: VK_COMPUTE_VERSION_1_4
     // Extension: VK_KHR_shader_subgroup_rotate
     // bit: 9
@@ -1614,14 +1638,12 @@ pub const VkGeometryInstanceFlagsKHR = packed struct(u32) {
     // Extension: VK_NV_ray_tracing
     // bit: 3
     VK_GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR: bool = false,
-    // Extension: VK_EXT_opacity_micromap
-    // Extension: VK_EXT_opacity_micromap
+    // Extension: VK_KHR_opacity_micromap
     // bit: 4
-    VK_GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_EXT: bool = false,
-    // Extension: VK_EXT_opacity_micromap
-    // Extension: VK_EXT_opacity_micromap
+    VK_GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_KHR: bool = false,
+    // Extension: VK_KHR_opacity_micromap
     // bit: 5
-    VK_GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_EXT: bool = false,
+    VK_GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_KHR: bool = false,
     _: u26 = 0,
 };
 pub const VkClusterAccelerationStructureGeometryFlagsNV = packed struct(u32) {
@@ -1673,14 +1695,12 @@ pub const VkBuildAccelerationStructureFlagsKHR = packed struct(u32) {
     // Extension: VK_NV_ray_tracing_motion_blur
     // bit: 5
     VK_BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV: bool = false,
-    // Extension: VK_EXT_opacity_micromap
-    // Extension: VK_EXT_opacity_micromap
+    // Extension: VK_KHR_opacity_micromap
     // bit: 6
-    VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT: bool = false,
-    // Extension: VK_EXT_opacity_micromap
-    // Extension: VK_EXT_opacity_micromap
+    VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_KHR: bool = false,
+    // Extension: VK_KHR_opacity_micromap
     // bit: 7
-    VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT: bool = false,
+    VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_KHR: bool = false,
     // Extension: VK_EXT_opacity_micromap
     // Extension: VK_EXT_opacity_micromap
     // bit: 8
@@ -1689,7 +1709,9 @@ pub const VkBuildAccelerationStructureFlagsKHR = packed struct(u32) {
     // Extension: VK_NV_displacement_micromap
     // bit: 9
     VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV: bool = false,
-    _9: u1 = 0,
+    // Extension: VK_KHR_opacity_micromap
+    // bit: 10
+    VK_BUILD_ACCELERATION_STRUCTURE_MICROMAP_LOSSY_BIT_KHR: bool = false,
     // Extension: VK_KHR_ray_tracing_position_fetch
     // Extension: VK_KHR_ray_tracing_position_fetch
     // bit: 11
@@ -1917,7 +1939,13 @@ pub const VkAccessFlags2 = packed struct(u64) {
     // Extension: VK_EXT_memory_decompression
     // bit: 56
     VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT: bool = false,
-    _: u7 = 0,
+    // Extension: VK_EXT_descriptor_heap
+    // bit: 57
+    VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT: bool = false,
+    // Extension: VK_EXT_descriptor_heap
+    // bit: 58
+    VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT: bool = false,
+    _: u5 = 0,
     pub const VK_ACCESS_2_NONE: @This() = @bitCast(@as(u64, 0x0));
 };
 pub const VkPipelineStageFlags2 = packed struct(u64) {
@@ -2206,7 +2234,12 @@ pub const VkFormatFeatureFlags2 = packed struct(u64) {
     // Extension: VK_ARM_tensors
     // bit: 43
     VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM: bool = false,
-    _43: u2 = 0,
+    // Extension: VK_QCOM_image_processing3
+    // bit: 44
+    VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM: bool = false,
+    // Extension: VK_IMG_filter_linear_2d
+    // bit: 45
+    VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG: bool = false,
     // Extension: VK_BASE_VERSION_1_4
     // Extension: VK_EXT_host_image_copy
     // bit: 46
@@ -2236,11 +2269,22 @@ pub const VkFormatFeatureFlags2 = packed struct(u64) {
     // Extension: VK_KHR_maintenance10
     // bit: 55
     VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR: bool = false,
-    _55: u3 = 0,
+    // Extension: VK_ARM_data_graph_optical_flow
+    // bit: 56
+    VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM: bool = false,
+    // Extension: VK_ARM_data_graph_optical_flow
+    // bit: 57
+    VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM: bool = false,
+    // Extension: VK_ARM_data_graph_optical_flow
+    // bit: 58
+    VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM: bool = false,
     // Extension: VK_KHR_copy_memory_indirect
     // bit: 59
     VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR: bool = false,
     _: u4 = 0,
+};
+pub const VkFormatFeatureFlags4KHR = packed struct(u64) {
+    _: u64 = 0,
 };
 pub const VkRenderingFlags = packed struct(u32) {
     // Extension: VK_KHR_dynamic_rendering
@@ -2277,6 +2321,21 @@ pub const VkMemoryDecompressionMethodFlagsEXT = packed struct(u64) {
     VK_MEMORY_DECOMPRESSION_METHOD_GDEFLATE_1_0_BIT_EXT: bool = false,
     _: u63 = 0,
 };
+pub const VkDeviceFaultFlagsKHR = packed struct(u32) {
+    // bit: 0
+    VK_DEVICE_FAULT_FLAG_DEVICE_LOST_KHR: bool = false,
+    // bit: 1
+    VK_DEVICE_FAULT_FLAG_MEMORY_ADDRESS_KHR: bool = false,
+    // bit: 2
+    VK_DEVICE_FAULT_FLAG_INSTRUCTION_ADDRESS_KHR: bool = false,
+    // bit: 3
+    VK_DEVICE_FAULT_FLAG_VENDOR_KHR: bool = false,
+    // bit: 4
+    VK_DEVICE_FAULT_FLAG_WATCHDOG_TIMEOUT_KHR: bool = false,
+    // bit: 5
+    VK_DEVICE_FAULT_FLAG_OVERFLOW_KHR: bool = false,
+    _: u26 = 0,
+};
 pub const VkBuildMicromapFlagsEXT = packed struct(u32) {
     // bit: 0
     VK_BUILD_MICROMAP_PREFER_FAST_TRACE_BIT_EXT: bool = false,
@@ -2309,84 +2368,111 @@ pub const VkDirectDriverLoadingFlagsLUNARG = packed struct(u32) {
     _: u32 = 0,
 };
 pub const VkPipelineCreateFlags2 = packed struct(u64) {
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 0
     VK_PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 1
     VK_PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 2
     VK_PIPELINE_CREATE_2_DERIVATIVE_BIT: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 3
     VK_PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 4
     VK_PIPELINE_CREATE_2_DISPATCH_BASE_BIT: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 5
     VK_PIPELINE_CREATE_2_DEFER_COMPILE_BIT_NV: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 6
     VK_PIPELINE_CREATE_2_CAPTURE_STATISTICS_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 7
     VK_PIPELINE_CREATE_2_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 8
     VK_PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 9
     VK_PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 10
     VK_PIPELINE_CREATE_2_LINK_TIME_OPTIMIZATION_BIT_EXT: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 11
     VK_PIPELINE_CREATE_2_LIBRARY_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 12
     VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 13
     VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_AABBS_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 14
     VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 15
     VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 16
     VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 17
     VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 18
     VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_NV: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 19
     VK_PIPELINE_CREATE_2_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 20
     VK_PIPELINE_CREATE_2_RAY_TRACING_ALLOW_MOTION_BIT_NV: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 21
     VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 22
     VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 23
     VK_PIPELINE_CREATE_2_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT: bool = false,
-    // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_opacity_micromap
+    // Extension: VK_KHR_extended_flags
     // bit: 24
-    VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT: bool = false,
+    VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 25
     VK_PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 26
     VK_PIPELINE_CREATE_2_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT: bool = false,
@@ -2394,8 +2480,10 @@ pub const VkPipelineCreateFlags2 = packed struct(u64) {
     // bit: 27
     VK_PIPELINE_CREATE_2_NO_PROTECTED_ACCESS_BIT: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 28
     VK_PIPELINE_CREATE_2_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 29
     VK_PIPELINE_CREATE_2_DESCRIPTOR_BUFFER_BIT_EXT: bool = false,
@@ -2414,19 +2502,29 @@ pub const VkPipelineCreateFlags2 = packed struct(u64) {
     // Extension: VK_EXT_legacy_dithering
     // bit: 34
     VK_PIPELINE_CREATE_2_ENABLE_LEGACY_DITHERING_BIT_EXT: bool = false,
-    _34: u2 = 0,
+    _34: u1 = 0,
+    // Extension: VK_EXT_descriptor_heap
+    // bit: 36
+    VK_PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT: bool = false,
     // Extension: VK_KHR_maintenance5
     // Extension: VK_ARM_pipeline_opacity_micromap
+    // Extension: VK_KHR_extended_flags
     // bit: 37
     VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM: bool = false,
     // Extension: VK_EXT_device_generated_commands
     // bit: 38
     VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_EXT: bool = false,
-    _38: u1 = 0,
+    // Extension: VK_ARM_shader_instrumentation
+    // Extension: VK_KHR_maintenance5
+    // bit: 39
+    VK_PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM: bool = false,
     // Extension: VK_VALVE_fragment_density_map_layered
     // bit: 40
     VK_PIPELINE_CREATE_2_PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE: bool = false,
-    _40: u2 = 0,
+    // Extension: VK_KHR_opacity_micromap
+    // bit: 41
+    VK_PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR: bool = false,
+    _41: u1 = 0,
     // Extension: VK_EXT_shader_64bit_indexing
     // bit: 43
     VK_PIPELINE_CREATE_2_64_BIT_INDEXING_BIT_EXT: bool = false,
@@ -2434,90 +2532,117 @@ pub const VkPipelineCreateFlags2 = packed struct(u64) {
 };
 pub const VkBufferUsageFlags2 = packed struct(u64) {
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 0
     VK_BUFFER_USAGE_2_TRANSFER_SRC_BIT: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 1
     VK_BUFFER_USAGE_2_TRANSFER_DST_BIT: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 2
     VK_BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 3
     VK_BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 4
     VK_BUFFER_USAGE_2_UNIFORM_BUFFER_BIT: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 5
     VK_BUFFER_USAGE_2_STORAGE_BUFFER_BIT: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 6
     VK_BUFFER_USAGE_2_INDEX_BUFFER_BIT: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 7
     VK_BUFFER_USAGE_2_VERTEX_BUFFER_BIT: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 8
     VK_BUFFER_USAGE_2_INDIRECT_BUFFER_BIT: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 9
     VK_BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 10
     VK_BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 11
     VK_BUFFER_USAGE_2_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 12
     VK_BUFFER_USAGE_2_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT: bool = false,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 13
     VK_BUFFER_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 14
     VK_BUFFER_USAGE_2_VIDEO_DECODE_DST_BIT_KHR: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 15
     VK_BUFFER_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 16
     VK_BUFFER_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR: bool = false,
-    // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_BASE_VERSION_1_4
+    // Extension: VK_KHR_maintenance5
     // bit: 17
     VK_BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT: bool = false,
     _17: u1 = 0,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_KHR_maintenance5
     // bit: 19
     VK_BUFFER_USAGE_2_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 20
     VK_BUFFER_USAGE_2_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 21
     VK_BUFFER_USAGE_2_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 22
     VK_BUFFER_USAGE_2_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT: bool = false,
-    // Extension: VK_KHR_maintenance5
+    // Extension: VK_EXT_opacity_micromap
+    // Extension: VK_KHR_extended_flags
     // bit: 23
     VK_BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT: bool = false,
-    // Extension: VK_KHR_maintenance5
+    // Extension: VK_EXT_opacity_micromap
+    // Extension: VK_KHR_extended_flags
     // bit: 24
     VK_BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT: bool = false,
     // Extension: VK_AMDX_shader_enqueue
     // bit: 25
     VK_BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX: bool = false,
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     // bit: 26
     VK_BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT: bool = false,
     // Extension: VK_QCOM_tile_memory_heap
     // bit: 27
     VK_BUFFER_USAGE_2_TILE_MEMORY_BIT_QCOM: bool = false,
-    _27: u1 = 0,
+    // Extension: VK_EXT_descriptor_heap
+    // bit: 28
+    VK_BUFFER_USAGE_2_DESCRIPTOR_HEAP_BIT_EXT: bool = false,
     // Extension: VK_ARM_data_graph
     // bit: 29
     VK_BUFFER_USAGE_2_DATA_GRAPH_FOREIGN_DESCRIPTOR_BIT_ARM: bool = false,
@@ -2532,6 +2657,141 @@ pub const VkBufferUsageFlags2 = packed struct(u64) {
     // bit: 33
     VK_BUFFER_USAGE_2_COMPRESSED_DATA_DGF1_BIT_AMDX: bool = false,
     _: u30 = 0,
+};
+pub const VkImageUsageFlags2KHR = packed struct(u64) {
+    // bit: 0
+    VK_IMAGE_USAGE_2_TRANSFER_SRC_BIT_KHR: bool = false,
+    // bit: 1
+    VK_IMAGE_USAGE_2_TRANSFER_DST_BIT_KHR: bool = false,
+    // bit: 2
+    VK_IMAGE_USAGE_2_SAMPLED_BIT_KHR: bool = false,
+    // bit: 3
+    VK_IMAGE_USAGE_2_STORAGE_BIT_KHR: bool = false,
+    // bit: 4
+    VK_IMAGE_USAGE_2_COLOR_ATTACHMENT_BIT_KHR: bool = false,
+    // bit: 5
+    VK_IMAGE_USAGE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR: bool = false,
+    // bit: 6
+    VK_IMAGE_USAGE_2_TRANSIENT_ATTACHMENT_BIT_KHR: bool = false,
+    // bit: 7
+    VK_IMAGE_USAGE_2_INPUT_ATTACHMENT_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 8
+    VK_IMAGE_USAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 9
+    VK_IMAGE_USAGE_2_FRAGMENT_DENSITY_MAP_BIT_EXT: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 10
+    VK_IMAGE_USAGE_2_VIDEO_DECODE_DST_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 11
+    VK_IMAGE_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 12
+    VK_IMAGE_USAGE_2_VIDEO_DECODE_DPB_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 13
+    VK_IMAGE_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 14
+    VK_IMAGE_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 15
+    VK_IMAGE_USAGE_2_VIDEO_ENCODE_DPB_BIT_KHR: bool = false,
+    _15: u2 = 0,
+    // Extension: VK_KHR_extended_flags
+    // bit: 18
+    VK_IMAGE_USAGE_2_INVOCATION_MASK_BIT_HUAWEI: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 19
+    VK_IMAGE_USAGE_2_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 20
+    VK_IMAGE_USAGE_2_SAMPLE_WEIGHT_BIT_QCOM: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 21
+    VK_IMAGE_USAGE_2_SAMPLE_BLOCK_MATCH_BIT_QCOM: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 22
+    VK_IMAGE_USAGE_2_HOST_TRANSFER_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 23
+    VK_IMAGE_USAGE_2_TENSOR_ALIASING_BIT_ARM: bool = false,
+    _23: u1 = 0,
+    // Extension: VK_KHR_extended_flags
+    // bit: 25
+    VK_IMAGE_USAGE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 26
+    VK_IMAGE_USAGE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 27
+    VK_IMAGE_USAGE_2_TILE_MEMORY_BIT_QCOM: bool = false,
+    _: u36 = 0,
+};
+pub const VkImageCreateFlags2KHR = packed struct(u64) {
+    // bit: 0
+    VK_IMAGE_CREATE_2_SPARSE_BINDING_BIT_KHR: bool = false,
+    // bit: 1
+    VK_IMAGE_CREATE_2_SPARSE_RESIDENCY_BIT_KHR: bool = false,
+    // bit: 2
+    VK_IMAGE_CREATE_2_SPARSE_ALIASED_BIT_KHR: bool = false,
+    // bit: 3
+    VK_IMAGE_CREATE_2_MUTABLE_FORMAT_BIT_KHR: bool = false,
+    // bit: 4
+    VK_IMAGE_CREATE_2_CUBE_COMPATIBLE_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 5
+    VK_IMAGE_CREATE_2_2D_ARRAY_COMPATIBLE_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 6
+    VK_IMAGE_CREATE_2_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 7
+    VK_IMAGE_CREATE_2_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 8
+    VK_IMAGE_CREATE_2_EXTENDED_USAGE_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 9
+    VK_IMAGE_CREATE_2_DISJOINT_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 10
+    VK_IMAGE_CREATE_2_ALIAS_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 11
+    VK_IMAGE_CREATE_2_PROTECTED_BIT_KHR: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 12
+    VK_IMAGE_CREATE_2_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 13
+    VK_IMAGE_CREATE_2_CORNER_SAMPLED_BIT_NV: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 14
+    VK_IMAGE_CREATE_2_SUBSAMPLED_BIT_EXT: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 15
+    VK_IMAGE_CREATE_2_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 16
+    VK_IMAGE_CREATE_2_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 17
+    VK_IMAGE_CREATE_2_2D_VIEW_COMPATIBLE_BIT_EXT: bool = false,
+    // Extension: VK_KHR_extended_flags
+    // bit: 18
+    VK_IMAGE_CREATE_2_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT: bool = false,
+    _18: u1 = 0,
+    // Extension: VK_KHR_extended_flags
+    // bit: 20
+    VK_IMAGE_CREATE_2_VIDEO_PROFILE_INDEPENDENT_BIT_KHR: bool = false,
+    _20: u1 = 0,
+    // Extension: VK_KHR_maintenance11
+    // bit: 22
+    VK_IMAGE_CREATE_2_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR: bool = false,
+    _: u41 = 0,
 };
 pub const VkAddressCopyFlagsKHR = packed struct(u32) {
     // bit: 0
@@ -2550,7 +2810,10 @@ pub const VkTensorCreateFlagsARM = packed struct(u64) {
     // Extension: VK_ARM_tensors
     // bit: 2
     VK_TENSOR_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_ARM: bool = false,
-    _: u61 = 0,
+    // Extension: VK_EXT_descriptor_heap
+    // bit: 3
+    VK_TENSOR_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_ARM: bool = false,
+    _: u60 = 0,
 };
 pub const VkTensorUsageFlagsARM = packed struct(u64) {
     _0: u1 = 0,
@@ -2580,7 +2843,10 @@ pub const VkTensorViewCreateFlagsARM = packed struct(u64) {
 pub const VkDataGraphPipelineSessionCreateFlagsARM = packed struct(u64) {
     // bit: 0
     VK_DATA_GRAPH_PIPELINE_SESSION_CREATE_PROTECTED_BIT_ARM: bool = false,
-    _: u63 = 0,
+    // Extension: VK_ARM_data_graph_optical_flow
+    // bit: 1
+    VK_DATA_GRAPH_PIPELINE_SESSION_CREATE_OPTICAL_FLOW_CACHE_BIT_ARM: bool = false,
+    _: u62 = 0,
 };
 pub const VkDataGraphPipelineDispatchFlagsARM = packed struct(u64) {
     _: u64 = 0,
@@ -2611,6 +2877,72 @@ pub const VkVideoEncodeRgbChromaOffsetFlagsVALVE = packed struct(u32) {
     // bit: 1
     VK_VIDEO_ENCODE_RGB_CHROMA_OFFSET_MIDPOINT_BIT_VALVE: bool = false,
     _: u30 = 0,
+};
+pub const VkSpirvResourceTypeFlagsEXT = packed struct(u32) {
+    // bit: 0
+    VK_SPIRV_RESOURCE_TYPE_SAMPLER_BIT_EXT: bool = false,
+    // bit: 1
+    VK_SPIRV_RESOURCE_TYPE_SAMPLED_IMAGE_BIT_EXT: bool = false,
+    // bit: 2
+    VK_SPIRV_RESOURCE_TYPE_READ_ONLY_IMAGE_BIT_EXT: bool = false,
+    // bit: 3
+    VK_SPIRV_RESOURCE_TYPE_READ_WRITE_IMAGE_BIT_EXT: bool = false,
+    // bit: 4
+    VK_SPIRV_RESOURCE_TYPE_COMBINED_SAMPLED_IMAGE_BIT_EXT: bool = false,
+    // bit: 5
+    VK_SPIRV_RESOURCE_TYPE_UNIFORM_BUFFER_BIT_EXT: bool = false,
+    // bit: 6
+    VK_SPIRV_RESOURCE_TYPE_READ_ONLY_STORAGE_BUFFER_BIT_EXT: bool = false,
+    // bit: 7
+    VK_SPIRV_RESOURCE_TYPE_READ_WRITE_STORAGE_BUFFER_BIT_EXT: bool = false,
+    // Extension: VK_EXT_descriptor_heap
+    // bit: 8
+    VK_SPIRV_RESOURCE_TYPE_ACCELERATION_STRUCTURE_BIT_EXT: bool = false,
+    // Extension: VK_EXT_descriptor_heap
+    // bit: 9
+    VK_SPIRV_RESOURCE_TYPE_TENSOR_BIT_ARM: bool = false,
+    _: u22 = 0,
+    pub const VK_SPIRV_RESOURCE_TYPE_ALL_EXT: @This() = @bitCast(@as(u32, 0x7fffffff));
+};
+pub const VkGpaSqShaderStageFlagsAMD = packed struct(u32) {
+    // bit: 0
+    VK_GPA_SQ_SHADER_STAGE_PS_BIT_AMD: bool = false,
+    // bit: 1
+    VK_GPA_SQ_SHADER_STAGE_VS_BIT_AMD: bool = false,
+    // bit: 2
+    VK_GPA_SQ_SHADER_STAGE_GS_BIT_AMD: bool = false,
+    // bit: 3
+    VK_GPA_SQ_SHADER_STAGE_ES_BIT_AMD: bool = false,
+    // bit: 4
+    VK_GPA_SQ_SHADER_STAGE_HS_BIT_AMD: bool = false,
+    // bit: 5
+    VK_GPA_SQ_SHADER_STAGE_LS_BIT_AMD: bool = false,
+    // bit: 6
+    VK_GPA_SQ_SHADER_STAGE_CS_BIT_AMD: bool = false,
+    _: u25 = 0,
+};
+pub const VkGpaPerfBlockPropertiesFlagsAMD = packed struct(u32) {
+    _: u32 = 0,
+};
+pub const VkPhysicalDeviceGpaPropertiesFlagsAMD = packed struct(u32) {
+    _: u32 = 0,
+};
+pub const VkAddressCommandFlagsKHR = packed struct(u32) {
+    // bit: 0
+    VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR: bool = false,
+    // bit: 1
+    VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR: bool = false,
+    // bit: 2
+    VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR: bool = false,
+    // bit: 3
+    VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR: bool = false,
+    // Extension: VK_KHR_device_address_commands
+    // bit: 4
+    VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR: bool = false,
+    // Extension: VK_KHR_device_address_commands
+    // bit: 5
+    VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR: bool = false,
+    _: u26 = 0,
 };
 pub const VkCompositeAlphaFlagsKHR = packed struct(u32) {
     // bit: 0
@@ -2676,7 +3008,9 @@ pub const VkSwapchainCreateFlagsKHR = packed struct(u32) {
     // Extension: VK_KHR_present_wait2
     // bit: 7
     VK_SWAPCHAIN_CREATE_PRESENT_WAIT_2_BIT_KHR: bool = false,
-    _7: u1 = 0,
+    // Extension: VK_EXT_multisampled_render_to_swapchain
+    // bit: 8
+    VK_SWAPCHAIN_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT: bool = false,
     // Extension: VK_EXT_present_timing
     // bit: 9
     VK_SWAPCHAIN_CREATE_PRESENT_TIMING_BIT_EXT: bool = false,
@@ -2695,6 +3029,9 @@ pub const VkViSurfaceCreateFlagsNN = packed struct(u32) {
     _: u32 = 0,
 };
 pub const VkWaylandSurfaceCreateFlagsKHR = packed struct(u32) {
+    _: u32 = 0,
+};
+pub const VkUbmSurfaceCreateFlagsSEC = packed struct(u32) {
     _: u32 = 0,
 };
 pub const VkWin32SurfaceCreateFlagsKHR = packed struct(u32) {
@@ -3365,11 +3702,26 @@ pub const VkShaderCreateFlagsEXT = packed struct(u32) {
     // Extension: VK_EXT_device_generated_commands
     // bit: 7
     VK_SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT: bool = false,
-    _7: u7 = 0,
+    _7: u2 = 0,
+    // Extension: VK_EXT_descriptor_heap
+    // bit: 10
+    VK_SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT: bool = false,
+    // Extension: VK_KHR_maintenance5
+    // Extension: VK_ARM_shader_instrumentation
+    // bit: 11
+    VK_SHADER_CREATE_INSTRUMENT_SHADER_BIT_ARM: bool = false,
+    // Extension: VK_KHR_opacity_micromap
+    // bit: 12
+    VK_SHADER_CREATE_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_EXT: bool = false,
+    _12: u2 = 0,
     // Extension: VK_EXT_shader_64bit_indexing
     // bit: 15
     VK_SHADER_CREATE_64_BIT_INDEXING_BIT_EXT: bool = false,
-    _: u16 = 0,
+    _15: u2 = 0,
+    // Extension: VK_KHR_maintenance11
+    // bit: 18
+    VK_SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR: bool = false,
+    _: u13 = 0,
 };
 pub const VkTileShadingRenderPassFlagsQCOM = packed struct(u32) {
     // bit: 0
@@ -3381,7 +3733,9 @@ pub const VkTileShadingRenderPassFlagsQCOM = packed struct(u32) {
 pub const VkPhysicalDeviceSchedulingControlsFlagsARM = packed struct(u64) {
     // bit: 0
     VK_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM: bool = false,
-    _: u63 = 0,
+    // bit: 1
+    VK_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_ARM: bool = false,
+    _: u62 = 0,
 };
 pub const VkSurfaceCreateFlagsOHOS = packed struct(u32) {
     _: u32 = 0,
@@ -3418,6 +3772,67 @@ pub const VkSwapchainImageUsageFlagsOHOS = packed struct(u32) {
 };
 pub const VkPerformanceCounterDescriptionFlagsARM = packed struct(u32) {
     _: u32 = 0,
+};
+pub const VkShaderInstrumentationValuesFlagsARM = packed struct(u32) {
+    _: u32 = 0,
+};
+pub const VkDataGraphTOSAQualityFlagsARM = packed struct(u32) {
+    // bit: 0
+    VK_DATA_GRAPH_TOSA_QUALITY_ACCELERATED_ARM: bool = false,
+    // bit: 1
+    VK_DATA_GRAPH_TOSA_QUALITY_CONFORMANT_ARM: bool = false,
+    // bit: 2
+    VK_DATA_GRAPH_TOSA_QUALITY_EXPERIMENTAL_ARM: bool = false,
+    // bit: 3
+    VK_DATA_GRAPH_TOSA_QUALITY_DEPRECATED_ARM: bool = false,
+    _: u28 = 0,
+};
+pub const VkDataGraphOpticalFlowGridSizeFlagsARM = packed struct(u32) {
+    // bit: 0
+    VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_1X1_BIT_ARM: bool = false,
+    // bit: 1
+    VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_2X2_BIT_ARM: bool = false,
+    // bit: 2
+    VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_4X4_BIT_ARM: bool = false,
+    // bit: 3
+    VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_8X8_BIT_ARM: bool = false,
+    _: u28 = 0,
+    pub const VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_UNKNOWN_ARM: @This() = @bitCast(@as(u32, 0x0));
+};
+pub const VkDataGraphOpticalFlowImageUsageFlagsARM = packed struct(u32) {
+    // bit: 0
+    VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_INPUT_BIT_ARM: bool = false,
+    // bit: 1
+    VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_OUTPUT_BIT_ARM: bool = false,
+    // bit: 2
+    VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_HINT_BIT_ARM: bool = false,
+    // bit: 3
+    VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_COST_BIT_ARM: bool = false,
+    _: u28 = 0,
+    pub const VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_UNKNOWN_ARM: @This() = @bitCast(@as(u32, 0x0));
+};
+pub const VkDataGraphOpticalFlowCreateFlagsARM = packed struct(u32) {
+    // bit: 0
+    VK_DATA_GRAPH_OPTICAL_FLOW_CREATE_ENABLE_HINT_BIT_ARM: bool = false,
+    // bit: 1
+    VK_DATA_GRAPH_OPTICAL_FLOW_CREATE_ENABLE_COST_BIT_ARM: bool = false,
+    _1: u28 = 0,
+    // bit: 30
+    VK_DATA_GRAPH_OPTICAL_FLOW_CREATE_RESERVED_30_BIT_ARM: bool = false,
+    _: u1 = 0,
+};
+pub const VkDataGraphOpticalFlowExecuteFlagsARM = packed struct(u32) {
+    // bit: 0
+    VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_DISABLE_TEMPORAL_HINTS_BIT_ARM: bool = false,
+    // bit: 1
+    VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_INPUT_UNCHANGED_BIT_ARM: bool = false,
+    // bit: 2
+    VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_REFERENCE_UNCHANGED_BIT_ARM: bool = false,
+    // bit: 3
+    VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_INPUT_IS_PREVIOUS_REFERENCE_BIT_ARM: bool = false,
+    // bit: 4
+    VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_REFERENCE_IS_PREVIOUS_INPUT_BIT_ARM: bool = false,
+    _: u27 = 0,
 };
 pub const VkVideoCodecOperationFlagsKHR = packed struct(u32) {
     // Extension: VK_KHR_video_decode_h264
@@ -3577,6 +3992,36 @@ pub const VkVideoEncodeFeedbackFlagsKHR = packed struct(u32) {
     VK_VIDEO_ENCODE_FEEDBACK_BITSTREAM_BYTES_WRITTEN_BIT_KHR: bool = false,
     // bit: 2
     VK_VIDEO_ENCODE_FEEDBACK_BITSTREAM_HAS_OVERRIDES_BIT_KHR: bool = false,
+    // Extension: VK_KHR_video_encode_feedback2
+    // bit: 3
+    VK_VIDEO_ENCODE_FEEDBACK_AVERAGE_QUANTIZATION_BIT_KHR: bool = false,
+    // Extension: VK_KHR_video_encode_feedback2
+    // bit: 4
+    VK_VIDEO_ENCODE_FEEDBACK_MIN_QUANTIZATION_BIT_KHR: bool = false,
+    // Extension: VK_KHR_video_encode_feedback2
+    // bit: 5
+    VK_VIDEO_ENCODE_FEEDBACK_MAX_QUANTIZATION_BIT_KHR: bool = false,
+    // Extension: VK_KHR_video_encode_feedback2
+    // bit: 6
+    VK_VIDEO_ENCODE_FEEDBACK_INTRA_PIXELS_BIT_KHR: bool = false,
+    // Extension: VK_KHR_video_encode_feedback2
+    // bit: 7
+    VK_VIDEO_ENCODE_FEEDBACK_INTER_PIXELS_BIT_KHR: bool = false,
+    // Extension: VK_KHR_video_encode_feedback2
+    // bit: 8
+    VK_VIDEO_ENCODE_FEEDBACK_SKIPPED_PIXELS_BIT_KHR: bool = false,
+    // Extension: VK_KHR_video_encode_feedback2
+    // bit: 9
+    VK_VIDEO_ENCODE_FEEDBACK_PICTURE_PARTITION_COUNT_BIT_KHR: bool = false,
+    _: u22 = 0,
+};
+pub const VkVideoEncodePerPartitionFeedbackFlagsKHR = packed struct(u32) {
+    // bit: 0
+    VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_STATUS_BIT_KHR: bool = false,
+    // bit: 1
+    VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_BITSTREAM_BUFFER_OFFSET_BIT_KHR: bool = false,
+    // bit: 2
+    VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_BITSTREAM_BYTES_WRITTEN_BIT_KHR: bool = false,
     _: u29 = 0,
 };
 pub const VkVideoEncodeRateControlFlagsKHR = packed struct(u32) {
@@ -4053,6 +4498,8 @@ pub const VkQueryType = enum(i32) {
     VK_QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR = 1000150001,
     // Extension: VK_NV_ray_tracing
     VK_QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV = 1000165000,
+    // Extension: VK_QCOM_elapsed_timer_query
+    VK_QUERY_TYPE_TIME_ELAPSED_QCOM = 1000173000,
     // Extension: VK_INTEL_performance_query
     VK_QUERY_TYPE_PERFORMANCE_QUERY_INTEL = 1000210000,
     // Extension: VK_KHR_video_encode_queue
@@ -4156,7 +4603,7 @@ pub const VkSamplerAddressMode = enum(i32) {
     VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = 1,
     VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = 2,
     VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = 3,
-    // Extension: VK_BASE_VERSION_1_2
+    // Extension: VK_COMPUTE_VERSION_1_2
     // Extension: VK_KHR_sampler_mirror_clamp_to_edge
     // Extension: VK_KHR_sampler_mirror_clamp_to_edge
     VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = 4,
@@ -4568,8 +5015,8 @@ pub const VkFormat = enum(i32) {
     // Extension: VK_BASE_VERSION_1_3
     // Extension: VK_EXT_texture_compression_astc_hdr
     VK_FORMAT_ASTC_4x4_SFLOAT_BLOCK = 1000066000,
-    // Extension: VK_BASE_VERSION_1_3
     // Extension: VK_EXT_texture_compression_astc_hdr
+    // Extension: VK_BASE_VERSION_1_3
     VK_FORMAT_ASTC_5x4_SFLOAT_BLOCK = 1000066001,
     // Extension: VK_EXT_texture_compression_astc_hdr
     // Extension: VK_BASE_VERSION_1_3
@@ -4580,32 +5027,32 @@ pub const VkFormat = enum(i32) {
     // Extension: VK_EXT_texture_compression_astc_hdr
     // Extension: VK_BASE_VERSION_1_3
     VK_FORMAT_ASTC_6x6_SFLOAT_BLOCK = 1000066004,
-    // Extension: VK_EXT_texture_compression_astc_hdr
     // Extension: VK_BASE_VERSION_1_3
+    // Extension: VK_EXT_texture_compression_astc_hdr
     VK_FORMAT_ASTC_8x5_SFLOAT_BLOCK = 1000066005,
     // Extension: VK_EXT_texture_compression_astc_hdr
     // Extension: VK_BASE_VERSION_1_3
     VK_FORMAT_ASTC_8x6_SFLOAT_BLOCK = 1000066006,
-    // Extension: VK_BASE_VERSION_1_3
     // Extension: VK_EXT_texture_compression_astc_hdr
+    // Extension: VK_BASE_VERSION_1_3
     VK_FORMAT_ASTC_8x8_SFLOAT_BLOCK = 1000066007,
     // Extension: VK_EXT_texture_compression_astc_hdr
     // Extension: VK_BASE_VERSION_1_3
     VK_FORMAT_ASTC_10x5_SFLOAT_BLOCK = 1000066008,
-    // Extension: VK_EXT_texture_compression_astc_hdr
     // Extension: VK_BASE_VERSION_1_3
+    // Extension: VK_EXT_texture_compression_astc_hdr
     VK_FORMAT_ASTC_10x6_SFLOAT_BLOCK = 1000066009,
     // Extension: VK_BASE_VERSION_1_3
     // Extension: VK_EXT_texture_compression_astc_hdr
     VK_FORMAT_ASTC_10x8_SFLOAT_BLOCK = 1000066010,
-    // Extension: VK_BASE_VERSION_1_3
     // Extension: VK_EXT_texture_compression_astc_hdr
+    // Extension: VK_BASE_VERSION_1_3
     VK_FORMAT_ASTC_10x10_SFLOAT_BLOCK = 1000066011,
     // Extension: VK_BASE_VERSION_1_3
     // Extension: VK_EXT_texture_compression_astc_hdr
     VK_FORMAT_ASTC_12x10_SFLOAT_BLOCK = 1000066012,
-    // Extension: VK_EXT_texture_compression_astc_hdr
     // Extension: VK_BASE_VERSION_1_3
+    // Extension: VK_EXT_texture_compression_astc_hdr
     VK_FORMAT_ASTC_12x12_SFLOAT_BLOCK = 1000066013,
     // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_sampler_ycbcr_conversion
@@ -4646,8 +5093,8 @@ pub const VkFormat = enum(i32) {
     // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_sampler_ycbcr_conversion
     VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16 = 1000156012,
-    // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_sampler_ycbcr_conversion
+    // Extension: VK_BASE_VERSION_1_1
     VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16 = 1000156013,
     // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_sampler_ycbcr_conversion
@@ -4655,23 +5102,23 @@ pub const VkFormat = enum(i32) {
     // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_sampler_ycbcr_conversion
     VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16 = 1000156015,
-    // Extension: VK_KHR_sampler_ycbcr_conversion
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_sampler_ycbcr_conversion
     VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16 = 1000156016,
-    // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_sampler_ycbcr_conversion
+    // Extension: VK_BASE_VERSION_1_1
     VK_FORMAT_R12X4_UNORM_PACK16 = 1000156017,
     // Extension: VK_KHR_sampler_ycbcr_conversion
     // Extension: VK_BASE_VERSION_1_1
     VK_FORMAT_R12X4G12X4_UNORM_2PACK16 = 1000156018,
-    // Extension: VK_KHR_sampler_ycbcr_conversion
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_sampler_ycbcr_conversion
     VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16 = 1000156019,
     // Extension: VK_KHR_sampler_ycbcr_conversion
     // Extension: VK_BASE_VERSION_1_1
     VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16 = 1000156020,
-    // Extension: VK_KHR_sampler_ycbcr_conversion
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_sampler_ycbcr_conversion
     VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16 = 1000156021,
     // Extension: VK_KHR_sampler_ycbcr_conversion
     // Extension: VK_BASE_VERSION_1_1
@@ -4679,20 +5126,20 @@ pub const VkFormat = enum(i32) {
     // Extension: VK_KHR_sampler_ycbcr_conversion
     // Extension: VK_BASE_VERSION_1_1
     VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16 = 1000156023,
-    // Extension: VK_KHR_sampler_ycbcr_conversion
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_sampler_ycbcr_conversion
     VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16 = 1000156024,
     // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_sampler_ycbcr_conversion
     VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16 = 1000156025,
-    // Extension: VK_KHR_sampler_ycbcr_conversion
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_sampler_ycbcr_conversion
     VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16 = 1000156026,
-    // Extension: VK_KHR_sampler_ycbcr_conversion
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_sampler_ycbcr_conversion
     VK_FORMAT_G16B16G16R16_422_UNORM = 1000156027,
-    // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_sampler_ycbcr_conversion
+    // Extension: VK_BASE_VERSION_1_1
     VK_FORMAT_B16G16R16G16_422_UNORM = 1000156028,
     // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_sampler_ycbcr_conversion
@@ -4703,20 +5150,80 @@ pub const VkFormat = enum(i32) {
     // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_sampler_ycbcr_conversion
     VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM = 1000156031,
-    // Extension: VK_KHR_sampler_ycbcr_conversion
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_sampler_ycbcr_conversion
     VK_FORMAT_G16_B16R16_2PLANE_422_UNORM = 1000156032,
     // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_sampler_ycbcr_conversion
     VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM = 1000156033,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_3x3x3_UNORM_BLOCK_EXT = 1000288000,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_3x3x3_SRGB_BLOCK_EXT = 1000288001,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_3x3x3_SFLOAT_BLOCK_EXT = 1000288002,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_4x3x3_UNORM_BLOCK_EXT = 1000288003,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_4x3x3_SRGB_BLOCK_EXT = 1000288004,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_4x3x3_SFLOAT_BLOCK_EXT = 1000288005,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_4x4x3_UNORM_BLOCK_EXT = 1000288006,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_4x4x3_SRGB_BLOCK_EXT = 1000288007,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_4x4x3_SFLOAT_BLOCK_EXT = 1000288008,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_4x4x4_UNORM_BLOCK_EXT = 1000288009,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_4x4x4_SRGB_BLOCK_EXT = 1000288010,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_4x4x4_SFLOAT_BLOCK_EXT = 1000288011,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_5x4x4_UNORM_BLOCK_EXT = 1000288012,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_5x4x4_SRGB_BLOCK_EXT = 1000288013,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_5x4x4_SFLOAT_BLOCK_EXT = 1000288014,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_5x5x4_UNORM_BLOCK_EXT = 1000288015,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_5x5x4_SRGB_BLOCK_EXT = 1000288016,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_5x5x4_SFLOAT_BLOCK_EXT = 1000288017,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_5x5x5_UNORM_BLOCK_EXT = 1000288018,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_5x5x5_SRGB_BLOCK_EXT = 1000288019,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_5x5x5_SFLOAT_BLOCK_EXT = 1000288020,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_6x5x5_UNORM_BLOCK_EXT = 1000288021,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_6x5x5_SRGB_BLOCK_EXT = 1000288022,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_6x5x5_SFLOAT_BLOCK_EXT = 1000288023,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_6x6x5_UNORM_BLOCK_EXT = 1000288024,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_6x6x5_SRGB_BLOCK_EXT = 1000288025,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_6x6x5_SFLOAT_BLOCK_EXT = 1000288026,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_6x6x6_UNORM_BLOCK_EXT = 1000288027,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_6x6x6_SRGB_BLOCK_EXT = 1000288028,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_FORMAT_ASTC_6x6x6_SFLOAT_BLOCK_EXT = 1000288029,
     // Extension: VK_BASE_VERSION_1_3
     // Extension: VK_EXT_ycbcr_2plane_444_formats
     VK_FORMAT_G8_B8R8_2PLANE_444_UNORM = 1000330000,
     // Extension: VK_BASE_VERSION_1_3
     // Extension: VK_EXT_ycbcr_2plane_444_formats
     VK_FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16 = 1000330001,
-    // Extension: VK_EXT_ycbcr_2plane_444_formats
     // Extension: VK_BASE_VERSION_1_3
+    // Extension: VK_EXT_ycbcr_2plane_444_formats
     VK_FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16 = 1000330002,
     // Extension: VK_BASE_VERSION_1_3
     // Extension: VK_EXT_ycbcr_2plane_444_formats
@@ -4729,6 +5236,12 @@ pub const VkFormat = enum(i32) {
     VK_FORMAT_A4B4G4R4_UNORM_PACK16 = 1000340001,
     // Extension: VK_ARM_tensors
     VK_FORMAT_R8_BOOL_ARM = 1000460000,
+    // Extension: VK_ARM_tensors
+    VK_FORMAT_R16_SFLOAT_FPENCODING_BFLOAT16_ARM = 1000460001,
+    // Extension: VK_ARM_tensors
+    VK_FORMAT_R8_SFLOAT_FPENCODING_FLOAT8E4M3_ARM = 1000460002,
+    // Extension: VK_ARM_tensors
+    VK_FORMAT_R8_SFLOAT_FPENCODING_FLOAT8E5M2_ARM = 1000460003,
     // Extension: VK_NV_optical_flow
     // Extension: VK_NV_optical_flow
     VK_FORMAT_R16G16_SFIXED5_NV = 1000464000,
@@ -5007,11 +5520,11 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_KHR_dynamic_rendering
     // Extension: VK_GRAPHICS_VERSION_1_3
     VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO = 1000044001,
-    // Extension: VK_GRAPHICS_VERSION_1_3
     // Extension: VK_KHR_dynamic_rendering
+    // Extension: VK_GRAPHICS_VERSION_1_3
     VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO = 1000044002,
-    // Extension: VK_GRAPHICS_VERSION_1_3
     // Extension: VK_KHR_dynamic_rendering
+    // Extension: VK_GRAPHICS_VERSION_1_3
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES = 1000044003,
     // Extension: VK_KHR_dynamic_rendering
     // Extension: VK_GRAPHICS_VERSION_1_3
@@ -5031,14 +5544,14 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV = 1000050000,
     // Extension: VK_NV_private_vendor_info
     VK_STRUCTURE_TYPE_PRIVATE_VENDOR_INFO_PLACEHOLDER_OFFSET_0_NV = 1000051000,
-    // Extension: VK_KHR_multiview
     // Extension: VK_GRAPHICS_VERSION_1_1
+    // Extension: VK_KHR_multiview
     VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO = 1000053000,
     // Extension: VK_GRAPHICS_VERSION_1_1
     // Extension: VK_KHR_multiview
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES = 1000053001,
-    // Extension: VK_GRAPHICS_VERSION_1_1
     // Extension: VK_KHR_multiview
+    // Extension: VK_GRAPHICS_VERSION_1_1
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES = 1000053002,
     // Extension: VK_NV_external_memory
     VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV = 1000056000,
@@ -5050,14 +5563,14 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV = 1000057001,
     // Extension: VK_NV_win32_keyed_mutex
     VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV = 1000058000,
-    // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_get_physical_device_properties2
+    // Extension: VK_BASE_VERSION_1_1
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 = 1000059000,
-    // Extension: VK_KHR_get_physical_device_properties2
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_get_physical_device_properties2
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2 = 1000059001,
-    // Extension: VK_KHR_get_physical_device_properties2
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_get_physical_device_properties2
     VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2 = 1000059002,
     // Extension: VK_KHR_get_physical_device_properties2
     // Extension: VK_BASE_VERSION_1_1
@@ -5074,17 +5587,17 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_KHR_get_physical_device_properties2
     // Extension: VK_BASE_VERSION_1_1
     VK_STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2 = 1000059007,
-    // Extension: VK_KHR_get_physical_device_properties2
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_get_physical_device_properties2
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2 = 1000059008,
     // Extension: VK_KHR_device_group
     // Extension: VK_BASE_VERSION_1_1
     VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO = 1000060000,
-    // Extension: VK_KHR_device_group
     // Extension: VK_GRAPHICS_VERSION_1_1
-    VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO = 1000060003,
     // Extension: VK_KHR_device_group
+    VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO = 1000060003,
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_device_group
     VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO = 1000060004,
     // Extension: VK_KHR_device_group
     // Extension: VK_BASE_VERSION_1_1
@@ -5110,8 +5623,8 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_KHR_device_group
     // Extension: VK_KHR_swapchain
     VK_STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR = 1000060012,
-    // Extension: VK_KHR_device_group
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_device_group
     VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO = 1000060013,
     // Extension: VK_KHR_device_group
     // Extension: VK_BASE_VERSION_1_1
@@ -5139,26 +5652,26 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_EXT_pipeline_robustness
     // Extension: VK_COMPUTE_VERSION_1_4
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES = 1000068002,
-    // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_device_group_creation
+    // Extension: VK_BASE_VERSION_1_1
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES = 1000070000,
     // Extension: VK_KHR_device_group_creation
     // Extension: VK_BASE_VERSION_1_1
     VK_STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO = 1000070001,
-    // Extension: VK_KHR_external_memory_capabilities
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_external_memory_capabilities
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO = 1000071000,
-    // Extension: VK_KHR_external_memory_capabilities
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_external_memory_capabilities
     VK_STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES = 1000071001,
-    // Extension: VK_KHR_external_memory_capabilities
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_external_memory_capabilities
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO = 1000071002,
-    // Extension: VK_KHR_external_memory_capabilities
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_external_memory_capabilities
     VK_STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES = 1000071003,
-    // Extension: VK_KHR_external_memory_capabilities
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_external_memory_capabilities
     // Extension: VK_KHR_external_semaphore_capabilities
     // Extension: VK_KHR_external_fence_capabilities
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES = 1000071004,
@@ -5193,8 +5706,8 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_KHR_external_semaphore_capabilities
     // Extension: VK_BASE_VERSION_1_1
     VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES = 1000076001,
-    // Extension: VK_KHR_external_semaphore
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_external_semaphore
     VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO = 1000077000,
     // Extension: VK_KHR_external_semaphore_win32
     VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR = 1000078000,
@@ -5221,8 +5734,8 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_KHR_shader_float16_int8
     // Extension: VK_COMPUTE_VERSION_1_2
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES = 1000082000,
-    // Extension: VK_KHR_16bit_storage
     // Extension: VK_COMPUTE_VERSION_1_1
+    // Extension: VK_KHR_16bit_storage
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES = 1000083000,
     // Extension: VK_KHR_incremental_present
     VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR = 1000084000,
@@ -5276,14 +5789,14 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_GRAPHICS_VERSION_1_2
     // Extension: VK_KHR_imageless_framebuffer
     VK_STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO = 1000108003,
-    // Extension: VK_GRAPHICS_VERSION_1_2
     // Extension: VK_KHR_create_renderpass2
+    // Extension: VK_GRAPHICS_VERSION_1_2
     VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2 = 1000109000,
     // Extension: VK_GRAPHICS_VERSION_1_2
     // Extension: VK_KHR_create_renderpass2
     VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2 = 1000109001,
-    // Extension: VK_GRAPHICS_VERSION_1_2
     // Extension: VK_KHR_create_renderpass2
+    // Extension: VK_GRAPHICS_VERSION_1_2
     VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2 = 1000109002,
     // Extension: VK_GRAPHICS_VERSION_1_2
     // Extension: VK_KHR_create_renderpass2
@@ -5291,8 +5804,8 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_KHR_create_renderpass2
     // Extension: VK_GRAPHICS_VERSION_1_2
     VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2 = 1000109004,
-    // Extension: VK_KHR_create_renderpass2
     // Extension: VK_GRAPHICS_VERSION_1_2
+    // Extension: VK_KHR_create_renderpass2
     VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO = 1000109005,
     // Extension: VK_KHR_create_renderpass2
     // Extension: VK_GRAPHICS_VERSION_1_2
@@ -5304,11 +5817,11 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_KHR_external_fence_capabilities
     // Extension: VK_BASE_VERSION_1_1
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO = 1000112000,
-    // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_external_fence_capabilities
-    VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES = 1000112001,
-    // Extension: VK_KHR_external_fence
     // Extension: VK_BASE_VERSION_1_1
+    VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES = 1000112001,
+    // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_external_fence
     VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO = 1000113000,
     // Extension: VK_KHR_external_fence_win32
     VK_STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR = 1000114000,
@@ -5342,8 +5855,8 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_GRAPHICS_VERSION_1_1
     // Extension: VK_KHR_maintenance2
     VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO = 1000117001,
-    // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_maintenance2
+    // Extension: VK_BASE_VERSION_1_1
     VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO = 1000117002,
     // Extension: VK_GRAPHICS_VERSION_1_1
     // Extension: VK_KHR_maintenance2
@@ -5372,11 +5885,11 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK = 1000122000,
     // Extension: VK_MVK_macos_surface
     VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK = 1000123000,
-    // Extension: VK_KHR_dedicated_allocation
     // Extension: VK_BASE_VERSION_1_1
+    // Extension: VK_KHR_dedicated_allocation
     VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS = 1000127000,
-    // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_dedicated_allocation
+    // Extension: VK_BASE_VERSION_1_1
     VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO = 1000127001,
     // Extension: VK_EXT_debug_utils
     VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT = 1000128000,
@@ -5405,9 +5918,23 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_EXT_sampler_filter_minmax
     // Extension: VK_COMPUTE_VERSION_1_2
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES = 1000130000,
-    // Extension: VK_EXT_sampler_filter_minmax
     // Extension: VK_COMPUTE_VERSION_1_2
+    // Extension: VK_EXT_sampler_filter_minmax
     VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO = 1000130001,
+    // Extension: VK_AMD_gpa_interface
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_FEATURES_AMD = 1000133000,
+    // Extension: VK_AMD_gpa_interface
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_PROPERTIES_AMD = 1000133001,
+    // Extension: VK_AMD_gpa_interface
+    VK_STRUCTURE_TYPE_GPA_SAMPLE_BEGIN_INFO_AMD = 1000133002,
+    // Extension: VK_AMD_gpa_interface
+    VK_STRUCTURE_TYPE_GPA_SESSION_CREATE_INFO_AMD = 1000133003,
+    // Extension: VK_AMD_gpa_interface
+    VK_STRUCTURE_TYPE_GPA_DEVICE_CLOCK_MODE_INFO_AMD = 1000133004,
+    // Extension: VK_AMD_gpa_interface
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_PROPERTIES_2_AMD = 1000133005,
+    // Extension: VK_AMD_gpa_interface
+    VK_STRUCTURE_TYPE_GPA_DEVICE_GET_CLOCK_INFO_AMD = 1000133006,
     // Extension: VK_AMDX_shader_enqueue
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ENQUEUE_FEATURES_AMDX = 1000134000,
     // Extension: VK_AMDX_shader_enqueue
@@ -5418,17 +5945,47 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_EXECUTION_GRAPH_PIPELINE_CREATE_INFO_AMDX = 1000134003,
     // Extension: VK_AMDX_shader_enqueue
     VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_NODE_CREATE_INFO_AMDX = 1000134004,
-    // Extension: VK_EXT_inline_uniform_block
+    // Extension: VK_EXT_descriptor_heap
+    VK_STRUCTURE_TYPE_TEXEL_BUFFER_DESCRIPTOR_INFO_EXT = 1000135000,
+    // Extension: VK_EXT_descriptor_heap
+    VK_STRUCTURE_TYPE_IMAGE_DESCRIPTOR_INFO_EXT = 1000135001,
+    // Extension: VK_EXT_descriptor_heap
+    VK_STRUCTURE_TYPE_RESOURCE_DESCRIPTOR_INFO_EXT = 1000135002,
+    // Extension: VK_EXT_descriptor_heap
+    VK_STRUCTURE_TYPE_BIND_HEAP_INFO_EXT = 1000135003,
+    // Extension: VK_EXT_descriptor_heap
+    VK_STRUCTURE_TYPE_PUSH_DATA_INFO_EXT = 1000135004,
+    // Extension: VK_EXT_descriptor_heap
+    VK_STRUCTURE_TYPE_DESCRIPTOR_SET_AND_BINDING_MAPPING_EXT = 1000135005,
+    // Extension: VK_EXT_descriptor_heap
+    VK_STRUCTURE_TYPE_SHADER_DESCRIPTOR_SET_AND_BINDING_MAPPING_INFO_EXT = 1000135006,
+    // Extension: VK_EXT_descriptor_heap
+    VK_STRUCTURE_TYPE_OPAQUE_CAPTURE_DATA_CREATE_INFO_EXT = 1000135007,
+    // Extension: VK_EXT_descriptor_heap
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_PROPERTIES_EXT = 1000135008,
+    // Extension: VK_EXT_descriptor_heap
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_FEATURES_EXT = 1000135009,
+    // Extension: VK_EXT_descriptor_heap
+    VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_DESCRIPTOR_HEAP_INFO_EXT = 1000135010,
+    // Extension: VK_EXT_descriptor_heap
+    VK_STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_INDEX_CREATE_INFO_EXT = 1000135011,
+    // Extension: VK_EXT_descriptor_heap
+    VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_PUSH_DATA_TOKEN_NV = 1000135012,
+    // Extension: VK_EXT_descriptor_heap
+    VK_STRUCTURE_TYPE_SUBSAMPLED_IMAGE_FORMAT_PROPERTIES_EXT = 1000135013,
+    // Extension: VK_EXT_descriptor_heap
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_TENSOR_PROPERTIES_ARM = 1000135014,
     // Extension: VK_COMPUTE_VERSION_1_3
+    // Extension: VK_EXT_inline_uniform_block
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES = 1000138000,
-    // Extension: VK_EXT_inline_uniform_block
     // Extension: VK_COMPUTE_VERSION_1_3
+    // Extension: VK_EXT_inline_uniform_block
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES = 1000138001,
-    // Extension: VK_EXT_inline_uniform_block
     // Extension: VK_COMPUTE_VERSION_1_3
+    // Extension: VK_EXT_inline_uniform_block
     VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK = 1000138002,
-    // Extension: VK_EXT_inline_uniform_block
     // Extension: VK_COMPUTE_VERSION_1_3
+    // Extension: VK_EXT_inline_uniform_block
     VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO = 1000138003,
     // Extension: VK_KHR_shader_bfloat16
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_BFLOAT16_FEATURES_KHR = 1000141000,
@@ -5465,8 +6022,8 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_KHR_get_memory_requirements2
     // Extension: VK_BASE_VERSION_1_1
     VK_STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2 = 1000146004,
-    // Extension: VK_BASE_VERSION_1_2
     // Extension: VK_KHR_image_format_list
+    // Extension: VK_BASE_VERSION_1_2
     VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO = 1000147000,
     // Extension: VK_EXT_blend_operation_advanced
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT = 1000148000,
@@ -5524,11 +6081,11 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_COMPUTE_VERSION_1_1
     // Extension: VK_KHR_sampler_ycbcr_conversion
     VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO = 1000156001,
-    // Extension: VK_KHR_sampler_ycbcr_conversion
     // Extension: VK_COMPUTE_VERSION_1_1
+    // Extension: VK_KHR_sampler_ycbcr_conversion
     VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO = 1000156002,
-    // Extension: VK_COMPUTE_VERSION_1_1
     // Extension: VK_KHR_sampler_ycbcr_conversion
+    // Extension: VK_COMPUTE_VERSION_1_1
     VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO = 1000156003,
     // Extension: VK_COMPUTE_VERSION_1_1
     // Extension: VK_KHR_sampler_ycbcr_conversion
@@ -5536,11 +6093,11 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_COMPUTE_VERSION_1_1
     // Extension: VK_KHR_sampler_ycbcr_conversion
     VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES = 1000156005,
-    // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_bind_memory2
+    // Extension: VK_BASE_VERSION_1_1
     VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO = 1000157000,
-    // Extension: VK_BASE_VERSION_1_1
     // Extension: VK_KHR_bind_memory2
+    // Extension: VK_BASE_VERSION_1_1
     VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO = 1000157001,
     // Extension: VK_EXT_image_drm_format_modifier
     VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT = 1000158000,
@@ -5561,11 +6118,11 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_COMPUTE_VERSION_1_2
     // Extension: VK_EXT_descriptor_indexing
     VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO = 1000161000,
-    // Extension: VK_EXT_descriptor_indexing
     // Extension: VK_COMPUTE_VERSION_1_2
+    // Extension: VK_EXT_descriptor_indexing
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES = 1000161001,
-    // Extension: VK_EXT_descriptor_indexing
     // Extension: VK_COMPUTE_VERSION_1_2
+    // Extension: VK_EXT_descriptor_indexing
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES = 1000161002,
     // Extension: VK_COMPUTE_VERSION_1_2
     // Extension: VK_EXT_descriptor_indexing
@@ -5611,8 +6168,8 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_REPRESENTATIVE_FRAGMENT_TEST_FEATURES_NV = 1000166000,
     // Extension: VK_NV_representative_fragment_test
     VK_STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV = 1000166001,
-    // Extension: VK_COMPUTE_VERSION_1_1
     // Extension: VK_KHR_maintenance3
+    // Extension: VK_COMPUTE_VERSION_1_1
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES = 1000168000,
     // Extension: VK_COMPUTE_VERSION_1_1
     // Extension: VK_KHR_maintenance3
@@ -5621,15 +6178,19 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT = 1000170000,
     // Extension: VK_EXT_filter_cubic
     VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT = 1000170001,
-    // Extension: VK_BASE_VERSION_1_4
+    // Extension: VK_QCOM_cooperative_matrix_conversion
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_CONVERSION_FEATURES_QCOM = 1000172000,
+    // Extension: VK_QCOM_elapsed_timer_query
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ELAPSED_TIMER_QUERY_FEATURES_QCOM = 1000173000,
     // Extension: VK_KHR_global_priority
     // Extension: VK_EXT_global_priority
+    // Extension: VK_BASE_VERSION_1_4
     VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO = 1000174000,
     // Extension: VK_KHR_shader_subgroup_extended_types
     // Extension: VK_COMPUTE_VERSION_1_2
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_EXTENDED_TYPES_FEATURES = 1000175000,
-    // Extension: VK_KHR_8bit_storage
     // Extension: VK_COMPUTE_VERSION_1_2
+    // Extension: VK_KHR_8bit_storage
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES = 1000177000,
     // Extension: VK_EXT_external_memory_host
     VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT = 1000178000,
@@ -5664,30 +6225,30 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD = 1000189000,
     // Extension: VK_EXT_vertex_attribute_divisor
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT = 1000190000,
-    // Extension: VK_EXT_vertex_attribute_divisor
     // Extension: VK_GRAPHICS_VERSION_1_4
     // Extension: VK_KHR_vertex_attribute_divisor
+    // Extension: VK_EXT_vertex_attribute_divisor
     VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO = 1000190001,
+    // Extension: VK_KHR_vertex_attribute_divisor
     // Extension: VK_GRAPHICS_VERSION_1_4
     // Extension: VK_EXT_vertex_attribute_divisor
-    // Extension: VK_KHR_vertex_attribute_divisor
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES = 1000190002,
     // Extension: VK_GGP_frame_token
     VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP = 1000191000,
-    // Extension: VK_EXT_pipeline_creation_feedback
     // Extension: VK_COMPUTE_VERSION_1_3
+    // Extension: VK_EXT_pipeline_creation_feedback
     VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO = 1000192000,
-    // Extension: VK_KHR_driver_properties
     // Extension: VK_BASE_VERSION_1_2
+    // Extension: VK_KHR_driver_properties
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES = 1000196000,
-    // Extension: VK_KHR_shader_float_controls
     // Extension: VK_COMPUTE_VERSION_1_2
+    // Extension: VK_KHR_shader_float_controls
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES = 1000197000,
-    // Extension: VK_KHR_depth_stencil_resolve
     // Extension: VK_GRAPHICS_VERSION_1_2
+    // Extension: VK_KHR_depth_stencil_resolve
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES = 1000199000,
-    // Extension: VK_KHR_depth_stencil_resolve
     // Extension: VK_GRAPHICS_VERSION_1_2
+    // Extension: VK_KHR_depth_stencil_resolve
     VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE = 1000199001,
     // Extension: VK_KHR_compute_shader_derivatives
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_KHR = 1000201000,
@@ -5722,8 +6283,8 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_BASE_VERSION_1_2
     // Extension: VK_KHR_timeline_semaphore
     VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO = 1000207004,
-    // Extension: VK_KHR_timeline_semaphore
     // Extension: VK_BASE_VERSION_1_2
+    // Extension: VK_KHR_timeline_semaphore
     VK_STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO = 1000207005,
     // Extension: VK_EXT_present_timing
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_TIMING_FEATURES_EXT = 1000208000,
@@ -5782,18 +6343,18 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT = 1000218001,
     // Extension: VK_EXT_fragment_density_map
     VK_STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT = 1000218002,
-    // Extension: VK_COMPUTE_VERSION_1_2
     // Extension: VK_EXT_scalar_block_layout
+    // Extension: VK_COMPUTE_VERSION_1_2
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES = 1000221000,
-    // Extension: VK_COMPUTE_VERSION_1_3
     // Extension: VK_EXT_subgroup_size_control
+    // Extension: VK_COMPUTE_VERSION_1_3
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES = 1000225000,
+    // Extension: VK_EXT_subgroup_size_control
+    // Extension: VK_COMPUTE_VERSION_1_3
     // Extension: VK_EXT_shader_object
-    // Extension: VK_COMPUTE_VERSION_1_3
-    // Extension: VK_EXT_subgroup_size_control
     VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO = 1000225001,
-    // Extension: VK_COMPUTE_VERSION_1_3
     // Extension: VK_EXT_subgroup_size_control
+    // Extension: VK_COMPUTE_VERSION_1_3
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES = 1000225002,
     // Extension: VK_KHR_fragment_shading_rate
     VK_STRUCTURE_TYPE_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR = 1000226000,
@@ -5809,6 +6370,8 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_2_AMD = 1000227000,
     // Extension: VK_AMD_device_coherent_memory
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COHERENT_MEMORY_FEATURES_AMD = 1000229000,
+    // Extension: VK_KHR_shader_constant_data
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CONSTANT_DATA_FEATURES_KHR = 1000231000,
     // Extension: VK_KHR_dynamic_rendering_local_read
     // Extension: VK_GRAPHICS_VERSION_1_4
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_LOCAL_READ_FEATURES = 1000232000,
@@ -5818,6 +6381,12 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_KHR_dynamic_rendering_local_read
     // Extension: VK_GRAPHICS_VERSION_1_4
     VK_STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO = 1000232002,
+    // Extension: VK_KHR_shader_abort
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ABORT_FEATURES_KHR = 1000233000,
+    // Extension: VK_KHR_shader_abort
+    VK_STRUCTURE_TYPE_DEVICE_FAULT_SHADER_ABORT_MESSAGE_INFO_KHR = 1000233001,
+    // Extension: VK_KHR_shader_abort
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ABORT_PROPERTIES_KHR = 1000233002,
     // Extension: VK_EXT_shader_image_atomic_int64
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_ATOMIC_INT64_FEATURES_EXT = 1000234000,
     // Extension: VK_KHR_shader_quad_control
@@ -5835,8 +6404,8 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_KHR_separate_depth_stencil_layouts
     // Extension: VK_GRAPHICS_VERSION_1_2
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SEPARATE_DEPTH_STENCIL_LAYOUTS_FEATURES = 1000241000,
-    // Extension: VK_KHR_separate_depth_stencil_layouts
     // Extension: VK_GRAPHICS_VERSION_1_2
+    // Extension: VK_KHR_separate_depth_stencil_layouts
     VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT = 1000241001,
     // Extension: VK_GRAPHICS_VERSION_1_2
     // Extension: VK_KHR_separate_depth_stencil_layouts
@@ -5853,8 +6422,8 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_BASE_VERSION_1_3
     // Extension: VK_EXT_tooling_info
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES = 1000245000,
-    // Extension: VK_GRAPHICS_VERSION_1_2
     // Extension: VK_EXT_separate_stencil_usage
+    // Extension: VK_GRAPHICS_VERSION_1_2
     VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO = 1000246000,
     // Extension: VK_EXT_validation_features
     VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT = 1000247000,
@@ -5896,22 +6465,22 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_KHR_buffer_device_address
     // Extension: VK_BASE_VERSION_1_2
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES = 1000257000,
-    // Extension: VK_KHR_buffer_device_address
     // Extension: VK_BASE_VERSION_1_2
+    // Extension: VK_KHR_buffer_device_address
     VK_STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO = 1000257002,
-    // Extension: VK_KHR_buffer_device_address
     // Extension: VK_BASE_VERSION_1_2
+    // Extension: VK_KHR_buffer_device_address
     VK_STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO = 1000257003,
-    // Extension: VK_KHR_buffer_device_address
     // Extension: VK_BASE_VERSION_1_2
+    // Extension: VK_KHR_buffer_device_address
     VK_STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO = 1000257004,
-    // Extension: VK_EXT_line_rasterization
-    // Extension: VK_GRAPHICS_VERSION_1_4
     // Extension: VK_KHR_line_rasterization
+    // Extension: VK_GRAPHICS_VERSION_1_4
+    // Extension: VK_EXT_line_rasterization
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES = 1000259000,
-    // Extension: VK_KHR_line_rasterization
-    // Extension: VK_EXT_line_rasterization
     // Extension: VK_GRAPHICS_VERSION_1_4
+    // Extension: VK_EXT_line_rasterization
+    // Extension: VK_KHR_line_rasterization
     VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO = 1000259001,
     // Extension: VK_KHR_line_rasterization
     // Extension: VK_GRAPHICS_VERSION_1_4
@@ -5919,19 +6488,19 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES = 1000259002,
     // Extension: VK_EXT_shader_atomic_float
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_FEATURES_EXT = 1000260000,
-    // Extension: VK_BASE_VERSION_1_2
     // Extension: VK_EXT_host_query_reset
+    // Extension: VK_BASE_VERSION_1_2
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES = 1000261000,
-    // Extension: VK_KHR_index_type_uint8
     // Extension: VK_EXT_index_type_uint8
     // Extension: VK_BASE_VERSION_1_4
+    // Extension: VK_KHR_index_type_uint8
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES = 1000265000,
     // Extension: VK_EXT_extended_dynamic_state
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_FEATURES_EXT = 1000267000,
     // Extension: VK_KHR_pipeline_executable_properties
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_EXECUTABLE_PROPERTIES_FEATURES_KHR = 1000269000,
-    // Extension: VK_KHR_pipeline_executable_properties
     // Extension: VK_EXT_pipeline_properties
+    // Extension: VK_KHR_pipeline_executable_properties
     VK_STRUCTURE_TYPE_PIPELINE_INFO_KHR = 1000269001,
     // Extension: VK_KHR_pipeline_executable_properties
     VK_STRUCTURE_TYPE_PIPELINE_EXECUTABLE_PROPERTIES_KHR = 1000269002,
@@ -5944,17 +6513,17 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_BASE_VERSION_1_4
     // Extension: VK_EXT_host_image_copy
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES = 1000270000,
-    // Extension: VK_BASE_VERSION_1_4
     // Extension: VK_EXT_host_image_copy
+    // Extension: VK_BASE_VERSION_1_4
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES = 1000270001,
     // Extension: VK_EXT_host_image_copy
     // Extension: VK_BASE_VERSION_1_4
     VK_STRUCTURE_TYPE_MEMORY_TO_IMAGE_COPY = 1000270002,
-    // Extension: VK_EXT_host_image_copy
     // Extension: VK_BASE_VERSION_1_4
+    // Extension: VK_EXT_host_image_copy
     VK_STRUCTURE_TYPE_IMAGE_TO_MEMORY_COPY = 1000270003,
-    // Extension: VK_EXT_host_image_copy
     // Extension: VK_BASE_VERSION_1_4
+    // Extension: VK_EXT_host_image_copy
     VK_STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO = 1000270004,
     // Extension: VK_EXT_host_image_copy
     // Extension: VK_BASE_VERSION_1_4
@@ -5965,11 +6534,11 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_EXT_host_image_copy
     // Extension: VK_BASE_VERSION_1_4
     VK_STRUCTURE_TYPE_COPY_IMAGE_TO_IMAGE_INFO = 1000270007,
-    // Extension: VK_BASE_VERSION_1_4
     // Extension: VK_EXT_host_image_copy
+    // Extension: VK_BASE_VERSION_1_4
     VK_STRUCTURE_TYPE_SUBRESOURCE_HOST_MEMCPY_SIZE = 1000270008,
-    // Extension: VK_BASE_VERSION_1_4
     // Extension: VK_EXT_host_image_copy
+    // Extension: VK_BASE_VERSION_1_4
     VK_STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY = 1000270009,
     // Extension: VK_KHR_map_memory2
     // Extension: VK_BASE_VERSION_1_4
@@ -6026,16 +6595,16 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INHERITED_VIEWPORT_SCISSOR_FEATURES_NV = 1000278000,
     // Extension: VK_NV_inherited_viewport_scissor
     VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_VIEWPORT_SCISSOR_INFO_NV = 1000278001,
-    // Extension: VK_COMPUTE_VERSION_1_3
     // Extension: VK_KHR_shader_integer_dot_product
+    // Extension: VK_COMPUTE_VERSION_1_3
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES = 1000280000,
-    // Extension: VK_KHR_shader_integer_dot_product
     // Extension: VK_COMPUTE_VERSION_1_3
+    // Extension: VK_KHR_shader_integer_dot_product
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES = 1000280001,
     // Extension: VK_EXT_texel_buffer_alignment
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_FEATURES_EXT = 1000281000,
-    // Extension: VK_EXT_texel_buffer_alignment
     // Extension: VK_COMPUTE_VERSION_1_3
+    // Extension: VK_EXT_texel_buffer_alignment
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES = 1000281001,
     // Extension: VK_QCOM_render_pass_transform
     VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM = 1000282000,
@@ -6063,6 +6632,8 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_PROPERTIES_EXT = 1000287001,
     // Extension: VK_EXT_custom_border_color
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_FEATURES_EXT = 1000287002,
+    // Extension: VK_EXT_texture_compression_astc_3d
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_3D_FEATURES_EXT = 1000288000,
     // Extension: VK_KHR_pipeline_library
     VK_STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR = 1000290000,
     // Extension: VK_NV_present_barrier
@@ -6075,17 +6646,17 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_PRESENT_ID_KHR = 1000294000,
     // Extension: VK_KHR_present_id
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_FEATURES_KHR = 1000294001,
-    // Extension: VK_EXT_private_data
     // Extension: VK_BASE_VERSION_1_3
+    // Extension: VK_EXT_private_data
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES = 1000295000,
-    // Extension: VK_EXT_private_data
     // Extension: VK_BASE_VERSION_1_3
+    // Extension: VK_EXT_private_data
     VK_STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO = 1000295001,
     // Extension: VK_EXT_private_data
     // Extension: VK_BASE_VERSION_1_3
     VK_STRUCTURE_TYPE_PRIVATE_DATA_SLOT_CREATE_INFO = 1000295002,
-    // Extension: VK_EXT_pipeline_creation_cache_control
     // Extension: VK_COMPUTE_VERSION_1_3
+    // Extension: VK_EXT_pipeline_creation_cache_control
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES = 1000297000,
     // Extension: VKSC_VERSION_1_0
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_SC_1_0_FEATURES = 1000298000,
@@ -6131,6 +6702,22 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV = 1000300000,
     // Extension: VK_NV_device_diagnostics_config
     VK_STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV = 1000300001,
+    // Extension: VK_QCOM_queue_perf_hint
+    VK_STRUCTURE_TYPE_PERF_HINT_INFO_QCOM = 1000302000,
+    // Extension: VK_QCOM_queue_perf_hint
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_PERF_HINT_FEATURES_QCOM = 1000302001,
+    // Extension: VK_QCOM_queue_perf_hint
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_PERF_HINT_PROPERTIES_QCOM = 1000302002,
+    // Extension: VK_QCOM_image_processing3
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_3_FEATURES_QCOM = 1000303000,
+    // Extension: VK_QCOM_shader_multiple_wait_queues
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MULTIPLE_WAIT_QUEUES_FEATURES_QCOM = 1000304000,
+    // Extension: VK_QCOM_shader_multiple_wait_queues
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MULTIPLE_WAIT_QUEUES_PROPERTIES_QCOM = 1000304001,
+    // Extension: VK_EXT_shader_split_barrier
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SPLIT_BARRIER_FEATURES_EXT = 1000305000,
+    // Extension: VK_EXT_shader_split_barrier
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SPLIT_BARRIER_PROPERTIES_EXT = 1000305001,
     // Extension: VK_NV_cuda_kernel_launch
     VK_STRUCTURE_TYPE_CUDA_MODULE_CREATE_INFO_NV = 1000307000,
     // Extension: VK_NV_cuda_kernel_launch
@@ -6184,26 +6771,26 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_BASE_VERSION_1_3
     // Extension: VK_KHR_synchronization2
     VK_STRUCTURE_TYPE_MEMORY_BARRIER_2 = 1000314000,
-    // Extension: VK_KHR_synchronization2
     // Extension: VK_BASE_VERSION_1_3
+    // Extension: VK_KHR_synchronization2
     VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2 = 1000314001,
-    // Extension: VK_KHR_synchronization2
     // Extension: VK_BASE_VERSION_1_3
+    // Extension: VK_KHR_synchronization2
     VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2 = 1000314002,
-    // Extension: VK_KHR_synchronization2
     // Extension: VK_BASE_VERSION_1_3
+    // Extension: VK_KHR_synchronization2
     VK_STRUCTURE_TYPE_DEPENDENCY_INFO = 1000314003,
-    // Extension: VK_KHR_synchronization2
     // Extension: VK_BASE_VERSION_1_3
+    // Extension: VK_KHR_synchronization2
     VK_STRUCTURE_TYPE_SUBMIT_INFO_2 = 1000314004,
-    // Extension: VK_KHR_synchronization2
     // Extension: VK_BASE_VERSION_1_3
+    // Extension: VK_KHR_synchronization2
     VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO = 1000314005,
     // Extension: VK_KHR_synchronization2
     // Extension: VK_BASE_VERSION_1_3
     VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO = 1000314006,
-    // Extension: VK_KHR_synchronization2
     // Extension: VK_BASE_VERSION_1_3
+    // Extension: VK_KHR_synchronization2
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES = 1000314007,
     // Extension: VK_NV_device_diagnostic_checkpoints
     VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV = 1000314008,
@@ -6235,6 +6822,38 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_INFO_EXT = 1000316011,
     // Extension: VK_EXT_descriptor_buffer
     VK_STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_PUSH_DESCRIPTOR_BUFFER_HANDLE_EXT = 1000316012,
+    // Extension: VK_KHR_device_address_commands
+    VK_STRUCTURE_TYPE_DEVICE_MEMORY_COPY_KHR = 1000318000,
+    // Extension: VK_KHR_device_address_commands
+    VK_STRUCTURE_TYPE_COPY_DEVICE_MEMORY_INFO_KHR = 1000318001,
+    // Extension: VK_KHR_device_address_commands
+    VK_STRUCTURE_TYPE_DEVICE_MEMORY_IMAGE_COPY_KHR = 1000318002,
+    // Extension: VK_KHR_device_address_commands
+    VK_STRUCTURE_TYPE_COPY_DEVICE_MEMORY_IMAGE_INFO_KHR = 1000318003,
+    // Extension: VK_KHR_device_address_commands
+    VK_STRUCTURE_TYPE_MEMORY_RANGE_BARRIERS_INFO_KHR = 1000318004,
+    // Extension: VK_KHR_device_address_commands
+    VK_STRUCTURE_TYPE_MEMORY_RANGE_BARRIER_KHR = 1000318005,
+    // Extension: VK_KHR_device_address_commands
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_ADDRESS_COMMANDS_FEATURES_KHR = 1000318006,
+    // Extension: VK_KHR_device_address_commands
+    VK_STRUCTURE_TYPE_BIND_INDEX_BUFFER_3_INFO_KHR = 1000318007,
+    // Extension: VK_KHR_device_address_commands
+    VK_STRUCTURE_TYPE_BIND_VERTEX_BUFFER_3_INFO_KHR = 1000318008,
+    // Extension: VK_KHR_device_address_commands
+    VK_STRUCTURE_TYPE_DRAW_INDIRECT_2_INFO_KHR = 1000318009,
+    // Extension: VK_KHR_device_address_commands
+    VK_STRUCTURE_TYPE_DRAW_INDIRECT_COUNT_2_INFO_KHR = 1000318010,
+    // Extension: VK_KHR_device_address_commands
+    VK_STRUCTURE_TYPE_DISPATCH_INDIRECT_2_INFO_KHR = 1000318011,
+    // Extension: VK_KHR_device_address_commands
+    VK_STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_2_EXT = 1000318012,
+    // Extension: VK_KHR_device_address_commands
+    VK_STRUCTURE_TYPE_BIND_TRANSFORM_FEEDBACK_BUFFER_2_INFO_EXT = 1000318013,
+    // Extension: VK_KHR_device_address_commands
+    VK_STRUCTURE_TYPE_MEMORY_MARKER_INFO_AMD = 1000318014,
+    // Extension: VK_KHR_device_address_commands
+    VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_2_KHR = 1000318015,
     // Extension: VK_EXT_graphics_pipeline_library
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_FEATURES_EXT = 1000320000,
     // Extension: VK_EXT_graphics_pipeline_library
@@ -6294,35 +6913,35 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_KHR_copy_commands2
     // Extension: VK_GRAPHICS_VERSION_1_3
     VK_STRUCTURE_TYPE_BLIT_IMAGE_INFO_2 = 1000337004,
-    // Extension: VK_KHR_copy_commands2
     // Extension: VK_GRAPHICS_VERSION_1_3
+    // Extension: VK_KHR_copy_commands2
     VK_STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2 = 1000337005,
-    // Extension: VK_KHR_copy_commands2
     // Extension: VK_BASE_VERSION_1_3
+    // Extension: VK_KHR_copy_commands2
     VK_STRUCTURE_TYPE_BUFFER_COPY_2 = 1000337006,
-    // Extension: VK_KHR_copy_commands2
     // Extension: VK_BASE_VERSION_1_3
+    // Extension: VK_KHR_copy_commands2
     VK_STRUCTURE_TYPE_IMAGE_COPY_2 = 1000337007,
-    // Extension: VK_KHR_copy_commands2
     // Extension: VK_GRAPHICS_VERSION_1_3
+    // Extension: VK_KHR_copy_commands2
     VK_STRUCTURE_TYPE_IMAGE_BLIT_2 = 1000337008,
-    // Extension: VK_KHR_copy_commands2
     // Extension: VK_BASE_VERSION_1_3
-    VK_STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2 = 1000337009,
-    // Extension: VK_GRAPHICS_VERSION_1_3
     // Extension: VK_KHR_copy_commands2
+    VK_STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2 = 1000337009,
+    // Extension: VK_KHR_copy_commands2
+    // Extension: VK_GRAPHICS_VERSION_1_3
     VK_STRUCTURE_TYPE_IMAGE_RESOLVE_2 = 1000337010,
     // Extension: VK_EXT_image_compression_control
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_COMPRESSION_CONTROL_FEATURES_EXT = 1000338000,
     // Extension: VK_EXT_image_compression_control
     VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_CONTROL_EXT = 1000338001,
-    // Extension: VK_BASE_VERSION_1_4
-    // Extension: VK_EXT_image_compression_control
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_EXT_image_compression_control
+    // Extension: VK_BASE_VERSION_1_4
     VK_STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2 = 1000338002,
-    // Extension: VK_BASE_VERSION_1_4
-    // Extension: VK_EXT_image_compression_control
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_EXT_image_compression_control
+    // Extension: VK_BASE_VERSION_1_4
     VK_STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2 = 1000338003,
     // Extension: VK_EXT_image_compression_control
     VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT = 1000338004,
@@ -6432,8 +7051,8 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_NV_external_sci_sync
     // Extension: VK_NV_external_sci_sync2
     VK_STRUCTURE_TYPE_FENCE_GET_SCI_SYNC_INFO_NV = 1000373002,
-    // Extension: VK_NV_external_sci_sync
     // Extension: VK_NV_external_sci_sync2
+    // Extension: VK_NV_external_sci_sync
     VK_STRUCTURE_TYPE_SCI_SYNC_ATTRIBUTES_INFO_NV = 1000373003,
     // Extension: VK_NV_external_sci_sync
     VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_SCI_SYNC_INFO_NV = 1000373004,
@@ -6478,13 +7097,13 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_MAINTENANCE_1_FEATURES_KHR = 1000386000,
     // Extension: VK_KHR_shader_untyped_pointers
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNTYPED_POINTERS_FEATURES_KHR = 1000387000,
+    // Extension: VK_KHR_global_priority
     // Extension: VK_EXT_global_priority_query
     // Extension: VK_BASE_VERSION_1_4
-    // Extension: VK_KHR_global_priority
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES = 1000388000,
     // Extension: VK_EXT_global_priority_query
-    // Extension: VK_BASE_VERSION_1_4
     // Extension: VK_KHR_global_priority
+    // Extension: VK_BASE_VERSION_1_4
     VK_STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES = 1000388001,
     // Extension: VK_VALVE_video_encode_rgb_conversion
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_RGB_CONVERSION_FEATURES_VALVE = 1000390000,
@@ -6552,11 +7171,11 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_KHR_maintenance4
     // Extension: VK_BASE_VERSION_1_3
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_PROPERTIES = 1000413001,
-    // Extension: VK_BASE_VERSION_1_3
     // Extension: VK_KHR_maintenance4
+    // Extension: VK_BASE_VERSION_1_3
     VK_STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS = 1000413002,
-    // Extension: VK_BASE_VERSION_1_3
     // Extension: VK_KHR_maintenance4
+    // Extension: VK_BASE_VERSION_1_3
     VK_STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS = 1000413003,
     // Extension: VK_ARM_shader_core_properties
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_ARM = 1000415000,
@@ -6569,6 +7188,10 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM = 1000417001,
     // Extension: VK_ARM_scheduling_controls
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM = 1000417002,
+    // Extension: VK_ARM_scheduling_controls
+    VK_STRUCTURE_TYPE_DISPATCH_PARAMETERS_ARM = 1000417003,
+    // Extension: VK_ARM_scheduling_controls
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_PROPERTIES_ARM = 1000417004,
     // Extension: VK_EXT_image_sliced_view_of_3d
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_SLICED_VIEW_OF_3D_FEATURES_EXT = 1000418000,
     // Extension: VK_EXT_image_sliced_view_of_3d
@@ -6651,12 +7274,6 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_OHOS = 1000452005,
     // Extension: VK_EXT_external_memory_acquire_unmodified
     VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_ACQUIRE_UNMODIFIED_EXT = 1000453000,
-    // Extension: VK_OHOS_native_buffer
-    VK_STRUCTURE_TYPE_NATIVE_BUFFER_OHOS = 1000453001,
-    // Extension: VK_OHOS_native_buffer
-    VK_STRUCTURE_TYPE_SWAPCHAIN_IMAGE_CREATE_INFO_OHOS = 1000453002,
-    // Extension: VK_OHOS_native_buffer
-    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENTATION_PROPERTIES_OHOS = 1000453003,
     // Extension: VK_EXT_extended_dynamic_state3
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_FEATURES_EXT = 1000455000,
     // Extension: VK_EXT_extended_dynamic_state3
@@ -6757,20 +7374,22 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_BASE_VERSION_1_4
     // Extension: VK_KHR_maintenance5
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES = 1000470000,
+    // Extension: VK_KHR_maintenance5
     // Extension: VK_BASE_VERSION_1_4
-    // Extension: VK_KHR_maintenance5
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES = 1000470001,
-    // Extension: VK_GRAPHICS_VERSION_1_4
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_GRAPHICS_VERSION_1_4
     VK_STRUCTURE_TYPE_RENDERING_AREA_INFO = 1000470003,
     // Extension: VK_BASE_VERSION_1_4
     // Extension: VK_KHR_maintenance5
     VK_STRUCTURE_TYPE_DEVICE_IMAGE_SUBRESOURCE_INFO = 1000470004,
+    // Extension: VK_KHR_extended_flags
     // Extension: VK_COMPUTE_VERSION_1_4
     // Extension: VK_KHR_maintenance5
     VK_STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO = 1000470005,
     // Extension: VK_BASE_VERSION_1_4
     // Extension: VK_KHR_maintenance5
+    // Extension: VK_KHR_extended_flags
     VK_STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO = 1000470006,
     // Extension: VK_AMD_anti_lag
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ANTI_LAG_FEATURES_AMD = 1000476000,
@@ -6870,6 +7489,8 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT = 1000498000,
     // Extension: VK_EXT_dynamic_rendering_unused_attachments
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT = 1000499000,
+    // Extension: VK_KHR_internally_synchronized_queues
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR = 1000504000,
     // Extension: VK_NV_low_latency2
     VK_STRUCTURE_TYPE_LATENCY_SLEEP_MODE_INFO_NV = 1000505000,
     // Extension: VK_NV_low_latency2
@@ -6934,6 +7555,8 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_PROPERTIES_ARM = 1000507018,
     // Extension: VK_ARM_data_graph
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_FAMILY_DATA_GRAPH_PROCESSING_ENGINE_INFO_ARM = 1000507019,
+    // Extension: VK_ARM_data_graph_instruction_set_tosa
+    VK_STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_TOSA_PROPERTIES_ARM = 1000508000,
     // Extension: VK_QCOM_multiview_per_view_render_areas
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_RENDER_AREAS_FEATURES_QCOM = 1000510000,
     // Extension: VK_QCOM_multiview_per_view_render_areas
@@ -7031,8 +7654,8 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_KHR_shader_expect_assume
     // Extension: VK_COMPUTE_VERSION_1_4
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_EXPECT_ASSUME_FEATURES = 1000544000,
-    // Extension: VK_BASE_VERSION_1_4
     // Extension: VK_KHR_maintenance6
+    // Extension: VK_BASE_VERSION_1_4
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES = 1000545000,
     // Extension: VK_BASE_VERSION_1_4
     // Extension: VK_KHR_maintenance6
@@ -7040,17 +7663,17 @@ pub const VkStructureType = enum(i32) {
     // Extension: VK_BASE_VERSION_1_4
     // Extension: VK_KHR_maintenance6
     VK_STRUCTURE_TYPE_BIND_MEMORY_STATUS = 1000545002,
-    // Extension: VK_KHR_maintenance6
     // Extension: VK_COMPUTE_VERSION_1_4
+    // Extension: VK_KHR_maintenance6
     VK_STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO = 1000545003,
-    // Extension: VK_KHR_maintenance6
     // Extension: VK_COMPUTE_VERSION_1_4
+    // Extension: VK_KHR_maintenance6
     VK_STRUCTURE_TYPE_PUSH_CONSTANTS_INFO = 1000545004,
-    // Extension: VK_COMPUTE_VERSION_1_4
     // Extension: VK_KHR_maintenance6
+    // Extension: VK_COMPUTE_VERSION_1_4
     VK_STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO = 1000545005,
-    // Extension: VK_COMPUTE_VERSION_1_4
     // Extension: VK_KHR_maintenance6
+    // Extension: VK_COMPUTE_VERSION_1_4
     VK_STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO = 1000545006,
     // Extension: VK_KHR_maintenance6
     VK_STRUCTURE_TYPE_SET_DESCRIPTOR_BUFFER_OFFSETS_INFO_EXT = 1000545007,
@@ -7138,6 +7761,10 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT16_VECTOR_FEATURES_NV = 1000563000,
     // Extension: VK_EXT_shader_replicated_composites
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_REPLICATED_COMPOSITES_FEATURES_EXT = 1000564000,
+    // Extension: VK_ARM_tensor_controls
+    VK_STRUCTURE_TYPE_TENSOR_EXPLICIT_TILING_FORMAT_PROPERTIES_ARM = 1000565000,
+    // Extension: VK_ARM_tensor_controls
+    VK_STRUCTURE_TYPE_TENSOR_ROLLING_BACKING_CREATE_INFO_ARM = 1000565001,
     // Extension: VK_EXT_shader_float8
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT8_FEATURES_EXT = 1000567000,
     // Extension: VK_NV_ray_tracing_validation
@@ -7198,6 +7825,14 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_GENERATED_COMMANDS_PIPELINE_INFO_EXT = 1000572013,
     // Extension: VK_EXT_device_generated_commands
     VK_STRUCTURE_TYPE_GENERATED_COMMANDS_SHADER_INFO_EXT = 1000572014,
+    // Extension: VK_KHR_device_fault
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_KHR = 1000573000,
+    // Extension: VK_KHR_device_fault
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_PROPERTIES_KHR = 1000573001,
+    // Extension: VK_KHR_device_fault
+    VK_STRUCTURE_TYPE_DEVICE_FAULT_INFO_KHR = 1000573002,
+    // Extension: VK_KHR_device_fault
+    VK_STRUCTURE_TYPE_DEVICE_FAULT_DEBUG_INFO_KHR = 1000573003,
     // Extension: VK_KHR_maintenance8
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_8_FEATURES_KHR = 1000574000,
     // Extension: VK_KHR_maintenance8
@@ -7210,6 +7845,12 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_IMAGE_ALIGNMENT_CONTROL_CREATE_INFO_MESA = 1000575002,
     // Extension: VK_KHR_shader_fma
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FMA_FEATURES_KHR = 1000579000,
+    // Extension: VK_NV_push_constant_bank
+    VK_STRUCTURE_TYPE_PUSH_CONSTANT_BANK_INFO_NV = 1000580000,
+    // Extension: VK_NV_push_constant_bank
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_FEATURES_NV = 1000580001,
+    // Extension: VK_NV_push_constant_bank
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_PROPERTIES_NV = 1000580002,
     // Extension: VK_EXT_ray_tracing_invocation_reorder
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_EXT = 1000581000,
     // Extension: VK_EXT_ray_tracing_invocation_reorder
@@ -7244,6 +7885,12 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_2_PROPERTIES_NV = 1000593002,
     // Extension: VK_ARM_pipeline_opacity_micromap
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_OPACITY_MICROMAP_FEATURES_ARM = 1000596000,
+    // Extension: VK_KHR_video_encode_feedback2
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_FEEDBACK_2_FEATURES_KHR = 1000598000,
+    // Extension: VK_KHR_video_encode_feedback2
+    VK_STRUCTURE_TYPE_VIDEO_ENCODE_FEEDBACK_2_CAPABILITIES_KHR = 1000598001,
+    // Extension: VK_KHR_video_encode_feedback2
+    VK_STRUCTURE_TYPE_QUERY_POOL_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_CREATE_INFO_KHR = 1000598002,
     // Extension: VK_EXT_external_memory_metal
     VK_STRUCTURE_TYPE_IMPORT_MEMORY_METAL_HANDLE_INFO_EXT = 1000602000,
     // Extension: VK_EXT_external_memory_metal
@@ -7260,6 +7907,14 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_PERFORMANCE_COUNTER_DESCRIPTION_ARM = 1000605003,
     // Extension: VK_ARM_performance_counters_by_region
     VK_STRUCTURE_TYPE_RENDER_PASS_PERFORMANCE_COUNTERS_BY_REGION_BEGIN_INFO_ARM = 1000605004,
+    // Extension: VK_ARM_shader_instrumentation
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INSTRUMENTATION_FEATURES_ARM = 1000607000,
+    // Extension: VK_ARM_shader_instrumentation
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INSTRUMENTATION_PROPERTIES_ARM = 1000607001,
+    // Extension: VK_ARM_shader_instrumentation
+    VK_STRUCTURE_TYPE_SHADER_INSTRUMENTATION_CREATE_INFO_ARM = 1000607002,
+    // Extension: VK_ARM_shader_instrumentation
+    VK_STRUCTURE_TYPE_SHADER_INSTRUMENTATION_METRIC_DESCRIPTION_ARM = 1000607003,
     // Extension: VK_EXT_vertex_attribute_robustness
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_ROBUSTNESS_FEATURES_EXT = 1000608000,
     // Extension: VK_ARM_format_pack
@@ -7274,10 +7929,22 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_SET_PRESENT_CONFIG_NV = 1000613000,
     // Extension: VK_NV_present_metering
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_METERING_FEATURES_NV = 1000613001,
+    // Extension: VK_EXT_multisampled_render_to_swapchain
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SWAPCHAIN_FEATURES_EXT = 1000616000,
+    // Extension: VK_EXT_multisampled_render_to_swapchain
+    VK_STRUCTURE_TYPE_SWAPCHAIN_FLAGS_SURFACE_CAPABILITIES_EXT = 1000616001,
     // Extension: VK_KHR_maintenance10
     VK_STRUCTURE_TYPE_RENDERING_END_INFO_KHR = 1000619003,
     // Extension: VK_EXT_zero_initialize_device_memory
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_DEVICE_MEMORY_FEATURES_EXT = 1000620000,
+    // Extension: VK_KHR_opacity_micromap
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_FEATURES_KHR = 1000623000,
+    // Extension: VK_KHR_opacity_micromap
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_PROPERTIES_KHR = 1000623001,
+    // Extension: VK_KHR_opacity_micromap
+    VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_MICROMAP_DATA_KHR = 1000623002,
+    // Extension: VK_KHR_opacity_micromap
+    VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_TRIANGLES_OPACITY_MICROMAP_KHR = 1000623003,
     // Extension: VK_EXT_shader_64bit_indexing
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_64_BIT_INDEXING_FEATURES_EXT = 1000627000,
     // Extension: VK_EXT_custom_resolve
@@ -7298,6 +7965,28 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_FLAGS_INFO_KHR = 1000630002,
     // Extension: VK_KHR_maintenance10
     VK_STRUCTURE_TYPE_RESOLVE_IMAGE_MODE_INFO_KHR = 1000630004,
+    // Extension: VK_ARM_data_graph_optical_flow
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_OPTICAL_FLOW_FEATURES_ARM = 1000631000,
+    // Extension: VK_ARM_data_graph_optical_flow
+    VK_STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_OPTICAL_FLOW_PROPERTIES_ARM = 1000631001,
+    // Extension: VK_ARM_data_graph_optical_flow
+    VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_OPTICAL_FLOW_CREATE_INFO_ARM = 1000631002,
+    // Extension: VK_ARM_data_graph_optical_flow
+    VK_STRUCTURE_TYPE_DATA_GRAPH_OPTICAL_FLOW_IMAGE_FORMAT_INFO_ARM = 1000631003,
+    // Extension: VK_ARM_data_graph_optical_flow
+    VK_STRUCTURE_TYPE_DATA_GRAPH_OPTICAL_FLOW_IMAGE_FORMAT_PROPERTIES_ARM = 1000631004,
+    // Extension: VK_ARM_data_graph_optical_flow
+    VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_OPTICAL_FLOW_DISPATCH_INFO_ARM = 1000631005,
+    // Extension: VK_ARM_data_graph_optical_flow
+    VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_RESOURCE_INFO_IMAGE_LAYOUT_ARM = 1000631006,
+    // Extension: VK_ARM_data_graph_optical_flow
+    VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SINGLE_NODE_CREATE_INFO_ARM = 1000631007,
+    // Extension: VK_ARM_data_graph_optical_flow
+    VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SINGLE_NODE_CONNECTION_ARM = 1000631008,
+    // Extension: VK_EXT_shader_long_vector
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT = 1000635000,
+    // Extension: VK_EXT_shader_long_vector
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_PROPERTIES_EXT = 1000635001,
     // Extension: VK_SEC_pipeline_cache_incremental_mode
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CACHE_INCREMENTAL_MODE_FEATURES_SEC = 1000637000,
     // Extension: VK_EXT_shader_uniform_buffer_unsized_array
@@ -7306,8 +7995,48 @@ pub const VkStructureType = enum(i32) {
     VK_STRUCTURE_TYPE_COMPUTE_OCCUPANCY_PRIORITY_PARAMETERS_NV = 1000645000,
     // Extension: VK_NV_compute_occupancy_priority
     VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV = 1000645001,
+    // Extension: VK_KHR_maintenance11
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR = 1000657000,
+    // Extension: VK_KHR_maintenance11
+    VK_STRUCTURE_TYPE_QUEUE_FAMILY_OPTIMAL_IMAGE_TRANSFER_GRANULARITY_PROPERTIES_KHR = 1000657001,
+    // Extension: VK_EXT_shader_subgroup_partitioned
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT = 1000662000,
+    // Extension: VK_SEC_ubm_surface
+    VK_STRUCTURE_TYPE_UBM_SURFACE_CREATE_INFO_SEC = 1000664000,
+    // Extension: VK_KHR_extended_flags
+    VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_4_KHR = 1000668000,
+    // Extension: VK_KHR_extended_flags
+    VK_STRUCTURE_TYPE_IMAGE_CREATE_FLAGS_2_CREATE_INFO_KHR = 1000668001,
+    // Extension: VK_KHR_extended_flags
+    VK_STRUCTURE_TYPE_IMAGE_USAGE_FLAGS_2_CREATE_INFO_KHR = 1000668002,
+    // Extension: VK_KHR_extended_flags
+    VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_2_CREATE_INFO_KHR = 1000668003,
+    // Extension: VK_KHR_extended_flags
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_FLAGS_FEATURES_KHR = 1000668004,
+    // Extension: VK_KHR_extended_flags
+    VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_2_CREATE_INFO_KHR = 1000668005,
+    // Extension: VK_KHR_extended_flags
+    VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_2_KHR = 1000668006,
+    // Extension: VK_EXT_shader_ocp_microscaling_types
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT = 1000672000,
+    // Extension: VK_VALVE_shader_mixed_float_dot_product
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE = 1000673000,
+    // Extension: VK_SEC_throttle_hint
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_THROTTLE_HINT_FEATURES_SEC = 1000674000,
+    // Extension: VK_SEC_throttle_hint
+    VK_STRUCTURE_TYPE_THROTTLE_HINT_SUBMIT_INFO_SEC = 1000674001,
+    // Extension: VK_ARM_data_graph_neural_accelerator_statistics
+    VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_NEURAL_STATISTICS_CREATE_INFO_ARM = 1000676000,
+    // Extension: VK_ARM_data_graph_neural_accelerator_statistics
+    VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_NEURAL_STATISTICS_CREATE_INFO_ARM = 1000676001,
+    // Extension: VK_ARM_data_graph_neural_accelerator_statistics
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_NEURAL_ACCELERATOR_STATISTICS_FEATURES_ARM = 1000676002,
+    // Extension: VK_EXT_primitive_restart_index
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT = 1000678000,
     // Extension: VK_OHOS_surface
     VK_STRUCTURE_TYPE_SURFACE_CREATE_INFO_OHOS = 1000685000,
+    // Extension: VK_NV_cooperative_matrix_decode_vector
+    VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_DECODE_VECTOR_FEATURES_NV = 1000689000,
     _,
 };
 pub const VkSubpassContents = enum(i32) {
@@ -7652,6 +8381,8 @@ pub const VkObjectType = enum(i32) {
     VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE = 1000085000,
     // Extension: VK_EXT_debug_utils
     VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT = 1000128000,
+    // Extension: VK_AMD_gpa_interface
+    VK_OBJECT_TYPE_GPA_SESSION_AMD = 1000133000,
     // Extension: VK_KHR_acceleration_structure
     VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR = 1000150000,
     // Extension: VK_COMPUTE_VERSION_1_1
@@ -7698,6 +8429,8 @@ pub const VkObjectType = enum(i32) {
     VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_EXT = 1000572000,
     // Extension: VK_EXT_device_generated_commands
     VK_OBJECT_TYPE_INDIRECT_EXECUTION_SET_EXT = 1000572001,
+    // Extension: VK_ARM_shader_instrumentation
+    VK_OBJECT_TYPE_SHADER_INSTRUMENTATION_ARM = 1000607000,
     _,
 };
 pub const VkRayTracingInvocationReorderModeEXT = enum(i32) {
@@ -7944,6 +8677,8 @@ pub const VkIndirectCommandsTokenTypeNV = enum(i32) {
     VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NV = 5,
     VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NV = 6,
     VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_TASKS_NV = 7,
+    // Extension: VK_EXT_descriptor_heap
+    VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_DATA_NV = 1000135000,
     // Extension: VK_EXT_mesh_shader
     VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV = 1000328000,
     // Extension: VK_NV_device_generated_commands_compute
@@ -8106,6 +8841,8 @@ pub const VkVendorId = enum(i32) {
     VK_VENDOR_ID_POCL = 65542,
     // Comment: Mobileye vendor ID
     VK_VENDOR_ID_MOBILEYE = 65543,
+    // Comment: Ape vendor ID
+    VK_VENDOR_ID_APE = 65544,
     _,
 };
 pub const VkDriverId = enum(i32) {
@@ -8177,6 +8914,10 @@ pub const VkDriverId = enum(i32) {
     VK_DRIVER_ID_VULKAN_SC_EMULATION_ON_VULKAN = 27,
     // Comment: Mesa open source project
     VK_DRIVER_ID_MESA_KOSMICKRISP = 28,
+    // Comment: Mesa open source project
+    VK_DRIVER_ID_MESA_GFXSTREAM = 29,
+    // Comment: Ape open source project
+    VK_DRIVER_ID_APE_SOFT = 30,
     _,
 };
 pub const VkShadingRatePaletteEntryNV = enum(i32) {
@@ -8223,6 +8964,8 @@ pub const VkAccelerationStructureTypeKHR = enum(i32) {
     // Extension: VK_NV_ray_tracing
     VK_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR = 1,
     VK_ACCELERATION_STRUCTURE_TYPE_GENERIC_KHR = 2,
+    // Extension: VK_KHR_opacity_micromap
+    VK_ACCELERATION_STRUCTURE_TYPE_OPACITY_MICROMAP_KHR = 1000623000,
     _,
 };
 pub const VkGeometryTypeKHR = enum(i32) {
@@ -8237,6 +8980,8 @@ pub const VkGeometryTypeKHR = enum(i32) {
     VK_GEOMETRY_TYPE_LINEAR_SWEPT_SPHERES_NV = 1000429005,
     // Extension: VK_AMDX_dense_geometry_format
     VK_GEOMETRY_TYPE_DENSE_GEOMETRY_FORMAT_TRIANGLES_AMDX = 1000478000,
+    // Extension: VK_KHR_opacity_micromap
+    VK_GEOMETRY_TYPE_MICROMAP_KHR = 1000623000,
     _,
 };
 pub const VkAccelerationStructureMemoryRequirementsTypeNV = enum(i32) {
@@ -8565,18 +9310,28 @@ pub const VkBuildMicromapModeEXT = enum(i32) {
     VK_BUILD_MICROMAP_MODE_BUILD_EXT = 0,
     _,
 };
-pub const VkOpacityMicromapFormatEXT = enum(i32) {
-    VK_OPACITY_MICROMAP_FORMAT_2_STATE_EXT = 1,
-    VK_OPACITY_MICROMAP_FORMAT_4_STATE_EXT = 2,
+pub const VkOpacityMicromapFormatKHR = enum(i32) {
+    // Extension: VK_EXT_opacity_micromap
+    VK_OPACITY_MICROMAP_FORMAT_2_STATE_KHR = 1,
+    // Extension: VK_EXT_opacity_micromap
+    VK_OPACITY_MICROMAP_FORMAT_4_STATE_KHR = 2,
     _,
 };
-pub const VkOpacityMicromapSpecialIndexEXT = enum(i32) {
+pub const VkOpacityMicromapSpecialIndexKHR = enum(i32) {
     // Extension: VK_NV_cluster_acceleration_structure
     VK_OPACITY_MICROMAP_SPECIAL_INDEX_CLUSTER_GEOMETRY_DISABLE_OPACITY_MICROMAP_NV = -5,
-    VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT = -4,
-    VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT = -3,
-    VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT = -2,
-    VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT = -1,
+    // Extension: VK_EXT_opacity_micromap
+    VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_KHR = -4,
+    // Extension: VK_EXT_opacity_micromap
+    VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_KHR = -3,
+    // Extension: VK_EXT_opacity_micromap
+    VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_KHR = -2,
+    // Extension: VK_EXT_opacity_micromap
+    VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_KHR = -1,
+    _,
+};
+pub const VkAccelerationStructureSerializedBlockTypeKHR = enum(i32) {
+    VK_ACCELERATION_STRUCTURE_SERIALIZED_BLOCK_TYPE_OPACITY_MICROMAP_KHR = 0,
     _,
 };
 pub const VkDepthBiasRepresentationEXT = enum(i32) {
@@ -8585,19 +9340,26 @@ pub const VkDepthBiasRepresentationEXT = enum(i32) {
     VK_DEPTH_BIAS_REPRESENTATION_FLOAT_EXT = 2,
     _,
 };
-pub const VkDeviceFaultAddressTypeEXT = enum(i32) {
+pub const VkDeviceFaultAddressTypeKHR = enum(i32) {
+    // Extension: VK_EXT_device_fault
     // Comment: Currently unused
-    VK_DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT = 0,
-    VK_DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT = 1,
-    VK_DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT = 2,
-    VK_DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_EXT = 3,
-    VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_EXT = 4,
-    VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT = 5,
-    VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT = 6,
+    VK_DEVICE_FAULT_ADDRESS_TYPE_NONE_KHR = 0,
+    // Extension: VK_EXT_device_fault
+    VK_DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_KHR = 1,
+    // Extension: VK_EXT_device_fault
+    VK_DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_KHR = 2,
+    // Extension: VK_EXT_device_fault
+    VK_DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_KHR = 3,
+    // Extension: VK_EXT_device_fault
+    VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_KHR = 4,
+    // Extension: VK_EXT_device_fault
+    VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_KHR = 5,
+    // Extension: VK_EXT_device_fault
+    VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_KHR = 6,
     _,
 };
-pub const VkDeviceFaultVendorBinaryHeaderVersionEXT = enum(i32) {
-    VK_DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_EXT = 1,
+pub const VkDeviceFaultVendorBinaryHeaderVersionKHR = enum(i32) {
+    VK_DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_KHR = 1,
     _,
 };
 pub const VkIndirectExecutionSetInfoTypeEXT = enum(i32) {
@@ -8616,6 +9378,10 @@ pub const VkIndirectCommandsTokenTypeEXT = enum(i32) {
     VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_COUNT_EXT = 7,
     VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_COUNT_EXT = 8,
     VK_INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_EXT = 9,
+    // Extension: VK_EXT_descriptor_heap
+    VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_DATA_EXT = 1000135000,
+    // Extension: VK_EXT_descriptor_heap
+    VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_DATA_SEQUENCE_INDEX_EXT = 1000135001,
     // Extension: VK_NV_mesh_shader
     VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV_EXT = 1000202002,
     // Extension: VK_NV_mesh_shader
@@ -8683,6 +9449,16 @@ pub const VkComponentTypeKHR = enum(i32) {
     VK_COMPONENT_TYPE_FLOAT8_E4M3_EXT = 1000491002,
     // Extension: VK_EXT_shader_float8
     VK_COMPONENT_TYPE_FLOAT8_E5M2_EXT = 1000491003,
+    // Extension: VK_EXT_shader_ocp_microscaling_types
+    VK_COMPONENT_TYPE_FLOAT6_E2M3_EXT = 1000672000,
+    // Extension: VK_EXT_shader_ocp_microscaling_types
+    VK_COMPONENT_TYPE_FLOAT6_E3M2_EXT = 1000672001,
+    // Extension: VK_EXT_shader_ocp_microscaling_types
+    VK_COMPONENT_TYPE_FLOAT4_E2M1_EXT = 1000672002,
+    // Extension: VK_EXT_shader_ocp_microscaling_types
+    VK_COMPONENT_TYPE_FLOAT8_UNSIGNED_E8M0_EXT = 1000672003,
+    // Extension: VK_EXT_shader_ocp_microscaling_types
+    VK_COMPONENT_TYPE_MXINT8_EXT = 1000672004,
     _,
 };
 pub const VkCubicFilterWeightsQCOM = enum(i32) {
@@ -8749,6 +9525,16 @@ pub const VkCooperativeVectorMatrixLayoutNV = enum(i32) {
 pub const VkTensorTilingARM = enum(i32) {
     VK_TENSOR_TILING_OPTIMAL_ARM = 0,
     VK_TENSOR_TILING_LINEAR_ARM = 1,
+    // Extension: VK_ARM_tensor_controls
+    VK_TENSOR_TILING_BRICK_16_WIDE_ARM = 1000565000,
+    // Extension: VK_ARM_tensor_controls
+    VK_TENSOR_TILING_BRICK_8_WIDE_ARM = 1000565001,
+    // Extension: VK_ARM_tensor_controls
+    VK_TENSOR_TILING_BRICK_4_WIDE_ARM = 1000565002,
+    // Extension: VK_ARM_tensor_controls
+    VK_TENSOR_TILING_BLOCK_U_INTERLEAVED_ARM = 1000565003,
+    // Extension: VK_ARM_tensor_controls
+    VK_TENSOR_TILING_BLOCK_U_INTERLEAVED_64K_ARM = 1000565004,
     _,
 };
 pub const VkDefaultVertexAttributeValueKHR = enum(i32) {
@@ -8758,6 +9544,10 @@ pub const VkDefaultVertexAttributeValueKHR = enum(i32) {
 };
 pub const VkDataGraphPipelineSessionBindPointARM = enum(i32) {
     VK_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_TRANSIENT_ARM = 0,
+    // Extension: VK_ARM_data_graph_optical_flow
+    VK_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_OPTICAL_FLOW_CACHE_ARM = 1000631001,
+    // Extension: VK_ARM_data_graph_neural_accelerator_statistics
+    VK_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_NEURAL_ACCELERATOR_STATISTICS_ARM = 1000676000,
     _,
 };
 pub const VkDataGraphPipelineSessionBindPointTypeARM = enum(i32) {
@@ -8767,6 +9557,10 @@ pub const VkDataGraphPipelineSessionBindPointTypeARM = enum(i32) {
 pub const VkDataGraphPipelinePropertyARM = enum(i32) {
     VK_DATA_GRAPH_PIPELINE_PROPERTY_CREATION_LOG_ARM = 0,
     VK_DATA_GRAPH_PIPELINE_PROPERTY_IDENTIFIER_ARM = 1,
+    // Extension: VK_ARM_data_graph_neural_accelerator_statistics
+    VK_DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_DEBUG_DATABASE_ARM = 1000676000,
+    // Extension: VK_ARM_data_graph_neural_accelerator_statistics
+    VK_DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_STATISTICS_INFO_ARM = 1000676001,
     _,
 };
 pub const VkPhysicalDeviceDataGraphProcessingEngineTypeARM = enum(i32) {
@@ -8783,10 +9577,153 @@ pub const VkPhysicalDeviceDataGraphOperationTypeARM = enum(i32) {
     VK_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_NEURAL_MODEL_QCOM = 1000629000,
     // Extension: VK_QCOM_data_graph_model
     VK_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_BUILTIN_MODEL_QCOM = 1000629001,
+    // Extension: VK_ARM_data_graph_optical_flow
+    VK_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_OPTICAL_FLOW_ARM = 1000631000,
     _,
 };
 pub const VkDataGraphModelCacheTypeQCOM = enum(i32) {
     VK_DATA_GRAPH_MODEL_CACHE_TYPE_GENERIC_BINARY_QCOM = 0,
+    _,
+};
+pub const VkPerfHintTypeQCOM = enum(i32) {
+    VK_PERF_HINT_TYPE_DEFAULT_QCOM = 0,
+    VK_PERF_HINT_TYPE_FREQUENCY_MIN_QCOM = 1,
+    VK_PERF_HINT_TYPE_FREQUENCY_MAX_QCOM = 2,
+    VK_PERF_HINT_TYPE_FREQUENCY_SCALED_QCOM = 3,
+    _,
+};
+pub const VkThrottleHintTypeSEC = enum(i32) {
+    VK_THROTTLE_HINT_TYPE_DEFAULT_SEC = 0,
+    VK_THROTTLE_HINT_TYPE_LOW_SEC = 1,
+    VK_THROTTLE_HINT_TYPE_HIGH_SEC = 2,
+    _,
+};
+pub const VkDescriptorMappingSourceEXT = enum(i32) {
+    VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_CONSTANT_OFFSET_EXT = 0,
+    VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT = 1,
+    VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT = 2,
+    VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT = 3,
+    VK_DESCRIPTOR_MAPPING_SOURCE_RESOURCE_HEAP_DATA_EXT = 4,
+    VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_DATA_EXT = 5,
+    VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT = 6,
+    VK_DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT = 7,
+    // Extension: VK_EXT_descriptor_heap
+    VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT = 8,
+    // Extension: VK_EXT_descriptor_heap
+    VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT = 9,
+    // Extension: VK_EXT_descriptor_heap
+    VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT = 10,
+    _,
+};
+pub const VkGpaPerfBlockAMD = enum(i32) {
+    VK_GPA_PERF_BLOCK_CPF_AMD = 0,
+    VK_GPA_PERF_BLOCK_IA_AMD = 1,
+    VK_GPA_PERF_BLOCK_VGT_AMD = 2,
+    VK_GPA_PERF_BLOCK_PA_AMD = 3,
+    VK_GPA_PERF_BLOCK_SC_AMD = 4,
+    VK_GPA_PERF_BLOCK_SPI_AMD = 5,
+    VK_GPA_PERF_BLOCK_SQ_AMD = 6,
+    VK_GPA_PERF_BLOCK_SX_AMD = 7,
+    VK_GPA_PERF_BLOCK_TA_AMD = 8,
+    VK_GPA_PERF_BLOCK_TD_AMD = 9,
+    VK_GPA_PERF_BLOCK_TCP_AMD = 10,
+    VK_GPA_PERF_BLOCK_TCC_AMD = 11,
+    VK_GPA_PERF_BLOCK_TCA_AMD = 12,
+    VK_GPA_PERF_BLOCK_DB_AMD = 13,
+    VK_GPA_PERF_BLOCK_CB_AMD = 14,
+    VK_GPA_PERF_BLOCK_GDS_AMD = 15,
+    VK_GPA_PERF_BLOCK_SRBM_AMD = 16,
+    VK_GPA_PERF_BLOCK_GRBM_AMD = 17,
+    VK_GPA_PERF_BLOCK_GRBM_SE_AMD = 18,
+    VK_GPA_PERF_BLOCK_RLC_AMD = 19,
+    VK_GPA_PERF_BLOCK_DMA_AMD = 20,
+    VK_GPA_PERF_BLOCK_MC_AMD = 21,
+    VK_GPA_PERF_BLOCK_CPG_AMD = 22,
+    VK_GPA_PERF_BLOCK_CPC_AMD = 23,
+    VK_GPA_PERF_BLOCK_WD_AMD = 24,
+    VK_GPA_PERF_BLOCK_TCS_AMD = 25,
+    VK_GPA_PERF_BLOCK_ATC_AMD = 26,
+    VK_GPA_PERF_BLOCK_ATC_L2_AMD = 27,
+    VK_GPA_PERF_BLOCK_MC_VM_L2_AMD = 28,
+    VK_GPA_PERF_BLOCK_EA_AMD = 29,
+    VK_GPA_PERF_BLOCK_RPB_AMD = 30,
+    VK_GPA_PERF_BLOCK_RMI_AMD = 31,
+    VK_GPA_PERF_BLOCK_UMCCH_AMD = 32,
+    VK_GPA_PERF_BLOCK_GE_AMD = 33,
+    VK_GPA_PERF_BLOCK_GL1A_AMD = 34,
+    VK_GPA_PERF_BLOCK_GL1C_AMD = 35,
+    VK_GPA_PERF_BLOCK_GL1CG_AMD = 36,
+    VK_GPA_PERF_BLOCK_GL2A_AMD = 37,
+    VK_GPA_PERF_BLOCK_GL2C_AMD = 38,
+    VK_GPA_PERF_BLOCK_CHA_AMD = 39,
+    VK_GPA_PERF_BLOCK_CHC_AMD = 40,
+    VK_GPA_PERF_BLOCK_CHCG_AMD = 41,
+    VK_GPA_PERF_BLOCK_GUS_AMD = 42,
+    VK_GPA_PERF_BLOCK_GCR_AMD = 43,
+    VK_GPA_PERF_BLOCK_PH_AMD = 44,
+    VK_GPA_PERF_BLOCK_UTCL1_AMD = 45,
+    VK_GPA_PERF_BLOCK_GE_DIST_AMD = 46,
+    VK_GPA_PERF_BLOCK_GE_SE_AMD = 47,
+    VK_GPA_PERF_BLOCK_DF_MALL_AMD = 48,
+    VK_GPA_PERF_BLOCK_SQ_WGP_AMD = 49,
+    VK_GPA_PERF_BLOCK_PC_AMD = 50,
+    VK_GPA_PERF_BLOCK_GL1XA_AMD = 51,
+    VK_GPA_PERF_BLOCK_GL1XC_AMD = 52,
+    VK_GPA_PERF_BLOCK_WGS_AMD = 53,
+    VK_GPA_PERF_BLOCK_EACPWD_AMD = 54,
+    VK_GPA_PERF_BLOCK_EASE_AMD = 55,
+    VK_GPA_PERF_BLOCK_RLCUSER_AMD = 56,
+    _,
+};
+pub const VkGpaSampleTypeAMD = enum(i32) {
+    VK_GPA_SAMPLE_TYPE_CUMULATIVE_AMD = 0,
+    VK_GPA_SAMPLE_TYPE_TRACE_AMD = 1,
+    VK_GPA_SAMPLE_TYPE_TIMING_AMD = 2,
+    _,
+};
+pub const VkGpaDeviceClockModeAMD = enum(i32) {
+    VK_GPA_DEVICE_CLOCK_MODE_DEFAULT_AMD = 0,
+    VK_GPA_DEVICE_CLOCK_MODE_QUERY_AMD = 1,
+    VK_GPA_DEVICE_CLOCK_MODE_PROFILING_AMD = 2,
+    VK_GPA_DEVICE_CLOCK_MODE_MIN_MEMORY_AMD = 3,
+    VK_GPA_DEVICE_CLOCK_MODE_MIN_ENGINE_AMD = 4,
+    VK_GPA_DEVICE_CLOCK_MODE_PEAK_AMD = 5,
+    _,
+};
+pub const VkDataGraphTOSALevelARM = enum(i32) {
+    VK_DATA_GRAPH_TOSA_LEVEL_NONE_ARM = 0,
+    VK_DATA_GRAPH_TOSA_LEVEL_8K_ARM = 1,
+    _,
+};
+pub const VkDataGraphOpticalFlowPerformanceLevelARM = enum(i32) {
+    VK_DATA_GRAPH_OPTICAL_FLOW_PERFORMANCE_LEVEL_UNKNOWN_ARM = 0,
+    VK_DATA_GRAPH_OPTICAL_FLOW_PERFORMANCE_LEVEL_SLOW_ARM = 1,
+    VK_DATA_GRAPH_OPTICAL_FLOW_PERFORMANCE_LEVEL_MEDIUM_ARM = 2,
+    VK_DATA_GRAPH_OPTICAL_FLOW_PERFORMANCE_LEVEL_FAST_ARM = 3,
+    _,
+};
+pub const VkDataGraphPipelineNodeConnectionTypeARM = enum(i32) {
+    // Extension: VK_ARM_data_graph_optical_flow
+    VK_DATA_GRAPH_PIPELINE_NODE_CONNECTION_TYPE_OPTICAL_FLOW_INPUT_ARM = 1000631000,
+    // Extension: VK_ARM_data_graph_optical_flow
+    VK_DATA_GRAPH_PIPELINE_NODE_CONNECTION_TYPE_OPTICAL_FLOW_REFERENCE_ARM = 1000631001,
+    // Extension: VK_ARM_data_graph_optical_flow
+    VK_DATA_GRAPH_PIPELINE_NODE_CONNECTION_TYPE_OPTICAL_FLOW_HINT_ARM = 1000631002,
+    // Extension: VK_ARM_data_graph_optical_flow
+    VK_DATA_GRAPH_PIPELINE_NODE_CONNECTION_TYPE_OPTICAL_FLOW_FLOW_VECTOR_ARM = 1000631003,
+    // Extension: VK_ARM_data_graph_optical_flow
+    VK_DATA_GRAPH_PIPELINE_NODE_CONNECTION_TYPE_OPTICAL_FLOW_COST_ARM = 1000631004,
+    _,
+};
+pub const VkDataGraphPipelineNodeTypeARM = enum(i32) {
+    // Extension: VK_ARM_data_graph_optical_flow
+    VK_DATA_GRAPH_PIPELINE_NODE_TYPE_OPTICAL_FLOW_ARM = 1000631000,
+    _,
+};
+pub const VkNeuralAcceleratorStatisticsModeARM = enum(i32) {
+    VK_NEURAL_ACCELERATOR_STATISTICS_MODE_DISABLED_ARM = 0,
+    VK_NEURAL_ACCELERATOR_STATISTICS_MODE_STATISTICS0_ARM = 1,
+    VK_NEURAL_ACCELERATOR_STATISTICS_MODE_STATISTICS1_ARM = 2,
     _,
 };
 
@@ -9093,12 +10030,12 @@ pub const VkDeviceCreateInfo = extern struct {
     // Extern sync: false
     // Optional: false
     pQueueCreateInfos: ?[*]const VkDeviceQueueCreateInfo = null,
-    // Deprecated: ignored
+    // Deprecated: unused
     // Extern sync: false
     // Optional: true
     enabledLayerCount: u32 = 0,
     // Length expression: enabledLayerCount,null-terminated
-    // Deprecated: ignored
+    // Deprecated: unused
     // Extern sync: false
     // Optional: false
     // Comment: Ordered list of layer names to be enabled
@@ -9767,6 +10704,38 @@ pub const VkImageCreateInfo = extern struct {
     // Comment: Initial image layout for all subresources
     initialLayout: VkImageLayout = .VK_IMAGE_LAYOUT_UNDEFINED,
 };
+// Extension: VK_KHR_extended_flags
+// Extends: VkImageCreateInfo,VkPhysicalDeviceImageFormatInfo2,VkFramebufferAttachmentImageInfo,VkVideoFormatPropertiesKHR
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkImageCreateFlags2CreateInfoKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_IMAGE_CREATE_FLAGS_2_CREATE_INFO_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    flags: VkImageCreateFlags2KHR = .{},
+};
+// Extension: VK_KHR_extended_flags
+// Extends: VkFramebufferAttachmentImageInfo,VkImageCreateInfo,VkPhysicalDeviceImageFormatInfo2,VkPhysicalDeviceSparseImageFormatInfo2,VkPhysicalDeviceVideoFormatInfoKHR,VkSurfaceCapabilities2KHR,VkSwapchainCreateInfoKHR,VkVideoFormatPropertiesKHR
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkImageUsageFlags2CreateInfoKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_IMAGE_USAGE_FLAGS_2_CREATE_INFO_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    usage: VkImageUsageFlags2KHR = .{},
+};
 // Extension: VK_BASE_VERSION_1_0
 // Returned only: false
 // Allow duplicate in pNext chain: false
@@ -10047,7 +11016,7 @@ pub const VkBufferImageCopy = extern struct {
     // Comment: Specified in pixels for both compressed and uncompressed images
     imageExtent: VkExtent3D = .{},
 };
-// Extension: VK_KHR_copy_memory_indirect
+// Extension: VK_KHR_device_address_commands
 // Returned only: false
 // Allow duplicate in pNext chain: false
 pub const VkStridedDeviceAddressRangeKHR = extern struct {
@@ -10088,10 +11057,10 @@ pub const VkCopyMemoryIndirectInfoKHR = extern struct {
     // Optional: true
     pNext: ?*const anyopaque = null,
     // Extern sync: false
-    // Optional: false
+    // Optional: true
     srcCopyFlags: VkAddressCopyFlagsKHR = .{},
     // Extern sync: false
-    // Optional: false
+    // Optional: true
     dstCopyFlags: VkAddressCopyFlagsKHR = .{},
     // Extern sync: false
     // Optional: false
@@ -10136,7 +11105,7 @@ pub const VkCopyMemoryToImageIndirectInfoKHR = extern struct {
     // Optional: true
     pNext: ?*const anyopaque = null,
     // Extern sync: false
-    // Optional: false
+    // Optional: true
     srcCopyFlags: VkAddressCopyFlagsKHR = .{},
     // Extern sync: false
     // Optional: false
@@ -10399,7 +11368,7 @@ pub const VkComputePipelineCreateInfo = extern struct {
     // Optional: false
     stage: VkPipelineShaderStageCreateInfo = .{},
     // Extern sync: false
-    // Optional: false
+    // Optional: true
     // Comment: Interface layout of the pipeline
     layout: VkPipelineLayout = .none,
     // Extern sync: false
@@ -12789,6 +13758,27 @@ pub const VkWaylandSurfaceCreateInfoKHR = extern struct {
     // Optional: false
     surface: ?*wl_surface = null,
 };
+// Extension: VK_SEC_ubm_surface
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkUbmSurfaceCreateInfoSEC = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_UBM_SURFACE_CREATE_INFO_SEC;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: true
+    flags: VkUbmSurfaceCreateFlagsSEC = .{},
+    // Extern sync: false
+    // Optional: false
+    device: ?*ubm_device = null,
+    // Extern sync: false
+    // Optional: false
+    surface: ?*ubm_surface = null,
+};
 // Extension: VK_KHR_win32_surface
 // Returned only: false
 // Allow duplicate in pNext chain: false
@@ -13102,7 +14092,7 @@ pub const VkValidationFlagsEXT = extern struct {
     pDisabledValidationChecks: ?[*]const VkValidationCheckEXT = null,
 };
 // Extension: VK_EXT_validation_features
-// Extends: VkInstanceCreateInfo,VkShaderModuleCreateInfo,VkShaderCreateInfoEXT
+// Extends: VkInstanceCreateInfo,VkShaderModuleCreateInfo,VkShaderCreateInfoEXT,VkPipelineShaderStageCreateInfo,VkGraphicsPipelineCreateInfo,VkComputePipelineCreateInfo,VkRayTracingPipelineCreateInfoKHR
 // Returned only: false
 // Allow duplicate in pNext chain: false
 pub const VkValidationFeaturesEXT = extern struct {
@@ -13586,6 +14576,63 @@ pub const VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV = extern struct {
     // Optional: false
     // Feature link: deviceGeneratedCommandsNV
     deviceGeneratedCommands: u32 = 0,
+};
+// Extension: VK_NV_push_constant_bank
+// Extends: VkDescriptorSetAndBindingMappingEXT,VkPushDataInfoEXT,VkPushConstantsInfo,VkIndirectCommandsLayoutTokenEXT
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPushConstantBankInfoNV = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PUSH_CONSTANT_BANK_INFO_NV;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    bank: u32 = 0,
+};
+// Extension: VK_NV_push_constant_bank
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDevicePushConstantBankFeaturesNV = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_FEATURES_NV;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    pushConstantBank: u32 = 0,
+};
+// Extension: VK_NV_push_constant_bank
+// Extends: VkPhysicalDeviceProperties2
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDevicePushConstantBankPropertiesNV = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_PROPERTIES_NV;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    maxGraphicsPushConstantBanks: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    maxComputePushConstantBanks: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    maxGraphicsPushDataBanks: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    maxComputePushDataBanks: u32 = 0,
 };
 // Extension: VK_NV_device_generated_commands_compute
 // Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
@@ -16551,7 +17598,7 @@ pub const VkPhysicalDevicePresentTimingFeaturesEXT = extern struct {
 };
 // Extension: VK_EXT_present_timing
 // Extends: VkSurfaceCapabilities2KHR
-// Returned only: false
+// Returned only: true
 // Allow duplicate in pNext chain: false
 pub const VkPresentTimingSurfaceCapabilitiesEXT = extern struct {
     // Extern sync: false
@@ -16579,7 +17626,7 @@ pub const VkPresentTimingSurfaceCapabilitiesEXT = extern struct {
     presentStageQueries: VkPresentStageFlagsEXT = .{},
 };
 // Extension: VK_EXT_present_timing
-// Returned only: false
+// Returned only: true
 // Allow duplicate in pNext chain: false
 pub const VkSwapchainTimingPropertiesEXT = extern struct {
     // Extern sync: false
@@ -16599,7 +17646,7 @@ pub const VkSwapchainTimingPropertiesEXT = extern struct {
     refreshInterval: u64 = 0,
 };
 // Extension: VK_EXT_present_timing
-// Returned only: false
+// Returned only: true
 // Allow duplicate in pNext chain: false
 pub const VkSwapchainTimeDomainPropertiesEXT = extern struct {
     // Extern sync: false
@@ -16624,7 +17671,7 @@ pub const VkSwapchainTimeDomainPropertiesEXT = extern struct {
     pTimeDomainIds: ?[*]u64 = null,
 };
 // Extension: VK_EXT_present_timing
-// Returned only: false
+// Returned only: true
 // Allow duplicate in pNext chain: false
 pub const VkPresentStageTimeEXT = extern struct {
     // Extern sync: false
@@ -16654,7 +17701,7 @@ pub const VkPastPresentationTimingInfoEXT = extern struct {
     swapchain: VkSwapchainKHR = .none,
 };
 // Extension: VK_EXT_present_timing
-// Returned only: false
+// Returned only: true
 // Allow duplicate in pNext chain: false
 pub const VkPastPresentationTimingPropertiesEXT = extern struct {
     // Extern sync: false
@@ -16679,7 +17726,7 @@ pub const VkPastPresentationTimingPropertiesEXT = extern struct {
     pPresentationTimings: ?[*]VkPastPresentationTimingEXT = null,
 };
 // Extension: VK_EXT_present_timing
-// Returned only: false
+// Returned only: true
 // Allow duplicate in pNext chain: false
 pub const VkPastPresentationTimingEXT = extern struct {
     // Extern sync: false
@@ -16783,11 +17830,11 @@ pub const VkSwapchainCalibratedTimestampInfoEXT = extern struct {
     // Extern sync: false
     // Optional: true
     pNext: ?*const anyopaque = null,
-    // Extern sync: true
+    // Extern sync: false
     // Optional: false
     swapchain: VkSwapchainKHR = .none,
     // Extern sync: false
-    // Optional: false
+    // Optional: true
     presentStage: VkPresentStageFlagsEXT = .{},
     // Extern sync: false
     // Optional: false
@@ -17339,6 +18386,39 @@ pub const VkSharedPresentSurfaceCapabilitiesKHR = extern struct {
     // Comment: Supported image usage flags if swapchain created using a shared present mode
     sharedPresentSupportedUsageFlags: VkImageUsageFlags = .{},
 };
+// Extension: VK_EXT_multisampled_render_to_swapchain
+// Extends: VkSurfaceCapabilities2KHR
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkSwapchainFlagsSurfaceCapabilitiesEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_SWAPCHAIN_FLAGS_SURFACE_CAPABILITIES_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: true
+    // Comment: Supported swapchain create flags for this surface and, if provided, a specific present mode in VkSurfacePresentModeKHR
+    swapchainSupportedFlags: VkSwapchainCreateFlagsKHR = .{},
+};
+// Extension: VK_KHR_extended_flags
+// Extends: VkSurfaceCapabilities2KHR
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkSharedPresentSurfaceCapabilities2KHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_2_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: true
+    sharedPresentSupportedUsageFlags: VkImageUsageFlags2KHR = .{},
+};
 // Extension: VK_KHR_16bit_storage
 // Extension: VK_COMPUTE_VERSION_1_1
 // Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
@@ -17606,6 +18686,22 @@ pub const VkImageViewUsageCreateInfo = extern struct {
     // Extern sync: false
     // Optional: false
     usage: VkImageUsageFlags = .{},
+};
+// Extension: VK_KHR_extended_flags
+// Extends: VkImageViewCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkImageViewUsage2CreateInfoKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_2_CREATE_INFO_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    usage: VkImageUsageFlags2KHR = .{},
 };
 // Extension: VK_EXT_image_sliced_view_of_3d
 // Extends: VkImageViewCreateInfo
@@ -18648,6 +19744,22 @@ pub const VkPhysicalDeviceMaintenance9PropertiesKHR = extern struct {
     // Optional: false
     defaultVertexAttributeValue: VkDefaultVertexAttributeValueKHR = .VK_DEFAULT_VERTEX_ATTRIBUTE_VALUE_ZERO_ZERO_ZERO_ZERO_KHR,
 };
+// Extension: VK_KHR_maintenance11
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceMaintenance11FeaturesKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    maintenance11: u32 = 0,
+};
 // Extension: VK_KHR_maintenance10
 // Extends: VkPhysicalDeviceProperties2
 // Returned only: true
@@ -18701,6 +19813,22 @@ pub const VkQueueFamilyOwnershipTransferPropertiesKHR = extern struct {
     // Extern sync: false
     // Optional: false
     optimalImageTransferToQueueFamilies: u32 = 0,
+};
+// Extension: VK_KHR_maintenance11
+// Extends: VkQueueFamilyProperties2
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkQueueFamilyOptimalImageTransferGranularityPropertiesKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_QUEUE_FAMILY_OPTIMAL_IMAGE_TRANSFER_GRANULARITY_PROPERTIES_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    optimalImageTransferGranularity: VkExtent3D = .{},
 };
 // Extension: VK_KHR_maintenance5
 // Extension: VK_GRAPHICS_VERSION_1_4
@@ -18930,6 +20058,22 @@ pub const VkShaderStatisticsInfoAMD = extern struct {
     // Optional: false
     computeWorkGroupSize: [3]u32 = @import("std").mem.zeroes([3]u32),
 };
+// Extension: VK_QCOM_elapsed_timer_query
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ELAPSED_TIMER_QUERY_FEATURES_QCOM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    elapsedTimerQuery: u32 = 0,
+};
 // Extension: VK_KHR_global_priority
 // Extension: VK_EXT_global_priority
 // Extension: VK_BASE_VERSION_1_4
@@ -18989,7 +20133,7 @@ pub const VkQueueFamilyGlobalPriorityProperties = extern struct {
     priorities: [VK_MAX_GLOBAL_PRIORITY_SIZE]VkQueueGlobalPriority = .{VkQueueGlobalPriority.VK_QUEUE_GLOBAL_PRIORITY_LOW} ** VK_MAX_GLOBAL_PRIORITY_SIZE,
 };
 // Extension: VK_EXT_debug_utils
-// Extends: VkPipelineShaderStageCreateInfo
+// Extends: VkPipelineShaderStageCreateInfo,VkResourceDescriptorInfoEXT,VkSamplerCreateInfo
 // Returned only: false
 // Allow duplicate in pNext chain: false
 pub const VkDebugUtilsObjectNameInfoEXT = extern struct {
@@ -21354,7 +22498,7 @@ pub const VkRayTracingPipelineCreateInfoNV = extern struct {
     // Optional: false
     maxRecursionDepth: u32 = 0,
     // Extern sync: false
-    // Optional: false
+    // Optional: true
     // Comment: Interface layout of the pipeline
     layout: VkPipelineLayout = .none,
     // Extern sync: false
@@ -21409,7 +22553,7 @@ pub const VkRayTracingPipelineCreateInfoKHR = extern struct {
     // Optional: true
     pDynamicState: ?*const VkPipelineDynamicStateCreateInfo = null,
     // Extern sync: false
-    // Optional: false
+    // Optional: true
     // Comment: Interface layout of the pipeline
     layout: VkPipelineLayout = .none,
     // Extern sync: false
@@ -21541,6 +22685,7 @@ pub const VkAccelerationStructureInfoNV = extern struct {
     type: VkAccelerationStructureTypeKHR = .VK_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR,
     // Extern sync: false
     // Optional: true
+    flags: VkBuildAccelerationStructureFlagsKHR = .{},
     // Extern sync: false
     // Optional: true
     instanceCount: u32 = 0,
@@ -22067,6 +23212,22 @@ pub const VkImageStencilUsageCreateInfo = extern struct {
     // Extern sync: false
     // Optional: false
     stencilUsage: VkImageUsageFlags = .{},
+};
+// Extension: VK_KHR_extended_flags
+// Extends: VkImageCreateInfo,VkPhysicalDeviceImageFormatInfo2
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkImageStencilUsage2CreateInfoKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_2_CREATE_INFO_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    stencilUsage: VkImageUsageFlags2KHR = .{},
 };
 // Extension: VK_AMD_memory_overallocation_behavior
 // Extends: VkDeviceCreateInfo
@@ -23912,47 +25073,59 @@ pub const VkPhysicalDeviceVulkan11Features = extern struct {
     // Extern sync: false
     // Optional: true
     pNext: ?*anyopaque = null,
+    //  Alias: VkPhysicalDevice16BitStorageFeatures::storageBuffer16BitAccess
     // Extern sync: false
     // Optional: false
     // Comment: 16-bit integer/floating-point variables supported in BufferBlock
     storageBuffer16BitAccess: u32 = 0,
+    //  Alias: VkPhysicalDevice16BitStorageFeatures::uniformAndStorageBuffer16BitAccess
     // Extern sync: false
     // Optional: false
     // Comment: 16-bit integer/floating-point variables supported in BufferBlock and Block
     uniformAndStorageBuffer16BitAccess: u32 = 0,
+    //  Alias: VkPhysicalDevice16BitStorageFeatures::storagePushConstant16
     // Extern sync: false
     // Optional: false
     // Comment: 16-bit integer/floating-point variables supported in PushConstant
     storagePushConstant16: u32 = 0,
+    //  Alias: VkPhysicalDevice16BitStorageFeatures::storageInputOutput16
     // Extern sync: false
     // Optional: false
     // Comment: 16-bit integer/floating-point variables supported in shader inputs and outputs
     storageInputOutput16: u32 = 0,
+    //  Alias: VkPhysicalDeviceMultiviewFeatures::multiview
     // Extern sync: false
     // Optional: false
     // Comment: Multiple views in a render pass
     multiview: u32 = 0,
+    //  Alias: VkPhysicalDeviceMultiviewFeatures::multiviewGeometryShader
     // Extern sync: false
     // Optional: false
     // Comment: Multiple views in a render pass w/ geometry shader
     multiviewGeometryShader: u32 = 0,
+    //  Alias: VkPhysicalDeviceMultiviewFeatures::multiviewTessellationShader
     // Extern sync: false
     // Optional: false
     // Comment: Multiple views in a render pass w/ tessellation shader
     multiviewTessellationShader: u32 = 0,
+    //  Alias: VkPhysicalDeviceVariablePointersFeatures::variablePointersStorageBuffer
     // Extern sync: false
     // Optional: false
     variablePointersStorageBuffer: u32 = 0,
+    //  Alias: VkPhysicalDeviceVariablePointersFeatures::variablePointers
     // Extern sync: false
     // Optional: false
     variablePointers: u32 = 0,
+    //  Alias: VkPhysicalDeviceProtectedMemoryFeatures::protectedMemory
     // Extern sync: false
     // Optional: false
     protectedMemory: u32 = 0,
+    //  Alias: VkPhysicalDeviceSamplerYcbcrConversionFeatures::samplerYcbcrConversion
     // Extern sync: false
     // Optional: false
     // Comment: Sampler color conversion supported
     samplerYcbcrConversion: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderDrawParametersFeatures::shaderDrawParameters
     // Extern sync: false
     // Optional: false
     shaderDrawParameters: u32 = 0,
@@ -23969,54 +25142,69 @@ pub const VkPhysicalDeviceVulkan11Properties = extern struct {
     // Extern sync: false
     // Optional: true
     pNext: ?*anyopaque = null,
+    //  Alias: VkPhysicalDeviceIDProperties::deviceUUID
     // Extern sync: false
     // Optional: false
     deviceUUID: [VK_UUID_SIZE]u8 = @import("std").mem.zeroes([VK_UUID_SIZE]u8),
+    //  Alias: VkPhysicalDeviceIDProperties::driverUUID
     // Extern sync: false
     // Optional: false
     driverUUID: [VK_UUID_SIZE]u8 = @import("std").mem.zeroes([VK_UUID_SIZE]u8),
+    //  Alias: VkPhysicalDeviceIDProperties::deviceLUID
     // Extern sync: false
     // Optional: false
     deviceLUID: [VK_LUID_SIZE]u8 = @import("std").mem.zeroes([VK_LUID_SIZE]u8),
+    //  Alias: VkPhysicalDeviceIDProperties::deviceNodeMask
     // Extern sync: false
     // Optional: false
     deviceNodeMask: u32 = 0,
+    //  Alias: VkPhysicalDeviceIDProperties::deviceLUIDValid
     // Extern sync: false
     // Optional: false
     deviceLUIDValid: u32 = 0,
+    //  Alias: VkPhysicalDeviceSubgroupProperties::subgroupSize
     // Extern sync: false
     // Optional: false
     // Comment: The size of a subgroup for this queue.
     subgroupSize: u32 = 0,
+    //  Alias: VkPhysicalDeviceSubgroupProperties::supportedStages
     // Extern sync: false
     // Optional: false
     // Comment: Bitfield of what shader stages support subgroup operations
     subgroupSupportedStages: VkShaderStageFlags = .{},
+    //  Alias: VkPhysicalDeviceSubgroupProperties::supportedOperations
     // Extern sync: false
     // Optional: false
     // Comment: Bitfield of what subgroup operations are supported.
     subgroupSupportedOperations: VkSubgroupFeatureFlags = .{},
+    //  Alias: VkPhysicalDeviceSubgroupProperties::quadOperationsInAllStages
     // Extern sync: false
     // Optional: false
     // Comment: Flag to specify whether quad operations are available in all stages.
     subgroupQuadOperationsInAllStages: u32 = 0,
+    //  Alias: VkPhysicalDevicePointClippingProperties::pointClippingBehavior
     // Extern sync: false
     // Optional: false
     pointClippingBehavior: VkPointClippingBehavior = .VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES,
+    //  Alias: VkPhysicalDeviceMultiviewProperties::maxMultiviewViewCount
     // Extern sync: false
     // Optional: false
     // Comment: max number of views in a subpass
     maxMultiviewViewCount: u32 = 0,
+    //  Alias: VkPhysicalDeviceMultiviewProperties::maxMultiviewInstanceIndex
     // Extern sync: false
     // Optional: false
     // Comment: max instance index for a draw in a multiview subpass
     maxMultiviewInstanceIndex: u32 = 0,
+    //  Alias: VkPhysicalDeviceProtectedMemoryProperties::protectedNoFault
     // Extern sync: false
     // Optional: false
     protectedNoFault: u32 = 0,
+    //  Alias: VkPhysicalDeviceMaintenance3Properties::maxPerSetDescriptors
     // Extern sync: false
     // Optional: false
     maxPerSetDescriptors: u32 = 0,
+    //  Alias: VkPhysicalDeviceMaintenance3Properties::maxMemoryAllocationSize
     // Extern sync: false
     // Optional: false
     maxMemoryAllocationSize: u64 = 0,
@@ -24033,146 +25221,192 @@ pub const VkPhysicalDeviceVulkan12Features = extern struct {
     // Extern sync: false
     // Optional: true
     pNext: ?*anyopaque = null,
+    //  Alias: VK_KHR_sampler_mirror_clamp_to_edge
     // Extern sync: false
     // Optional: false
     samplerMirrorClampToEdge: u32 = 0,
+    //  Alias: VK_KHR_draw_indirect_count
     // Extern sync: false
     // Optional: false
     drawIndirectCount: u32 = 0,
+    //  Alias: VkPhysicalDevice8BitStorageFeatures::storageBuffer8BitAccess
     // Extern sync: false
     // Optional: false
     // Comment: 8-bit integer variables supported in StorageBuffer
     storageBuffer8BitAccess: u32 = 0,
+    //  Alias: VkPhysicalDevice8BitStorageFeatures::uniformAndStorageBuffer8BitAccess
     // Extern sync: false
     // Optional: false
     // Comment: 8-bit integer variables supported in StorageBuffer and Uniform
     uniformAndStorageBuffer8BitAccess: u32 = 0,
+    //  Alias: VkPhysicalDevice8BitStorageFeatures::storagePushConstant8
     // Extern sync: false
     // Optional: false
     // Comment: 8-bit integer variables supported in PushConstant
     storagePushConstant8: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderAtomicInt64Features::shaderBufferInt64Atomics
     // Extern sync: false
     // Optional: false
     shaderBufferInt64Atomics: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderAtomicInt64Features::shaderSharedInt64Atomics
     // Extern sync: false
     // Optional: false
     shaderSharedInt64Atomics: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderFloat16Int8Features::shaderFloat16
     // Extern sync: false
     // Optional: false
     // Comment: 16-bit floats (halfs) in shaders
     shaderFloat16: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderFloat16Int8Features::shaderInt8
     // Extern sync: false
     // Optional: false
     // Comment: 8-bit integers in shaders
     shaderInt8: u32 = 0,
+    //  Alias: VK_EXT_descriptor_indexing
     // Extern sync: false
     // Optional: false
     descriptorIndexing: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::shaderInputAttachmentArrayDynamicIndexing
     // Extern sync: false
     // Optional: false
     shaderInputAttachmentArrayDynamicIndexing: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::shaderUniformTexelBufferArrayDynamicIndexing
     // Extern sync: false
     // Optional: false
     shaderUniformTexelBufferArrayDynamicIndexing: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::shaderStorageTexelBufferArrayDynamicIndexing
     // Extern sync: false
     // Optional: false
     shaderStorageTexelBufferArrayDynamicIndexing: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::shaderUniformBufferArrayNonUniformIndexing
     // Extern sync: false
     // Optional: false
     shaderUniformBufferArrayNonUniformIndexing: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::shaderSampledImageArrayNonUniformIndexing
     // Extern sync: false
     // Optional: false
     shaderSampledImageArrayNonUniformIndexing: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::shaderStorageBufferArrayNonUniformIndexing
     // Extern sync: false
     // Optional: false
     shaderStorageBufferArrayNonUniformIndexing: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::shaderStorageImageArrayNonUniformIndexing
     // Extern sync: false
     // Optional: false
     shaderStorageImageArrayNonUniformIndexing: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::shaderInputAttachmentArrayNonUniformIndexing
     // Extern sync: false
     // Optional: false
     shaderInputAttachmentArrayNonUniformIndexing: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::shaderUniformTexelBufferArrayNonUniformIndexing
     // Extern sync: false
     // Optional: false
     shaderUniformTexelBufferArrayNonUniformIndexing: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::shaderStorageTexelBufferArrayNonUniformIndexing
     // Extern sync: false
     // Optional: false
     shaderStorageTexelBufferArrayNonUniformIndexing: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingUniformBufferUpdateAfterBind
     // Extern sync: false
     // Optional: false
     descriptorBindingUniformBufferUpdateAfterBind: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingSampledImageUpdateAfterBind
     // Extern sync: false
     // Optional: false
     descriptorBindingSampledImageUpdateAfterBind: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingStorageImageUpdateAfterBind
     // Extern sync: false
     // Optional: false
     descriptorBindingStorageImageUpdateAfterBind: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingStorageBufferUpdateAfterBind
     // Extern sync: false
     // Optional: false
     descriptorBindingStorageBufferUpdateAfterBind: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingUniformTexelBufferUpdateAfterBind
     // Extern sync: false
     // Optional: false
     descriptorBindingUniformTexelBufferUpdateAfterBind: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingStorageTexelBufferUpdateAfterBind
     // Extern sync: false
     // Optional: false
     descriptorBindingStorageTexelBufferUpdateAfterBind: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingUpdateUnusedWhilePending
     // Extern sync: false
     // Optional: false
     descriptorBindingUpdateUnusedWhilePending: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingPartiallyBound
     // Extern sync: false
     // Optional: false
     descriptorBindingPartiallyBound: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::descriptorBindingVariableDescriptorCount
     // Extern sync: false
     // Optional: false
     descriptorBindingVariableDescriptorCount: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingFeatures::runtimeDescriptorArray
     // Extern sync: false
     // Optional: false
     runtimeDescriptorArray: u32 = 0,
+    //  Alias: VK_EXT_sampler_filter_minmax
     // Extern sync: false
     // Optional: false
     samplerFilterMinmax: u32 = 0,
+    //  Alias: VkPhysicalDeviceScalarBlockLayoutFeatures::scalarBlockLayout
     // Extern sync: false
     // Optional: false
     scalarBlockLayout: u32 = 0,
+    //  Alias: VkPhysicalDeviceImagelessFramebufferFeatures::imagelessFramebuffer
     // Extern sync: false
     // Optional: false
     imagelessFramebuffer: u32 = 0,
+    //  Alias: VkPhysicalDeviceUniformBufferStandardLayoutFeatures::uniformBufferStandardLayout
     // Extern sync: false
     // Optional: false
     uniformBufferStandardLayout: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderSubgroupExtendedTypesFeatures::shaderSubgroupExtendedTypes
     // Extern sync: false
     // Optional: false
     shaderSubgroupExtendedTypes: u32 = 0,
+    //  Alias: VkPhysicalDeviceSeparateDepthStencilLayoutsFeatures::separateDepthStencilLayouts
     // Extern sync: false
     // Optional: false
     separateDepthStencilLayouts: u32 = 0,
+    //  Alias: VkPhysicalDeviceHostQueryResetFeatures::hostQueryReset
     // Extern sync: false
     // Optional: false
     hostQueryReset: u32 = 0,
+    //  Alias: VkPhysicalDeviceTimelineSemaphoreFeatures::timelineSemaphore
     // Extern sync: false
     // Optional: false
     timelineSemaphore: u32 = 0,
+    //  Alias: VkPhysicalDeviceBufferDeviceAddressFeatures::bufferDeviceAddress
     // Extern sync: false
     // Optional: false
     bufferDeviceAddress: u32 = 0,
+    //  Alias: VkPhysicalDeviceBufferDeviceAddressFeatures::bufferDeviceAddressCaptureReplay
     // Extern sync: false
     // Optional: false
     bufferDeviceAddressCaptureReplay: u32 = 0,
+    //  Alias: VkPhysicalDeviceBufferDeviceAddressFeatures::bufferDeviceAddressMultiDevice
     // Extern sync: false
     // Optional: false
     bufferDeviceAddressMultiDevice: u32 = 0,
+    //  Alias: VkPhysicalDeviceVulkanMemoryModelFeatures::vulkanMemoryModel
     // Extern sync: false
     // Optional: false
     vulkanMemoryModel: u32 = 0,
+    //  Alias: VkPhysicalDeviceVulkanMemoryModelFeatures::vulkanMemoryModelDeviceScope
     // Extern sync: false
     // Optional: false
     vulkanMemoryModelDeviceScope: u32 = 0,
+    //  Alias: VkPhysicalDeviceVulkanMemoryModelFeatures::vulkanMemoryModelAvailabilityVisibilityChains
     // Extern sync: false
     // Optional: false
     vulkanMemoryModelAvailabilityVisibilityChains: u32 = 0,
+    //  Alias: VK_EXT_shader_viewport_index_layer
     // Extern sync: false
     // Optional: false
     shaderOutputViewportIndex: u32 = 0,
+    //  Alias: VK_EXT_shader_viewport_index_layer
     // Extern sync: false
     // Optional: false
     shaderOutputLayer: u32 = 0,
@@ -24192,177 +25426,228 @@ pub const VkPhysicalDeviceVulkan12Properties = extern struct {
     // Extern sync: false
     // Optional: true
     pNext: ?*anyopaque = null,
+    //  Alias: VkPhysicalDeviceDriverProperties::driverID
     // Extern sync: false
     // Optional: false
     driverID: VkDriverId = .VK_DRIVER_ID_AMD_PROPRIETARY,
     // Length expression: null-terminated
+    //  Alias: VkPhysicalDeviceDriverProperties::driverName
     // Extern sync: false
     // Optional: false
     driverName: [VK_MAX_DRIVER_NAME_SIZE]u8 = @import("std").mem.zeroes([VK_MAX_DRIVER_NAME_SIZE]u8),
     // Length expression: null-terminated
+    //  Alias: VkPhysicalDeviceDriverProperties::driverInfo
     // Extern sync: false
     // Optional: false
     driverInfo: [VK_MAX_DRIVER_INFO_SIZE]u8 = @import("std").mem.zeroes([VK_MAX_DRIVER_INFO_SIZE]u8),
+    //  Alias: VkPhysicalDeviceDriverProperties::conformanceVersion
     // Extern sync: false
     // Optional: false
     conformanceVersion: VkConformanceVersion = .{},
+    //  Alias: VkPhysicalDeviceFloatControlsProperties::denormBehaviorIndependence
     // Extern sync: false
     // Optional: false
     denormBehaviorIndependence: VkShaderFloatControlsIndependence = .VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY,
+    //  Alias: VkPhysicalDeviceFloatControlsProperties::roundingModeIndependence
     // Extern sync: false
     // Optional: false
     roundingModeIndependence: VkShaderFloatControlsIndependence = .VK_SHADER_FLOAT_CONTROLS_INDEPENDENCE_32_BIT_ONLY,
+    //  Alias: VkPhysicalDeviceFloatControlsProperties::shaderSignedZeroInfNanPreserveFloat16
     // Extern sync: false
     // Optional: false
     // Comment: An implementation can preserve signed zero, nan, inf
     shaderSignedZeroInfNanPreserveFloat16: u32 = 0,
+    //  Alias: VkPhysicalDeviceFloatControlsProperties::shaderSignedZeroInfNanPreserveFloat32
     // Extern sync: false
     // Optional: false
     // Comment: An implementation can preserve signed zero, nan, inf
     shaderSignedZeroInfNanPreserveFloat32: u32 = 0,
+    //  Alias: VkPhysicalDeviceFloatControlsProperties::shaderSignedZeroInfNanPreserveFloat64
     // Extern sync: false
     // Optional: false
     // Comment: An implementation can preserve signed zero, nan, inf
     shaderSignedZeroInfNanPreserveFloat64: u32 = 0,
+    //  Alias: VkPhysicalDeviceFloatControlsProperties::shaderDenormPreserveFloat16
     // Extern sync: false
     // Optional: false
     // Comment: An implementation can preserve  denormals
     shaderDenormPreserveFloat16: u32 = 0,
+    //  Alias: VkPhysicalDeviceFloatControlsProperties::shaderDenormPreserveFloat32
     // Extern sync: false
     // Optional: false
     // Comment: An implementation can preserve  denormals
     shaderDenormPreserveFloat32: u32 = 0,
+    //  Alias: VkPhysicalDeviceFloatControlsProperties::shaderDenormPreserveFloat64
     // Extern sync: false
     // Optional: false
     // Comment: An implementation can preserve  denormals
     shaderDenormPreserveFloat64: u32 = 0,
+    //  Alias: VkPhysicalDeviceFloatControlsProperties::shaderDenormFlushToZeroFloat16
     // Extern sync: false
     // Optional: false
     // Comment: An implementation can flush to zero  denormals
     shaderDenormFlushToZeroFloat16: u32 = 0,
+    //  Alias: VkPhysicalDeviceFloatControlsProperties::shaderDenormFlushToZeroFloat32
     // Extern sync: false
     // Optional: false
     // Comment: An implementation can flush to zero  denormals
     shaderDenormFlushToZeroFloat32: u32 = 0,
+    //  Alias: VkPhysicalDeviceFloatControlsProperties::shaderDenormFlushToZeroFloat64
     // Extern sync: false
     // Optional: false
     // Comment: An implementation can flush to zero  denormals
     shaderDenormFlushToZeroFloat64: u32 = 0,
+    //  Alias: VkPhysicalDeviceFloatControlsProperties::shaderRoundingModeRTEFloat16
     // Extern sync: false
     // Optional: false
     // Comment: An implementation can support RTE
     shaderRoundingModeRTEFloat16: u32 = 0,
+    //  Alias: VkPhysicalDeviceFloatControlsProperties::shaderRoundingModeRTEFloat32
     // Extern sync: false
     // Optional: false
     // Comment: An implementation can support RTE
     shaderRoundingModeRTEFloat32: u32 = 0,
+    //  Alias: VkPhysicalDeviceFloatControlsProperties::shaderRoundingModeRTEFloat64
     // Extern sync: false
     // Optional: false
     // Comment: An implementation can support RTE
     shaderRoundingModeRTEFloat64: u32 = 0,
+    //  Alias: VkPhysicalDeviceFloatControlsProperties::shaderRoundingModeRTZFloat16
     // Extern sync: false
     // Optional: false
     // Comment: An implementation can support RTZ
     shaderRoundingModeRTZFloat16: u32 = 0,
+    //  Alias: VkPhysicalDeviceFloatControlsProperties::shaderRoundingModeRTZFloat32
     // Extern sync: false
     // Optional: false
     // Comment: An implementation can support RTZ
     shaderRoundingModeRTZFloat32: u32 = 0,
+    //  Alias: VkPhysicalDeviceFloatControlsProperties::shaderRoundingModeRTZFloat64
     // Extern sync: false
     // Optional: false
     // Comment: An implementation can support RTZ
     shaderRoundingModeRTZFloat64: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::maxUpdateAfterBindDescriptorsInAllPools
     // Extern sync: false
     // Optional: false
     maxUpdateAfterBindDescriptorsInAllPools: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::shaderUniformBufferArrayNonUniformIndexingNative
     // Extern sync: false
     // Optional: false
     shaderUniformBufferArrayNonUniformIndexingNative: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::shaderSampledImageArrayNonUniformIndexingNative
     // Extern sync: false
     // Optional: false
     shaderSampledImageArrayNonUniformIndexingNative: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::shaderStorageBufferArrayNonUniformIndexingNative
     // Extern sync: false
     // Optional: false
     shaderStorageBufferArrayNonUniformIndexingNative: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::shaderStorageImageArrayNonUniformIndexingNative
     // Extern sync: false
     // Optional: false
     shaderStorageImageArrayNonUniformIndexingNative: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::shaderInputAttachmentArrayNonUniformIndexingNative
     // Extern sync: false
     // Optional: false
     shaderInputAttachmentArrayNonUniformIndexingNative: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::robustBufferAccessUpdateAfterBind
     // Extern sync: false
     // Optional: false
     robustBufferAccessUpdateAfterBind: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::quadDivergentImplicitLod
     // Extern sync: false
     // Optional: false
     quadDivergentImplicitLod: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::maxPerStageDescriptorUpdateAfterBindSamplers
     // Extern sync: false
     // Optional: false
     maxPerStageDescriptorUpdateAfterBindSamplers: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::maxPerStageDescriptorUpdateAfterBindUniformBuffers
     // Extern sync: false
     // Optional: false
     maxPerStageDescriptorUpdateAfterBindUniformBuffers: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::maxPerStageDescriptorUpdateAfterBindStorageBuffers
     // Extern sync: false
     // Optional: false
     maxPerStageDescriptorUpdateAfterBindStorageBuffers: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::maxPerStageDescriptorUpdateAfterBindSampledImages
     // Extern sync: false
     // Optional: false
     maxPerStageDescriptorUpdateAfterBindSampledImages: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::maxPerStageDescriptorUpdateAfterBindStorageImages
     // Extern sync: false
     // Optional: false
     maxPerStageDescriptorUpdateAfterBindStorageImages: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::maxPerStageDescriptorUpdateAfterBindInputAttachments
     // Extern sync: false
     // Optional: false
     maxPerStageDescriptorUpdateAfterBindInputAttachments: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::maxPerStageUpdateAfterBindResources
     // Extern sync: false
     // Optional: false
     maxPerStageUpdateAfterBindResources: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::maxDescriptorSetUpdateAfterBindSamplers
     // Extern sync: false
     // Optional: false
     maxDescriptorSetUpdateAfterBindSamplers: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::maxDescriptorSetUpdateAfterBindUniformBuffers
     // Extern sync: false
     // Optional: false
     maxDescriptorSetUpdateAfterBindUniformBuffers: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::maxDescriptorSetUpdateAfterBindUniformBuffersDynamic
     // Extern sync: false
     // Optional: false
     maxDescriptorSetUpdateAfterBindUniformBuffersDynamic: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::maxDescriptorSetUpdateAfterBindStorageBuffers
     // Extern sync: false
     // Optional: false
     maxDescriptorSetUpdateAfterBindStorageBuffers: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::maxDescriptorSetUpdateAfterBindStorageBuffersDynamic
     // Extern sync: false
     // Optional: false
     maxDescriptorSetUpdateAfterBindStorageBuffersDynamic: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::maxDescriptorSetUpdateAfterBindSampledImages
     // Extern sync: false
     // Optional: false
     maxDescriptorSetUpdateAfterBindSampledImages: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::maxDescriptorSetUpdateAfterBindStorageImages
     // Extern sync: false
     // Optional: false
     maxDescriptorSetUpdateAfterBindStorageImages: u32 = 0,
+    //  Alias: VkPhysicalDeviceDescriptorIndexingProperties::maxDescriptorSetUpdateAfterBindInputAttachments
     // Extern sync: false
     // Optional: false
     maxDescriptorSetUpdateAfterBindInputAttachments: u32 = 0,
+    //  Alias: VkPhysicalDeviceDepthStencilResolveProperties::supportedDepthResolveModes
     // Extern sync: false
     // Optional: false
     // Comment: supported depth resolve modes
     supportedDepthResolveModes: VkResolveModeFlags = .{},
+    //  Alias: VkPhysicalDeviceDepthStencilResolveProperties::supportedStencilResolveModes
     // Extern sync: false
     // Optional: false
     // Comment: supported stencil resolve modes
     supportedStencilResolveModes: VkResolveModeFlags = .{},
+    //  Alias: VkPhysicalDeviceDepthStencilResolveProperties::independentResolveNone
     // Extern sync: false
     // Optional: false
     // Comment: depth and stencil resolve modes can be set independently if one of them is none
     independentResolveNone: u32 = 0,
+    //  Alias: VkPhysicalDeviceDepthStencilResolveProperties::independentResolve
     // Extern sync: false
     // Optional: false
     // Comment: depth and stencil resolve modes can be set independently
     independentResolve: u32 = 0,
+    //  Alias: VkPhysicalDeviceSamplerFilterMinmaxProperties::filterMinmaxSingleComponentFormats
     // Extern sync: false
     // Optional: false
     filterMinmaxSingleComponentFormats: u32 = 0,
+    //  Alias: VkPhysicalDeviceSamplerFilterMinmaxProperties::filterMinmaxImageComponentMapping
     // Extern sync: false
     // Optional: false
     filterMinmaxImageComponentMapping: u32 = 0,
+    //  Alias: VkPhysicalDeviceTimelineSemaphoreProperties::maxTimelineSemaphoreValueDifference
     // Extern sync: false
     // Optional: false
     maxTimelineSemaphoreValueDifference: u64 = 0,
@@ -24382,48 +25667,63 @@ pub const VkPhysicalDeviceVulkan13Features = extern struct {
     // Extern sync: false
     // Optional: true
     pNext: ?*anyopaque = null,
+    //  Alias: VkPhysicalDeviceImageRobustnessFeatures::robustImageAccess
     // Extern sync: false
     // Optional: false
     robustImageAccess: u32 = 0,
+    //  Alias: VkPhysicalDeviceInlineUniformBlockFeatures::inlineUniformBlock
     // Extern sync: false
     // Optional: false
     inlineUniformBlock: u32 = 0,
+    //  Alias: VkPhysicalDeviceInlineUniformBlockFeatures::descriptorBindingInlineUniformBlockUpdateAfterBind
     // Extern sync: false
     // Optional: false
     descriptorBindingInlineUniformBlockUpdateAfterBind: u32 = 0,
+    //  Alias: VkPhysicalDevicePipelineCreationCacheControlFeatures::pipelineCreationCacheControl
     // Extern sync: false
     // Optional: false
     pipelineCreationCacheControl: u32 = 0,
+    //  Alias: VkPhysicalDevicePrivateDataFeatures::privateData
     // Extern sync: false
     // Optional: false
     privateData: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures::shaderDemoteToHelperInvocation
     // Extern sync: false
     // Optional: false
     shaderDemoteToHelperInvocation: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderTerminateInvocationFeatures::shaderTerminateInvocation
     // Extern sync: false
     // Optional: false
     shaderTerminateInvocation: u32 = 0,
+    //  Alias: VkPhysicalDeviceSubgroupSizeControlFeatures::subgroupSizeControl
     // Extern sync: false
     // Optional: false
     subgroupSizeControl: u32 = 0,
+    //  Alias: VkPhysicalDeviceSubgroupSizeControlFeatures::computeFullSubgroups
     // Extern sync: false
     // Optional: false
     computeFullSubgroups: u32 = 0,
+    //  Alias: VkPhysicalDeviceSynchronization2Features::synchronization2
     // Extern sync: false
     // Optional: false
     synchronization2: u32 = 0,
+    //  Alias: VkPhysicalDeviceTextureCompressionASTCHDRFeatures::textureCompressionASTC_HDR
     // Extern sync: false
     // Optional: false
     textureCompressionASTC_HDR: u32 = 0,
+    //  Alias: VkPhysicalDeviceZeroInitializeWorkgroupMemoryFeatures::shaderZeroInitializeWorkgroupMemory
     // Extern sync: false
     // Optional: false
     shaderZeroInitializeWorkgroupMemory: u32 = 0,
+    //  Alias: VkPhysicalDeviceDynamicRenderingFeatures::dynamicRendering
     // Extern sync: false
     // Optional: false
     dynamicRendering: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductFeatures::shaderIntegerDotProduct
     // Extern sync: false
     // Optional: false
     shaderIntegerDotProduct: u32 = 0,
+    //  Alias: VkPhysicalDeviceMaintenance4Features::maintenance4
     // Extern sync: false
     // Optional: false
     maintenance4: u32 = 0,
@@ -24440,139 +25740,182 @@ pub const VkPhysicalDeviceVulkan13Properties = extern struct {
     // Extern sync: false
     // Optional: true
     pNext: ?*anyopaque = null,
+    //  Alias: VkPhysicalDeviceSubgroupSizeControlProperties::minSubgroupSize
     // Extern sync: false
     // Optional: false
     // Comment: The minimum subgroup size supported by this device
     minSubgroupSize: u32 = 0,
+    //  Alias: VkPhysicalDeviceSubgroupSizeControlProperties::maxSubgroupSize
     // Extern sync: false
     // Optional: false
     // Comment: The maximum subgroup size supported by this device
     maxSubgroupSize: u32 = 0,
+    //  Alias: VkPhysicalDeviceSubgroupSizeControlProperties::maxComputeWorkgroupSubgroups
     // Extern sync: false
     // Optional: false
     // Comment: The maximum number of subgroups supported in a workgroup
     maxComputeWorkgroupSubgroups: u32 = 0,
+    //  Alias: VkPhysicalDeviceSubgroupSizeControlProperties::requiredSubgroupSizeStages
     // Extern sync: false
     // Optional: false
     // Comment: The shader stages that support specifying a subgroup size
     requiredSubgroupSizeStages: VkShaderStageFlags = .{},
+    //  Alias: VkPhysicalDeviceInlineUniformBlockProperties::maxInlineUniformBlockSize
     // Extern sync: false
     // Optional: false
     maxInlineUniformBlockSize: u32 = 0,
+    //  Alias: VkPhysicalDeviceInlineUniformBlockProperties::maxPerStageDescriptorInlineUniformBlocks
     // Extern sync: false
     // Optional: false
     maxPerStageDescriptorInlineUniformBlocks: u32 = 0,
+    //  Alias: VkPhysicalDeviceInlineUniformBlockProperties::maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks
     // Extern sync: false
     // Optional: false
     maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks: u32 = 0,
+    //  Alias: VkPhysicalDeviceInlineUniformBlockProperties::maxDescriptorSetInlineUniformBlocks
     // Extern sync: false
     // Optional: false
     maxDescriptorSetInlineUniformBlocks: u32 = 0,
+    //  Alias: VkPhysicalDeviceInlineUniformBlockProperties::maxDescriptorSetUpdateAfterBindInlineUniformBlocks
     // Extern sync: false
     // Optional: false
     maxDescriptorSetUpdateAfterBindInlineUniformBlocks: u32 = 0,
     // Extern sync: false
     // Optional: false
     maxInlineUniformTotalSize: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProduct8BitUnsignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProduct8BitUnsignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProduct8BitSignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProduct8BitSignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProduct8BitMixedSignednessAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProduct8BitMixedSignednessAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProduct4x8BitPackedUnsignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProduct4x8BitPackedUnsignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProduct4x8BitPackedSignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProduct4x8BitPackedSignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProduct4x8BitPackedMixedSignednessAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProduct4x8BitPackedMixedSignednessAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProduct16BitUnsignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProduct16BitUnsignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProduct16BitSignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProduct16BitSignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProduct16BitMixedSignednessAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProduct16BitMixedSignednessAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProduct32BitUnsignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProduct32BitUnsignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProduct32BitSignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProduct32BitSignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProduct32BitMixedSignednessAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProduct32BitMixedSignednessAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProduct64BitUnsignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProduct64BitUnsignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProduct64BitSignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProduct64BitSignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProduct64BitMixedSignednessAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProduct64BitMixedSignednessAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProductAccumulatingSaturating8BitUnsignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProductAccumulatingSaturating8BitUnsignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProductAccumulatingSaturating8BitSignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProductAccumulatingSaturating8BitSignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProductAccumulatingSaturating16BitUnsignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProductAccumulatingSaturating16BitUnsignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProductAccumulatingSaturating16BitSignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProductAccumulatingSaturating16BitSignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProductAccumulatingSaturating16BitMixedSignednessAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProductAccumulatingSaturating32BitUnsignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProductAccumulatingSaturating32BitUnsignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProductAccumulatingSaturating32BitSignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProductAccumulatingSaturating32BitSignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProductAccumulatingSaturating32BitMixedSignednessAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProductAccumulatingSaturating64BitUnsignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProductAccumulatingSaturating64BitUnsignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProductAccumulatingSaturating64BitSignedAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProductAccumulatingSaturating64BitSignedAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderIntegerDotProductProperties::integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated
     // Extern sync: false
     // Optional: false
     integerDotProductAccumulatingSaturating64BitMixedSignednessAccelerated: u32 = 0,
+    //  Alias: VkPhysicalDeviceTexelBufferAlignmentProperties::storageTexelBufferOffsetAlignmentBytes
     // Extern sync: false
     // Optional: false
     storageTexelBufferOffsetAlignmentBytes: u64 = 0,
+    //  Alias: VkPhysicalDeviceTexelBufferAlignmentProperties::storageTexelBufferOffsetSingleTexelAlignment
     // Extern sync: false
     // Optional: false
     storageTexelBufferOffsetSingleTexelAlignment: u32 = 0,
+    //  Alias: VkPhysicalDeviceTexelBufferAlignmentProperties::uniformTexelBufferOffsetAlignmentBytes
     // Extern sync: false
     // Optional: false
     uniformTexelBufferOffsetAlignmentBytes: u64 = 0,
+    //  Alias: VkPhysicalDeviceTexelBufferAlignmentProperties::uniformTexelBufferOffsetSingleTexelAlignment
     // Extern sync: false
     // Optional: false
     uniformTexelBufferOffsetSingleTexelAlignment: u32 = 0,
@@ -24592,63 +25935,83 @@ pub const VkPhysicalDeviceVulkan14Features = extern struct {
     // Extern sync: false
     // Optional: true
     pNext: ?*anyopaque = null,
+    //  Alias: VkPhysicalDeviceGlobalPriorityQueryFeatures::globalPriorityQuery
     // Extern sync: false
     // Optional: false
     globalPriorityQuery: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderSubgroupRotateFeatures::shaderSubgroupRotate
     // Extern sync: false
     // Optional: false
     shaderSubgroupRotate: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderSubgroupRotateFeatures::shaderSubgroupRotateClustered
     // Extern sync: false
     // Optional: false
     shaderSubgroupRotateClustered: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderFloatControls2Features::shaderFloatControls2
     // Extern sync: false
     // Optional: false
     shaderFloatControls2: u32 = 0,
+    //  Alias: VkPhysicalDeviceShaderExpectAssumeFeatures::shaderExpectAssume
     // Extern sync: false
     // Optional: false
     shaderExpectAssume: u32 = 0,
+    //  Alias: VkPhysicalDeviceLineRasterizationFeatures::rectangularLines
     // Extern sync: false
     // Optional: false
     rectangularLines: u32 = 0,
+    //  Alias: VkPhysicalDeviceLineRasterizationFeatures::bresenhamLines
     // Extern sync: false
     // Optional: false
     bresenhamLines: u32 = 0,
+    //  Alias: VkPhysicalDeviceLineRasterizationFeatures::smoothLines
     // Extern sync: false
     // Optional: false
     smoothLines: u32 = 0,
+    //  Alias: VkPhysicalDeviceLineRasterizationFeatures::stippledRectangularLines
     // Extern sync: false
     // Optional: false
     stippledRectangularLines: u32 = 0,
+    //  Alias: VkPhysicalDeviceLineRasterizationFeatures::stippledBresenhamLines
     // Extern sync: false
     // Optional: false
     stippledBresenhamLines: u32 = 0,
+    //  Alias: VkPhysicalDeviceLineRasterizationFeatures::stippledSmoothLines
     // Extern sync: false
     // Optional: false
     stippledSmoothLines: u32 = 0,
+    //  Alias: VkPhysicalDeviceVertexAttributeDivisorFeatures::vertexAttributeInstanceRateDivisor
     // Extern sync: false
     // Optional: false
     vertexAttributeInstanceRateDivisor: u32 = 0,
+    //  Alias: VkPhysicalDeviceVertexAttributeDivisorFeatures::vertexAttributeInstanceRateZeroDivisor
     // Extern sync: false
     // Optional: false
     vertexAttributeInstanceRateZeroDivisor: u32 = 0,
+    //  Alias: VkPhysicalDeviceIndexTypeUint8Features::indexTypeUint8
     // Extern sync: false
     // Optional: false
     indexTypeUint8: u32 = 0,
+    //  Alias: VkPhysicalDeviceDynamicRenderingLocalReadFeatures::dynamicRenderingLocalRead
     // Extern sync: false
     // Optional: false
     dynamicRenderingLocalRead: u32 = 0,
+    //  Alias: VkPhysicalDeviceMaintenance5Features::maintenance5
     // Extern sync: false
     // Optional: false
     maintenance5: u32 = 0,
+    //  Alias: VkPhysicalDeviceMaintenance6Features::maintenance6
     // Extern sync: false
     // Optional: false
     maintenance6: u32 = 0,
+    //  Alias: VkPhysicalDevicePipelineProtectedAccessFeatures::pipelineProtectedAccess
     // Extern sync: false
     // Optional: false
     pipelineProtectedAccess: u32 = 0,
+    //  Alias: VkPhysicalDevicePipelineRobustnessFeatures::pipelineRobustness
     // Extern sync: false
     // Optional: false
     pipelineRobustness: u32 = 0,
+    //  Alias: VkPhysicalDeviceHostImageCopyFeatures::hostImageCopy
     // Extern sync: false
     // Optional: false
     hostImageCopy: u32 = 0,
@@ -24668,16 +26031,20 @@ pub const VkPhysicalDeviceVulkan14Properties = extern struct {
     // Extern sync: false
     // Optional: true
     pNext: ?*anyopaque = null,
+    //  Alias: VkPhysicalDeviceLineRasterizationProperties::lineSubPixelPrecisionBits
     // Extern sync: false
     // Optional: false
     lineSubPixelPrecisionBits: u32 = 0,
+    //  Alias: VkPhysicalDeviceVertexAttributeDivisorProperties::maxVertexAttribDivisor
     // Extern sync: false
     // Optional: false
     // Comment: max value of vertex attribute divisor
     maxVertexAttribDivisor: u32 = 0,
+    //  Alias: VkPhysicalDeviceVertexAttributeDivisorProperties::supportsNonZeroFirstInstance
     // Extern sync: false
     // Optional: false
     supportsNonZeroFirstInstance: u32 = 0,
+    //  Alias: VkPhysicalDevicePushDescriptorProperties::maxPushDescriptors
     // Extern sync: false
     // Optional: false
     maxPushDescriptors: u32 = 0,
@@ -24687,62 +26054,81 @@ pub const VkPhysicalDeviceVulkan14Properties = extern struct {
     // Extern sync: false
     // Optional: false
     dynamicRenderingLocalReadMultisampledAttachments: u32 = 0,
+    //  Alias: VkPhysicalDeviceMaintenance5Properties::earlyFragmentMultisampleCoverageAfterSampleCounting
     // Extern sync: false
     // Optional: false
     earlyFragmentMultisampleCoverageAfterSampleCounting: u32 = 0,
+    //  Alias: VkPhysicalDeviceMaintenance5Properties::earlyFragmentSampleMaskTestBeforeSampleCounting
     // Extern sync: false
     // Optional: false
     earlyFragmentSampleMaskTestBeforeSampleCounting: u32 = 0,
+    //  Alias: VkPhysicalDeviceMaintenance5Properties::depthStencilSwizzleOneSupport
     // Extern sync: false
     // Optional: false
     depthStencilSwizzleOneSupport: u32 = 0,
+    //  Alias: VkPhysicalDeviceMaintenance5Properties::polygonModePointSize
     // Extern sync: false
     // Optional: false
     polygonModePointSize: u32 = 0,
+    //  Alias: VkPhysicalDeviceMaintenance5Properties::nonStrictSinglePixelWideLinesUseParallelogram
     // Extern sync: false
     // Optional: false
     nonStrictSinglePixelWideLinesUseParallelogram: u32 = 0,
+    //  Alias: VkPhysicalDeviceMaintenance5Properties::nonStrictWideLinesUseParallelogram
     // Extern sync: false
     // Optional: false
     nonStrictWideLinesUseParallelogram: u32 = 0,
+    //  Alias: VkPhysicalDeviceMaintenance6Properties::blockTexelViewCompatibleMultipleLayers
     // Extern sync: false
     // Optional: false
     blockTexelViewCompatibleMultipleLayers: u32 = 0,
+    //  Alias: VkPhysicalDeviceMaintenance6Properties::maxCombinedImageSamplerDescriptorCount
     // Extern sync: false
     // Optional: false
     maxCombinedImageSamplerDescriptorCount: u32 = 0,
+    //  Alias: VkPhysicalDeviceMaintenance6Properties::fragmentShadingRateClampCombinerInputs
     // Extern sync: false
     // Optional: false
     fragmentShadingRateClampCombinerInputs: u32 = 0,
+    //  Alias: VkPhysicalDevicePipelineRobustnessProperties::defaultRobustnessStorageBuffers
     // Extern sync: false
     // Optional: false
     defaultRobustnessStorageBuffers: VkPipelineRobustnessBufferBehavior = .VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT,
+    //  Alias: VkPhysicalDevicePipelineRobustnessProperties::defaultRobustnessUniformBuffers
     // Extern sync: false
     // Optional: false
     defaultRobustnessUniformBuffers: VkPipelineRobustnessBufferBehavior = .VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT,
+    //  Alias: VkPhysicalDevicePipelineRobustnessProperties::defaultRobustnessVertexInputs
     // Extern sync: false
     // Optional: false
     defaultRobustnessVertexInputs: VkPipelineRobustnessBufferBehavior = .VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT,
+    //  Alias: VkPhysicalDevicePipelineRobustnessProperties::defaultRobustnessImages
     // Extern sync: false
     // Optional: false
     defaultRobustnessImages: VkPipelineRobustnessImageBehavior = .VK_PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DEVICE_DEFAULT,
+    //  Alias: VkPhysicalDeviceHostImageCopyProperties::copySrcLayoutCount
     // Extern sync: false
     // Optional: true
     copySrcLayoutCount: u32 = 0,
     // Length expression: copySrcLayoutCount
+    //  Alias: VkPhysicalDeviceHostImageCopyProperties::pCopySrcLayouts
     // Extern sync: false
     // Optional: true
     pCopySrcLayouts: ?[*]VkImageLayout = null,
+    //  Alias: VkPhysicalDeviceHostImageCopyProperties::copyDstLayoutCount
     // Extern sync: false
     // Optional: true
     copyDstLayoutCount: u32 = 0,
     // Length expression: copyDstLayoutCount
+    //  Alias: VkPhysicalDeviceHostImageCopyProperties::pCopyDstLayouts
     // Extern sync: false
     // Optional: true
     pCopyDstLayouts: ?[*]VkImageLayout = null,
+    //  Alias: VkPhysicalDeviceHostImageCopyProperties::optimalTilingLayoutUUID
     // Extern sync: false
     // Optional: true
     optimalTilingLayoutUUID: [VK_UUID_SIZE]u8 = @import("std").mem.zeroes([VK_UUID_SIZE]u8),
+    //  Alias: VkPhysicalDeviceHostImageCopyProperties::identicalMemoryTypeRequirements
     // Extern sync: false
     // Optional: false
     identicalMemoryTypeRequirements: u32 = 0,
@@ -24778,6 +26164,231 @@ pub const VkPhysicalDeviceCoherentMemoryFeaturesAMD = extern struct {
     // Extern sync: false
     // Optional: false
     deviceCoherentMemory: u32 = 0,
+};
+// Extension: VK_AMD_gpa_interface
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkGpaPerfBlockPropertiesAMD = extern struct {
+    // Extern sync: false
+    // Optional: false
+    blockType: VkGpaPerfBlockAMD = .VK_GPA_PERF_BLOCK_CPF_AMD,
+    // Extern sync: false
+    // Optional: false
+    flags: VkGpaPerfBlockPropertiesFlagsAMD = .{},
+    // Extern sync: false
+    // Optional: false
+    instanceCount: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    maxEventID: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    maxGlobalOnlyCounters: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    maxGlobalSharedCounters: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    maxStreamingCounters: u32 = 0,
+};
+// Extension: VK_AMD_gpa_interface
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceGpaFeaturesAMD = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_FEATURES_AMD;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    perfCounters: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    streamingPerfCounters: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    sqThreadTracing: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    clockModes: u32 = 0,
+};
+// Extension: VK_AMD_gpa_interface
+// Extends: VkPhysicalDeviceProperties2
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceGpaPropertiesAMD = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_PROPERTIES_AMD;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    flags: VkPhysicalDeviceGpaPropertiesFlagsAMD = .{},
+    // Extern sync: false
+    // Optional: false
+    maxSqttSeBufferSize: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    shaderEngineCount: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    perfBlockCount: u32 = 0,
+    // Length expression: perfBlockCount
+    // Extern sync: false
+    // Optional: false
+    pPerfBlocks: ?[*]VkGpaPerfBlockPropertiesAMD = null,
+};
+// Extension: VK_AMD_gpa_interface
+// Extends: VkPhysicalDeviceProperties2
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceGpaProperties2AMD = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_PROPERTIES_2_AMD;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    revisionId: u32 = 0,
+};
+// Extension: VK_AMD_gpa_interface
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkGpaPerfCounterAMD = extern struct {
+    // Extern sync: false
+    // Optional: false
+    blockType: VkGpaPerfBlockAMD = .VK_GPA_PERF_BLOCK_CPF_AMD,
+    // Extern sync: false
+    // Optional: false
+    blockInstance: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    eventID: u32 = 0,
+};
+// Extension: VK_AMD_gpa_interface
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkGpaSampleBeginInfoAMD = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_GPA_SAMPLE_BEGIN_INFO_AMD;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    sampleType: VkGpaSampleTypeAMD = .VK_GPA_SAMPLE_TYPE_CUMULATIVE_AMD,
+    // Extern sync: false
+    // Optional: false
+    sampleInternalOperations: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    cacheFlushOnCounterCollection: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    sqShaderMaskEnable: u32 = 0,
+    // Extern sync: false
+    // Optional: true
+    sqShaderMask: VkGpaSqShaderStageFlagsAMD = .{},
+    // Extern sync: false
+    // Optional: false
+    perfCounterCount: u32 = 0,
+    // Length expression: perfCounterCount
+    // Extern sync: false
+    // Optional: false
+    pPerfCounters: ?[*]const VkGpaPerfCounterAMD = null,
+    // Extern sync: false
+    // Optional: false
+    streamingPerfTraceSampleInterval: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    perfCounterDeviceMemoryLimit: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    sqThreadTraceEnable: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    sqThreadTraceSuppressInstructionTokens: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    sqThreadTraceDeviceMemoryLimit: u64 = 0,
+    // Extern sync: false
+    // Optional: true
+    timingPreSample: VkPipelineStageFlags = .{},
+    // Extern sync: false
+    // Optional: true
+    timingPostSample: VkPipelineStageFlags = .{},
+};
+// Extension: VK_AMD_gpa_interface
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkGpaDeviceClockModeInfoAMD = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_GPA_DEVICE_CLOCK_MODE_INFO_AMD;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    clockMode: VkGpaDeviceClockModeAMD = .VK_GPA_DEVICE_CLOCK_MODE_DEFAULT_AMD,
+    // Extern sync: false
+    // Optional: false
+    memoryClockRatioToPeak: f32 = 0,
+    // Extern sync: false
+    // Optional: false
+    engineClockRatioToPeak: f32 = 0,
+};
+// Extension: VK_AMD_gpa_interface
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkGpaDeviceGetClockInfoAMD = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_GPA_DEVICE_GET_CLOCK_INFO_AMD;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    memoryClockRatioToPeak: f32 = 0,
+    // Extern sync: false
+    // Optional: false
+    engineClockRatioToPeak: f32 = 0,
+    // Extern sync: false
+    // Optional: false
+    memoryClockFrequency: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    engineClockFrequency: u32 = 0,
+};
+// Extension: VK_AMD_gpa_interface
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkGpaSessionCreateInfoAMD = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_GPA_SESSION_CREATE_INFO_AMD;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: true
+    secondaryCopySource: VkGpaSessionAMD = .none,
 };
 // Extension: VKSC_VERSION_1_0
 // Returned only: true
@@ -25587,6 +27198,22 @@ pub const VkPhysicalDeviceExtendedDynamicState3PropertiesEXT = extern struct {
     // Optional: false
     dynamicPrimitiveTopologyUnrestricted: u32 = 0,
 };
+// Extension: VK_KHR_extended_flags
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceExtendedFlagsFeaturesKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_FLAGS_FEATURES_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    extendedFlags: u32 = 0,
+};
 // Extension: VK_EXT_extended_dynamic_state3
 // Returned only: false
 // Allow duplicate in pNext chain: false
@@ -25648,7 +27275,7 @@ pub const VkRenderPassTransformBeginInfoQCOM = extern struct {
     transform: VkSurfaceTransformFlagsKHR = .{},
 };
 // Extension: VK_QCOM_rotated_copy_commands
-// Extends: VkBufferImageCopy2,VkImageBlit2
+// Extends: VkBufferImageCopy2,VkImageBlit2,VkDeviceMemoryImageCopyKHR
 // Returned only: false
 // Allow duplicate in pNext chain: false
 pub const VkCopyCommandTransformInfoQCOM = extern struct {
@@ -27729,7 +29356,7 @@ pub const VkBufferMemoryBarrier2 = extern struct {
     size: u64 = 0,
 };
 // Extension: VK_KHR_maintenance8
-// Extends: VkSubpassDependency2,VkBufferMemoryBarrier2,VkImageMemoryBarrier2
+// Extends: VkSubpassDependency2,VkBufferMemoryBarrier2,VkImageMemoryBarrier2,VkMemoryRangeBarriersInfoKHR
 // Returned only: false
 // Allow duplicate in pNext chain: false
 pub const VkMemoryBarrierAccessFlags3KHR = extern struct {
@@ -28607,6 +30234,22 @@ pub const VkMultisampledRenderToSingleSampledInfoEXT = extern struct {
     // Extern sync: false
     // Optional: false
     rasterizationSamples: VkSampleCountFlags = .{},
+};
+// Extension: VK_EXT_multisampled_render_to_swapchain
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SWAPCHAIN_FEATURES_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    multisampledRenderToSwapchain: u32 = 0,
 };
 // Extension: VK_EXT_pipeline_protected_access
 // Extension: VK_COMPUTE_VERSION_1_4
@@ -30036,6 +31679,60 @@ pub const VkVideoEncodeCapabilitiesKHR = extern struct {
     // Extern sync: false
     // Optional: false
     supportedEncodeFeedbackFlags: VkVideoEncodeFeedbackFlagsKHR = .{},
+};
+// Extension: VK_KHR_video_encode_feedback2
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_FEEDBACK_2_FEATURES_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    videoEncodeFeedback2: u32 = 0,
+};
+// Extension: VK_KHR_video_encode_feedback2
+// Extends: VkVideoCapabilitiesKHR
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkVideoEncodeFeedback2CapabilitiesKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_VIDEO_ENCODE_FEEDBACK_2_CAPABILITIES_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    maxPerPartitionFeedbackEntries: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    supportedPerPartitionEncodeFeedbackFlags: VkVideoEncodePerPartitionFeedbackFlagsKHR = .{},
+};
+// Extension: VK_KHR_video_encode_feedback2
+// Extends: VkQueryPoolCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkQueryPoolVideoEncodePerPartitionFeedbackCreateInfoKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_QUERY_POOL_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_CREATE_INFO_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: true
+    maxPerPartitionFeedbackEntries: u32 = 0,
+    // Extern sync: false
+    // Optional: true
+    perPartitionEncodeFeedbackFlags: VkVideoEncodePerPartitionFeedbackFlagsKHR = .{},
 };
 // Extension: VK_KHR_video_encode_h264
 // Extends: VkVideoCapabilitiesKHR
@@ -31831,7 +33528,7 @@ pub const VkAccelerationStructureCaptureDescriptorDataInfoEXT = extern struct {
     accelerationStructureNV: VkAccelerationStructureNV = .none,
 };
 // Extension: VK_EXT_descriptor_buffer
-// Extends: VkBufferCreateInfo,VkImageCreateInfo,VkImageViewCreateInfo,VkSamplerCreateInfo,VkAccelerationStructureCreateInfoKHR,VkAccelerationStructureCreateInfoNV,VkTensorCreateInfoARM,VkTensorViewCreateInfoARM
+// Extends: VkBufferCreateInfo,VkImageCreateInfo,VkImageViewCreateInfo,VkSamplerCreateInfo,VkAccelerationStructureCreateInfoKHR,VkAccelerationStructureCreateInfoNV,VkTensorCreateInfoARM,VkTensorViewCreateInfoARM,VkAccelerationStructureCreateInfo2KHR
 // Returned only: false
 // Allow duplicate in pNext chain: false
 pub const VkOpaqueCaptureDescriptorDataCreateInfoEXT = extern struct {
@@ -32630,6 +34327,28 @@ pub const VkFormatProperties3 = extern struct {
     // Optional: true
     bufferFeatures: VkFormatFeatureFlags2 = .{},
 };
+// Extension: VK_KHR_extended_flags
+// Extends: VkFormatProperties2
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkFormatProperties4KHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_4_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: true
+    linearTilingFeatures: VkFormatFeatureFlags4KHR = .{},
+    // Extern sync: false
+    // Optional: true
+    optimalTilingFeatures: VkFormatFeatureFlags4KHR = .{},
+    // Extern sync: false
+    // Optional: true
+    bufferFeatures: VkFormatFeatureFlags4KHR = .{},
+};
 // Extension: VK_EXT_image_drm_format_modifier
 // Extends: VkFormatProperties2
 // Returned only: true
@@ -33138,6 +34857,98 @@ pub const VkGraphicsPipelineLibraryCreateInfoEXT = extern struct {
     // Optional: false
     flags: VkGraphicsPipelineLibraryFlagsEXT = .{},
 };
+// Extension: VK_ARM_data_graph_neural_accelerator_statistics
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_NEURAL_ACCELERATOR_STATISTICS_FEATURES_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    dataGraphNeuralAcceleratorStatistics: u32 = 0,
+};
+// Extension: VK_ARM_data_graph_neural_accelerator_statistics
+// Extends: VkDataGraphPipelineCreateInfoARM
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDataGraphPipelineNeuralStatisticsCreateInfoARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_NEURAL_STATISTICS_CREATE_INFO_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    allowNeuralStatistics: u32 = 0,
+};
+// Extension: VK_ARM_data_graph_neural_accelerator_statistics
+// Extends: VkDataGraphPipelineSessionCreateInfoARM
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDataGraphPipelineSessionNeuralStatisticsCreateInfoARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_NEURAL_STATISTICS_CREATE_INFO_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    mode: VkNeuralAcceleratorStatisticsModeARM = .VK_NEURAL_ACCELERATOR_STATISTICS_MODE_DISABLED_ARM,
+};
+// Extension: VK_ARM_tensor_controls
+// Extends: VkFormatProperties2
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkTensorExplicitTilingFormatPropertiesARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_TENSOR_EXPLICIT_TILING_FORMAT_PROPERTIES_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    brick16TilingTensorFeatures: VkFormatFeatureFlags2 = .{},
+    // Extern sync: false
+    // Optional: false
+    brick8TilingTensorFeatures: VkFormatFeatureFlags2 = .{},
+    // Extern sync: false
+    // Optional: false
+    brick4TilingTensorFeatures: VkFormatFeatureFlags2 = .{},
+    // Extern sync: false
+    // Optional: false
+    blockUTilingTensorFeatures: VkFormatFeatureFlags2 = .{},
+    // Extern sync: false
+    // Optional: false
+    blockU64kTilingTensorFeatures: VkFormatFeatureFlags2 = .{},
+};
+// Extension: VK_ARM_tensor_controls
+// Extends: VkTensorCreateInfoARM
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkTensorRollingBackingCreateInfoARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_TENSOR_ROLLING_BACKING_CREATE_INFO_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    wraps: [VK_MAX_TENSOR_CREATE_INFO_ROLLING_BACKING_WRAP_COUNT_ARM]u32 = @import("std").mem.zeroes([VK_MAX_TENSOR_CREATE_INFO_ROLLING_BACKING_WRAP_COUNT_ARM]u32),
+};
 // Extension: VK_VALVE_descriptor_set_host_mapping
 // Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
 // Returned only: false
@@ -33541,6 +35352,39 @@ pub const VkMicromapBuildInfoEXT = extern struct {
     // Optional: false
     triangleArrayStride: u64 = 0,
 };
+// Extension: VK_KHR_opacity_micromap
+// Extends: VkAccelerationStructureGeometryKHR
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkAccelerationStructureGeometryMicromapDataKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_MICROMAP_DATA_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: true
+    usageCountsCount: u32 = 0,
+    // Length expression: usageCountsCount
+    // Extern sync: false
+    // Optional: true
+    pUsageCounts: ?[*]const VkMicromapUsageKHR = null,
+    // Length expression: usageCountsCount,1
+    // Extern sync: false
+    // Optional: false
+    ppUsageCounts: ?[*]const *const VkMicromapUsageKHR = null,
+    // Extern sync: false
+    // Optional: false
+    data: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    triangleArray: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    triangleArrayStride: u64 = 0,
+};
 // Extension: VK_EXT_opacity_micromap
 // Returned only: false
 // Allow duplicate in pNext chain: false
@@ -33672,6 +35516,20 @@ pub const VkMicromapBuildSizesInfoEXT = extern struct {
     // Optional: false
     discardable: u32 = 0,
 };
+// Extension: VK_KHR_opacity_micromap
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkMicromapUsageKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    count: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    subdivisionLevel: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    format: VkOpacityMicromapFormatKHR = .VK_OPACITY_MICROMAP_FORMAT_2_STATE_KHR,
+};
 // Extension: VK_EXT_opacity_micromap
 // Returned only: false
 // Allow duplicate in pNext chain: false
@@ -33688,9 +35546,10 @@ pub const VkMicromapUsageEXT = extern struct {
     format: u32 = 0,
 };
 // Extension: VK_EXT_opacity_micromap
+// Extension: VK_KHR_opacity_micromap
 // Returned only: false
 // Allow duplicate in pNext chain: false
-pub const VkMicromapTriangleEXT = extern struct {
+pub const VkMicromapTriangleKHR = extern struct {
     // Extern sync: false
     // Optional: false
     // Comment: Specified in bytes
@@ -33701,6 +35560,22 @@ pub const VkMicromapTriangleEXT = extern struct {
     // Extern sync: false
     // Optional: false
     format: u16 = 0,
+};
+// Extension: VK_KHR_opacity_micromap
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceOpacityMicromapFeaturesKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_FEATURES_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    micromap: u32 = 0,
 };
 // Extension: VK_EXT_opacity_micromap
 // Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
@@ -33724,6 +35599,31 @@ pub const VkPhysicalDeviceOpacityMicromapFeaturesEXT = extern struct {
     // Optional: false
     micromapHostCommands: u32 = 0,
 };
+// Extension: VK_KHR_opacity_micromap
+// Extends: VkPhysicalDeviceProperties2
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceOpacityMicromapPropertiesKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_PROPERTIES_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    maxOpacity2StateSubdivisionLevel: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    maxOpacity4StateSubdivisionLevel: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    maxOpacityLossy4StateSubdivisionLevel: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    maxMicromapTriangles: u64 = 0,
+};
 // Extension: VK_EXT_opacity_micromap
 // Extends: VkPhysicalDeviceProperties2
 // Returned only: true
@@ -33742,6 +35642,34 @@ pub const VkPhysicalDeviceOpacityMicromapPropertiesEXT = extern struct {
     // Extern sync: false
     // Optional: false
     maxOpacity4StateSubdivisionLevel: u32 = 0,
+};
+// Extension: VK_KHR_opacity_micromap
+// Extends: VkAccelerationStructureGeometryTrianglesDataKHR,VkAccelerationStructureDenseGeometryFormatTrianglesDataAMDX
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkAccelerationStructureTrianglesOpacityMicromapKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_TRIANGLES_OPACITY_MICROMAP_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    indexType: VkIndexType = .VK_INDEX_TYPE_UINT16,
+    // Extern sync: false
+    // Optional: false
+    indexBuffer: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    indexStride: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    baseTriangle: u32 = 0,
+    // Extern sync: false
+    // Optional: true
+    micromap: VkAccelerationStructureKHR = .none,
 };
 // Extension: VK_EXT_opacity_micromap
 // Extends: VkAccelerationStructureGeometryTrianglesDataKHR,VkAccelerationStructureDenseGeometryFormatTrianglesDataAMDX
@@ -34255,6 +36183,38 @@ pub const VkImageViewSampleWeightCreateInfoQCOM = extern struct {
     // Optional: false
     numPhases: u32 = 0,
 };
+// Extension: VK_QCOM_shader_multiple_wait_queues
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MULTIPLE_WAIT_QUEUES_FEATURES_QCOM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    shaderMultipleWaitQueues: u32 = 0,
+};
+// Extension: VK_QCOM_shader_multiple_wait_queues
+// Extends: VkPhysicalDeviceProperties2
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceShaderMultipleWaitQueuesPropertiesQCOM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MULTIPLE_WAIT_QUEUES_PROPERTIES_QCOM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: true
+    maxShaderWaitQueues: u32 = 0,
+};
 // Extension: VK_QCOM_image_processing
 // Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
 // Returned only: false
@@ -34697,12 +36657,13 @@ pub const VkPhysicalDeviceFaultFeaturesEXT = extern struct {
     deviceFaultVendorBinary: u32 = 0,
 };
 // Extension: VK_EXT_device_fault
-// Returned only: false
+// Extension: VK_KHR_device_fault
+// Returned only: true
 // Allow duplicate in pNext chain: false
-pub const VkDeviceFaultAddressInfoEXT = extern struct {
+pub const VkDeviceFaultAddressInfoKHR = extern struct {
     // Extern sync: false
     // Optional: false
-    addressType: VkDeviceFaultAddressTypeEXT = .VK_DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT,
+    addressType: VkDeviceFaultAddressTypeKHR = .VK_DEVICE_FAULT_ADDRESS_TYPE_NONE_KHR,
     // Extern sync: false
     // Optional: false
     reportedAddress: u64 = 0,
@@ -34711,9 +36672,10 @@ pub const VkDeviceFaultAddressInfoEXT = extern struct {
     addressPrecision: u64 = 0,
 };
 // Extension: VK_EXT_device_fault
-// Returned only: false
+// Extension: VK_KHR_device_fault
+// Returned only: true
 // Allow duplicate in pNext chain: false
-pub const VkDeviceFaultVendorInfoEXT = extern struct {
+pub const VkDeviceFaultVendorInfoKHR = extern struct {
     // Length expression: null-terminated
     // Extern sync: false
     // Optional: false
@@ -34724,6 +36686,56 @@ pub const VkDeviceFaultVendorInfoEXT = extern struct {
     // Extern sync: false
     // Optional: false
     vendorFaultData: u64 = 0,
+};
+// Extension: VK_KHR_device_fault
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkDeviceFaultInfoKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DEVICE_FAULT_INFO_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    flags: VkDeviceFaultFlagsKHR = .{},
+    // Extern sync: false
+    // Optional: false
+    groupId: u64 = 0,
+    // Length expression: null-terminated
+    // Extern sync: false
+    // Optional: false
+    description: [VK_MAX_DESCRIPTION_SIZE]u8 = @import("std").mem.zeroes([VK_MAX_DESCRIPTION_SIZE]u8),
+    // Extern sync: false
+    // Optional: true
+    faultAddressInfo: VkDeviceFaultAddressInfoKHR = .{},
+    // Extern sync: false
+    // Optional: true
+    instructionAddressInfo: VkDeviceFaultAddressInfoKHR = .{},
+    // Extern sync: false
+    // Optional: true
+    vendorInfo: VkDeviceFaultVendorInfoKHR = .{},
+};
+// Extension: VK_KHR_device_fault
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkDeviceFaultDebugInfoKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DEVICE_FAULT_DEBUG_INFO_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    vendorBinarySize: u32 = 0,
+    // Length expression: vendorBinarySize
+    // Extern sync: false
+    // Optional: true
+    pVendorBinaryData: ?*anyopaque = null,
 };
 // Extension: VK_EXT_device_fault
 // Returned only: false
@@ -34764,24 +36776,25 @@ pub const VkDeviceFaultInfoEXT = extern struct {
     description: [VK_MAX_DESCRIPTION_SIZE]u8 = @import("std").mem.zeroes([VK_MAX_DESCRIPTION_SIZE]u8),
     // Extern sync: false
     // Optional: true
-    pAddressInfos: ?*VkDeviceFaultAddressInfoEXT = null,
+    pAddressInfos: ?*VkDeviceFaultAddressInfoKHR = null,
     // Extern sync: false
     // Optional: true
-    pVendorInfos: ?*VkDeviceFaultVendorInfoEXT = null,
+    pVendorInfos: ?*VkDeviceFaultVendorInfoKHR = null,
     // Extern sync: false
     // Optional: true
     pVendorBinaryData: ?*anyopaque = null,
 };
 // Extension: VK_EXT_device_fault
+// Extension: VK_KHR_device_fault
 // Returned only: false
 // Allow duplicate in pNext chain: false
-pub const VkDeviceFaultVendorBinaryHeaderVersionOneEXT = extern struct {
+pub const VkDeviceFaultVendorBinaryHeaderVersionOneKHR = extern struct {
     // Extern sync: false
     // Optional: false
     headerSize: u32 = 0,
     // Extern sync: false
     // Optional: false
-    headerVersion: VkDeviceFaultVendorBinaryHeaderVersionEXT = .VK_DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_EXT,
+    headerVersion: VkDeviceFaultVendorBinaryHeaderVersionKHR = .VK_DEVICE_FAULT_VENDOR_BINARY_HEADER_VERSION_ONE_KHR,
     // Extern sync: false
     // Optional: false
     vendorID: u32 = 0,
@@ -34809,6 +36822,47 @@ pub const VkDeviceFaultVendorBinaryHeaderVersionOneEXT = extern struct {
     // Extern sync: false
     // Optional: false
     apiVersion: ApiVersion = .{},
+};
+// Extension: VK_KHR_device_fault
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceFaultFeaturesKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    deviceFault: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    deviceFaultVendorBinary: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    deviceFaultReportMasked: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    deviceFaultDeviceLostOnMasked: u32 = 0,
+};
+// Extension: VK_KHR_device_fault
+// Extends: VkPhysicalDeviceProperties2
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceFaultPropertiesKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_PROPERTIES_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    maxDeviceFaultCount: u32 = 0,
 };
 // Extension: VK_EXT_pipeline_library_group_handles
 // Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
@@ -34886,6 +36940,7 @@ pub const VkDecompressMemoryRegionNV = extern struct {
     decompressedSize: u64 = 0,
     // Extern sync: false
     // Optional: false
+    decompressionMethod: VkMemoryDecompressionMethodFlagsEXT = .{},
 };
 // Extension: VK_EXT_memory_decompression
 // Returned only: false
@@ -35040,6 +37095,22 @@ pub const VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT = extern 
     // Extern sync: false
     // Optional: false
     dynamicRenderingUnusedAttachments: u32 = 0,
+};
+// Extension: VK_KHR_internally_synchronized_queues
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    internallySynchronizedQueues: u32 = 0,
 };
 // Extension: VK_EXT_surface_maintenance1
 // Extension: VK_KHR_surface_maintenance1
@@ -35899,6 +37970,22 @@ pub const VkPhysicalDeviceCooperativeMatrixPropertiesKHR = extern struct {
     // Optional: false
     cooperativeMatrixSupportedStages: VkShaderStageFlags = .{},
 };
+// Extension: VK_QCOM_cooperative_matrix_conversion
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_CONVERSION_FEATURES_QCOM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    cooperativeMatrixConversion: u32 = 0,
+};
 // Extension: VK_AMDX_shader_enqueue
 // Extends: VkPhysicalDeviceProperties2
 // Returned only: true
@@ -35977,7 +38064,8 @@ pub const VkExecutionGraphPipelineCreateInfoAMDX = extern struct {
     // Optional: true
     pLibraryInfo: ?*const VkPipelineLibraryCreateInfoKHR = null,
     // Extern sync: false
-    // Optional: false
+    // Optional: true
+    // Comment: Interface layout of the pipeline
     layout: VkPipelineLayout = .none,
     // Extern sync: false
     // Optional: true
@@ -36522,6 +38610,28 @@ pub const VkSamplerBlockMatchWindowCreateInfoQCOM = extern struct {
     // Optional: false
     windowCompareMode: VkBlockMatchWindowCompareModeQCOM = .VK_BLOCK_MATCH_WINDOW_COMPARE_MODE_MIN_QCOM,
 };
+// Extension: VK_QCOM_image_processing3
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceImageProcessing3FeaturesQCOM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_3_FEATURES_QCOM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    imageGatherLinear: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    imageGatherExtendedModes: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    blockMatchExtendedClampToEdge: u32 = 0,
+};
 // Extension: VK_NV_descriptor_pool_overallocation
 // Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
 // Returned only: false
@@ -36906,6 +39016,49 @@ pub const VkPhysicalDeviceSchedulingControlsPropertiesARM = extern struct {
     // Extern sync: false
     // Optional: false
     schedulingControlsFlags: VkPhysicalDeviceSchedulingControlsFlagsARM = .{},
+};
+// Extension: VK_ARM_scheduling_controls
+// Extends: VkPhysicalDeviceProperties2
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_PROPERTIES_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    schedulingControlsMaxWarpsCount: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    schedulingControlsMaxQueuedBatchesCount: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    schedulingControlsMaxWorkGroupBatchSize: u32 = 0,
+};
+// Extension: VK_ARM_scheduling_controls
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDispatchParametersARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DISPATCH_PARAMETERS_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: true
+    workGroupBatchSize: u32 = 0,
+    // Extern sync: false
+    // Optional: true
+    maxQueuedWorkGroupBatches: u32 = 0,
+    // Extern sync: false
+    // Optional: true
+    maxWarpsPerShaderCore: u32 = 0,
 };
 // Extension: VK_IMG_relaxed_line_rasterization
 // Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
@@ -37494,6 +39647,22 @@ pub const VkCooperativeMatrixFlexibleDimensionsPropertiesNV = extern struct {
     // Optional: false
     workgroupInvocations: u32 = 0,
 };
+// Extension: VK_NV_cooperative_matrix_decode_vector
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_DECODE_VECTOR_FEATURES_NV;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    cooperativeMatrixDecodeVector: u32 = 0,
+};
 // Extension: VK_HUAWEI_hdr_vivid
 // Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
 // Returned only: false
@@ -38014,6 +40183,47 @@ pub const VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT = extern st
     // Optional: false
     shaderUniformBufferUnsizedArray: u32 = 0,
 };
+// Extension: VK_VALVE_shader_mixed_float_dot_product
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    shaderMixedFloatDotProductFloat16AccFloat32: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    shaderMixedFloatDotProductFloat16AccFloat16: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    shaderMixedFloatDotProductBFloat16Acc: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    shaderMixedFloatDotProductFloat8AccFloat32: u32 = 0,
+};
+// Extension: VK_EXT_primitive_restart_index
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    primitiveRestartIndex: u32 = 0,
+};
 // Extension: VK_ARM_format_pack
 // Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
 // Returned only: false
@@ -38029,6 +40239,38 @@ pub const VkPhysicalDeviceFormatPackFeaturesARM = extern struct {
     // Extern sync: false
     // Optional: false
     formatPack: u32 = 0,
+};
+// Extension: VK_SEC_throttle_hint
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceThrottleHintFeaturesSEC = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_THROTTLE_HINT_FEATURES_SEC;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    throttleHint: u32 = 0,
+};
+// Extension: VK_SEC_throttle_hint
+// Extends: VkSubmitInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkThrottleHintSubmitInfoSEC = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_THROTTLE_HINT_SUBMIT_INFO_SEC;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    throttleHint: VkThrottleHintTypeSEC = .VK_THROTTLE_HINT_TYPE_DEFAULT_SEC,
 };
 // Extension: VK_ARM_tensors
 // Extends: VkDataGraphPipelineResourceInfoARM,VkDataGraphPipelineConstantARM
@@ -38091,7 +40333,7 @@ pub const VkTensorCreateInfoARM = extern struct {
     // Optional: false
     pQueueFamilyIndices: ?[*]const u32 = null,
 };
-// Extension: VK_ARM_tensors
+// Extension: VK_EXT_descriptor_heap
 // Returned only: false
 // Allow duplicate in pNext chain: false
 pub const VkTensorViewCreateInfoARM = extern struct {
@@ -38288,9 +40530,10 @@ pub const VkTensorDependencyInfoARM = extern struct {
     // Extern sync: false
     // Optional: false
     tensorMemoryBarrierCount: u32 = 0,
+    // Length expression: tensorMemoryBarrierCount
     // Extern sync: false
     // Optional: false
-    pTensorMemoryBarriers: ?*const VkTensorMemoryBarrierARM = null,
+    pTensorMemoryBarriers: ?[*]const VkTensorMemoryBarrierARM = null,
 };
 // Extension: VK_ARM_tensors
 // Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
@@ -38689,6 +40932,22 @@ pub const VkDataGraphPipelineResourceInfoARM = extern struct {
     // Optional: true
     arrayElement: u32 = 0,
 };
+// Extension: VK_ARM_data_graph_optical_flow
+// Extends: VkDataGraphPipelineResourceInfoARM
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDataGraphPipelineResourceInfoImageLayoutARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_RESOURCE_INFO_IMAGE_LAYOUT_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    layout: VkImageLayout = .VK_IMAGE_LAYOUT_UNDEFINED,
+};
 // Extension: VK_ARM_data_graph
 // Extends: VkDataGraphPipelineCreateInfoARM
 // Returned only: false
@@ -38719,11 +40978,12 @@ pub const VkDataGraphPipelineCreateInfoARM = extern struct {
     pNext: ?*const anyopaque = null,
     // Extern sync: false
     // Optional: true
+    flags: VkPipelineCreateFlags2 = .{},
     // Extern sync: false
     // Optional: false
     layout: VkPipelineLayout = .none,
     // Extern sync: false
-    // Optional: false
+    // Optional: true
     resourceInfoCount: u32 = 0,
     // Length expression: resourceInfoCount
     // Extern sync: false
@@ -38794,7 +41054,7 @@ pub const VkDataGraphPipelineSessionBindPointRequirementsInfoARM = extern struct
     session: VkDataGraphPipelineSessionARM = .none,
 };
 // Extension: VK_ARM_data_graph
-// Returned only: false
+// Returned only: true
 // Allow duplicate in pNext chain: false
 pub const VkDataGraphPipelineSessionBindPointRequirementARM = extern struct {
     // Extern sync: false
@@ -38803,7 +41063,7 @@ pub const VkDataGraphPipelineSessionBindPointRequirementARM = extern struct {
     sType: VkStructureType = @This().STYPE,
     // Extern sync: false
     // Optional: true
-    pNext: ?*const anyopaque = null,
+    pNext: ?*anyopaque = null,
     // Extern sync: false
     // Optional: false
     bindPoint: VkDataGraphPipelineSessionBindPointARM = .VK_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_TRANSIENT_ARM,
@@ -38887,7 +41147,7 @@ pub const VkDataGraphPipelinePropertyQueryResultARM = extern struct {
     sType: VkStructureType = @This().STYPE,
     // Extern sync: false
     // Optional: true
-    pNext: ?*const anyopaque = null,
+    pNext: ?*anyopaque = null,
     // Extern sync: false
     // Optional: false
     property: VkDataGraphPipelinePropertyARM = .VK_DATA_GRAPH_PIPELINE_PROPERTY_CREATION_LOG_ARM,
@@ -38964,7 +41224,7 @@ pub const VkPhysicalDeviceDataGraphOperationSupportARM = extern struct {
     version: u32 = 0,
 };
 // Extension: VK_ARM_data_graph
-// Returned only: false
+// Returned only: true
 // Allow duplicate in pNext chain: false
 pub const VkQueueFamilyDataGraphPropertiesARM = extern struct {
     // Extern sync: false
@@ -38973,7 +41233,7 @@ pub const VkQueueFamilyDataGraphPropertiesARM = extern struct {
     sType: VkStructureType = @This().STYPE,
     // Extern sync: false
     // Optional: true
-    pNext: ?*const anyopaque = null,
+    pNext: ?*anyopaque = null,
     // Extern sync: false
     // Optional: false
     engine: VkPhysicalDeviceDataGraphProcessingEngineARM = .{},
@@ -39000,7 +41260,7 @@ pub const VkPhysicalDeviceQueueFamilyDataGraphProcessingEngineInfoARM = extern s
     engineType: VkPhysicalDeviceDataGraphProcessingEngineTypeARM = .VK_PHYSICAL_DEVICE_DATA_GRAPH_PROCESSING_ENGINE_TYPE_DEFAULT_ARM,
 };
 // Extension: VK_ARM_data_graph
-// Returned only: false
+// Returned only: true
 // Allow duplicate in pNext chain: false
 pub const VkQueueFamilyDataGraphProcessingEnginePropertiesARM = extern struct {
     // Extern sync: false
@@ -39009,7 +41269,7 @@ pub const VkQueueFamilyDataGraphProcessingEnginePropertiesARM = extern struct {
     sType: VkStructureType = @This().STYPE,
     // Extern sync: false
     // Optional: true
-    pNext: ?*const anyopaque = null,
+    pNext: ?*anyopaque = null,
     // Extern sync: false
     // Optional: false
     foreignSemaphoreHandleTypes: VkExternalSemaphoreHandleTypeFlags = .{},
@@ -39101,54 +41361,6 @@ pub const VkPhysicalDeviceShaderUntypedPointersFeaturesKHR = extern struct {
     // Extern sync: false
     // Optional: false
     shaderUntypedPointers: u32 = 0,
-};
-// Extension: VK_OHOS_native_buffer
-// Extends: VkImageCreateInfo,VkBindImageMemoryInfo
-// Returned only: false
-// Allow duplicate in pNext chain: false
-pub const VkNativeBufferOHOS = extern struct {
-    // Extern sync: false
-    // Optional: false
-    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_NATIVE_BUFFER_OHOS;
-    sType: VkStructureType = @This().STYPE,
-    // Extern sync: false
-    // Optional: true
-    pNext: ?*const anyopaque = null,
-    // Extern sync: false
-    // Optional: false
-    handle: ?*OHBufferHandle = null,
-};
-// Extension: VK_OHOS_native_buffer
-// Extends: VkImageCreateInfo
-// Returned only: false
-// Allow duplicate in pNext chain: false
-pub const VkSwapchainImageCreateInfoOHOS = extern struct {
-    // Extern sync: false
-    // Optional: false
-    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_SWAPCHAIN_IMAGE_CREATE_INFO_OHOS;
-    sType: VkStructureType = @This().STYPE,
-    // Extern sync: false
-    // Optional: true
-    pNext: ?*const anyopaque = null,
-    // Extern sync: false
-    // Optional: false
-    usage: VkSwapchainImageUsageFlagsOHOS = .{},
-};
-// Extension: VK_OHOS_native_buffer
-// Extends: VkPhysicalDeviceProperties2
-// Returned only: true
-// Allow duplicate in pNext chain: false
-pub const VkPhysicalDevicePresentationPropertiesOHOS = extern struct {
-    // Extern sync: false
-    // Optional: false
-    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENTATION_PROPERTIES_OHOS;
-    sType: VkStructureType = @This().STYPE,
-    // Extern sync: false
-    // Optional: true
-    pNext: ?*anyopaque = null,
-    // Extern sync: false
-    // Optional: false
-    sharedImage: u32 = 0,
 };
 // Extension: VK_VALVE_video_encode_rgb_conversion
 // Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
@@ -39366,6 +41578,57 @@ pub const VkExternalFormatOHOS = extern struct {
     // Optional: false
     externalFormat: u64 = 0,
 };
+// Extension: VK_QCOM_queue_perf_hint
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPerfHintInfoQCOM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PERF_HINT_INFO_QCOM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    // Comment: Pointer to next structure
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    type: VkPerfHintTypeQCOM = .VK_PERF_HINT_TYPE_DEFAULT_QCOM,
+    // Extern sync: false
+    // Optional: false
+    scale: u32 = 0,
+};
+// Extension: VK_QCOM_queue_perf_hint
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceQueuePerfHintFeaturesQCOM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_PERF_HINT_FEATURES_QCOM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    queuePerfHint: u32 = 0,
+};
+// Extension: VK_QCOM_queue_perf_hint
+// Extends: VkPhysicalDeviceProperties2
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceQueuePerfHintPropertiesQCOM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_PERF_HINT_PROPERTIES_QCOM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    supportedQueues: VkQueueFlags = .{},
+};
 // Extension: VK_ARM_performance_counters_by_region
 // Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
 // Returned only: false
@@ -39460,18 +41723,20 @@ pub const VkRenderPassPerformanceCountersByRegionBeginInfoARM = extern struct {
     // Extern sync: false
     // Optional: false
     counterAddressCount: u32 = 0,
+    // Length expression: counterAddressCount
     // Extern sync: false
     // Optional: false
-    pCounterAddresses: ?*const u64 = null,
+    pCounterAddresses: ?[*]const u64 = null,
     // Extern sync: false
     // Optional: false
     serializeRegions: u32 = 0,
     // Extern sync: false
     // Optional: false
     counterIndexCount: u32 = 0,
+    // Length expression: counterIndexCount
     // Extern sync: false
     // Optional: false
-    pCounterIndices: ?*u32 = null,
+    pCounterIndices: ?[*]u32 = null,
 };
 // Extension: VK_NV_compute_occupancy_priority
 // Returned only: false
@@ -39506,6 +41771,1439 @@ pub const VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV = extern struct {
     // Extern sync: false
     // Optional: false
     computeOccupancyPriority: u32 = 0,
+};
+// Extension: VK_EXT_shader_long_vector
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceShaderLongVectorFeaturesEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    longVector: u32 = 0,
+};
+// Extension: VK_EXT_shader_long_vector
+// Extends: VkPhysicalDeviceProperties2
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceShaderLongVectorPropertiesEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_PROPERTIES_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    maxVectorComponents: u32 = 0,
+};
+// Extension: VK_EXT_texture_compression_astc_3d
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_3D_FEATURES_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    textureCompressionASTC_3D: u32 = 0,
+};
+// Extension: VK_EXT_shader_subgroup_partitioned
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    shaderSubgroupPartitioned: u32 = 0,
+};
+// Extension: VK_EXT_descriptor_heap
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkHostAddressRangeEXT = extern struct {
+    // Length expression: size
+    // Extern sync: false
+    // Optional: false
+    address: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    size: u64 = 0,
+};
+// Extension: VK_EXT_descriptor_heap
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkHostAddressRangeConstEXT = extern struct {
+    // Length expression: size
+    // Extern sync: false
+    // Optional: false
+    address: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    size: u64 = 0,
+};
+// Extension: VK_EXT_descriptor_heap
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkTexelBufferDescriptorInfoEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_TEXEL_BUFFER_DESCRIPTOR_INFO_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    format: VkFormat = .VK_FORMAT_UNDEFINED,
+    // Extern sync: false
+    // Optional: false
+    addressRange: VkDeviceAddressRangeKHR = .{},
+};
+// Extension: VK_EXT_descriptor_heap
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkImageDescriptorInfoEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_IMAGE_DESCRIPTOR_INFO_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    pView: ?*const VkImageViewCreateInfo = null,
+    // Extern sync: false
+    // Optional: false
+    layout: VkImageLayout = .VK_IMAGE_LAYOUT_UNDEFINED,
+};
+// Extension: VK_EXT_descriptor_heap
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkResourceDescriptorInfoEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_RESOURCE_DESCRIPTOR_INFO_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    type: VkDescriptorType = .VK_DESCRIPTOR_TYPE_SAMPLER,
+    // Extern sync: false
+    // Optional: false
+    // Selector field: type (What union field is valid)
+    data: VkResourceDescriptorDataEXT,
+};
+// Extension: VK_EXT_descriptor_heap
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkBindHeapInfoEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_BIND_HEAP_INFO_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    heapRange: VkDeviceAddressRangeKHR = .{},
+    // Extern sync: false
+    // Optional: false
+    reservedRangeOffset: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    reservedRangeSize: u64 = 0,
+};
+// Extension: VK_EXT_descriptor_heap
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPushDataInfoEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PUSH_DATA_INFO_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    offset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    data: VkHostAddressRangeConstEXT = .{},
+};
+// Extension: VK_EXT_descriptor_heap
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDescriptorMappingSourceConstantOffsetEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    heapOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    heapArrayStride: u32 = 0,
+    // Extern sync: false
+    // Optional: true
+    pEmbeddedSampler: ?*const VkSamplerCreateInfo = null,
+    // Extern sync: false
+    // Optional: false
+    samplerHeapOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerHeapArrayStride: u32 = 0,
+};
+// Extension: VK_EXT_descriptor_heap
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDescriptorMappingSourcePushIndexEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    heapOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    pushOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    heapIndexStride: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    heapArrayStride: u32 = 0,
+    // Extern sync: false
+    // Optional: true
+    pEmbeddedSampler: ?*const VkSamplerCreateInfo = null,
+    // Extern sync: false
+    // Optional: false
+    useCombinedImageSamplerIndex: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerHeapOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerPushOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerHeapIndexStride: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerHeapArrayStride: u32 = 0,
+};
+// Extension: VK_EXT_descriptor_heap
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDescriptorMappingSourceIndirectIndexEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    heapOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    pushOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    addressOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    heapIndexStride: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    heapArrayStride: u32 = 0,
+    // Extern sync: false
+    // Optional: true
+    pEmbeddedSampler: ?*const VkSamplerCreateInfo = null,
+    // Extern sync: false
+    // Optional: false
+    useCombinedImageSamplerIndex: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerHeapOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerPushOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerAddressOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerHeapIndexStride: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerHeapArrayStride: u32 = 0,
+};
+// Extension: VK_EXT_descriptor_heap
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDescriptorMappingSourceIndirectIndexArrayEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    heapOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    pushOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    addressOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    heapIndexStride: u32 = 0,
+    // Extern sync: false
+    // Optional: true
+    pEmbeddedSampler: ?*const VkSamplerCreateInfo = null,
+    // Extern sync: false
+    // Optional: false
+    useCombinedImageSamplerIndex: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerHeapOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerPushOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerAddressOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerHeapIndexStride: u32 = 0,
+};
+// Extension: VK_EXT_descriptor_heap
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDescriptorMappingSourceHeapDataEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    heapOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    pushOffset: u32 = 0,
+};
+// Extension: VK_EXT_descriptor_heap
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDescriptorMappingSourceShaderRecordIndexEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    heapOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    shaderRecordOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    heapIndexStride: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    heapArrayStride: u32 = 0,
+    // Extern sync: false
+    // Optional: true
+    pEmbeddedSampler: ?*const VkSamplerCreateInfo = null,
+    // Extern sync: false
+    // Optional: false
+    useCombinedImageSamplerIndex: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerHeapOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerShaderRecordOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerHeapIndexStride: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerHeapArrayStride: u32 = 0,
+};
+// Extension: VK_EXT_descriptor_heap
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDescriptorMappingSourceIndirectAddressEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pushOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    addressOffset: u32 = 0,
+};
+// Extension: VK_EXT_descriptor_heap
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDescriptorSetAndBindingMappingEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_AND_BINDING_MAPPING_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    descriptorSet: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    firstBinding: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    bindingCount: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    resourceMask: VkSpirvResourceTypeFlagsEXT = .{},
+    // Extern sync: false
+    // Optional: false
+    source: VkDescriptorMappingSourceEXT = .VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_CONSTANT_OFFSET_EXT,
+    // Extern sync: false
+    // Optional: false
+    // Selector field: source (What union field is valid)
+    sourceData: VkDescriptorMappingSourceDataEXT,
+};
+// Extension: VK_EXT_descriptor_heap
+// Extends: VkPipelineShaderStageCreateInfo,VkShaderCreateInfoEXT
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkShaderDescriptorSetAndBindingMappingInfoEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_SHADER_DESCRIPTOR_SET_AND_BINDING_MAPPING_INFO_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: true
+    mappingCount: u32 = 0,
+    // Length expression: mappingCount
+    // Extern sync: false
+    // Optional: false
+    pMappings: ?[*]const VkDescriptorSetAndBindingMappingEXT = null,
+};
+// Extension: VK_EXT_descriptor_heap
+// Extends: VkSamplerCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkSamplerCustomBorderColorIndexCreateInfoEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_INDEX_CREATE_INFO_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    index: u32 = 0,
+};
+// Extension: VK_EXT_descriptor_heap
+// Extends: VkImageCreateInfo,VkTensorCreateInfoARM
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkOpaqueCaptureDataCreateInfoEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_OPAQUE_CAPTURE_DATA_CREATE_INFO_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: true
+    pData: ?*const VkHostAddressRangeConstEXT = null,
+};
+// Extension: VK_EXT_descriptor_heap
+// Extends: VkIndirectCommandsLayoutTokenNV
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkIndirectCommandsLayoutPushDataTokenNV = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_PUSH_DATA_TOKEN_NV;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    pushDataOffset: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    pushDataSize: u32 = 0,
+};
+// Extension: VK_EXT_descriptor_heap
+// Extends: VkImageFormatProperties2
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkSubsampledImageFormatPropertiesEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_SUBSAMPLED_IMAGE_FORMAT_PROPERTIES_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    subsampledImageDescriptorCount: u32 = 0,
+};
+// Extension: VK_EXT_shader_split_barrier
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceShaderSplitBarrierFeaturesEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SPLIT_BARRIER_FEATURES_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    shaderSplitBarrier: u32 = 0,
+};
+// Extension: VK_EXT_shader_split_barrier
+// Extends: VkPhysicalDeviceProperties2
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceShaderSplitBarrierPropertiesEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SPLIT_BARRIER_PROPERTIES_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    splitBarrierReservedSharedMemory: u32 = 0,
+};
+// Extension: VK_EXT_descriptor_heap
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceDescriptorHeapFeaturesEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_FEATURES_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    descriptorHeap: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    descriptorHeapCaptureReplay: u32 = 0,
+};
+// Extension: VK_EXT_descriptor_heap
+// Extends: VkPhysicalDeviceProperties2
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceDescriptorHeapPropertiesEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_PROPERTIES_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    samplerHeapAlignment: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    resourceHeapAlignment: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    maxSamplerHeapSize: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    maxResourceHeapSize: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    minSamplerHeapReservedRange: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    minSamplerHeapReservedRangeWithEmbedded: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    minResourceHeapReservedRange: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerDescriptorSize: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    imageDescriptorSize: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    bufferDescriptorSize: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerDescriptorAlignment: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    imageDescriptorAlignment: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    bufferDescriptorAlignment: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    maxPushDataSize: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    imageCaptureReplayOpaqueDataSize: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    maxDescriptorHeapEmbeddedSamplers: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    samplerYcbcrConversionCount: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    sparseDescriptorHeaps: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    protectedDescriptorHeaps: u32 = 0,
+};
+// Extension: VK_EXT_descriptor_heap
+// Extends: VkCommandBufferInheritanceInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkCommandBufferInheritanceDescriptorHeapInfoEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_DESCRIPTOR_HEAP_INFO_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: true
+    pSamplerHeapBindInfo: ?*const VkBindHeapInfoEXT = null,
+    // Extern sync: false
+    // Optional: true
+    pResourceHeapBindInfo: ?*const VkBindHeapInfoEXT = null,
+};
+// Extension: VK_EXT_descriptor_heap
+// Extends: VkPhysicalDeviceProperties2
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceDescriptorHeapTensorPropertiesARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_TENSOR_PROPERTIES_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    tensorDescriptorSize: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    tensorDescriptorAlignment: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    tensorCaptureReplayOpaqueDataSize: u64 = 0,
+};
+// Extension: VK_ARM_shader_instrumentation
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceShaderInstrumentationFeaturesARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INSTRUMENTATION_FEATURES_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    shaderInstrumentation: u32 = 0,
+};
+// Extension: VK_ARM_shader_instrumentation
+// Extends: VkPhysicalDeviceProperties2
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceShaderInstrumentationPropertiesARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INSTRUMENTATION_PROPERTIES_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    numMetrics: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    perBasicBlockGranularity: u32 = 0,
+};
+// Extension: VK_ARM_shader_instrumentation
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkShaderInstrumentationCreateInfoARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_SHADER_INSTRUMENTATION_CREATE_INFO_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+};
+// Extension: VK_ARM_shader_instrumentation
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkShaderInstrumentationMetricDescriptionARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_SHADER_INSTRUMENTATION_METRIC_DESCRIPTION_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Length expression: null-terminated
+    // Extern sync: false
+    // Optional: false
+    name: [VK_MAX_DESCRIPTION_SIZE]u8 = @import("std").mem.zeroes([VK_MAX_DESCRIPTION_SIZE]u8),
+    // Length expression: null-terminated
+    // Extern sync: false
+    // Optional: false
+    description: [VK_MAX_DESCRIPTION_SIZE]u8 = @import("std").mem.zeroes([VK_MAX_DESCRIPTION_SIZE]u8),
+};
+// Extension: VK_ARM_shader_instrumentation
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkShaderInstrumentationMetricDataHeaderARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    resultIndex: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    resultSubIndex: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    stages: VkShaderStageFlags = .{},
+    // Extern sync: false
+    // Optional: false
+    basicBlockIndex: u32 = 0,
+};
+// Extension: VK_EXT_descriptor_heap
+// Extension: VK_KHR_device_address_commands
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDeviceAddressRangeKHR = extern struct {
+    // Extern sync: false
+    // Optional: true
+    address: u64 = 0,
+    // Extern sync: false
+    // Optional: false
+    size: u64 = 0,
+};
+// Extension: VK_KHR_device_address_commands
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDeviceMemoryCopyKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DEVICE_MEMORY_COPY_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    srcRange: VkDeviceAddressRangeKHR = .{},
+    // Extern sync: false
+    // Optional: true
+    srcFlags: VkAddressCommandFlagsKHR = .{},
+    // Extern sync: false
+    // Optional: false
+    dstRange: VkDeviceAddressRangeKHR = .{},
+    // Extern sync: false
+    // Optional: true
+    dstFlags: VkAddressCommandFlagsKHR = .{},
+};
+// Extension: VK_KHR_device_address_commands
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkCopyDeviceMemoryInfoKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_COPY_DEVICE_MEMORY_INFO_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    regionCount: u32 = 0,
+    // Length expression: regionCount
+    // Extern sync: false
+    // Optional: false
+    pRegions: ?[*]const VkDeviceMemoryCopyKHR = null,
+};
+// Extension: VK_KHR_device_address_commands
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDeviceMemoryImageCopyKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DEVICE_MEMORY_IMAGE_COPY_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    addressRange: VkDeviceAddressRangeKHR = .{},
+    // Extern sync: false
+    // Optional: true
+    addressFlags: VkAddressCommandFlagsKHR = .{},
+    // Extern sync: false
+    // Optional: false
+    addressRowLength: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    addressImageHeight: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    imageSubresource: VkImageSubresourceLayers = .{},
+    // Extern sync: false
+    // Optional: false
+    imageLayout: VkImageLayout = .VK_IMAGE_LAYOUT_UNDEFINED,
+    // Extern sync: false
+    // Optional: false
+    imageOffset: VkOffset3D = .{},
+    // Extern sync: false
+    // Optional: false
+    imageExtent: VkExtent3D = .{},
+};
+// Extension: VK_KHR_device_address_commands
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkCopyDeviceMemoryImageInfoKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_COPY_DEVICE_MEMORY_IMAGE_INFO_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    image: VkImage = .none,
+    // Extern sync: false
+    // Optional: false
+    regionCount: u32 = 0,
+    // Length expression: regionCount
+    // Extern sync: false
+    // Optional: false
+    pRegions: ?[*]const VkDeviceMemoryImageCopyKHR = null,
+};
+// Extension: VK_KHR_device_address_commands
+// Extends: VkDependencyInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkMemoryRangeBarriersInfoKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_MEMORY_RANGE_BARRIERS_INFO_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: true
+    memoryRangeBarrierCount: u32 = 0,
+    // Length expression: memoryRangeBarrierCount
+    // Extern sync: false
+    // Optional: false
+    pMemoryRangeBarriers: ?[*]const VkMemoryRangeBarrierKHR = null,
+};
+// Extension: VK_KHR_device_address_commands
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkMemoryRangeBarrierKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_MEMORY_RANGE_BARRIER_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: true
+    srcStageMask: VkPipelineStageFlags2 = .{},
+    // Extern sync: false
+    // Optional: true
+    srcAccessMask: VkAccessFlags2 = .{},
+    // Extern sync: false
+    // Optional: true
+    dstStageMask: VkPipelineStageFlags2 = .{},
+    // Extern sync: false
+    // Optional: true
+    dstAccessMask: VkAccessFlags2 = .{},
+    // Extern sync: false
+    // Optional: false
+    srcQueueFamilyIndex: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    dstQueueFamilyIndex: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    addressRange: VkDeviceAddressRangeKHR = .{},
+    // Extern sync: false
+    // Optional: true
+    addressFlags: VkAddressCommandFlagsKHR = .{},
+};
+// Extension: VK_KHR_device_address_commands
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_ADDRESS_COMMANDS_FEATURES_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    deviceAddressCommands: u32 = 0,
+};
+// Extension: VK_KHR_device_address_commands
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkConditionalRenderingBeginInfo2EXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_2_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    addressRange: VkDeviceAddressRangeKHR = .{},
+    // Extern sync: false
+    // Optional: true
+    addressFlags: VkAddressCommandFlagsKHR = .{},
+    // Extern sync: false
+    // Optional: true
+    flags: VkConditionalRenderingFlagsEXT = .{},
+};
+// Extension: VK_KHR_device_address_commands
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkAccelerationStructureCreateInfo2KHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_2_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: true
+    createFlags: VkAccelerationStructureCreateFlagsKHR = .{},
+    // Extern sync: false
+    // Optional: false
+    addressRange: VkDeviceAddressRangeKHR = .{},
+    // Extern sync: false
+    // Optional: true
+    addressFlags: VkAddressCommandFlagsKHR = .{},
+    // Extern sync: false
+    // Optional: false
+    type: VkAccelerationStructureTypeKHR = .VK_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR,
+};
+// Extension: VK_KHR_device_address_commands
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkBindIndexBuffer3InfoKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_BIND_INDEX_BUFFER_3_INFO_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    addressRange: VkDeviceAddressRangeKHR = .{},
+    // Extern sync: false
+    // Optional: true
+    addressFlags: VkAddressCommandFlagsKHR = .{},
+    // Extern sync: false
+    // Optional: false
+    indexType: VkIndexType = .VK_INDEX_TYPE_UINT16,
+};
+// Extension: VK_KHR_device_address_commands
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkBindVertexBuffer3InfoKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_BIND_VERTEX_BUFFER_3_INFO_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    setStride: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    addressRange: VkStridedDeviceAddressRangeKHR = .{},
+    // Extern sync: false
+    // Optional: true
+    addressFlags: VkAddressCommandFlagsKHR = .{},
+};
+// Extension: VK_KHR_device_address_commands
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDrawIndirect2InfoKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DRAW_INDIRECT_2_INFO_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    addressRange: VkStridedDeviceAddressRangeKHR = .{},
+    // Extern sync: false
+    // Optional: true
+    addressFlags: VkAddressCommandFlagsKHR = .{},
+    // Extern sync: false
+    // Optional: false
+    drawCount: u32 = 0,
+};
+// Extension: VK_KHR_device_address_commands
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDrawIndirectCount2InfoKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DRAW_INDIRECT_COUNT_2_INFO_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    addressRange: VkStridedDeviceAddressRangeKHR = .{},
+    // Extern sync: false
+    // Optional: true
+    addressFlags: VkAddressCommandFlagsKHR = .{},
+    // Extern sync: false
+    // Optional: false
+    countAddressRange: VkDeviceAddressRangeKHR = .{},
+    // Extern sync: false
+    // Optional: true
+    countAddressFlags: VkAddressCommandFlagsKHR = .{},
+    // Extern sync: false
+    // Optional: false
+    maxDrawCount: u32 = 0,
+};
+// Extension: VK_KHR_device_address_commands
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDispatchIndirect2InfoKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DISPATCH_INDIRECT_2_INFO_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    addressRange: VkDeviceAddressRangeKHR = .{},
+    // Extern sync: false
+    // Optional: true
+    addressFlags: VkAddressCommandFlagsKHR = .{},
+};
+// Extension: VK_KHR_device_address_commands
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkBindTransformFeedbackBuffer2InfoEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_BIND_TRANSFORM_FEEDBACK_BUFFER_2_INFO_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    addressRange: VkDeviceAddressRangeKHR = .{},
+    // Extern sync: false
+    // Optional: true
+    addressFlags: VkAddressCommandFlagsKHR = .{},
+};
+// Extension: VK_KHR_device_address_commands
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkMemoryMarkerInfoAMD = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_MEMORY_MARKER_INFO_AMD;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    // Extern sync: false
+    // Optional: false
+    dstRange: VkDeviceAddressRangeKHR = .{},
+    // Extern sync: false
+    // Optional: true
+    dstFlags: VkAddressCommandFlagsKHR = .{},
+    // Extern sync: false
+    // Optional: false
+    marker: u32 = 0,
+};
+// Extension: VK_KHR_shader_constant_data
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceShaderConstantDataFeaturesKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CONSTANT_DATA_FEATURES_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    shaderConstantData: u32 = 0,
+};
+// Extension: VK_KHR_shader_abort
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceShaderAbortFeaturesKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ABORT_FEATURES_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    shaderAbort: u32 = 0,
+};
+// Extension: VK_KHR_shader_abort
+// Extends: VkPhysicalDeviceProperties2
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceShaderAbortPropertiesKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ABORT_PROPERTIES_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    maxShaderAbortMessageSize: u64 = 0,
+};
+// Extension: VK_KHR_shader_abort
+// Extends: VkDeviceFaultDebugInfoKHR
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkDeviceFaultShaderAbortMessageInfoKHR = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DEVICE_FAULT_SHADER_ABORT_MESSAGE_INFO_KHR;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: true
+    messageDataSize: u64 = 0,
+    // Length expression: messageDataSize
+    // Extern sync: false
+    // Optional: true
+    pMessageData: ?*anyopaque = null,
+};
+// Extension: VK_ARM_data_graph_instruction_set_tosa
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkDataGraphTOSANameQualityARM = extern struct {
+    // Length expression: null-terminated
+    // Extern sync: false
+    // Optional: false
+    name: [VK_MAX_DATA_GRAPH_TOSA_NAME_SIZE_ARM]u8 = @import("std").mem.zeroes([VK_MAX_DATA_GRAPH_TOSA_NAME_SIZE_ARM]u8),
+    // Extern sync: false
+    // Optional: false
+    qualityFlags: VkDataGraphTOSAQualityFlagsARM = .{},
+};
+// Extension: VK_ARM_data_graph_instruction_set_tosa
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkQueueFamilyDataGraphTOSAPropertiesARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_TOSA_PROPERTIES_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    profileCount: u32 = 0,
+    // Length expression: profileCount
+    // Extern sync: false
+    // Optional: false
+    pProfiles: ?[*]const VkDataGraphTOSANameQualityARM = null,
+    // Extern sync: false
+    // Optional: false
+    extensionCount: u32 = 0,
+    // Length expression: extensionCount
+    // Extern sync: false
+    // Optional: false
+    pExtensions: ?[*]const VkDataGraphTOSANameQualityARM = null,
+    // Extern sync: false
+    // Optional: false
+    level: VkDataGraphTOSALevelARM = .VK_DATA_GRAPH_TOSA_LEVEL_NONE_ARM,
+};
+// Extension: VK_ARM_data_graph_optical_flow
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDataGraphPipelineSingleNodeConnectionARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SINGLE_NODE_CONNECTION_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    set: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    binding: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    connection: VkDataGraphPipelineNodeConnectionTypeARM = .VK_DATA_GRAPH_PIPELINE_NODE_CONNECTION_TYPE_OPTICAL_FLOW_INPUT_ARM,
+};
+// Extension: VK_ARM_data_graph_optical_flow
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_OPTICAL_FLOW_FEATURES_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    dataGraphOpticalFlow: u32 = 0,
+};
+// Extension: VK_ARM_data_graph_optical_flow
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkQueueFamilyDataGraphOpticalFlowPropertiesARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_OPTICAL_FLOW_PROPERTIES_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    supportedOutputGridSizes: VkDataGraphOpticalFlowGridSizeFlagsARM = .{},
+    // Extern sync: false
+    // Optional: false
+    supportedHintGridSizes: VkDataGraphOpticalFlowGridSizeFlagsARM = .{},
+    // Extern sync: false
+    // Optional: false
+    hintSupported: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    costSupported: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    minWidth: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    minHeight: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    maxWidth: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    maxHeight: u32 = 0,
+};
+// Extension: VK_ARM_data_graph_optical_flow
+// Extends: VkPhysicalDeviceImageFormatInfo2,VkImageCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDataGraphOpticalFlowImageFormatInfoARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_OPTICAL_FLOW_IMAGE_FORMAT_INFO_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*const anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    usage: VkDataGraphOpticalFlowImageUsageFlagsARM = .{},
+};
+// Extension: VK_ARM_data_graph_optical_flow
+// Returned only: true
+// Allow duplicate in pNext chain: false
+pub const VkDataGraphOpticalFlowImageFormatPropertiesARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_OPTICAL_FLOW_IMAGE_FORMAT_PROPERTIES_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    format: VkFormat = .VK_FORMAT_UNDEFINED,
+};
+// Extension: VK_ARM_data_graph_optical_flow
+// Extends: VkDataGraphPipelineCreateInfoARM
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDataGraphPipelineSingleNodeCreateInfoARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SINGLE_NODE_CREATE_INFO_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    nodeType: VkDataGraphPipelineNodeTypeARM = .VK_DATA_GRAPH_PIPELINE_NODE_TYPE_OPTICAL_FLOW_ARM,
+    // Extern sync: false
+    // Optional: false
+    connectionCount: u32 = 0,
+    // Length expression: connectionCount
+    // Extern sync: false
+    // Optional: false
+    pConnections: ?[*]const VkDataGraphPipelineSingleNodeConnectionARM = null,
+};
+// Extension: VK_ARM_data_graph_optical_flow
+// Extends: VkDataGraphPipelineCreateInfoARM
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDataGraphPipelineOpticalFlowCreateInfoARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_OPTICAL_FLOW_CREATE_INFO_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    width: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    height: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    imageFormat: VkFormat = .VK_FORMAT_UNDEFINED,
+    // Extern sync: false
+    // Optional: false
+    flowVectorFormat: VkFormat = .VK_FORMAT_UNDEFINED,
+    // Extern sync: false
+    // Optional: true
+    costFormat: VkFormat = .VK_FORMAT_UNDEFINED,
+    // Extern sync: false
+    // Optional: false
+    outputGridSize: VkDataGraphOpticalFlowGridSizeFlagsARM = .{},
+    // Extern sync: false
+    // Optional: false
+    hintGridSize: VkDataGraphOpticalFlowGridSizeFlagsARM = .{},
+    // Extern sync: false
+    // Optional: true
+    performanceLevel: VkDataGraphOpticalFlowPerformanceLevelARM = .VK_DATA_GRAPH_OPTICAL_FLOW_PERFORMANCE_LEVEL_UNKNOWN_ARM,
+    // Extern sync: false
+    // Optional: true
+    flags: VkDataGraphOpticalFlowCreateFlagsARM = .{},
+};
+// Extension: VK_ARM_data_graph_optical_flow
+// Extends: VkDataGraphPipelineDispatchInfoARM
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkDataGraphPipelineOpticalFlowDispatchInfoARM = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_OPTICAL_FLOW_DISPATCH_INFO_ARM;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: true
+    flags: VkDataGraphOpticalFlowExecuteFlagsARM = .{},
+    // Extern sync: false
+    // Optional: true
+    meanFlowL1NormHint: u32 = 0,
+};
+// Extension: VK_EXT_shader_ocp_microscaling_types
+// Extends: VkPhysicalDeviceFeatures2,VkDeviceCreateInfo
+// Returned only: false
+// Allow duplicate in pNext chain: false
+pub const VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT = extern struct {
+    // Extern sync: false
+    // Optional: false
+    pub const STYPE = VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT;
+    sType: VkStructureType = @This().STYPE,
+    // Extern sync: false
+    // Optional: true
+    pNext: ?*anyopaque = null,
+    // Extern sync: false
+    // Optional: false
+    shaderFloat4: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    shaderFloat6: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    shaderFloat8UnsignedE8M0: u32 = 0,
+    // Extern sync: false
+    // Optional: false
+    shaderMXInt8: u32 = 0,
 };
 
 // Unions
@@ -39601,7 +43299,7 @@ pub const VkIndirectExecutionSetInfoEXT = extern union {
 };
 // Extension: VK_EXT_device_generated_commands
 pub const VkIndirectCommandsTokenDataEXT = extern union {
-    // Selected with: VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_EXT,VK_INDIRECT_COMMANDS_TOKEN_TYPE_SEQUENCE_INDEX_EXT
+    // Selected with: VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_EXT,VK_INDIRECT_COMMANDS_TOKEN_TYPE_SEQUENCE_INDEX_EXT,VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_DATA_EXT,VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_DATA_SEQUENCE_INDEX_EXT
     pPushConstant: *const VkIndirectCommandsPushConstantTokenEXT,
     // Selected with: VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_EXT
     pVertexBuffer: *const VkIndirectCommandsVertexBufferTokenEXT,
@@ -39641,6 +43339,42 @@ pub const VkAccelerationStructureMotionInstanceDataNV = extern union {
     matrixMotionInstance: VkAccelerationStructureMatrixMotionInstanceNV,
     // Selected with: VK_ACCELERATION_STRUCTURE_MOTION_INSTANCE_TYPE_SRT_MOTION_NV
     srtMotionInstance: VkAccelerationStructureSRTMotionInstanceNV,
+};
+// Extension: VK_EXT_descriptor_heap
+pub const VkResourceDescriptorDataEXT = extern union {
+    // Selected with: VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT,VK_DESCRIPTOR_TYPE_BLOCK_MATCH_IMAGE_QCOM,VK_DESCRIPTOR_TYPE_SAMPLE_WEIGHT_IMAGE_QCOM
+    pImage: *const VkImageDescriptorInfoEXT,
+    // Selected with: VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER,VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER
+    pTexelBuffer: *const VkTexelBufferDescriptorInfoEXT,
+    // Selected with: VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR,VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,VK_DESCRIPTOR_TYPE_STORAGE_BUFFER
+    pAddressRange: *const VkDeviceAddressRangeKHR,
+    // Selected with: VK_DESCRIPTOR_TYPE_TENSOR_ARM
+    pTensorARM: *const VkTensorViewCreateInfoARM,
+};
+// Extension: VK_EXT_descriptor_heap
+pub const VkDescriptorMappingSourceDataEXT = extern union {
+    // Selected with: VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_CONSTANT_OFFSET_EXT
+    constantOffset: VkDescriptorMappingSourceConstantOffsetEXT,
+    // Selected with: VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_PUSH_INDEX_EXT
+    pushIndex: VkDescriptorMappingSourcePushIndexEXT,
+    // Selected with: VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_EXT
+    indirectIndex: VkDescriptorMappingSourceIndirectIndexEXT,
+    // Selected with: VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_INDIRECT_INDEX_ARRAY_EXT
+    indirectIndexArray: VkDescriptorMappingSourceIndirectIndexArrayEXT,
+    // Selected with: VK_DESCRIPTOR_MAPPING_SOURCE_RESOURCE_HEAP_DATA_EXT
+    heapData: VkDescriptorMappingSourceHeapDataEXT,
+    // Selected with: VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_DATA_EXT
+    pushDataOffset: u32,
+    // Selected with: VK_DESCRIPTOR_MAPPING_SOURCE_PUSH_ADDRESS_EXT
+    pushAddressOffset: u32,
+    // Selected with: VK_DESCRIPTOR_MAPPING_SOURCE_INDIRECT_ADDRESS_EXT
+    indirectAddress: VkDescriptorMappingSourceIndirectAddressEXT,
+    // Selected with: VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT
+    shaderRecordIndex: VkDescriptorMappingSourceShaderRecordIndexEXT,
+    // Selected with: VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT
+    shaderRecordDataOffset: u32,
+    // Selected with: VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT
+    shaderRecordAddressOffset: u32,
 };
 
 // Commands
@@ -40458,6 +44192,15 @@ pub const vkCmdBindPipeline = fn (
     commandBuffer: VkCommandBuffer,
     pipelineBindPoint: VkPipelineBindPoint,
     pipeline: VkPipeline,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT
+// Render pass: both
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdSetPrimitiveRestartIndexEXT = fn (
+    commandBuffer: VkCommandBuffer,
+    primitiveRestartIndex: u32,
 ) callconv(.c) void;
 // Queues: VK_QUEUE_GRAPHICS_BIT
 // Render pass: both
@@ -41350,6 +45093,21 @@ pub const vkGetPhysicalDeviceWaylandPresentationSupportKHR = fn (
     physicalDevice: VkPhysicalDevice,
     queueFamilyIndex: u32,
     display: *wl_display,
+) callconv(.c) u32;
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkCreateUbmSurfaceSEC = fn (
+    instance: VkInstance,
+    pCreateInfo: *const VkUbmSurfaceCreateInfoSEC,
+    pAllocator: ?*const VkAllocationCallbacks,
+    pSurface: *VkSurfaceKHR,
+) callconv(.c) VkResult;
+// Can be used without queues: false
+pub const vkGetPhysicalDeviceUbmPresentationSupportSEC = fn (
+    physicalDevice: VkPhysicalDevice,
+    queueFamilyIndex: u32,
+    device: *ubm_device,
 ) callconv(.c) u32;
 // Success codes: VK_SUCCESS
 // Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
@@ -43315,6 +47073,12 @@ pub const vkGetImageViewAddressNVX = fn (
     imageView: VkImageView,
     pProperties: *VkImageViewAddressPropertiesNVX,
 ) callconv(.c) VkResult;
+// Can be used without queues: false
+pub const vkGetDeviceCombinedImageSamplerIndexNVX = fn (
+    device: VkDevice,
+    imageViewIndex: u64,
+    samplerIndex: u64,
+) callconv(.c) u64;
 // Success codes: VK_SUCCESS,VK_INCOMPLETE
 // Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_SURFACE_LOST_KHR,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
 // Can be used without queues: false
@@ -45177,6 +48941,23 @@ pub const vkGetDeviceFaultInfoEXT = fn (
     pFaultCounts: *VkDeviceFaultCountsEXT,
     pFaultInfo: ?*VkDeviceFaultInfoEXT,
 ) callconv(.c) VkResult;
+// Success codes: VK_SUCCESS,VK_INCOMPLETE,VK_TIMEOUT
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkGetDeviceFaultReportsKHR = fn (
+    device: VkDevice,
+    timeout: u64,
+    pFaultCounts: *u32,
+    // Length expression: pFaultCounts
+    pFaultInfo: ?[*]VkDeviceFaultInfoKHR,
+) callconv(.c) VkResult;
+// Success codes: VK_SUCCESS,VK_INCOMPLETE
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_NOT_ENOUGH_SPACE_KHR,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkGetDeviceFaultDebugInfoKHR = fn (
+    device: VkDevice,
+    pDebugInfo: *VkDeviceFaultDebugInfoKHR,
+) callconv(.c) VkResult;
 // Queues: VK_QUEUE_GRAPHICS_BIT
 // Render pass: both
 // Command buffer levels: primary,secondary
@@ -45380,6 +49161,114 @@ pub const vkCmdDispatchGraphIndirectCountAMDX = fn (
     scratchSize: u64,
     countInfo: u64,
 ) callconv(.c) void;
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkCreateGpaSessionAMD = fn (
+    device: VkDevice,
+    pCreateInfo: *const VkGpaSessionCreateInfoAMD,
+    pAllocator: ?*const VkAllocationCallbacks,
+    pGpaSession: *VkGpaSessionAMD,
+) callconv(.c) VkResult;
+// Can be used without queues: false
+pub const vkDestroyGpaSessionAMD = fn (
+    device: VkDevice,
+    gpaSession: VkGpaSessionAMD,
+    pAllocator: ?*const VkAllocationCallbacks,
+) callconv(.c) void;
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkSetGpaDeviceClockModeAMD = fn (
+    device: VkDevice,
+    pInfo: *VkGpaDeviceClockModeInfoAMD,
+) callconv(.c) VkResult;
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkGetGpaDeviceClockInfoAMD = fn (
+    device: VkDevice,
+    pInfo: *VkGpaDeviceGetClockInfoAMD,
+) callconv(.c) VkResult;
+// Queues: VK_QUEUE_GRAPHICS_BIT,VK_QUEUE_COMPUTE_BIT
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Render pass: both
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdBeginGpaSessionAMD = fn (
+    commandBuffer: VkCommandBuffer,
+    gpaSession: VkGpaSessionAMD,
+) callconv(.c) VkResult;
+// Queues: VK_QUEUE_GRAPHICS_BIT,VK_QUEUE_COMPUTE_BIT
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Render pass: both
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdEndGpaSessionAMD = fn (
+    commandBuffer: VkCommandBuffer,
+    gpaSession: VkGpaSessionAMD,
+) callconv(.c) VkResult;
+// Queues: VK_QUEUE_GRAPHICS_BIT,VK_QUEUE_COMPUTE_BIT
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Render pass: both
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdBeginGpaSampleAMD = fn (
+    commandBuffer: VkCommandBuffer,
+    gpaSession: VkGpaSessionAMD,
+    pGpaSampleBeginInfo: *const VkGpaSampleBeginInfoAMD,
+    pSampleID: *u32,
+) callconv(.c) VkResult;
+// Queues: VK_QUEUE_GRAPHICS_BIT,VK_QUEUE_COMPUTE_BIT
+// Render pass: both
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdEndGpaSampleAMD = fn (
+    commandBuffer: VkCommandBuffer,
+    gpaSession: VkGpaSessionAMD,
+    sampleID: u32,
+) callconv(.c) void;
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkGetGpaSessionStatusAMD = fn (
+    device: VkDevice,
+    gpaSession: VkGpaSessionAMD,
+) callconv(.c) VkResult;
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkGetGpaSessionResultsAMD = fn (
+    device: VkDevice,
+    gpaSession: VkGpaSessionAMD,
+    sampleID: u32,
+    pSizeInBytes: *u64,
+    // Length expression: pSizeInBytes
+    pData: ?*anyopaque,
+) callconv(.c) VkResult;
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkResetGpaSessionAMD = fn (
+    device: VkDevice,
+    gpaSession: VkGpaSessionAMD,
+) callconv(.c) VkResult;
+// Queues: VK_QUEUE_GRAPHICS_BIT,VK_QUEUE_COMPUTE_BIT,VK_QUEUE_TRANSFER_BIT
+// Render pass: both
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdCopyGpaSessionResultsAMD = fn (
+    commandBuffer: VkCommandBuffer,
+    gpaSession: VkGpaSessionAMD,
+) callconv(.c) void;
 // Queues: VK_QUEUE_GRAPHICS_BIT,VK_QUEUE_COMPUTE_BIT
 // Render pass: both
 // Command buffer levels: primary,secondary
@@ -45466,6 +49355,44 @@ pub const vkGetLatencyTimingsNV = fn (
 pub const vkQueueNotifyOutOfBandNV = fn (
     queue: VkQueue,
     pQueueTypeInfo: *const VkOutOfBandQueueTypeInfoNV,
+) callconv(.c) void;
+// Can be used without queues: false
+pub const vkSetLatencySleepModeLegacyNV = fn (
+    device: VkDevice,
+    lowLatencyMode: u32,
+    lowLatencyBoost: u32,
+    minimumIntervalUs: u32,
+) callconv(.c) void;
+// Can be used without queues: false
+pub const vkLatencySleepLegacyNV = fn (
+    device: VkDevice,
+    signalSemaphore: VkSemaphore,
+    value: u64,
+) callconv(.c) void;
+// Can be used without queues: false
+pub const vkSetLatencyMarkerLegacyNV = fn (
+    device: VkDevice,
+    frameID: u64,
+    marker: u32,
+) callconv(.c) void;
+// Can be used without queues: false
+pub const vkGetLatencyTimingsLegacyNV = fn (
+    device: VkDevice,
+    pTimings: *anyopaque,
+) callconv(.c) void;
+// Can be used without queues: false
+pub const vkQueueNotifyOutOfBandLegacyNV = fn (
+    queue: VkQueue,
+    queueType: u32,
+) callconv(.c) void;
+// Can be used without queues: false
+pub const vkGetSleepStatusLegacyNV = fn (
+    device: VkDevice,
+    pLowLatencyMode: *u32,
+) callconv(.c) void;
+// Can be used without queues: false
+pub const vkShutdownLatencyDeviceLegacyNV = fn (
+    device: VkDevice,
 ) callconv(.c) void;
 // Queues: VK_QUEUE_GRAPHICS_BIT
 // Render pass: inside
@@ -45595,6 +49522,62 @@ pub const vkGetExternalComputeQueueDataNV = fn (
     externalQueue: VkExternalComputeQueueNV,
     params: *VkExternalComputeQueueDataParamsNV,
     pData: *anyopaque,
+) callconv(.c) void;
+// Success codes: VK_SUCCESS,VK_INCOMPLETE
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_INITIALIZATION_FAILED,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM = fn (
+    physicalDevice: VkPhysicalDevice,
+    pDescriptionCount: *u32,
+    // Length expression: pDescriptionCount
+    pDescriptions: ?[*]VkShaderInstrumentationMetricDescriptionARM,
+) callconv(.c) VkResult;
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkCreateShaderInstrumentationARM = fn (
+    device: VkDevice,
+    pCreateInfo: *const VkShaderInstrumentationCreateInfoARM,
+    pAllocator: ?*const VkAllocationCallbacks,
+    pInstrumentation: *VkShaderInstrumentationARM,
+) callconv(.c) VkResult;
+// Can be used without queues: false
+pub const vkDestroyShaderInstrumentationARM = fn (
+    device: VkDevice,
+    instrumentation: VkShaderInstrumentationARM,
+    pAllocator: ?*const VkAllocationCallbacks,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT,VK_QUEUE_COMPUTE_BIT,VK_QUEUE_DATA_GRAPH_BIT_ARM
+// Render pass: both
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdBeginShaderInstrumentationARM = fn (
+    commandBuffer: VkCommandBuffer,
+    instrumentation: VkShaderInstrumentationARM,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT,VK_QUEUE_COMPUTE_BIT,VK_QUEUE_DATA_GRAPH_BIT_ARM
+// Render pass: both
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdEndShaderInstrumentationARM = fn (
+    commandBuffer: VkCommandBuffer,
+) callconv(.c) void;
+// Success codes: VK_SUCCESS,VK_INCOMPLETE
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkGetShaderInstrumentationValuesARM = fn (
+    device: VkDevice,
+    instrumentation: VkShaderInstrumentationARM,
+    pMetricBlockCount: *u32,
+    pMetricValues: *anyopaque,
+    flags: VkShaderInstrumentationValuesFlagsARM,
+) callconv(.c) VkResult;
+// Can be used without queues: false
+pub const vkClearShaderInstrumentationMetricsARM = fn (
+    device: VkDevice,
+    instrumentation: VkShaderInstrumentationARM,
 ) callconv(.c) void;
 // Success codes: VK_SUCCESS
 // Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
@@ -45824,6 +49807,13 @@ pub const vkQueueSignalReleaseImageOHOS = fn (
     image: VkImage,
     pNativeFenceFd: *i32,
 ) callconv(.c) VkResult;
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_DEVICE_LOST,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkQueueSetPerfHintQCOM = fn (
+    queue: VkQueue,
+    pPerfHintInfo: *const VkPerfHintInfoQCOM,
+) callconv(.c) VkResult;
 // Success codes: VK_SUCCESS,VK_INCOMPLETE
 // Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_INITIALIZATION_FAILED,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
 // Can be used without queues: false
@@ -45845,6 +49835,351 @@ pub const vkCmdSetComputeOccupancyPriorityNV = fn (
     commandBuffer: VkCommandBuffer,
     pParameters: *const VkComputeOccupancyPriorityParametersNV,
 ) callconv(.c) void;
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkWriteSamplerDescriptorsEXT = fn (
+    device: VkDevice,
+    samplerCount: u32,
+    // Length expression: samplerCount
+    pSamplers: [*]const VkSamplerCreateInfo,
+    // Length expression: samplerCount
+    pDescriptors: [*]const VkHostAddressRangeEXT,
+) callconv(.c) VkResult;
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkWriteResourceDescriptorsEXT = fn (
+    device: VkDevice,
+    resourceCount: u32,
+    // Length expression: resourceCount
+    pResources: [*]const VkResourceDescriptorInfoEXT,
+    // Length expression: resourceCount
+    pDescriptors: [*]const VkHostAddressRangeEXT,
+) callconv(.c) VkResult;
+// Queues: VK_QUEUE_GRAPHICS_BIT,VK_QUEUE_COMPUTE_BIT
+// Render pass: both
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdBindSamplerHeapEXT = fn (
+    commandBuffer: VkCommandBuffer,
+    pBindInfo: *const VkBindHeapInfoEXT,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT,VK_QUEUE_COMPUTE_BIT
+// Render pass: both
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdBindResourceHeapEXT = fn (
+    commandBuffer: VkCommandBuffer,
+    pBindInfo: *const VkBindHeapInfoEXT,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT,VK_QUEUE_COMPUTE_BIT
+// Render pass: both
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdPushDataEXT = fn (
+    commandBuffer: VkCommandBuffer,
+    pPushDataInfo: *const VkPushDataInfoEXT,
+) callconv(.c) void;
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_TOO_MANY_OBJECTS,VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkRegisterCustomBorderColorEXT = fn (
+    device: VkDevice,
+    pBorderColor: *const VkSamplerCustomBorderColorCreateInfoEXT,
+    requestIndex: u32,
+    pIndex: *u32,
+) callconv(.c) VkResult;
+// Can be used without queues: false
+pub const vkUnregisterCustomBorderColorEXT = fn (
+    device: VkDevice,
+    index: u32,
+) callconv(.c) void;
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkGetImageOpaqueCaptureDataEXT = fn (
+    device: VkDevice,
+    imageCount: u32,
+    // Length expression: imageCount
+    pImages: [*]const VkImage,
+    // Length expression: imageCount
+    pDatas: [*]VkHostAddressRangeEXT,
+) callconv(.c) VkResult;
+// Can be used without queues: false
+pub const vkGetPhysicalDeviceDescriptorSizeEXT = fn (
+    physicalDevice: VkPhysicalDevice,
+    descriptorType: VkDescriptorType,
+) callconv(.c) u64;
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkGetTensorOpaqueCaptureDataARM = fn (
+    device: VkDevice,
+    tensorCount: u32,
+    // Length expression: tensorCount
+    pTensors: [*]const VkTensorARM,
+    // Length expression: tensorCount
+    pDatas: [*]VkHostAddressRangeEXT,
+) callconv(.c) VkResult;
+// Queues: VK_QUEUE_TRANSFER_BIT
+// Render pass: outside
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdCopyMemoryKHR = fn (
+    commandBuffer: VkCommandBuffer,
+    pCopyMemoryInfo: ?*const VkCopyDeviceMemoryInfoKHR,
+) callconv(.c) void;
+// Queues: VK_QUEUE_TRANSFER_BIT
+// Render pass: outside
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdCopyMemoryToImageKHR = fn (
+    commandBuffer: VkCommandBuffer,
+    pCopyMemoryInfo: ?*const VkCopyDeviceMemoryImageInfoKHR,
+) callconv(.c) void;
+// Queues: VK_QUEUE_TRANSFER_BIT
+// Render pass: outside
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdCopyImageToMemoryKHR = fn (
+    commandBuffer: VkCommandBuffer,
+    pCopyMemoryInfo: ?*const VkCopyDeviceMemoryImageInfoKHR,
+) callconv(.c) void;
+// Queues: VK_QUEUE_TRANSFER_BIT
+// Render pass: outside
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdUpdateMemoryKHR = fn (
+    commandBuffer: VkCommandBuffer,
+    pDstRange: *const VkDeviceAddressRangeKHR,
+    dstFlags: VkAddressCommandFlagsKHR,
+    dataSize: u64,
+    // Length expression: dataSize
+    pData: *const anyopaque,
+) callconv(.c) void;
+// Queues: VK_QUEUE_TRANSFER_BIT
+// Render pass: outside
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdFillMemoryKHR = fn (
+    commandBuffer: VkCommandBuffer,
+    pDstRange: *const VkDeviceAddressRangeKHR,
+    dstFlags: VkAddressCommandFlagsKHR,
+    data: u32,
+) callconv(.c) void;
+// Queues: VK_QUEUE_TRANSFER_BIT
+// Render pass: outside
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdCopyQueryPoolResultsToMemoryKHR = fn (
+    commandBuffer: VkCommandBuffer,
+    queryPool: VkQueryPool,
+    firstQuery: u32,
+    queryCount: u32,
+    pDstRange: *const VkStridedDeviceAddressRangeKHR,
+    dstFlags: VkAddressCommandFlagsKHR,
+    queryResultFlags: VkQueryResultFlags,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT,VK_QUEUE_COMPUTE_BIT
+// Render pass: both
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdBeginConditionalRendering2EXT = fn (
+    commandBuffer: VkCommandBuffer,
+    pConditionalRenderingBegin: *const VkConditionalRenderingBeginInfo2EXT,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT
+// Render pass: both
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdBindTransformFeedbackBuffers2EXT = fn (
+    commandBuffer: VkCommandBuffer,
+    firstBinding: u32,
+    bindingCount: u32,
+    // Length expression: bindingCount
+    pBindingInfos: ?[*]const VkBindTransformFeedbackBuffer2InfoEXT,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT
+// Render pass: inside
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdBeginTransformFeedback2EXT = fn (
+    commandBuffer: VkCommandBuffer,
+    firstCounterRange: u32,
+    counterRangeCount: u32,
+    // Length expression: counterRangeCount
+    pCounterInfos: ?[*]const VkBindTransformFeedbackBuffer2InfoEXT,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT
+// Render pass: inside
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdEndTransformFeedback2EXT = fn (
+    commandBuffer: VkCommandBuffer,
+    firstCounterRange: u32,
+    counterRangeCount: u32,
+    // Length expression: counterRangeCount
+    pCounterInfos: ?[*]const VkBindTransformFeedbackBuffer2InfoEXT,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT
+// Render pass: inside
+// Command buffer levels: primary,secondary
+// Conditional rendering: true
+// Can be used without queues: false
+pub const vkCmdDrawIndirectByteCount2EXT = fn (
+    commandBuffer: VkCommandBuffer,
+    instanceCount: u32,
+    firstInstance: u32,
+    pCounterInfo: *const VkBindTransformFeedbackBuffer2InfoEXT,
+    counterOffset: u32,
+    vertexStride: u32,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT,VK_QUEUE_COMPUTE_BIT,VK_QUEUE_TRANSFER_BIT
+// Render pass: both
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdWriteMarkerToMemoryAMD = fn (
+    commandBuffer: VkCommandBuffer,
+    pInfo: *const VkMemoryMarkerInfoAMD,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT
+// Render pass: both
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdBindIndexBuffer3KHR = fn (
+    commandBuffer: VkCommandBuffer,
+    pInfo: *const VkBindIndexBuffer3InfoKHR,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT
+// Render pass: both
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdBindVertexBuffers3KHR = fn (
+    commandBuffer: VkCommandBuffer,
+    firstBinding: u32,
+    bindingCount: u32,
+    // Length expression: bindingCount
+    pBindingInfos: [*]const VkBindVertexBuffer3InfoKHR,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT
+// Render pass: inside
+// Command buffer levels: primary,secondary
+// Conditional rendering: true
+// Can be used without queues: false
+pub const vkCmdDrawIndirect2KHR = fn (
+    commandBuffer: VkCommandBuffer,
+    pInfo: *const VkDrawIndirect2InfoKHR,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT
+// Render pass: inside
+// Command buffer levels: primary,secondary
+// Conditional rendering: true
+// Can be used without queues: false
+pub const vkCmdDrawIndexedIndirect2KHR = fn (
+    commandBuffer: VkCommandBuffer,
+    pInfo: *const VkDrawIndirect2InfoKHR,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT
+// Render pass: inside
+// Command buffer levels: primary,secondary
+// Conditional rendering: true
+// Can be used without queues: false
+pub const vkCmdDrawIndirectCount2KHR = fn (
+    commandBuffer: VkCommandBuffer,
+    pInfo: *const VkDrawIndirectCount2InfoKHR,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT
+// Render pass: inside
+// Command buffer levels: primary,secondary
+// Conditional rendering: true
+// Can be used without queues: false
+pub const vkCmdDrawIndexedIndirectCount2KHR = fn (
+    commandBuffer: VkCommandBuffer,
+    pInfo: *const VkDrawIndirectCount2InfoKHR,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT
+// Render pass: inside
+// Command buffer levels: primary,secondary
+// Conditional rendering: true
+// Can be used without queues: false
+pub const vkCmdDrawMeshTasksIndirect2EXT = fn (
+    commandBuffer: VkCommandBuffer,
+    pInfo: *const VkDrawIndirect2InfoKHR,
+) callconv(.c) void;
+// Queues: VK_QUEUE_GRAPHICS_BIT
+// Render pass: inside
+// Command buffer levels: primary,secondary
+// Conditional rendering: true
+// Can be used without queues: false
+pub const vkCmdDrawMeshTasksIndirectCount2EXT = fn (
+    commandBuffer: VkCommandBuffer,
+    pInfo: *const VkDrawIndirectCount2InfoKHR,
+) callconv(.c) void;
+// Queues: VK_QUEUE_COMPUTE_BIT
+// Render pass: outside
+// Command buffer levels: primary,secondary
+// Conditional rendering: true
+// Can be used without queues: false
+pub const vkCmdDispatchIndirect2KHR = fn (
+    commandBuffer: VkCommandBuffer,
+    pInfo: *const VkDispatchIndirect2InfoKHR,
+) callconv(.c) void;
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR,VK_ERROR_VALIDATION_FAILED,VK_ERROR_UNKNOWN
+// Can be used without queues: false
+pub const vkCreateAccelerationStructure2KHR = fn (
+    device: VkDevice,
+    pCreateInfo: *const VkAccelerationStructureCreateInfo2KHR,
+    pAllocator: ?*const VkAllocationCallbacks,
+    pAccelerationStructure: *VkAccelerationStructureKHR,
+) callconv(.c) VkResult;
+// Success codes: VK_SUCCESS
+// Error codes: VK_ERROR_OUT_OF_HOST_MEMORY,VK_ERROR_OUT_OF_DEVICE_MEMORY,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM = fn (
+    physicalDevice: VkPhysicalDevice,
+    queueFamilyIndex: u32,
+    pQueueFamilyDataGraphProperties: *const VkQueueFamilyDataGraphPropertiesARM,
+    pProperties: *VkBaseOutStructure,
+) callconv(.c) VkResult;
+// Queues: VK_QUEUE_COMPUTE_BIT
+// Render pass: outside
+// Command buffer levels: primary,secondary
+// Conditional rendering: false
+// Can be used without queues: false
+pub const vkCmdSetDispatchParametersARM = fn (
+    commandBuffer: VkCommandBuffer,
+    pDispatchParameters: *const VkDispatchParametersARM,
+) callconv(.c) void;
+// Success codes: VK_SUCCESS,VK_INCOMPLETE
+// Error codes: VK_ERROR_EXTENSION_NOT_PRESENT,VK_ERROR_INITIALIZATION_FAILED,VK_ERROR_FORMAT_NOT_SUPPORTED,VK_ERROR_UNKNOWN,VK_ERROR_VALIDATION_FAILED
+// Can be used without queues: false
+pub const vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM = fn (
+    physicalDevice: VkPhysicalDevice,
+    queueFamilyIndex: u32,
+    pQueueFamilyDataGraphProperties: *const VkQueueFamilyDataGraphPropertiesARM,
+    pOpticalFlowImageFormatInfo: *const VkDataGraphOpticalFlowImageFormatInfoARM,
+    pFormatCount: *u32,
+    // Length expression: pFormatCount
+    pImageFormatProperties: ?[*]VkDataGraphOpticalFlowImageFormatPropertiesARM,
+) callconv(.c) VkResult;
 // Can be used without queues: false
 pub const vkInternalAllocationNotification = fn (
     pUserData: *anyopaque,
@@ -46007,14 +50342,18 @@ pub const VkRefreshObjectFlagBitsKHR = VkRefreshObjectFlagsKHR;
 pub const VkAccessFlagBits2 = VkAccessFlags2;
 pub const VkPipelineStageFlagBits2 = VkPipelineStageFlags2;
 pub const VkFormatFeatureFlagBits2 = VkFormatFeatureFlags2;
+pub const VkFormatFeatureFlagBits4KHR = VkFormatFeatureFlags4KHR;
 pub const VkRenderingFlagBits = VkRenderingFlags;
 pub const VkMemoryDecompressionMethodFlagBitsEXT = VkMemoryDecompressionMethodFlagsEXT;
+pub const VkDeviceFaultFlagBitsKHR = VkDeviceFaultFlagsKHR;
 pub const VkBuildMicromapFlagBitsEXT = VkBuildMicromapFlagsEXT;
 pub const VkMicromapCreateFlagBitsEXT = VkMicromapCreateFlagsEXT;
 pub const VkIndirectCommandsLayoutUsageFlagBitsEXT = VkIndirectCommandsLayoutUsageFlagsEXT;
 pub const VkIndirectCommandsInputModeFlagBitsEXT = VkIndirectCommandsInputModeFlagsEXT;
 pub const VkPipelineCreateFlagBits2 = VkPipelineCreateFlags2;
 pub const VkBufferUsageFlagBits2 = VkBufferUsageFlags2;
+pub const VkImageUsageFlagBits2KHR = VkImageUsageFlags2KHR;
+pub const VkImageCreateFlagBits2KHR = VkImageCreateFlags2KHR;
 pub const VkAddressCopyFlagBitsKHR = VkAddressCopyFlagsKHR;
 pub const VkTensorCreateFlagBitsARM = VkTensorCreateFlagsARM;
 pub const VkTensorUsageFlagBitsARM = VkTensorUsageFlagsARM;
@@ -46024,6 +50363,9 @@ pub const VkDataGraphPipelineDispatchFlagBitsARM = VkDataGraphPipelineDispatchFl
 pub const VkVideoEncodeRgbModelConversionFlagBitsVALVE = VkVideoEncodeRgbModelConversionFlagsVALVE;
 pub const VkVideoEncodeRgbRangeCompressionFlagBitsVALVE = VkVideoEncodeRgbRangeCompressionFlagsVALVE;
 pub const VkVideoEncodeRgbChromaOffsetFlagBitsVALVE = VkVideoEncodeRgbChromaOffsetFlagsVALVE;
+pub const VkSpirvResourceTypeFlagBitsEXT = VkSpirvResourceTypeFlagsEXT;
+pub const VkGpaSqShaderStageFlagBitsAMD = VkGpaSqShaderStageFlagsAMD;
+pub const VkAddressCommandFlagBitsKHR = VkAddressCommandFlagsKHR;
 pub const VkCompositeAlphaFlagBitsKHR = VkCompositeAlphaFlagsKHR;
 pub const VkDisplayPlaneAlphaFlagBitsKHR = VkDisplayPlaneAlphaFlagsKHR;
 pub const VkSurfaceTransformFlagBitsKHR = VkSurfaceTransformFlagsKHR;
@@ -46076,6 +50418,11 @@ pub const VkPresentStageFlagBitsEXT = VkPresentStageFlagsEXT;
 pub const VkPastPresentationTimingFlagBitsEXT = VkPastPresentationTimingFlagsEXT;
 pub const VkPresentTimingInfoFlagBitsEXT = VkPresentTimingInfoFlagsEXT;
 pub const VkSwapchainImageUsageFlagBitsOHOS = VkSwapchainImageUsageFlagsOHOS;
+pub const VkDataGraphTOSAQualityFlagBitsARM = VkDataGraphTOSAQualityFlagsARM;
+pub const VkDataGraphOpticalFlowGridSizeFlagBitsARM = VkDataGraphOpticalFlowGridSizeFlagsARM;
+pub const VkDataGraphOpticalFlowImageUsageFlagBitsARM = VkDataGraphOpticalFlowImageUsageFlagsARM;
+pub const VkDataGraphOpticalFlowCreateFlagBitsARM = VkDataGraphOpticalFlowCreateFlagsARM;
+pub const VkDataGraphOpticalFlowExecuteFlagBitsARM = VkDataGraphOpticalFlowExecuteFlagsARM;
 pub const VkVideoCodecOperationFlagBitsKHR = VkVideoCodecOperationFlagsKHR;
 pub const VkVideoCapabilityFlagBitsKHR = VkVideoCapabilityFlagsKHR;
 pub const VkVideoSessionCreateFlagBitsKHR = VkVideoSessionCreateFlagsKHR;
@@ -46089,6 +50436,7 @@ pub const VkVideoEncodeUsageFlagBitsKHR = VkVideoEncodeUsageFlagsKHR;
 pub const VkVideoEncodeContentFlagBitsKHR = VkVideoEncodeContentFlagsKHR;
 pub const VkVideoEncodeCapabilityFlagBitsKHR = VkVideoEncodeCapabilityFlagsKHR;
 pub const VkVideoEncodeFeedbackFlagBitsKHR = VkVideoEncodeFeedbackFlagsKHR;
+pub const VkVideoEncodePerPartitionFeedbackFlagBitsKHR = VkVideoEncodePerPartitionFeedbackFlagsKHR;
 pub const VkVideoEncodeRateControlModeFlagBitsKHR = VkVideoEncodeRateControlModeFlagsKHR;
 pub const VkVideoEncodeIntraRefreshModeFlagBitsKHR = VkVideoEncodeIntraRefreshModeFlagsKHR;
 pub const VkVideoChromaSubsamplingFlagBitsKHR = VkVideoChromaSubsamplingFlagsKHR;
@@ -46135,6 +50483,9 @@ pub const VkFormatFeatureFlagBits2KHR = VkFormatFeatureFlags2;
 pub const VkRenderingFlagBitsKHR = VkRenderingFlags;
 pub const VkPipelineRobustnessBufferBehaviorEXT = VkPipelineRobustnessBufferBehavior;
 pub const VkPipelineRobustnessImageBehaviorEXT = VkPipelineRobustnessImageBehavior;
+pub const VkOpacityMicromapFormatEXT = VkOpacityMicromapFormatKHR;
+pub const VkOpacityMicromapSpecialIndexEXT = VkOpacityMicromapSpecialIndexKHR;
+pub const VkDeviceFaultVendorBinaryHeaderVersionEXT = VkDeviceFaultVendorBinaryHeaderVersionKHR;
 pub const VkMemoryDecompressionMethodFlagBitsNV = VkMemoryDecompressionMethodFlagsEXT;
 pub const VkPipelineCreateFlagBits2KHR = VkPipelineCreateFlags2;
 pub const VkBufferUsageFlagBits2KHR = VkBufferUsageFlags2;
@@ -46157,6 +50508,7 @@ pub const VkChromaLocationKHR = VkChromaLocation;
 pub const VkSamplerReductionModeEXT = VkSamplerReductionMode;
 pub const VkShaderFloatControlsIndependenceKHR = VkShaderFloatControlsIndependence;
 pub const VkSubmitFlagBitsKHR = VkSubmitFlags;
+pub const VkDeviceFaultAddressTypeEXT = VkDeviceFaultAddressTypeKHR;
 pub const VkPresentScalingFlagBitsEXT = VkPresentScalingFlagsKHR;
 pub const VkPresentGravityFlagBitsEXT = VkPresentGravityFlagsKHR;
 pub const VkMemoryUnmapFlagBitsKHR = VkMemoryUnmapFlags;
@@ -46406,10 +50758,14 @@ pub const VkImageSubresource2KHR = VkImageSubresource2;
 pub const VkImageSubresource2EXT = VkImageSubresource2;
 pub const VkSubresourceLayout2KHR = VkSubresourceLayout2;
 pub const VkSubresourceLayout2EXT = VkSubresourceLayout2;
+pub const VkMicromapTriangleEXT = VkMicromapTriangleKHR;
 pub const VkPhysicalDevicePipelineRobustnessFeaturesEXT = VkPhysicalDevicePipelineRobustnessFeatures;
 pub const VkPipelineRobustnessCreateInfoEXT = VkPipelineRobustnessCreateInfo;
 pub const VkPhysicalDevicePipelineRobustnessPropertiesEXT = VkPhysicalDevicePipelineRobustnessProperties;
 pub const VkPhysicalDeviceDepthClampZeroOneFeaturesEXT = VkPhysicalDeviceDepthClampZeroOneFeaturesKHR;
+pub const VkDeviceFaultAddressInfoEXT = VkDeviceFaultAddressInfoKHR;
+pub const VkDeviceFaultVendorInfoEXT = VkDeviceFaultVendorInfoKHR;
+pub const VkDeviceFaultVendorBinaryHeaderVersionOneEXT = VkDeviceFaultVendorBinaryHeaderVersionOneKHR;
 pub const VkSurfacePresentModeEXT = VkSurfacePresentModeKHR;
 pub const VkSurfacePresentScalingCapabilitiesEXT = VkSurfacePresentScalingCapabilitiesKHR;
 pub const VkSurfacePresentModeCompatibilityEXT = VkSurfacePresentModeCompatibilityKHR;
@@ -46435,6 +50791,7 @@ pub const VkPhysicalDeviceDynamicRenderingLocalReadFeaturesKHR = VkPhysicalDevic
 pub const VkRenderingAttachmentLocationInfoKHR = VkRenderingAttachmentLocationInfo;
 pub const VkRenderingInputAttachmentIndexInfoKHR = VkRenderingInputAttachmentIndexInfo;
 pub const VkPhysicalDevicePresentModeFifoLatestReadyFeaturesEXT = VkPhysicalDevicePresentModeFifoLatestReadyFeaturesKHR;
+pub const VkDeviceAddressRangeEXT = VkDeviceAddressRangeKHR;
 pub const PFN_vkCreateInstance = *const vkCreateInstance;
 pub const PFN_vkDestroyInstance = *const vkDestroyInstance;
 pub const PFN_vkEnumeratePhysicalDevices = *const vkEnumeratePhysicalDevices;
@@ -46541,6 +50898,7 @@ pub const PFN_vkBeginCommandBuffer = *const vkBeginCommandBuffer;
 pub const PFN_vkEndCommandBuffer = *const vkEndCommandBuffer;
 pub const PFN_vkResetCommandBuffer = *const vkResetCommandBuffer;
 pub const PFN_vkCmdBindPipeline = *const vkCmdBindPipeline;
+pub const PFN_vkCmdSetPrimitiveRestartIndexEXT = *const vkCmdSetPrimitiveRestartIndexEXT;
 pub const PFN_vkCmdSetAttachmentFeedbackLoopEnableEXT = *const vkCmdSetAttachmentFeedbackLoopEnableEXT;
 pub const PFN_vkCmdSetViewport = *const vkCmdSetViewport;
 pub const PFN_vkCmdSetScissor = *const vkCmdSetScissor;
@@ -46621,6 +50979,8 @@ pub const PFN_vkQueuePresentKHR = *const vkQueuePresentKHR;
 pub const PFN_vkCreateViSurfaceNN = *const vkCreateViSurfaceNN;
 pub const PFN_vkCreateWaylandSurfaceKHR = *const vkCreateWaylandSurfaceKHR;
 pub const PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR = *const vkGetPhysicalDeviceWaylandPresentationSupportKHR;
+pub const PFN_vkCreateUbmSurfaceSEC = *const vkCreateUbmSurfaceSEC;
+pub const PFN_vkGetPhysicalDeviceUbmPresentationSupportSEC = *const vkGetPhysicalDeviceUbmPresentationSupportSEC;
 pub const PFN_vkCreateWin32SurfaceKHR = *const vkCreateWin32SurfaceKHR;
 pub const PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR = *const vkGetPhysicalDeviceWin32PresentationSupportKHR;
 pub const PFN_vkCreateXlibSurfaceKHR = *const vkCreateXlibSurfaceKHR;
@@ -46888,6 +51248,7 @@ pub const PFN_vkCmdSetRayTracingPipelineStackSizeKHR = *const vkCmdSetRayTracing
 pub const PFN_vkGetImageViewHandleNVX = *const vkGetImageViewHandleNVX;
 pub const PFN_vkGetImageViewHandle64NVX = *const vkGetImageViewHandle64NVX;
 pub const PFN_vkGetImageViewAddressNVX = *const vkGetImageViewAddressNVX;
+pub const PFN_vkGetDeviceCombinedImageSamplerIndexNVX = *const vkGetDeviceCombinedImageSamplerIndexNVX;
 pub const PFN_vkGetPhysicalDeviceSurfacePresentModes2EXT = *const vkGetPhysicalDeviceSurfacePresentModes2EXT;
 pub const PFN_vkGetDeviceGroupSurfacePresentModes2EXT = *const vkGetDeviceGroupSurfacePresentModes2EXT;
 pub const PFN_vkAcquireFullScreenExclusiveModeEXT = *const vkAcquireFullScreenExclusiveModeEXT;
@@ -47145,6 +51506,8 @@ pub const PFN_vkDestroyOpticalFlowSessionNV = *const vkDestroyOpticalFlowSession
 pub const PFN_vkBindOpticalFlowSessionImageNV = *const vkBindOpticalFlowSessionImageNV;
 pub const PFN_vkCmdOpticalFlowExecuteNV = *const vkCmdOpticalFlowExecuteNV;
 pub const PFN_vkGetDeviceFaultInfoEXT = *const vkGetDeviceFaultInfoEXT;
+pub const PFN_vkGetDeviceFaultReportsKHR = *const vkGetDeviceFaultReportsKHR;
+pub const PFN_vkGetDeviceFaultDebugInfoKHR = *const vkGetDeviceFaultDebugInfoKHR;
 pub const PFN_vkCmdSetDepthBias2EXT = *const vkCmdSetDepthBias2EXT;
 pub const PFN_vkReleaseSwapchainImagesKHR = *const vkReleaseSwapchainImagesKHR;
 pub const vkReleaseSwapchainImagesEXT = vkReleaseSwapchainImagesKHR;
@@ -47171,6 +51534,18 @@ pub const PFN_vkCmdInitializeGraphScratchMemoryAMDX = *const vkCmdInitializeGrap
 pub const PFN_vkCmdDispatchGraphAMDX = *const vkCmdDispatchGraphAMDX;
 pub const PFN_vkCmdDispatchGraphIndirectAMDX = *const vkCmdDispatchGraphIndirectAMDX;
 pub const PFN_vkCmdDispatchGraphIndirectCountAMDX = *const vkCmdDispatchGraphIndirectCountAMDX;
+pub const PFN_vkCreateGpaSessionAMD = *const vkCreateGpaSessionAMD;
+pub const PFN_vkDestroyGpaSessionAMD = *const vkDestroyGpaSessionAMD;
+pub const PFN_vkSetGpaDeviceClockModeAMD = *const vkSetGpaDeviceClockModeAMD;
+pub const PFN_vkGetGpaDeviceClockInfoAMD = *const vkGetGpaDeviceClockInfoAMD;
+pub const PFN_vkCmdBeginGpaSessionAMD = *const vkCmdBeginGpaSessionAMD;
+pub const PFN_vkCmdEndGpaSessionAMD = *const vkCmdEndGpaSessionAMD;
+pub const PFN_vkCmdBeginGpaSampleAMD = *const vkCmdBeginGpaSampleAMD;
+pub const PFN_vkCmdEndGpaSampleAMD = *const vkCmdEndGpaSampleAMD;
+pub const PFN_vkGetGpaSessionStatusAMD = *const vkGetGpaSessionStatusAMD;
+pub const PFN_vkGetGpaSessionResultsAMD = *const vkGetGpaSessionResultsAMD;
+pub const PFN_vkResetGpaSessionAMD = *const vkResetGpaSessionAMD;
+pub const PFN_vkCmdCopyGpaSessionResultsAMD = *const vkCmdCopyGpaSessionResultsAMD;
 pub const PFN_vkCmdBindDescriptorSets2 = *const vkCmdBindDescriptorSets2;
 pub const vkCmdBindDescriptorSets2KHR = vkCmdBindDescriptorSets2;
 pub const PFN_vkCmdPushConstants2 = *const vkCmdPushConstants2;
@@ -47186,6 +51561,13 @@ pub const PFN_vkLatencySleepNV = *const vkLatencySleepNV;
 pub const PFN_vkSetLatencyMarkerNV = *const vkSetLatencyMarkerNV;
 pub const PFN_vkGetLatencyTimingsNV = *const vkGetLatencyTimingsNV;
 pub const PFN_vkQueueNotifyOutOfBandNV = *const vkQueueNotifyOutOfBandNV;
+pub const PFN_vkSetLatencySleepModeLegacyNV = *const vkSetLatencySleepModeLegacyNV;
+pub const PFN_vkLatencySleepLegacyNV = *const vkLatencySleepLegacyNV;
+pub const PFN_vkSetLatencyMarkerLegacyNV = *const vkSetLatencyMarkerLegacyNV;
+pub const PFN_vkGetLatencyTimingsLegacyNV = *const vkGetLatencyTimingsLegacyNV;
+pub const PFN_vkQueueNotifyOutOfBandLegacyNV = *const vkQueueNotifyOutOfBandLegacyNV;
+pub const PFN_vkGetSleepStatusLegacyNV = *const vkGetSleepStatusLegacyNV;
+pub const PFN_vkShutdownLatencyDeviceLegacyNV = *const vkShutdownLatencyDeviceLegacyNV;
 pub const PFN_vkCmdSetRenderingAttachmentLocations = *const vkCmdSetRenderingAttachmentLocations;
 pub const vkCmdSetRenderingAttachmentLocationsKHR = vkCmdSetRenderingAttachmentLocations;
 pub const PFN_vkCmdSetRenderingInputAttachmentIndices = *const vkCmdSetRenderingInputAttachmentIndices;
@@ -47203,6 +51585,13 @@ pub const PFN_vkCmdEndPerTileExecutionQCOM = *const vkCmdEndPerTileExecutionQCOM
 pub const PFN_vkCreateExternalComputeQueueNV = *const vkCreateExternalComputeQueueNV;
 pub const PFN_vkDestroyExternalComputeQueueNV = *const vkDestroyExternalComputeQueueNV;
 pub const PFN_vkGetExternalComputeQueueDataNV = *const vkGetExternalComputeQueueDataNV;
+pub const PFN_vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM = *const vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM;
+pub const PFN_vkCreateShaderInstrumentationARM = *const vkCreateShaderInstrumentationARM;
+pub const PFN_vkDestroyShaderInstrumentationARM = *const vkDestroyShaderInstrumentationARM;
+pub const PFN_vkCmdBeginShaderInstrumentationARM = *const vkCmdBeginShaderInstrumentationARM;
+pub const PFN_vkCmdEndShaderInstrumentationARM = *const vkCmdEndShaderInstrumentationARM;
+pub const PFN_vkGetShaderInstrumentationValuesARM = *const vkGetShaderInstrumentationValuesARM;
+pub const PFN_vkClearShaderInstrumentationMetricsARM = *const vkClearShaderInstrumentationMetricsARM;
 pub const PFN_vkCreateTensorARM = *const vkCreateTensorARM;
 pub const PFN_vkDestroyTensorARM = *const vkDestroyTensorARM;
 pub const PFN_vkCreateTensorViewARM = *const vkCreateTensorViewARM;
@@ -47230,8 +51619,44 @@ pub const PFN_vkGetMemoryNativeBufferOHOS = *const vkGetMemoryNativeBufferOHOS;
 pub const PFN_vkGetSwapchainGrallocUsageOHOS = *const vkGetSwapchainGrallocUsageOHOS;
 pub const PFN_vkAcquireImageOHOS = *const vkAcquireImageOHOS;
 pub const PFN_vkQueueSignalReleaseImageOHOS = *const vkQueueSignalReleaseImageOHOS;
+pub const PFN_vkQueueSetPerfHintQCOM = *const vkQueueSetPerfHintQCOM;
 pub const PFN_vkEnumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM = *const vkEnumeratePhysicalDeviceQueueFamilyPerformanceCountersByRegionARM;
 pub const PFN_vkCmdSetComputeOccupancyPriorityNV = *const vkCmdSetComputeOccupancyPriorityNV;
+pub const PFN_vkWriteSamplerDescriptorsEXT = *const vkWriteSamplerDescriptorsEXT;
+pub const PFN_vkWriteResourceDescriptorsEXT = *const vkWriteResourceDescriptorsEXT;
+pub const PFN_vkCmdBindSamplerHeapEXT = *const vkCmdBindSamplerHeapEXT;
+pub const PFN_vkCmdBindResourceHeapEXT = *const vkCmdBindResourceHeapEXT;
+pub const PFN_vkCmdPushDataEXT = *const vkCmdPushDataEXT;
+pub const PFN_vkRegisterCustomBorderColorEXT = *const vkRegisterCustomBorderColorEXT;
+pub const PFN_vkUnregisterCustomBorderColorEXT = *const vkUnregisterCustomBorderColorEXT;
+pub const PFN_vkGetImageOpaqueCaptureDataEXT = *const vkGetImageOpaqueCaptureDataEXT;
+pub const PFN_vkGetPhysicalDeviceDescriptorSizeEXT = *const vkGetPhysicalDeviceDescriptorSizeEXT;
+pub const PFN_vkGetTensorOpaqueCaptureDataARM = *const vkGetTensorOpaqueCaptureDataARM;
+pub const PFN_vkCmdCopyMemoryKHR = *const vkCmdCopyMemoryKHR;
+pub const PFN_vkCmdCopyMemoryToImageKHR = *const vkCmdCopyMemoryToImageKHR;
+pub const PFN_vkCmdCopyImageToMemoryKHR = *const vkCmdCopyImageToMemoryKHR;
+pub const PFN_vkCmdUpdateMemoryKHR = *const vkCmdUpdateMemoryKHR;
+pub const PFN_vkCmdFillMemoryKHR = *const vkCmdFillMemoryKHR;
+pub const PFN_vkCmdCopyQueryPoolResultsToMemoryKHR = *const vkCmdCopyQueryPoolResultsToMemoryKHR;
+pub const PFN_vkCmdBeginConditionalRendering2EXT = *const vkCmdBeginConditionalRendering2EXT;
+pub const PFN_vkCmdBindTransformFeedbackBuffers2EXT = *const vkCmdBindTransformFeedbackBuffers2EXT;
+pub const PFN_vkCmdBeginTransformFeedback2EXT = *const vkCmdBeginTransformFeedback2EXT;
+pub const PFN_vkCmdEndTransformFeedback2EXT = *const vkCmdEndTransformFeedback2EXT;
+pub const PFN_vkCmdDrawIndirectByteCount2EXT = *const vkCmdDrawIndirectByteCount2EXT;
+pub const PFN_vkCmdWriteMarkerToMemoryAMD = *const vkCmdWriteMarkerToMemoryAMD;
+pub const PFN_vkCmdBindIndexBuffer3KHR = *const vkCmdBindIndexBuffer3KHR;
+pub const PFN_vkCmdBindVertexBuffers3KHR = *const vkCmdBindVertexBuffers3KHR;
+pub const PFN_vkCmdDrawIndirect2KHR = *const vkCmdDrawIndirect2KHR;
+pub const PFN_vkCmdDrawIndexedIndirect2KHR = *const vkCmdDrawIndexedIndirect2KHR;
+pub const PFN_vkCmdDrawIndirectCount2KHR = *const vkCmdDrawIndirectCount2KHR;
+pub const PFN_vkCmdDrawIndexedIndirectCount2KHR = *const vkCmdDrawIndexedIndirectCount2KHR;
+pub const PFN_vkCmdDrawMeshTasksIndirect2EXT = *const vkCmdDrawMeshTasksIndirect2EXT;
+pub const PFN_vkCmdDrawMeshTasksIndirectCount2EXT = *const vkCmdDrawMeshTasksIndirectCount2EXT;
+pub const PFN_vkCmdDispatchIndirect2KHR = *const vkCmdDispatchIndirect2KHR;
+pub const PFN_vkCreateAccelerationStructure2KHR = *const vkCreateAccelerationStructure2KHR;
+pub const PFN_vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM = *const vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM;
+pub const PFN_vkCmdSetDispatchParametersARM = *const vkCmdSetDispatchParametersARM;
+pub const PFN_vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM = *const vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM;
 
 // Unknown types
 pub const VkPrivateDataSlotCreateFlagBits = if (@hasDecl(@import("root"), "VkPrivateDataSlotCreateFlagBits")) @import("root").VkPrivateDataSlotCreateFlagBits else blk: {
@@ -47244,6 +51669,12 @@ pub const wl_display = if (@hasDecl(@import("root"), "wl_display")) @import("roo
     break :blk struct {};
 };
 pub const wl_surface = if (@hasDecl(@import("root"), "wl_surface")) @import("root").wl_surface else blk: {
+    break :blk struct {};
+};
+pub const ubm_device = if (@hasDecl(@import("root"), "ubm_device")) @import("root").ubm_device else blk: {
+    break :blk struct {};
+};
+pub const ubm_surface = if (@hasDecl(@import("root"), "ubm_surface")) @import("root").ubm_surface else blk: {
     break :blk struct {};
 };
 pub const HINSTANCE = if (@hasDecl(@import("root"), "HINSTANCE")) @import("root").HINSTANCE else blk: {
@@ -47316,9 +51747,6 @@ pub const CAMetalLayer = if (@hasDecl(@import("root"), "CAMetalLayer")) @import(
     break :blk struct {};
 };
 pub const AHardwareBuffer = if (@hasDecl(@import("root"), "AHardwareBuffer")) @import("root").AHardwareBuffer else blk: {
-    break :blk struct {};
-};
-pub const VkBuildAccelerationStructureFlagsNV = if (@hasDecl(@import("root"), "VkBuildAccelerationStructureFlagsNV")) @import("root").VkBuildAccelerationStructureFlagsNV else blk: {
     break :blk struct {};
 };
 pub const GgpFrameToken = if (@hasDecl(@import("root"), "GgpFrameToken")) @import("root").GgpFrameToken else blk: {
@@ -47438,22 +51866,16 @@ pub const IOSurfaceRef = if (@hasDecl(@import("root"), "IOSurfaceRef")) @import(
 pub const MTLSharedEvent_id = if (@hasDecl(@import("root"), "MTLSharedEvent_id")) @import("root").MTLSharedEvent_id else blk: {
     break :blk struct {};
 };
-pub const VkMemoryDecompressionMethodFlagsNV = if (@hasDecl(@import("root"), "VkMemoryDecompressionMethodFlagsNV")) @import("root").VkMemoryDecompressionMethodFlagsNV else blk: {
-    break :blk struct {};
-};
 pub const _screen_buffer = if (@hasDecl(@import("root"), "_screen_buffer")) @import("root")._screen_buffer else blk: {
     break :blk struct {};
 };
 pub const OHNativeWindow = if (@hasDecl(@import("root"), "OHNativeWindow")) @import("root").OHNativeWindow else blk: {
     break :blk struct {};
 };
-pub const VkPipelineCreateFlags2KHR = if (@hasDecl(@import("root"), "VkPipelineCreateFlags2KHR")) @import("root").VkPipelineCreateFlags2KHR else blk: {
-    break :blk struct {};
-};
-pub const OHBufferHandle = if (@hasDecl(@import("root"), "OHBufferHandle")) @import("root").OHBufferHandle else blk: {
-    break :blk struct {};
-};
 pub const OH_NativeBuffer = if (@hasDecl(@import("root"), "OH_NativeBuffer")) @import("root").OH_NativeBuffer else blk: {
+    break :blk struct {};
+};
+pub const VkPipelineStageFlags2KHR = if (@hasDecl(@import("root"), "VkPipelineStageFlags2KHR")) @import("root").VkPipelineStageFlags2KHR else blk: {
     break :blk struct {};
 };
 pub const VisualID = if (@hasDecl(@import("root"), "VisualID")) @import("root").VisualID else blk: {
@@ -47501,6 +51923,8 @@ pub const VK_KHR_surface_name = "VK_KHR_surface";
 //             Name: VkSurfaceKHR
 //         Type:
 //             Name: VkSurfaceTransformFlagBitsKHR
+//         Type:
+//             Name: VkSurfaceTransformFlagsKHR
 //         Type:
 //             Name: VkPresentModeKHR
 //         Type:
@@ -48599,6 +53023,8 @@ pub const VK_KHR_video_decode_queue_name = "VK_KHR_video_decode_queue";
 //             Negative: false
 //             Bitpos: 5
 //             Extends: VkQueueFlagBits
+//         Comment:
+//             VkPipelineStageFlagBits bitpos="26" is reserved by this extension, but not used
 //         Enum:
 //             Name: VK_PIPELINE_STAGE_2_VIDEO_DECODE_BIT_KHR
 //             Negative: false
@@ -48937,7 +53363,7 @@ pub const VK_NVX_image_view_handle_name = "VK_NVX_image_view_handle";
 //         Enum:
 //             Name: VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION
 //             Negative: false
-//             Value: 3
+//             Value: 4
 //         Enum:
 //             Name: VK_NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME
 //             Negative: false
@@ -48962,6 +53388,8 @@ pub const VK_NVX_image_view_handle_name = "VK_NVX_image_view_handle";
 //             Name: vkGetImageViewHandle64NVX
 //         Command:
 //             Name: vkGetImageViewAddressNVX
+//         Command:
+//             Name: vkGetDeviceCombinedImageSamplerIndexNVX
 pub const VK_AMD_extension_32_name = "VK_AMD_extension_32";
 // Extension: VK_AMD_extension_32
 // Number: 32
@@ -52045,6 +56473,12 @@ pub const VK_IMG_extension_107_name = "VK_IMG_extension_107";
 //             Negative: false
 //             Bitpos: 3
 //             Extends: VkRenderPassCreateFlagBits
+//     Depends: VK_KHR_extended_flags
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_RESERVED_21_BIT_IMG
+//             Negative: false
+//             Bitpos: 21
+//             Extends: VkImageCreateFlagBits2KHR
 pub const VK_IMG_extension_108_name = "VK_IMG_extension_108";
 // Extension: VK_IMG_extension_108
 // Number: 108
@@ -53195,21 +57629,123 @@ pub const VK_AMD_gpu_shader_int16_name = "VK_AMD_gpu_shader_int16";
 //             Name: VK_AMD_GPU_SHADER_INT16_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_AMD_gpu_shader_int16&quot;
-pub const VK_AMD_extension_134_name = "VK_AMD_extension_134";
-// Extension: VK_AMD_extension_134
+pub const VK_AMD_gpa_interface_name = "VK_AMD_gpa_interface";
+// Extension: VK_AMD_gpa_interface
 // Number: 134
-// Type: invalid
+// Type: device
 // Author: AMD
-// Supported: disabled
+// Depends: VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_AMD_EXTENSION_134_SPEC_VERSION
+//             Name: VK_AMD_GPA_INTERFACE_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_AMD_EXTENSION_134_EXTENSION_NAME
+//             Name: VK_AMD_GPA_INTERFACE_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_AMD_extension_134&quot;
+//             Value: &quot;VK_AMD_gpa_interface&quot;
+//         Enum:
+//             Name: VK_OBJECT_TYPE_GPA_SESSION_AMD
+//             Negative: false
+//             Extends: VkObjectType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_FEATURES_AMD
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_PROPERTIES_AMD
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_GPA_SAMPLE_BEGIN_INFO_AMD
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 2
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_GPA_SESSION_CREATE_INFO_AMD
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 3
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_GPA_DEVICE_CLOCK_MODE_INFO_AMD
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 4
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_PROPERTIES_2_AMD
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 5
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_GPA_DEVICE_GET_CLOCK_INFO_AMD
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 6
+//         Type:
+//             Name: VkGpaSqShaderStageFlagBitsAMD
+//         Type:
+//             Name: VkGpaSqShaderStageFlagsAMD
+//         Type:
+//             Name: VkGpaPerfBlockAMD
+//         Type:
+//             Name: VkGpaPerfBlockPropertiesAMD
+//         Type:
+//             Name: VkGpaPerfBlockPropertiesFlagsAMD
+//         Type:
+//             Name: VkPhysicalDeviceGpaFeaturesAMD
+//         Type:
+//             Name: VkPhysicalDeviceGpaPropertiesAMD
+//         Type:
+//             Name: VkPhysicalDeviceGpaPropertiesFlagsAMD
+//         Type:
+//             Name: VkPhysicalDeviceGpaProperties2AMD
+//         Type:
+//             Name: VkGpaSampleTypeAMD
+//         Type:
+//             Name: VkGpaPerfCounterAMD
+//         Type:
+//             Name: VkGpaSampleBeginInfoAMD
+//         Type:
+//             Name: VkGpaDeviceClockModeAMD
+//         Type:
+//             Name: VkGpaDeviceClockModeInfoAMD
+//         Type:
+//             Name: VkGpaDeviceGetClockInfoAMD
+//         Type:
+//             Name: VkGpaSessionAMD
+//         Type:
+//             Name: VkGpaSessionCreateInfoAMD
+//         Command:
+//             Name: vkCreateGpaSessionAMD
+//         Command:
+//             Name: vkDestroyGpaSessionAMD
+//         Command:
+//             Name: vkSetGpaDeviceClockModeAMD
+//         Command:
+//             Name: vkGetGpaDeviceClockInfoAMD
+//         Command:
+//             Name: vkCmdBeginGpaSessionAMD
+//         Command:
+//             Name: vkCmdEndGpaSessionAMD
+//         Command:
+//             Name: vkCmdBeginGpaSampleAMD
+//         Command:
+//             Name: vkCmdEndGpaSampleAMD
+//         Command:
+//             Name: vkGetGpaSessionStatusAMD
+//         Command:
+//             Name: vkGetGpaSessionResultsAMD
+//         Command:
+//             Name: vkResetGpaSessionAMD
+//         Command:
+//             Name: vkCmdCopyGpaSessionResultsAMD
+//         Feature:
+//             Name: perfCounters,streamingPerfCounters,sqThreadTracing,clockModes
+//             Struct: VkPhysicalDeviceGpaFeaturesAMD
 pub const VK_AMDX_shader_enqueue_name = "VK_AMDX_shader_enqueue";
 // Extension: VK_AMDX_shader_enqueue
 // Number: 135
@@ -53298,7 +57834,7 @@ pub const VK_AMDX_shader_enqueue_name = "VK_AMDX_shader_enqueue";
 //         Feature:
 //             Name: shaderEnqueue
 //             Struct: VkPhysicalDeviceShaderEnqueueFeaturesAMDX
-//     Depends: VK_KHR_maintenance5,VK_VERSION_1_4
+//     Depends: VK_VERSION_1_4,VK_KHR_extended_flags,VK_KHR_maintenance5
 //         Enum:
 //             Name: VK_BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX
 //             Negative: false
@@ -53313,72 +57849,270 @@ pub const VK_AMDX_shader_enqueue_name = "VK_AMDX_shader_enqueue";
 //         Feature:
 //             Name: shaderMeshEnqueue
 //             Struct: VkPhysicalDeviceShaderEnqueueFeaturesAMDX
-pub const VK_KHR_extension_136_name = "VK_KHR_extension_136";
-// Extension: VK_KHR_extension_136
+pub const VK_EXT_descriptor_heap_name = "VK_EXT_descriptor_heap";
+// Extension: VK_EXT_descriptor_heap
 // Number: 136
 // Type: device
-// Author: KHR
-// Depends: VK_KHR_maintenance5
-// Supported: disabled
+// Author: EXT
+// Depends: ((VK_KHR_extended_flags,VK_KHR_maintenance5)+(VK_KHR_buffer_device_address,VK_VERSION_1_2),VK_VERSION_1_4)
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_KHR_EXTENSION_136_SPEC_VERSION
+//             Name: VK_EXT_DESCRIPTOR_HEAP_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_KHR_EXTENSION_136_EXTENSION_NAME
+//             Name: VK_EXT_DESCRIPTOR_HEAP_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_KHR_extension_136&quot;
+//             Value: &quot;VK_EXT_descriptor_heap&quot;
 //         Enum:
-//             Name: VK_BUFFER_USAGE_RESERVED_28_BIT_KHR
+//             Name: VK_BUFFER_USAGE_DESCRIPTOR_HEAP_BIT_EXT
 //             Negative: false
 //             Bitpos: 28
 //             Extends: VkBufferUsageFlagBits
 //         Enum:
-//             Name: VK_PIPELINE_CREATE_RESERVED_36_BIT_KHR
+//             Name: VK_BUFFER_USAGE_2_DESCRIPTOR_HEAP_BIT_EXT
+//             Negative: false
+//             Bitpos: 28
+//             Extends: VkBufferUsageFlagBits2
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT
 //             Negative: false
 //             Bitpos: 36
 //             Extends: VkPipelineCreateFlagBits2
 //         Enum:
-//             Name: VK_PIPELINE_CREATE_RESERVED_39_BIT_KHR
+//             Name: VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT
 //             Negative: false
-//             Bitpos: 39
-//             Extends: VkPipelineCreateFlagBits2
+//             Bitpos: 16
+//             Extends: VkImageCreateFlagBits
 //         Enum:
-//             Name: VK_ACCESS_2_RESERVED_57_BIT_KHR
+//             Name: VK_STRUCTURE_TYPE_TEXEL_BUFFER_DESCRIPTOR_INFO_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_IMAGE_DESCRIPTOR_INFO_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_RESOURCE_DESCRIPTOR_INFO_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 2
+//         Type:
+//             Name: VkHostAddressRangeEXT
+//         Type:
+//             Name: VkHostAddressRangeConstEXT
+//         Type:
+//             Name: VkDeviceAddressRangeEXT
+//         Type:
+//             Name: VkTexelBufferDescriptorInfoEXT
+//         Type:
+//             Name: VkImageDescriptorInfoEXT
+//         Type:
+//             Name: VkResourceDescriptorInfoEXT
+//         Type:
+//             Name: VkResourceDescriptorDataEXT
+//         Command:
+//             Name: vkWriteSamplerDescriptorsEXT
+//         Command:
+//             Name: vkWriteResourceDescriptorsEXT
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_BIND_HEAP_INFO_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 3
+//         Type:
+//             Name: VkBindHeapInfoEXT
+//         Command:
+//             Name: vkCmdBindSamplerHeapEXT
+//         Command:
+//             Name: vkCmdBindResourceHeapEXT
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PUSH_DATA_INFO_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 4
+//         Type:
+//             Name: VkPushDataInfoEXT
+//         Command:
+//             Name: vkCmdPushDataEXT
+//         Type:
+//             Name: VkDescriptorMappingSourceEXT
+//         Type:
+//             Name: VkDescriptorMappingSourceConstantOffsetEXT
+//         Type:
+//             Name: VkDescriptorMappingSourcePushIndexEXT
+//         Type:
+//             Name: VkDescriptorMappingSourceIndirectIndexEXT
+//         Type:
+//             Name: VkDescriptorMappingSourceHeapDataEXT
+//         Type:
+//             Name: VkDescriptorMappingSourceIndirectAddressEXT
+//         Type:
+//             Name: VkDescriptorMappingSourceShaderRecordIndexEXT
+//         Type:
+//             Name: VkDescriptorMappingSourceDataEXT
+//         Type:
+//             Name: VkDescriptorMappingSourceIndirectIndexArrayEXT
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DESCRIPTOR_SET_AND_BINDING_MAPPING_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 5
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_SHADER_DESCRIPTOR_SET_AND_BINDING_MAPPING_INFO_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 6
+//         Type:
+//             Name: VkSpirvResourceTypeFlagsEXT
+//         Type:
+//             Name: VkSpirvResourceTypeFlagBitsEXT
+//         Type:
+//             Name: VkDescriptorSetAndBindingMappingEXT
+//         Type:
+//             Name: VkShaderDescriptorSetAndBindingMappingInfoEXT
+//         Enum:
+//             Name: VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT
 //             Negative: false
 //             Bitpos: 57
 //             Extends: VkAccessFlagBits2
 //         Enum:
-//             Name: VK_ACCESS_2_RESERVED_58_BIT_KHR
+//             Name: VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT
 //             Negative: false
 //             Bitpos: 58
 //             Extends: VkAccessFlagBits2
+//         Command:
+//             Name: vkGetImageOpaqueCaptureDataEXT
 //         Enum:
-//             Name: VK_ACCESS_2_RESERVED_59_BIT_KHR
+//             Name: VK_STRUCTURE_TYPE_OPAQUE_CAPTURE_DATA_CREATE_INFO_EXT
 //             Negative: false
-//             Bitpos: 59
-//             Extends: VkAccessFlagBits2
-//     Depends: VK_KHR_maintenance5,VK_VERSION_1_4
+//             Extends: VkStructureType
+//             Offset: 7
+//         Type:
+//             Name: VkOpaqueCaptureDataCreateInfoEXT
 //         Enum:
-//             Name: VK_BUFFER_USAGE_2_RESERVED_28_BIT_KHR
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_PROPERTIES_EXT
 //             Negative: false
-//             Bitpos: 28
-//             Extends: VkBufferUsageFlagBits2
+//             Extends: VkStructureType
+//             Offset: 8
+//         Type:
+//             Name: VkPhysicalDeviceDescriptorHeapFeaturesEXT
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_FEATURES_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 9
+//         Type:
+//             Name: VkPhysicalDeviceDescriptorHeapPropertiesEXT
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_DESCRIPTOR_HEAP_INFO_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 10
+//         Type:
+//             Name: VkCommandBufferInheritanceDescriptorHeapInfoEXT
+//         Command:
+//             Name: vkGetPhysicalDeviceDescriptorSizeEXT
+//         Feature:
+//             Name: descriptorHeap
+//             Struct: VkPhysicalDeviceDescriptorHeapFeaturesEXT
+//     Depends: VK_EXT_custom_border_color
+//         Command:
+//             Name: vkRegisterCustomBorderColorEXT
+//         Command:
+//             Name: vkUnregisterCustomBorderColorEXT
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_INDEX_CREATE_INFO_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 11
+//         Type:
+//             Name: VkSamplerCustomBorderColorIndexCreateInfoEXT
+//     Depends: VK_EXT_device_generated_commands
+//         Enum:
+//             Name: VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_DATA_EXT
+//             Negative: false
+//             Extends: VkIndirectCommandsTokenTypeEXT
+//             Offset: 0
+//         Enum:
+//             Name: VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_DATA_SEQUENCE_INDEX_EXT
+//             Negative: false
+//             Extends: VkIndirectCommandsTokenTypeEXT
+//             Offset: 1
+//     Depends: VK_NV_device_generated_commands
+//         Enum:
+//             Name: VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_DATA_NV
+//             Negative: false
+//             Extends: VkIndirectCommandsTokenTypeNV
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_PUSH_DATA_TOKEN_NV
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 12
+//         Type:
+//             Name: VkIndirectCommandsLayoutPushDataTokenNV
 //     Depends: VK_EXT_shader_object
 //         Enum:
-//             Name: VK_SHADER_CREATE_RESERVED_10_BIT_KHR
+//             Name: VK_SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT
 //             Negative: false
 //             Bitpos: 10
 //             Extends: VkShaderCreateFlagBitsEXT
+//     Depends: VK_KHR_ray_tracing_pipeline,VK_NV_ray_tracing
 //         Enum:
-//             Name: VK_SHADER_CREATE_RESERVED_11_BIT_KHR
+//             Name: VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT
 //             Negative: false
-//             Bitpos: 11
-//             Extends: VkShaderCreateFlagBitsEXT
+//             Value: 8
+//             Extends: VkDescriptorMappingSourceEXT
+//         Enum:
+//             Name: VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT
+//             Negative: false
+//             Value: 9
+//             Extends: VkDescriptorMappingSourceEXT
+//         Enum:
+//             Name: VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT
+//             Negative: false
+//             Value: 10
+//             Extends: VkDescriptorMappingSourceEXT
+//         Enum:
+//             Name: VK_SPIRV_RESOURCE_TYPE_ACCELERATION_STRUCTURE_BIT_EXT
+//             Negative: false
+//             Bitpos: 8
+//             Extends: VkSpirvResourceTypeFlagBitsEXT
+//     Depends: VK_EXT_fragment_density_map
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_SUBSAMPLED_IMAGE_FORMAT_PROPERTIES_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 13
+//         Type:
+//             Name: VkSubsampledImageFormatPropertiesEXT
+//         Type:
+//             Name: VkTensorARM
+//         Type:
+//             Name: VkTensorViewCreateFlagsARM
+//         Type:
+//             Name: VkTensorViewCreateInfoARM
 //     Depends: VK_ARM_tensors
 //         Enum:
-//             Name: VK_TENSOR_CREATE_RESERVED_3_BIT_ARM
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_TENSOR_PROPERTIES_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 14
+//         Type:
+//             Name: VkPhysicalDeviceDescriptorHeapTensorPropertiesARM
+//         Command:
+//             Name: vkGetTensorOpaqueCaptureDataARM
+//         Enum:
+//             Name: VK_SPIRV_RESOURCE_TYPE_TENSOR_BIT_ARM
+//             Negative: false
+//             Bitpos: 9
+//             Extends: VkSpirvResourceTypeFlagBitsEXT
+//         Enum:
+//             Name: VK_TENSOR_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_ARM
 //             Negative: false
 //             Bitpos: 3
 //             Extends: VkTensorCreateFlagBitsARM
@@ -56010,36 +60744,63 @@ pub const VK_QCOM_render_pass_shader_resolve_name = "VK_QCOM_render_pass_shader_
 //             Negative: false
 //             Extends: VkSubpassDescriptionFlagBits
 //             Alias: VK_SUBPASS_DESCRIPTION_CUSTOM_RESOLVE_BIT_EXT
-pub const VK_QCOM_extension_173_name = "VK_QCOM_extension_173";
-// Extension: VK_QCOM_extension_173
+pub const VK_QCOM_cooperative_matrix_conversion_name = "VK_QCOM_cooperative_matrix_conversion";
+// Extension: VK_QCOM_cooperative_matrix_conversion
 // Number: 173
-// Type: invalid
+// Type: device
 // Author: QCOM
-// Supported: disabled
+// Depends: VK_KHR_cooperative_matrix
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_QCOM_EXTENSION_173_SPEC_VERSION
+//             Name: VK_QCOM_COOPERATIVE_MATRIX_CONVERSION_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_QCOM_EXTENSION_173_EXTENSION_NAME
+//             Name: VK_QCOM_COOPERATIVE_MATRIX_CONVERSION_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_QCOM_extension_173&quot;
-pub const VK_QCOM_extension_174_name = "VK_QCOM_extension_174";
-// Extension: VK_QCOM_extension_174
+//             Value: &quot;VK_QCOM_cooperative_matrix_conversion&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_CONVERSION_FEATURES_QCOM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Type:
+//             Name: VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM
+//         Feature:
+//             Name: cooperativeMatrixConversion
+//             Struct: VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM
+pub const VK_QCOM_elapsed_timer_query_name = "VK_QCOM_elapsed_timer_query";
+// Extension: VK_QCOM_elapsed_timer_query
 // Number: 174
-// Type: invalid
+// Type: device
 // Author: QCOM
-// Supported: disabled
+// Depends: VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_QCOM_EXTENSION_174_SPEC_VERSION
+//             Name: VK_QCOM_ELAPSED_TIMER_QUERY_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_QCOM_EXTENSION_174_EXTENSION_NAME
+//             Name: VK_QCOM_ELAPSED_TIMER_QUERY_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_QCOM_extension_174&quot;
+//             Value: &quot;VK_QCOM_elapsed_timer_query&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ELAPSED_TIMER_QUERY_FEATURES_QCOM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_QUERY_TYPE_TIME_ELAPSED_QCOM
+//             Negative: false
+//             Extends: VkQueryType
+//             Offset: 0
+//         Type:
+//             Name: VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM
+//         Feature:
+//             Name: elapsedTimerQuery
+//             Struct: VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM
 pub const VK_EXT_global_priority_name = "VK_EXT_global_priority";
 // Extension: VK_EXT_global_priority
 // Number: 175
@@ -56869,6 +61630,7 @@ pub const VK_NV_shader_subgroup_partitioned_name = "VK_NV_shader_subgroup_partit
 // Author: NV
 // Depends: VK_VERSION_1_1
 // Supported: supported
+// Promoted to: VK_EXT_shader_subgroup_partitioned
 // Unlocks:
 //         Enum:
 //             Name: VK_NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION
@@ -56881,8 +61643,8 @@ pub const VK_NV_shader_subgroup_partitioned_name = "VK_NV_shader_subgroup_partit
 //         Enum:
 //             Name: VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV
 //             Negative: false
-//             Bitpos: 8
 //             Extends: VkSubgroupFeatureFlagBits
+//             Alias: VK_SUBGROUP_FEATURE_PARTITIONED_BIT_EXT
 pub const VK_KHR_depth_stencil_resolve_name = "VK_KHR_depth_stencil_resolve";
 // Extension: VK_KHR_depth_stencil_resolve
 // Number: 200
@@ -57766,7 +62528,7 @@ pub const VK_EXT_fragment_density_map_name = "VK_EXT_fragment_density_map";
 //         Enum:
 //             Name: VK_EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION
 //             Negative: false
-//             Value: 2
+//             Value: 3
 //         Enum:
 //             Name: VK_EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME
 //             Negative: false
@@ -58030,10 +62792,10 @@ pub const VK_EXT_subgroup_size_control_name = "VK_EXT_subgroup_size_control";
 //             Alias: VK_PIPELINE_SHADER_STAGE_CREATE_REQUIRE_FULL_SUBGROUPS_BIT
 //         Feature:
 //             Name: subgroupSizeControl
-//             Struct: VkPhysicalDeviceSubgroupSizeControlFeatures
+//             Struct: VkPhysicalDeviceSubgroupSizeControlFeaturesEXT
 //         Feature:
 //             Name: computeFullSubgroups
-//             Struct: VkPhysicalDeviceSubgroupSizeControlFeatures
+//             Struct: VkPhysicalDeviceSubgroupSizeControlFeaturesEXT
 pub const VK_KHR_fragment_shading_rate_name = "VK_KHR_fragment_shading_rate";
 // Extension: VK_KHR_fragment_shading_rate
 // Number: 227
@@ -58138,7 +62900,6 @@ pub const VK_KHR_fragment_shading_rate_name = "VK_KHR_fragment_shading_rate";
 //             Extends: VkStructureType
 //             Extnumber: 45
 //             Offset: 6
-//     Depends: VK_VERSION_1_3,VK_KHR_dynamic_rendering
 //         Enum:
 //             Name: VK_PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
 //             Negative: false
@@ -58244,21 +63005,32 @@ pub const VK_AMD_extension_231_name = "VK_AMD_extension_231";
 //             Name: VK_AMD_EXTENSION_231_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_AMD_extension_231&quot;
-pub const VK_AMD_extension_232_name = "VK_AMD_extension_232";
-// Extension: VK_AMD_extension_232
+pub const VK_KHR_shader_constant_data_name = "VK_KHR_shader_constant_data";
+// Extension: VK_KHR_shader_constant_data
 // Number: 232
-// Type: invalid
-// Author: AMD
-// Supported: disabled
+// Type: device
+// Author: KHR
+// Depends: VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_AMD_EXTENSION_232_SPEC_VERSION
+//             Name: VK_KHR_SHADER_CONSTANT_DATA_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_AMD_EXTENSION_232_EXTENSION_NAME
+//             Name: VK_KHR_SHADER_CONSTANT_DATA_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_AMD_extension_232&quot;
+//             Value: &quot;VK_KHR_shader_constant_data&quot;
+//         Type:
+//             Name: VkPhysicalDeviceShaderConstantDataFeaturesKHR
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CONSTANT_DATA_FEATURES_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Feature:
+//             Name: shaderConstantData
+//             Struct: VkPhysicalDeviceShaderConstantDataFeaturesKHR
 pub const VK_KHR_dynamic_rendering_local_read_name = "VK_KHR_dynamic_rendering_local_read";
 // Extension: VK_KHR_dynamic_rendering_local_read
 // Number: 233
@@ -58309,21 +63081,46 @@ pub const VK_KHR_dynamic_rendering_local_read_name = "VK_KHR_dynamic_rendering_l
 //         Feature:
 //             Name: dynamicRenderingLocalRead
 //             Struct: VkPhysicalDeviceDynamicRenderingLocalReadFeaturesKHR
-pub const VK_AMD_extension_234_name = "VK_AMD_extension_234";
-// Extension: VK_AMD_extension_234
+pub const VK_KHR_shader_abort_name = "VK_KHR_shader_abort";
+// Extension: VK_KHR_shader_abort
 // Number: 234
-// Type: invalid
-// Author: AMD
-// Supported: disabled
+// Type: device
+// Author: KHR
+// Depends: VK_KHR_device_fault+VK_KHR_shader_constant_data
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_AMD_EXTENSION_234_SPEC_VERSION
+//             Name: VK_KHR_SHADER_ABORT_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_AMD_EXTENSION_234_EXTENSION_NAME
+//             Name: VK_KHR_SHADER_ABORT_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_AMD_extension_234&quot;
+//             Value: &quot;VK_KHR_shader_abort&quot;
+//         Type:
+//             Name: VkPhysicalDeviceShaderAbortFeaturesKHR
+//         Type:
+//             Name: VkDeviceFaultShaderAbortMessageInfoKHR
+//         Type:
+//             Name: VkPhysicalDeviceShaderAbortPropertiesKHR
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ABORT_FEATURES_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DEVICE_FAULT_SHADER_ABORT_MESSAGE_INFO_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ABORT_PROPERTIES_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 2
+//         Feature:
+//             Name: shaderAbort
+//             Struct: VkPhysicalDeviceShaderAbortFeaturesKHR
 pub const VK_EXT_shader_image_atomic_int64_name = "VK_EXT_shader_image_atomic_int64";
 // Extension: VK_EXT_shader_image_atomic_int64
 // Number: 235
@@ -59288,7 +64085,12 @@ pub const VK_EXT_extension_259_name = "VK_EXT_extension_259";
 //             Name: VK_EXT_EXTENSION_259_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_EXT_extension_259&quot;
-//     Depends: (VK_KHR_dynamic_rendering,VK_VERSION_1_3)+(VK_KHR_maintenance5,VK_VERSION_1_4)
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_RESERVED_31_BIT_EXT
+//             Negative: false
+//             Bitpos: 31
+//             Extends: VkImageUsageFlagBits2KHR
+//     Depends: (VK_KHR_dynamic_rendering,VK_VERSION_1_3)+(VK_VERSION_1_4,VK_KHR_extended_flags,VK_KHR_maintenance5)
 //         Enum:
 //             Name: VK_PIPELINE_CREATE_RESERVED_44_BIT_KHR
 //             Negative: false
@@ -60650,25 +65452,32 @@ pub const VK_EXT_custom_border_color_name = "VK_EXT_custom_border_color";
 //         Feature:
 //             Name: customBorderColors
 //             Struct: VkPhysicalDeviceCustomBorderColorFeaturesEXT
-pub const VK_EXT_extension_289_name = "VK_EXT_extension_289";
-// Extension: VK_EXT_extension_289
+pub const VK_EXT_texture_compression_astc_3d_name = "VK_EXT_texture_compression_astc_3d";
+// Extension: VK_EXT_texture_compression_astc_3d
 // Number: 289
-// Type: invalid
+// Type: device
 // Author: EXT
-// Supported: disabled
+// Depends: VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
+// Supported: supported
 // Unlocks:
-//         Comment:
-//             These enums are present only to inform downstream
-//             consumers like KTX2. There is no actual Vulkan extension
-//             corresponding to the enums.
 //         Enum:
-//             Name: VK_EXT_EXTENSION_289_SPEC_VERSION
+//             Name: VK_EXT_TEXTURE_COMPRESSION_ASTC_3D_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_EXT_EXTENSION_289_EXTENSION_NAME
+//             Name: VK_EXT_TEXTURE_COMPRESSION_ASTC_3D_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_EXT_extension_289&quot;
+//             Value: &quot;VK_EXT_texture_compression_astc_3d&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_3D_FEATURES_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Type:
+//             Name: VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT
+//         Feature:
+//             Name: textureCompressionASTC_3D
+//             Struct: VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT
 //         Enum:
 //             Name: VK_FORMAT_ASTC_3x3x3_UNORM_BLOCK_EXT
 //             Negative: false
@@ -60967,7 +65776,7 @@ pub const VK_KHR_present_id_name = "VK_KHR_present_id";
 // Number: 295
 // Type: device
 // Author: KHR
-// Depends: VK_KHR_swapchain+VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
+// Depends: VK_KHR_swapchain+(VK_KHR_get_physical_device_properties2,VK_VERSION_1_1)
 // Supported: supported
 // Unlocks:
 //         Enum:
@@ -61126,7 +65935,7 @@ pub const VK_EXT_pipeline_creation_cache_control_name = "VK_EXT_pipeline_creatio
 //             Name: VkPipelineCacheCreateFlagBits
 //         Feature:
 //             Name: pipelineCreationCacheControl
-//             Struct: VkPhysicalDevicePipelineCreationCacheControlFeatures
+//             Struct: VkPhysicalDevicePipelineCreationCacheControlFeaturesEXT
 pub const VK_KHR_extension_299_name = "VK_KHR_extension_299";
 // Extension: VK_KHR_extension_299
 // Number: 299
@@ -61158,6 +65967,8 @@ pub const VK_KHR_video_encode_queue_name = "VK_KHR_video_encode_queue";
 //             Name: VK_KHR_VIDEO_ENCODE_QUEUE_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_KHR_video_encode_queue&quot;
+//         Comment:
+//             VkPipelineStageFlagBits bitpos="27" is reserved by this extension, but not used
 //         Enum:
 //             Name: VK_PIPELINE_STAGE_2_VIDEO_ENCODE_BIT_KHR
 //             Negative: false
@@ -61435,66 +66246,148 @@ pub const VK_QCOM_render_pass_store_ops_name = "VK_QCOM_render_pass_store_ops";
 //             Negative: false
 //             Extends: VkAttachmentStoreOp
 //             Alias: VK_ATTACHMENT_STORE_OP_NONE
-pub const VK_QCOM_extension_303_name = "VK_QCOM_extension_303";
-// Extension: VK_QCOM_extension_303
+pub const VK_QCOM_queue_perf_hint_name = "VK_QCOM_queue_perf_hint";
+// Extension: VK_QCOM_queue_perf_hint
 // Number: 303
-// Type: invalid
+// Type: device
 // Author: QCOM
-// Supported: disabled
+// Depends: VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_QCOM_EXTENSION_303_SPEC_VERSION
+//             Name: VK_QCOM_QUEUE_PERF_HINT_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_QCOM_EXTENSION_303_EXTENSION_NAME
+//             Name: VK_QCOM_QUEUE_PERF_HINT_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_QCOM_extension_303&quot;
-pub const VK_QCOM_extension_304_name = "VK_QCOM_extension_304";
-// Extension: VK_QCOM_extension_304
+//             Value: &quot;VK_QCOM_queue_perf_hint&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PERF_HINT_INFO_QCOM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_PERF_HINT_FEATURES_QCOM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_PERF_HINT_PROPERTIES_QCOM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 2
+//         Type:
+//             Name: VkPerfHintTypeQCOM
+//         Type:
+//             Name: VkPerfHintInfoQCOM
+//         Type:
+//             Name: VkPhysicalDeviceQueuePerfHintFeaturesQCOM
+//         Type:
+//             Name: VkPhysicalDeviceQueuePerfHintPropertiesQCOM
+//         Command:
+//             Name: vkQueueSetPerfHintQCOM
+//         Feature:
+//             Name: queuePerfHint
+//             Struct: VkPhysicalDeviceQueuePerfHintFeaturesQCOM
+pub const VK_QCOM_image_processing3_name = "VK_QCOM_image_processing3";
+// Extension: VK_QCOM_image_processing3
 // Number: 304
-// Type: invalid
+// Type: device
 // Author: QCOM
-// Supported: disabled
+// Depends: VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_QCOM_EXTENSION_304_SPEC_VERSION
+//             Name: VK_QCOM_IMAGE_PROCESSING_3_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_QCOM_EXTENSION_304_EXTENSION_NAME
+//             Name: VK_QCOM_IMAGE_PROCESSING_3_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_QCOM_extension_304&quot;
-pub const VK_QCOM_extension_305_name = "VK_QCOM_extension_305";
-// Extension: VK_QCOM_extension_305
+//             Value: &quot;VK_QCOM_image_processing3&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_3_FEATURES_QCOM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Type:
+//             Name: VkPhysicalDeviceImageProcessing3FeaturesQCOM
+//         Feature:
+//             Name: imageGatherLinear
+//             Struct: VkPhysicalDeviceImageProcessing3FeaturesQCOM
+//     Depends: VK_QCOM_image_processing
+//         Enum:
+//             Name: VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM
+//             Negative: false
+//             Bitpos: 44
+//             Extends: VkFormatFeatureFlagBits2
+pub const VK_QCOM_shader_multiple_wait_queues_name = "VK_QCOM_shader_multiple_wait_queues";
+// Extension: VK_QCOM_shader_multiple_wait_queues
 // Number: 305
-// Type: invalid
+// Type: device
 // Author: QCOM
-// Supported: disabled
+// Depends: VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_QCOM_EXTENSION_305_SPEC_VERSION
+//             Name: VK_QCOM_SHADER_MULTIPLE_WAIT_QUEUES_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_QCOM_EXTENSION_305_EXTENSION_NAME
+//             Name: VK_QCOM_SHADER_MULTIPLE_WAIT_QUEUES_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_QCOM_extension_305&quot;
-pub const VK_QCOM_extension_306_name = "VK_QCOM_extension_306";
-// Extension: VK_QCOM_extension_306
+//             Value: &quot;VK_QCOM_shader_multiple_wait_queues&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MULTIPLE_WAIT_QUEUES_FEATURES_QCOM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MULTIPLE_WAIT_QUEUES_PROPERTIES_QCOM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Type:
+//             Name: VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM
+//         Type:
+//             Name: VkPhysicalDeviceShaderMultipleWaitQueuesPropertiesQCOM
+//         Feature:
+//             Name: shaderMultipleWaitQueues
+//             Struct: VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM
+pub const VK_EXT_shader_split_barrier_name = "VK_EXT_shader_split_barrier";
+// Extension: VK_EXT_shader_split_barrier
 // Number: 306
-// Type: invalid
-// Author: QCOM
-// Supported: disabled
+// Type: device
+// Author: EXT
+// Depends: VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_QCOM_EXTENSION_306_SPEC_VERSION
+//             Name: VK_EXT_SHADER_SPLIT_BARRIER_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_QCOM_EXTENSION_306_EXTENSION_NAME
+//             Name: VK_EXT_SHADER_SPLIT_BARRIER_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_QCOM_extension_306&quot;
+//             Value: &quot;VK_EXT_shader_split_barrier&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SPLIT_BARRIER_FEATURES_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SPLIT_BARRIER_PROPERTIES_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Type:
+//             Name: VkPhysicalDeviceShaderSplitBarrierFeaturesEXT
+//         Type:
+//             Name: VkPhysicalDeviceShaderSplitBarrierPropertiesEXT
+//         Feature:
+//             Name: shaderSplitBarrier
+//             Struct: VkPhysicalDeviceShaderSplitBarrierFeaturesEXT
 pub const VK_QCOM_extension_307_name = "VK_QCOM_extension_307";
 // Extension: VK_QCOM_extension_307
 // Number: 307
@@ -61510,6 +66403,22 @@ pub const VK_QCOM_extension_307_name = "VK_QCOM_extension_307";
 //             Name: VK_QCOM_EXTENSION_307_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_QCOM_extension_307&quot;
+//     Depends: VK_KHR_synchronization2,VK_VERSION_1_3
+//         Enum:
+//             Name: VK_PIPELINE_STAGE_2_RESERVED_50_BIT_KHR
+//             Negative: false
+//             Bitpos: 50
+//             Extends: VkPipelineStageFlagBits2
+//         Enum:
+//             Name: VK_ACCESS_2_RESERVED_53_BIT_KHR
+//             Negative: false
+//             Bitpos: 53
+//             Extends: VkAccessFlagBits2
+//         Enum:
+//             Name: VK_ACCESS_2_RESERVED_54_BIT_KHR
+//             Negative: false
+//             Bitpos: 54
+//             Extends: VkAccessFlagBits2
 pub const VK_NV_cuda_kernel_launch_name = "VK_NV_cuda_kernel_launch";
 // Extension: VK_NV_cuda_kernel_launch
 // Number: 308
@@ -61639,7 +66548,7 @@ pub const VK_QCOM_tile_shading_name = "VK_QCOM_tile_shading";
 // Number: 310
 // Type: device
 // Author: QCOM
-// Depends: VK_QCOM_tile_properties,VK_KHR_get_physical_device_properties2
+// Depends: VK_QCOM_tile_properties
 // Supported: supported
 // Unlocks:
 //         Enum:
@@ -61753,11 +66662,12 @@ pub const VK_NV_low_latency_name = "VK_NV_low_latency";
 // Type: device
 // Author: NV
 // Supported: supported
+// Deprecated by: VK_NV_low_latency2
 // Unlocks:
 //         Enum:
 //             Name: VK_NV_LOW_LATENCY_SPEC_VERSION
 //             Negative: false
-//             Value: 1
+//             Value: 2
 //         Enum:
 //             Name: VK_NV_LOW_LATENCY_EXTENSION_NAME
 //             Negative: false
@@ -61769,6 +66679,20 @@ pub const VK_NV_low_latency_name = "VK_NV_low_latency";
 //             Offset: 0
 //         Type:
 //             Name: VkQueryLowLatencySupportNV
+//         Command:
+//             Name: vkSetLatencySleepModeLegacyNV
+//         Command:
+//             Name: vkLatencySleepLegacyNV
+//         Command:
+//             Name: vkSetLatencyMarkerLegacyNV
+//         Command:
+//             Name: vkGetLatencyTimingsLegacyNV
+//         Command:
+//             Name: vkQueueNotifyOutOfBandLegacyNV
+//         Command:
+//             Name: vkGetSleepStatusLegacyNV
+//         Command:
+//             Name: vkShutdownLatencyDeviceLegacyNV
 pub const VK_EXT_metal_objects_name = "VK_EXT_metal_objects";
 // Extension: VK_EXT_metal_objects
 // Number: 312
@@ -62478,6 +67402,7 @@ pub const VK_EXT_descriptor_buffer_name = "VK_EXT_descriptor_buffer";
 // Author: EXT
 // Depends: ((((VK_KHR_get_physical_device_properties2,VK_VERSION_1_1)+VK_KHR_buffer_device_address+VK_EXT_descriptor_indexing),VK_VERSION_1_2)+VK_KHR_synchronization2),VK_VERSION_1_3
 // Supported: supported
+// Deprecated by: VK_EXT_descriptor_heap
 // Unlocks:
 //         Enum:
 //             Name: VK_EXT_DESCRIPTOR_BUFFER_SPEC_VERSION
@@ -62580,8 +67505,8 @@ pub const VK_EXT_descriptor_buffer_name = "VK_EXT_descriptor_buffer";
 //         Enum:
 //             Name: VK_IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT
 //             Negative: false
-//             Bitpos: 16
 //             Extends: VkImageCreateFlagBits
+//             Alias: VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT
 //         Enum:
 //             Name: VK_IMAGE_VIEW_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT
 //             Negative: false
@@ -62609,8 +67534,6 @@ pub const VK_EXT_descriptor_buffer_name = "VK_EXT_descriptor_buffer";
 //             Extends: VkPipelineCreateFlagBits
 //         Type:
 //             Name: VkPhysicalDeviceDescriptorBufferPropertiesEXT
-//         Type:
-//             Name: VkPhysicalDeviceDescriptorBufferDensityMapPropertiesEXT
 //         Type:
 //             Name: VkPhysicalDeviceDescriptorBufferFeaturesEXT
 //         Type:
@@ -62666,6 +67589,9 @@ pub const VK_EXT_descriptor_buffer_name = "VK_EXT_descriptor_buffer";
 //             Name: VkAccelerationStructureCaptureDescriptorDataInfoEXT
 //         Command:
 //             Name: vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT
+//     Depends: VK_EXT_fragment_density_map
+//         Type:
+//             Name: VkPhysicalDeviceDescriptorBufferDensityMapPropertiesEXT
 pub const VK_AMD_extension_318_name = "VK_AMD_extension_318";
 // Extension: VK_AMD_extension_318
 // Number: 318
@@ -62681,31 +67607,206 @@ pub const VK_AMD_extension_318_name = "VK_AMD_extension_318";
 //             Name: VK_AMD_EXTENSION_318_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_AMD_extension_318&quot;
-pub const VK_AMD_extension_319_name = "VK_AMD_extension_319";
-// Extension: VK_AMD_extension_319
+pub const VK_KHR_device_address_commands_name = "VK_KHR_device_address_commands";
+// Extension: VK_KHR_device_address_commands
 // Number: 319
-// Type: invalid
-// Author: AMD
-// Supported: disabled
+// Type: device
+// Author: KHR
+// Depends: ((((VK_KHR_get_physical_device_properties2,VK_VERSION_1_1)+VK_KHR_buffer_device_address),VK_VERSION_1_2)+VK_KHR_synchronization2+VK_EXT_extended_dynamic_state),VK_VERSION_1_3
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_AMD_EXTENSION_319_SPEC_VERSION
+//             Name: VK_KHR_DEVICE_ADDRESS_COMMANDS_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_AMD_EXTENSION_319_EXTENSION_NAME
+//             Name: VK_KHR_DEVICE_ADDRESS_COMMANDS_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_AMD_extension_319&quot;
+//             Value: &quot;VK_KHR_device_address_commands&quot;
 //         Enum:
-//             Name: VK_DESCRIPTOR_SET_LAYOUT_CREATE_RESERVED_3_BIT_AMD
+//             Name: VK_STRUCTURE_TYPE_DEVICE_MEMORY_COPY_KHR
 //             Negative: false
-//             Bitpos: 3
-//             Extends: VkDescriptorSetLayoutCreateFlagBits
+//             Extends: VkStructureType
+//             Offset: 0
 //         Enum:
-//             Name: VK_PIPELINE_LAYOUT_CREATE_RESERVED_0_BIT_AMD
+//             Name: VK_STRUCTURE_TYPE_COPY_DEVICE_MEMORY_INFO_KHR
 //             Negative: false
-//             Bitpos: 0
-//             Extends: VkPipelineLayoutCreateFlagBits
+//             Extends: VkStructureType
+//             Offset: 1
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DEVICE_MEMORY_IMAGE_COPY_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 2
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_COPY_DEVICE_MEMORY_IMAGE_INFO_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 3
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_MEMORY_RANGE_BARRIERS_INFO_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 4
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_MEMORY_RANGE_BARRIER_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 5
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_ADDRESS_COMMANDS_FEATURES_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 6
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_BIND_INDEX_BUFFER_3_INFO_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 7
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_BIND_VERTEX_BUFFER_3_INFO_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 8
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DRAW_INDIRECT_2_INFO_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 9
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DRAW_INDIRECT_COUNT_2_INFO_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 10
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DISPATCH_INDIRECT_2_INFO_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 11
+//         Type:
+//             Name: VkDeviceAddressRangeKHR
+//         Type:
+//             Name: VkStridedDeviceAddressRangeKHR
+//         Type:
+//             Name: VkDeviceMemoryCopyKHR
+//         Type:
+//             Name: VkCopyDeviceMemoryInfoKHR
+//         Type:
+//             Name: VkDeviceMemoryImageCopyKHR
+//         Type:
+//             Name: VkCopyDeviceMemoryImageInfoKHR
+//         Type:
+//             Name: VkMemoryRangeBarriersInfoKHR
+//         Type:
+//             Name: VkMemoryRangeBarrierKHR
+//         Type:
+//             Name: VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR
+//         Type:
+//             Name: VkAddressCommandFlagBitsKHR
+//         Type:
+//             Name: VkAddressCommandFlagsKHR
+//         Type:
+//             Name: VkBindIndexBuffer3InfoKHR
+//         Type:
+//             Name: VkBindVertexBuffer3InfoKHR
+//         Type:
+//             Name: VkDrawIndirect2InfoKHR
+//         Type:
+//             Name: VkDrawIndirectCount2InfoKHR
+//         Type:
+//             Name: VkDispatchIndirect2InfoKHR
+//         Command:
+//             Name: vkCmdBindIndexBuffer3KHR
+//         Command:
+//             Name: vkCmdBindVertexBuffers3KHR
+//         Command:
+//             Name: vkCmdDrawIndirect2KHR
+//         Command:
+//             Name: vkCmdDrawIndexedIndirect2KHR
+//         Command:
+//             Name: vkCmdDispatchIndirect2KHR
+//         Command:
+//             Name: vkCmdCopyMemoryKHR
+//         Command:
+//             Name: vkCmdCopyMemoryToImageKHR
+//         Command:
+//             Name: vkCmdCopyImageToMemoryKHR
+//         Command:
+//             Name: vkCmdUpdateMemoryKHR
+//         Command:
+//             Name: vkCmdFillMemoryKHR
+//         Command:
+//             Name: vkCmdCopyQueryPoolResultsToMemoryKHR
+//         Feature:
+//             Name: deviceAddressCommands
+//             Struct: VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR
+//     Depends: VK_KHR_draw_indirect_count,VK_VERSION_1_2
+//         Command:
+//             Name: vkCmdDrawIndirectCount2KHR
+//         Command:
+//             Name: vkCmdDrawIndexedIndirectCount2KHR
+//     Depends: VK_EXT_conditional_rendering
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_2_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 12
+//         Type:
+//             Name: VkConditionalRenderingBeginInfo2EXT
+//         Command:
+//             Name: vkCmdBeginConditionalRendering2EXT
+//     Depends: VK_EXT_transform_feedback
+//         Command:
+//             Name: vkCmdBindTransformFeedbackBuffers2EXT
+//         Command:
+//             Name: vkCmdBeginTransformFeedback2EXT
+//         Command:
+//             Name: vkCmdEndTransformFeedback2EXT
+//         Command:
+//             Name: vkCmdDrawIndirectByteCount2EXT
+//         Enum:
+//             Name: VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR
+//             Negative: false
+//             Bitpos: 4
+//             Extends: VkAddressCommandFlagBitsKHR
+//         Enum:
+//             Name: VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR
+//             Negative: false
+//             Bitpos: 5
+//             Extends: VkAddressCommandFlagBitsKHR
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_BIND_TRANSFORM_FEEDBACK_BUFFER_2_INFO_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 13
+//         Type:
+//             Name: VkBindTransformFeedbackBuffer2InfoEXT
+//     Depends: VK_EXT_mesh_shader
+//         Command:
+//             Name: vkCmdDrawMeshTasksIndirect2EXT
+//     Depends: (VK_KHR_draw_indirect_count,VK_VERSION_1_2)+VK_EXT_mesh_shader
+//         Command:
+//             Name: vkCmdDrawMeshTasksIndirectCount2EXT
+//     Depends: VK_AMD_buffer_marker
+//         Command:
+//             Name: vkCmdWriteMarkerToMemoryAMD
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_MEMORY_MARKER_INFO_AMD
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 14
+//         Type:
+//             Name: VkMemoryMarkerInfoAMD
+//     Depends: VK_KHR_acceleration_structure
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_2_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 15
+//         Type:
+//             Name: VkAccelerationStructureCreateInfo2KHR
+//         Command:
+//             Name: vkCreateAccelerationStructure2KHR
 pub const VK_AMD_extension_320_name = "VK_AMD_extension_320";
 // Extension: VK_AMD_extension_320
 // Number: 320
@@ -62830,18 +67931,19 @@ pub const VK_KHR_fragment_shader_barycentric_name = "VK_KHR_fragment_shader_bary
 //             Extends: VkStructureType
 //             Extnumber: 204
 //             Offset: 0
+//         Type:
+//             Name: VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR
+//         Feature:
+//             Name: fragmentShaderBarycentric
+//             Struct: VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR
+//     Depends: VK_EXT_provoking_vertex
 //         Enum:
 //             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_PROPERTIES_KHR
 //             Negative: false
 //             Extends: VkStructureType
 //             Offset: 0
 //         Type:
-//             Name: VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR
-//         Type:
 //             Name: VkPhysicalDeviceFragmentShaderBarycentricPropertiesKHR
-//         Feature:
-//             Name: fragmentShaderBarycentric
-//             Struct: VkPhysicalDeviceFragmentShaderBarycentricFeaturesKHR
 pub const VK_KHR_shader_subgroup_uniform_control_flow_name = "VK_KHR_shader_subgroup_uniform_control_flow";
 // Extension: VK_KHR_shader_subgroup_uniform_control_flow
 // Number: 324
@@ -63614,6 +68716,7 @@ pub const VK_EXT_device_fault_name = "VK_EXT_device_fault";
 // Author: EXT
 // Depends: VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
 // Supported: supported
+// Promoted to: VK_KHR_device_fault
 // Unlocks:
 //         Enum:
 //             Name: VK_EXT_DEVICE_FAULT_SPEC_VERSION
@@ -63638,6 +68741,41 @@ pub const VK_EXT_device_fault_name = "VK_EXT_device_fault";
 //             Negative: false
 //             Extends: VkStructureType
 //             Offset: 2
+//         Enum:
+//             Name: VK_DEVICE_FAULT_ADDRESS_TYPE_NONE_EXT
+//             Negative: false
+//             Extends: VkDeviceFaultAddressTypeKHR
+//             Alias: VK_DEVICE_FAULT_ADDRESS_TYPE_NONE_KHR
+//         Enum:
+//             Name: VK_DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_EXT
+//             Negative: false
+//             Extends: VkDeviceFaultAddressTypeKHR
+//             Alias: VK_DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_KHR
+//         Enum:
+//             Name: VK_DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_EXT
+//             Negative: false
+//             Extends: VkDeviceFaultAddressTypeKHR
+//             Alias: VK_DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_KHR
+//         Enum:
+//             Name: VK_DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_EXT
+//             Negative: false
+//             Extends: VkDeviceFaultAddressTypeKHR
+//             Alias: VK_DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_KHR
+//         Enum:
+//             Name: VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_EXT
+//             Negative: false
+//             Extends: VkDeviceFaultAddressTypeKHR
+//             Alias: VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_KHR
+//         Enum:
+//             Name: VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_EXT
+//             Negative: false
+//             Extends: VkDeviceFaultAddressTypeKHR
+//             Alias: VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_KHR
+//         Enum:
+//             Name: VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_EXT
+//             Negative: false
+//             Extends: VkDeviceFaultAddressTypeKHR
+//             Alias: VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_KHR
 //         Type:
 //             Name: VkPhysicalDeviceFaultFeaturesEXT
 //         Type:
@@ -65326,6 +70464,8 @@ pub const VK_KHR_ray_tracing_maintenance1_name = "VK_KHR_ray_tracing_maintenance
 //             Name: rayTracingMaintenance1
 //             Struct: VkPhysicalDeviceRayTracingMaintenance1FeaturesKHR
 //     Depends: VK_KHR_synchronization2,VK_VERSION_1_3
+//         Comment:
+//             VkPipelineStageFlagBits bitpos="28" is reserved by this extension, but not used
 //         Enum:
 //             Name: VK_PIPELINE_STAGE_2_ACCELERATION_STRUCTURE_COPY_BIT_KHR
 //             Negative: false
@@ -65653,6 +70793,7 @@ pub const VK_EXT_opacity_micromap_name = "VK_EXT_opacity_micromap";
 // Author: EXT
 // Depends: VK_KHR_acceleration_structure+(VK_KHR_synchronization2,VK_VERSION_1_3)
 // Supported: supported
+// Promoted to: VK_KHR_opacity_micromap
 // Unlocks:
 //         Enum:
 //             Name: VK_EXT_OPACITY_MICROMAP_SPEC_VERSION
@@ -65755,13 +70896,13 @@ pub const VK_EXT_opacity_micromap_name = "VK_EXT_opacity_micromap";
 //         Enum:
 //             Name: VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT
 //             Negative: false
-//             Bitpos: 24
 //             Extends: VkPipelineCreateFlagBits
+//             Alias: VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR
 //         Enum:
 //             Name: VK_GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_EXT
 //             Negative: false
-//             Bitpos: 4
 //             Extends: VkGeometryInstanceFlagBitsKHR
+//             Alias: VK_GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_KHR
 //         Enum:
 //             Name: VK_GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_EXT
 //             Negative: false
@@ -65770,8 +70911,8 @@ pub const VK_EXT_opacity_micromap_name = "VK_EXT_opacity_micromap";
 //         Enum:
 //             Name: VK_GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_EXT
 //             Negative: false
-//             Bitpos: 5
 //             Extends: VkGeometryInstanceFlagBitsKHR
+//             Alias: VK_GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_KHR
 //         Enum:
 //             Name: VK_GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_EXT
 //             Negative: false
@@ -65780,8 +70921,8 @@ pub const VK_EXT_opacity_micromap_name = "VK_EXT_opacity_micromap";
 //         Enum:
 //             Name: VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT
 //             Negative: false
-//             Bitpos: 6
 //             Extends: VkBuildAccelerationStructureFlagBitsKHR
+//             Alias: VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_KHR
 //         Enum:
 //             Name: VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_EXT
 //             Negative: false
@@ -65790,8 +70931,8 @@ pub const VK_EXT_opacity_micromap_name = "VK_EXT_opacity_micromap";
 //         Enum:
 //             Name: VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT
 //             Negative: false
-//             Bitpos: 7
 //             Extends: VkBuildAccelerationStructureFlagBitsKHR
+//             Alias: VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_KHR
 //         Enum:
 //             Name: VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_EXT
 //             Negative: false
@@ -65807,6 +70948,36 @@ pub const VK_EXT_opacity_micromap_name = "VK_EXT_opacity_micromap";
 //             Negative: false
 //             Extends: VkBuildAccelerationStructureFlagBitsKHR
 //             Alias: VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT
+//         Enum:
+//             Name: VK_OPACITY_MICROMAP_FORMAT_2_STATE_EXT
+//             Negative: false
+//             Extends: VkOpacityMicromapFormatKHR
+//             Alias: VK_OPACITY_MICROMAP_FORMAT_2_STATE_KHR
+//         Enum:
+//             Name: VK_OPACITY_MICROMAP_FORMAT_4_STATE_EXT
+//             Negative: false
+//             Extends: VkOpacityMicromapFormatKHR
+//             Alias: VK_OPACITY_MICROMAP_FORMAT_4_STATE_KHR
+//         Enum:
+//             Name: VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_EXT
+//             Negative: false
+//             Extends: VkOpacityMicromapSpecialIndexKHR
+//             Alias: VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_KHR
+//         Enum:
+//             Name: VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_EXT
+//             Negative: false
+//             Extends: VkOpacityMicromapSpecialIndexKHR
+//             Alias: VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_KHR
+//         Enum:
+//             Name: VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_EXT
+//             Negative: false
+//             Extends: VkOpacityMicromapSpecialIndexKHR
+//             Alias: VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_KHR
+//         Enum:
+//             Name: VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_EXT
+//             Negative: false
+//             Extends: VkOpacityMicromapSpecialIndexKHR
+//             Alias: VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_KHR
 //         Type:
 //             Name: VkMicromapTypeEXT
 //         Type:
@@ -65882,6 +71053,22 @@ pub const VK_EXT_opacity_micromap_name = "VK_EXT_opacity_micromap";
 //         Feature:
 //             Name: micromap
 //             Struct: VkPhysicalDeviceOpacityMicromapFeaturesEXT
+//     Depends: VK_KHR_maintenance5,VK_VERSION_1_4
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT
+//             Negative: false
+//             Extends: VkPipelineCreateFlagBits2
+//             Alias: VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT
+//             Negative: false
+//             Bitpos: 23
+//             Extends: VkBufferUsageFlagBits2
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT
+//             Negative: false
+//             Bitpos: 24
+//             Extends: VkBufferUsageFlagBits2
 pub const VK_NV_displacement_micromap_name = "VK_NV_displacement_micromap";
 // Extension: VK_NV_displacement_micromap
 // Number: 398
@@ -66402,7 +71589,7 @@ pub const VK_ARM_scheduling_controls_name = "VK_ARM_scheduling_controls";
 //         Enum:
 //             Name: VK_ARM_SCHEDULING_CONTROLS_SPEC_VERSION
 //             Negative: false
-//             Value: 1
+//             Value: 2
 //         Enum:
 //             Name: VK_ARM_SCHEDULING_CONTROLS_EXTENSION_NAME
 //             Negative: false
@@ -66422,6 +71609,16 @@ pub const VK_ARM_scheduling_controls_name = "VK_ARM_scheduling_controls";
 //             Negative: false
 //             Extends: VkStructureType
 //             Offset: 2
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DISPATCH_PARAMETERS_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 3
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_PROPERTIES_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 4
 //         Type:
 //             Name: VkDeviceQueueShaderCoreControlCreateInfoARM
 //         Type:
@@ -66432,6 +71629,12 @@ pub const VK_ARM_scheduling_controls_name = "VK_ARM_scheduling_controls";
 //             Name: VkPhysicalDeviceSchedulingControlsFlagsARM
 //         Type:
 //             Name: VkPhysicalDeviceSchedulingControlsFlagBitsARM
+//         Type:
+//             Name: VkDispatchParametersARM
+//         Type:
+//             Name: VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM
+//         Command:
+//             Name: vkCmdSetDispatchParametersARM
 //         Feature:
 //             Name: schedulingControls
 //             Struct: VkPhysicalDeviceSchedulingControlsFeaturesARM
@@ -67307,6 +72510,12 @@ pub const VK_COREAVI_extension_446_name = "VK_COREAVI_extension_446";
 //             Negative: false
 //             Bitpos: 24
 //             Extends: VkImageUsageFlagBits
+//     Depends: VK_KHR_extended_flags
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_RESERVED_24_BIT_COREAVI
+//             Negative: false
+//             Bitpos: 24
+//             Extends: VkImageUsageFlagBits2KHR
 pub const VK_COREAVI_extension_447_name = "VK_COREAVI_extension_447";
 // Extension: VK_COREAVI_extension_447
 // Number: 447
@@ -67700,7 +72909,7 @@ pub const VK_EXT_extended_dynamic_state3_name = "VK_EXT_extended_dynamic_state3"
 //             Offset: 19
 //         Command:
 //             Name: vkCmdSetProvokingVertexModeEXT
-//     Depends: VK_EXT_line_rasterization
+//     Depends: VK_VERSION_1_4,VK_KHR_line_rasterization,VK_EXT_line_rasterization
 //         Enum:
 //             Name: VK_DYNAMIC_STATE_LINE_RASTERIZATION_MODE_EXT
 //             Negative: false
@@ -67953,7 +73162,7 @@ pub const VK_ARM_tensors_name = "VK_ARM_tensors";
 //         Enum:
 //             Name: VK_ARM_TENSORS_SPEC_VERSION
 //             Negative: false
-//             Value: 1
+//             Value: 2
 //         Enum:
 //             Name: VK_ARM_TENSORS_EXTENSION_NAME
 //             Negative: false
@@ -68221,6 +73430,23 @@ pub const VK_ARM_tensors_name = "VK_ARM_tensors";
 //             Offset: 23
 //         Type:
 //             Name: VkFrameBoundaryTensorsARM
+//     Depends: VK_KHR_shader_bfloat16
+//         Enum:
+//             Name: VK_FORMAT_R16_SFLOAT_FPENCODING_BFLOAT16_ARM
+//             Negative: false
+//             Extends: VkFormat
+//             Offset: 1
+//     Depends: VK_EXT_shader_float8
+//         Enum:
+//             Name: VK_FORMAT_R8_SFLOAT_FPENCODING_FLOAT8E4M3_ARM
+//             Negative: false
+//             Extends: VkFormat
+//             Offset: 2
+//         Enum:
+//             Name: VK_FORMAT_R8_SFLOAT_FPENCODING_FLOAT8E5M2_ARM
+//             Negative: false
+//             Extends: VkFormat
+//             Offset: 3
 pub const VK_EXT_extension_462_name = "VK_EXT_extension_462";
 // Extension: VK_EXT_extension_462
 // Number: 462
@@ -68533,7 +73759,7 @@ pub const VK_EXT_legacy_dithering_name = "VK_EXT_legacy_dithering";
 //         Feature:
 //             Name: legacyDithering
 //             Struct: VkPhysicalDeviceLegacyDitheringFeaturesEXT
-//     Depends: (VK_KHR_dynamic_rendering,VK_VERSION_1_3)+(VK_KHR_maintenance5,VK_VERSION_1_4)
+//     Depends: (VK_KHR_dynamic_rendering,VK_VERSION_1_3)+(VK_VERSION_1_4,VK_KHR_extended_flags,VK_KHR_maintenance5)
 //         Enum:
 //             Name: VK_RENDERING_ENABLE_LEGACY_DITHERING_BIT_EXT
 //             Negative: false
@@ -68940,12 +74166,6 @@ pub const VK_KHR_maintenance5_name = "VK_KHR_maintenance5";
 //             Negative: false
 //             Bitpos: 22
 //             Extends: VkPipelineCreateFlagBits2
-//     Depends: VK_EXT_opacity_micromap
-//         Enum:
-//             Name: VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT
-//             Negative: false
-//             Bitpos: 24
-//             Extends: VkPipelineCreateFlagBits2
 //     Depends: VK_EXT_attachment_feedback_loop_layout
 //         Enum:
 //             Name: VK_PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
@@ -69064,23 +74284,23 @@ pub const VK_KHR_maintenance5_name = "VK_KHR_maintenance5";
 //             Negative: false
 //             Bitpos: 26
 //             Extends: VkBufferUsageFlagBits2
-//     Depends: VK_EXT_opacity_micromap
-//         Enum:
-//             Name: VK_BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT
-//             Negative: false
-//             Bitpos: 23
-//             Extends: VkBufferUsageFlagBits2
-//         Enum:
-//             Name: VK_BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT
-//             Negative: false
-//             Bitpos: 24
-//             Extends: VkBufferUsageFlagBits2
 //     Depends: VK_ARM_pipeline_opacity_micromap
 //         Enum:
 //             Name: VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM
 //             Negative: false
 //             Bitpos: 37
 //             Extends: VkPipelineCreateFlagBits2
+//     Depends: VK_ARM_shader_instrumentation
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM
+//             Negative: false
+//             Bitpos: 39
+//             Extends: VkPipelineCreateFlagBits2
+//         Enum:
+//             Name: VK_SHADER_CREATE_INSTRUMENT_SHADER_BIT_ARM
+//             Negative: false
+//             Bitpos: 11
+//             Extends: VkShaderCreateFlagBitsEXT
 pub const VK_AMD_extension_472_name = "VK_AMD_extension_472";
 // Extension: VK_AMD_extension_472
 // Number: 472
@@ -69222,7 +74442,7 @@ pub const VK_AMDX_dense_geometry_format_name = "VK_AMDX_dense_geometry_format";
 // Number: 479
 // Type: device
 // Author: AMD
-// Depends: VK_KHR_acceleration_structure+(VK_KHR_maintenance5,VK_VERSION_1_4)
+// Depends: VK_KHR_acceleration_structure+(VK_VERSION_1_4,VK_KHR_extended_flags,VK_KHR_maintenance5)
 // Platform: provisional
 // Supported: supported
 // Unlocks:
@@ -69577,7 +74797,7 @@ pub const VK_EXT_shader_object_name = "VK_EXT_shader_object";
 //     Depends: VK_EXT_provoking_vertex
 //         Command:
 //             Name: vkCmdSetProvokingVertexModeEXT
-//     Depends: VK_EXT_line_rasterization
+//     Depends: VK_VERSION_1_4,VK_KHR_line_rasterization,VK_EXT_line_rasterization
 //         Command:
 //             Name: vkCmdSetLineRasterizationModeEXT
 //         Command:
@@ -69655,7 +74875,7 @@ pub const VK_KHR_pipeline_binary_name = "VK_KHR_pipeline_binary";
 // Number: 484
 // Type: device
 // Author: KHR
-// Depends: VK_KHR_maintenance5,VK_VERSION_1_4
+// Depends: VK_VERSION_1_4,VK_KHR_extended_flags,VK_KHR_maintenance5
 // Supported: supported
 // Unlocks:
 //         Enum:
@@ -69856,7 +75076,7 @@ pub const VK_KHR_surface_maintenance1_name = "VK_KHR_surface_maintenance1";
 // Number: 487
 // Type: instance
 // Author: KHR
-// Depends: VK_KHR_surface,VK_KHR_get_surface_capabilities2
+// Depends: VK_KHR_surface+VK_KHR_get_surface_capabilities2
 // Supported: supported
 // Unlocks:
 //         Enum:
@@ -69904,7 +75124,7 @@ pub const VK_KHR_swapchain_maintenance1_name = "VK_KHR_swapchain_maintenance1";
 // Number: 488
 // Type: device
 // Author: KHR
-// Depends: VK_KHR_swapchain,VK_KHR_surface_maintenance1,VK_KHR_get_physical_device_properties2
+// Depends: VK_KHR_swapchain+VK_KHR_surface_maintenance1+(VK_KHR_get_physical_device_properties2,VK_VERSION_1_1)
 // Supported: supported
 // Unlocks:
 //         Enum:
@@ -70557,26 +75777,37 @@ pub const VK_NV_extension_504_name = "VK_NV_extension_504";
 //             Name: VK_NV_EXTENSION_504_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_NV_extension_504&quot;
-pub const VK_EXT_extension_505_name = "VK_EXT_extension_505";
-// Extension: VK_EXT_extension_505
+pub const VK_KHR_internally_synchronized_queues_name = "VK_KHR_internally_synchronized_queues";
+// Extension: VK_KHR_internally_synchronized_queues
 // Number: 505
 // Type: device
-// Author: EXT
-// Supported: disabled
+// Author: KHR
+// Depends: VK_VERSION_1_1
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_EXT_EXTENSION_505_SPEC_VERSION
+//             Name: VK_KHR_INTERNALLY_SYNCHRONIZED_QUEUES_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_EXT_EXTENSION_505_EXTENSION_NAME
+//             Name: VK_KHR_INTERNALLY_SYNCHRONIZED_QUEUES_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_EXT_extension_505&quot;
+//             Value: &quot;VK_KHR_internally_synchronized_queues&quot;
 //         Enum:
-//             Name: VK_DEVICE_QUEUE_CREATE_RESERVED_2_BIT_EXT
+//             Name: VK_DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR
 //             Negative: false
 //             Bitpos: 2
 //             Extends: VkDeviceQueueCreateFlagBits
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Type:
+//             Name: VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR
+//         Feature:
+//             Name: internallySynchronizedQueues
+//             Struct: VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR
 pub const VK_NV_low_latency2_name = "VK_NV_low_latency2";
 // Extension: VK_NV_low_latency2
 // Number: 506
@@ -70721,7 +75952,7 @@ pub const VK_ARM_data_graph_name = "VK_ARM_data_graph";
 // Number: 508
 // Type: device
 // Author: ARM
-// Depends: VK_VERSION_1_3+VK_KHR_maintenance5+VK_KHR_deferred_host_operations
+// Depends: VK_VERSION_1_3+(VK_KHR_extended_flags,VK_KHR_maintenance5)+VK_KHR_deferred_host_operations
 // Supported: supported
 // Unlocks:
 //         Enum:
@@ -70970,21 +76201,42 @@ pub const VK_ARM_data_graph_name = "VK_ARM_data_graph";
 //             Negative: false
 //             Extends: VkStructureType
 //             Offset: 15
-pub const VK_EXT_extension_509_name = "VK_EXT_extension_509";
-// Extension: VK_EXT_extension_509
+pub const VK_ARM_data_graph_instruction_set_tosa_name = "VK_ARM_data_graph_instruction_set_tosa";
+// Extension: VK_ARM_data_graph_instruction_set_tosa
 // Number: 509
 // Type: device
-// Author: EXT
-// Supported: disabled
+// Author: ARM
+// Depends: VK_ARM_data_graph
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_EXT_EXTENSION_509_SPEC_VERSION
+//             Name: VK_ARM_DATA_GRAPH_INSTRUCTION_SET_TOSA_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_EXT_EXTENSION_509_EXTENSION_NAME
+//             Name: VK_ARM_DATA_GRAPH_INSTRUCTION_SET_TOSA_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_EXT_extension_509&quot;
+//             Value: &quot;VK_ARM_data_graph_instruction_set_tosa&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_TOSA_PROPERTIES_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_MAX_DATA_GRAPH_TOSA_NAME_SIZE_ARM
+//             Negative: false
+//         Type:
+//             Name: VkDataGraphTOSAQualityFlagBitsARM
+//         Type:
+//             Name: VkDataGraphTOSAQualityFlagsARM
+//         Type:
+//             Name: VkDataGraphTOSALevelARM
+//         Type:
+//             Name: VkDataGraphTOSANameQualityARM
+//         Type:
+//             Name: VkQueueFamilyDataGraphTOSAPropertiesARM
+//         Command:
+//             Name: vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM
 pub const VK_MESA_extension_510_name = "VK_MESA_extension_510";
 // Extension: VK_MESA_extension_510
 // Number: 510
@@ -71364,6 +76616,7 @@ pub const VK_NV_per_stage_descriptor_set_name = "VK_NV_per_stage_descriptor_set"
 // Author: NV
 // Depends: VK_KHR_maintenance6,VK_VERSION_1_4
 // Supported: supported
+// Deprecated by: VK_EXT_descriptor_heap
 // Unlocks:
 //         Enum:
 //             Name: VK_NV_PER_STAGE_DESCRIPTOR_SET_SPEC_VERSION
@@ -72013,6 +77266,12 @@ pub const VK_EXT_extension_537_name = "VK_EXT_extension_537";
 //             Negative: false
 //             Bitpos: 60
 //             Extends: VkFormatFeatureFlagBits2
+//     Depends: VK_KHR_extended_flags
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_RESERVED_28_BIT_EXT
+//             Negative: false
+//             Bitpos: 28
+//             Extends: VkImageUsageFlagBits2KHR
 pub const VK_EXT_extension_538_name = "VK_EXT_extension_538";
 // Extension: VK_EXT_extension_538
 // Number: 538
@@ -73123,21 +78382,64 @@ pub const VK_EXT_shader_replicated_composites_name = "VK_EXT_shader_replicated_c
 //         Feature:
 //             Name: shaderReplicatedComposites
 //             Struct: VkPhysicalDeviceShaderReplicatedCompositesFeaturesEXT
-pub const VK_ARM_extension_566_name = "VK_ARM_extension_566";
-// Extension: VK_ARM_extension_566
+pub const VK_ARM_tensor_controls_name = "VK_ARM_tensor_controls";
+// Extension: VK_ARM_tensor_controls
 // Number: 566
-// Type: invalid
-// Author: ARM
-// Supported: disabled
+// Type: device
+// Author: Arm
+// Depends: VK_ARM_tensors
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_ARM_EXTENSION_566_SPEC_VERSION
+//             Name: VK_ARM_TENSOR_CONTROLS_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_ARM_EXTENSION_566_EXTENSION_NAME
+//             Name: VK_ARM_TENSOR_CONTROLS_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_ARM_extension_566&quot;
+//             Value: &quot;VK_ARM_tensor_controls&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_TENSOR_EXPLICIT_TILING_FORMAT_PROPERTIES_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_TENSOR_ROLLING_BACKING_CREATE_INFO_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Enum:
+//             Name: VK_TENSOR_TILING_BRICK_16_WIDE_ARM
+//             Negative: false
+//             Extends: VkTensorTilingARM
+//             Offset: 0
+//         Enum:
+//             Name: VK_TENSOR_TILING_BRICK_8_WIDE_ARM
+//             Negative: false
+//             Extends: VkTensorTilingARM
+//             Offset: 1
+//         Enum:
+//             Name: VK_TENSOR_TILING_BRICK_4_WIDE_ARM
+//             Negative: false
+//             Extends: VkTensorTilingARM
+//             Offset: 2
+//         Enum:
+//             Name: VK_TENSOR_TILING_BLOCK_U_INTERLEAVED_ARM
+//             Negative: false
+//             Extends: VkTensorTilingARM
+//             Offset: 3
+//         Enum:
+//             Name: VK_TENSOR_TILING_BLOCK_U_INTERLEAVED_64K_ARM
+//             Negative: false
+//             Extends: VkTensorTilingARM
+//             Offset: 4
+//         Enum:
+//             Name: VK_MAX_TENSOR_CREATE_INFO_ROLLING_BACKING_WRAP_COUNT_ARM
+//             Negative: false
+//         Type:
+//             Name: VkTensorRollingBackingCreateInfoARM
+//         Type:
+//             Name: VkTensorExplicitTilingFormatPropertiesARM
 pub const VK_ARM_extension_567_name = "VK_ARM_extension_567";
 // Extension: VK_ARM_extension_567
 // Number: 567
@@ -73345,7 +78647,7 @@ pub const VK_NV_cluster_acceleration_structure_name = "VK_NV_cluster_acceleratio
 //             Name: VK_OPACITY_MICROMAP_SPECIAL_INDEX_CLUSTER_GEOMETRY_DISABLE_OPACITY_MICROMAP_NV
 //             Negative: false
 //             Value: -5
-//             Extends: VkOpacityMicromapSpecialIndexEXT
+//             Extends: VkOpacityMicromapSpecialIndexKHR
 //     Depends: VK_KHR_ray_tracing_pipeline
 //         Type:
 //             Name: VkRayTracingPipelineClusterAccelerationStructureCreateInfoNV
@@ -73456,7 +78758,7 @@ pub const VK_EXT_device_generated_commands_name = "VK_EXT_device_generated_comma
 // Number: 573
 // Type: device
 // Author: EXT
-// Depends: ((VK_KHR_buffer_device_address,VK_VERSION_1_2)+VK_KHR_maintenance5),VK_VERSION_1_3
+// Depends: ((VK_KHR_buffer_device_address,VK_VERSION_1_2)+(VK_KHR_extended_flags,VK_KHR_maintenance5)),VK_VERSION_1_3
 // Supported: supported
 // Unlocks:
 //         Enum:
@@ -73661,21 +78963,71 @@ pub const VK_EXT_device_generated_commands_name = "VK_EXT_device_generated_comma
 //     Depends: VK_EXT_shader_object
 //         Type:
 //             Name: VkWriteIndirectExecutionSetShaderEXT
-pub const VK_KHR_extension_574_name = "VK_KHR_extension_574";
-// Extension: VK_KHR_extension_574
+pub const VK_KHR_device_fault_name = "VK_KHR_device_fault";
+// Extension: VK_KHR_device_fault
 // Number: 574
-// Type: invalid
+// Type: device
 // Author: KHR
-// Supported: disabled
+// Depends: VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_KHR_EXTENSION_574_SPEC_VERSION
+//             Name: VK_KHR_DEVICE_FAULT_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_KHR_EXTENSION_574_EXTENSION_NAME
+//             Name: VK_KHR_DEVICE_FAULT_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_KHR_extension_574&quot;
+//             Value: &quot;VK_KHR_device_fault&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_PROPERTIES_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DEVICE_FAULT_INFO_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 2
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DEVICE_FAULT_DEBUG_INFO_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 3
+//         Type:
+//             Name: VkPhysicalDeviceFaultFeaturesKHR
+//         Type:
+//             Name: VkPhysicalDeviceFaultPropertiesKHR
+//         Type:
+//             Name: VkDeviceFaultInfoKHR
+//         Type:
+//             Name: VkDeviceFaultDebugInfoKHR
+//         Type:
+//             Name: VkDeviceFaultAddressInfoKHR
+//         Type:
+//             Name: VkDeviceFaultAddressTypeKHR
+//         Type:
+//             Name: VkDeviceFaultVendorInfoKHR
+//         Type:
+//             Name: VkDeviceFaultVendorBinaryHeaderVersionKHR
+//         Type:
+//             Name: VkDeviceFaultVendorBinaryHeaderVersionOneKHR
+//         Type:
+//             Name: VkDeviceFaultFlagBitsKHR
+//         Type:
+//             Name: VkDeviceFaultFlagsKHR
+//         Command:
+//             Name: vkGetDeviceFaultReportsKHR
+//         Command:
+//             Name: vkGetDeviceFaultDebugInfoKHR
+//         Feature:
+//             Name: deviceFault
+//             Struct: VkPhysicalDeviceFaultFeaturesKHR
 pub const VK_KHR_maintenance8_name = "VK_KHR_maintenance8";
 // Extension: VK_KHR_maintenance8
 // Number: 575
@@ -73851,21 +79203,45 @@ pub const VK_KHR_shader_fma_name = "VK_KHR_shader_fma";
 //         Feature:
 //             Name: shaderFmaFloat32
 //             Struct: VkPhysicalDeviceShaderFmaFeaturesKHR
-pub const VK_NV_extension_581_name = "VK_NV_extension_581";
-// Extension: VK_NV_extension_581
+pub const VK_NV_push_constant_bank_name = "VK_NV_push_constant_bank";
+// Extension: VK_NV_push_constant_bank
 // Number: 581
-// Type: invalid
+// Type: device
 // Author: NV
-// Supported: disabled
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_NV_EXTENSION_581_SPEC_VERSION
+//             Name: VK_NV_PUSH_CONSTANT_BANK_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_NV_EXTENSION_581_EXTENSION_NAME
+//             Name: VK_NV_PUSH_CONSTANT_BANK_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_NV_extension_581&quot;
+//             Value: &quot;VK_NV_push_constant_bank&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PUSH_CONSTANT_BANK_INFO_NV
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_FEATURES_NV
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_PROPERTIES_NV
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 2
+//         Type:
+//             Name: VkPushConstantBankInfoNV
+//         Type:
+//             Name: VkPhysicalDevicePushConstantBankFeaturesNV
+//         Type:
+//             Name: VkPhysicalDevicePushConstantBankPropertiesNV
+//         Feature:
+//             Name: pushConstantBank
+//             Struct: VkPhysicalDevicePushConstantBankFeaturesNV
 pub const VK_EXT_ray_tracing_invocation_reorder_name = "VK_EXT_ray_tracing_invocation_reorder";
 // Extension: VK_EXT_ray_tracing_invocation_reorder
 // Number: 582
@@ -73877,7 +79253,7 @@ pub const VK_EXT_ray_tracing_invocation_reorder_name = "VK_EXT_ray_tracing_invoc
 //         Enum:
 //             Name: VK_EXT_RAY_TRACING_INVOCATION_REORDER_SPEC_VERSION
 //             Negative: false
-//             Value: 1
+//             Value: 2
 //         Enum:
 //             Name: VK_EXT_RAY_TRACING_INVOCATION_REORDER_EXTENSION_NAME
 //             Negative: false
@@ -74141,7 +79517,7 @@ pub const VK_OHOS_native_buffer_name = "VK_OHOS_native_buffer";
 // Type: device
 // Author: HUAWEI
 // Platform: ohos
-// Supported: supported
+// Supported: disabled
 // Unlocks:
 //         Enum:
 //             Name: VK_OHOS_NATIVE_BUFFER_SPEC_VERSION
@@ -74388,56 +79764,85 @@ pub const VK_KHR_extension_598_name = "VK_KHR_extension_598";
 //             Name: VK_KHR_EXTENSION_598_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_KHR_extension_598&quot;
-pub const VK_KHR_extension_599_name = "VK_KHR_extension_599";
-// Extension: VK_KHR_extension_599
+pub const VK_KHR_video_encode_feedback2_name = "VK_KHR_video_encode_feedback2";
+// Extension: VK_KHR_video_encode_feedback2
 // Number: 599
 // Type: device
 // Author: KHR
-// Supported: disabled
+// Depends: VK_KHR_video_encode_queue
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_KHR_EXTENSION_599_SPEC_VERSION
+//             Name: VK_KHR_VIDEO_ENCODE_FEEDBACK_2_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_KHR_EXTENSION_599_EXTENSION_NAME
+//             Name: VK_KHR_VIDEO_ENCODE_FEEDBACK_2_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_KHR_extension_599&quot;
+//             Value: &quot;VK_KHR_video_encode_feedback2&quot;
 //         Enum:
-//             Name: VK_VIDEO_ENCODE_FEEDBACK_RESERVED_3_BIT_KHR
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_FEEDBACK_2_FEATURES_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_VIDEO_ENCODE_FEEDBACK_2_CAPABILITIES_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_QUERY_POOL_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_CREATE_INFO_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 2
+//         Enum:
+//             Name: VK_VIDEO_ENCODE_FEEDBACK_AVERAGE_QUANTIZATION_BIT_KHR
 //             Negative: false
 //             Bitpos: 3
 //             Extends: VkVideoEncodeFeedbackFlagBitsKHR
 //         Enum:
-//             Name: VK_VIDEO_ENCODE_FEEDBACK_RESERVED_4_BIT_KHR
+//             Name: VK_VIDEO_ENCODE_FEEDBACK_MIN_QUANTIZATION_BIT_KHR
 //             Negative: false
 //             Bitpos: 4
 //             Extends: VkVideoEncodeFeedbackFlagBitsKHR
 //         Enum:
-//             Name: VK_VIDEO_ENCODE_FEEDBACK_RESERVED_5_BIT_KHR
+//             Name: VK_VIDEO_ENCODE_FEEDBACK_MAX_QUANTIZATION_BIT_KHR
 //             Negative: false
 //             Bitpos: 5
 //             Extends: VkVideoEncodeFeedbackFlagBitsKHR
 //         Enum:
-//             Name: VK_VIDEO_ENCODE_FEEDBACK_RESERVED_6_BIT_KHR
+//             Name: VK_VIDEO_ENCODE_FEEDBACK_INTRA_PIXELS_BIT_KHR
 //             Negative: false
 //             Bitpos: 6
 //             Extends: VkVideoEncodeFeedbackFlagBitsKHR
 //         Enum:
-//             Name: VK_VIDEO_ENCODE_FEEDBACK_RESERVED_7_BIT_KHR
+//             Name: VK_VIDEO_ENCODE_FEEDBACK_INTER_PIXELS_BIT_KHR
 //             Negative: false
 //             Bitpos: 7
 //             Extends: VkVideoEncodeFeedbackFlagBitsKHR
 //         Enum:
-//             Name: VK_VIDEO_ENCODE_FEEDBACK_RESERVED_8_BIT_KHR
+//             Name: VK_VIDEO_ENCODE_FEEDBACK_SKIPPED_PIXELS_BIT_KHR
 //             Negative: false
 //             Bitpos: 8
 //             Extends: VkVideoEncodeFeedbackFlagBitsKHR
 //         Enum:
-//             Name: VK_VIDEO_ENCODE_FEEDBACK_RESERVED_9_BIT_KHR
+//             Name: VK_VIDEO_ENCODE_FEEDBACK_PICTURE_PARTITION_COUNT_BIT_KHR
 //             Negative: false
 //             Bitpos: 9
 //             Extends: VkVideoEncodeFeedbackFlagBitsKHR
+//         Type:
+//             Name: VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR
+//         Type:
+//             Name: VkVideoEncodePerPartitionFeedbackFlagBitsKHR
+//         Type:
+//             Name: VkVideoEncodePerPartitionFeedbackFlagsKHR
+//         Type:
+//             Name: VkVideoEncodeFeedback2CapabilitiesKHR
+//         Type:
+//             Name: VkQueryPoolVideoEncodePerPartitionFeedbackCreateInfoKHR
+//         Feature:
+//             Name: videoEncodeFeedback2
+//             Struct: VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR
 pub const VK_IMG_extension_600_name = "VK_IMG_extension_600";
 // Extension: VK_IMG_extension_600
 // Number: 600
@@ -74453,21 +79858,27 @@ pub const VK_IMG_extension_600_name = "VK_IMG_extension_600";
 //             Name: VK_IMG_EXTENSION_600_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_IMG_extension_600&quot;
-pub const VK_IMG_extension_601_name = "VK_IMG_extension_601";
-// Extension: VK_IMG_extension_601
+pub const VK_IMG_filter_linear_2d_name = "VK_IMG_filter_linear_2d";
+// Extension: VK_IMG_filter_linear_2d
 // Number: 601
-// Type: invalid
+// Type: device
 // Author: IMG
-// Supported: disabled
+// Depends: VK_KHR_format_feature_flags2,VK_VERSION_1_3
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_IMG_EXTENSION_601_SPEC_VERSION
+//             Name: VK_IMG_FILTER_LINEAR_2D_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_IMG_EXTENSION_601_EXTENSION_NAME
+//             Name: VK_IMG_FILTER_LINEAR_2D_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_IMG_extension_601&quot;
+//             Value: &quot;VK_IMG_filter_linear_2d&quot;
+//         Enum:
+//             Name: VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG
+//             Negative: false
+//             Bitpos: 45
+//             Extends: VkFormatFeatureFlagBits2
 pub const VK_EXT_extension_602_name = "VK_EXT_extension_602";
 // Extension: VK_EXT_extension_602
 // Number: 602
@@ -74660,21 +80071,89 @@ pub const VK_KHR_extension_607_name = "VK_KHR_extension_607";
 //             Name: VK_KHR_EXTENSION_607_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_KHR_extension_607&quot;
-pub const VK_KHR_extension_608_name = "VK_KHR_extension_608";
-// Extension: VK_KHR_extension_608
+pub const VK_ARM_shader_instrumentation_name = "VK_ARM_shader_instrumentation";
+// Extension: VK_ARM_shader_instrumentation
 // Number: 608
-// Type: invalid
+// Type: device
 // Author: ARM
-// Supported: disabled
+// Depends: VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_KHR_EXTENSION_608_SPEC_VERSION
+//             Name: VK_ARM_SHADER_INSTRUMENTATION_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_KHR_EXTENSION_608_EXTENSION_NAME
+//             Name: VK_ARM_SHADER_INSTRUMENTATION_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_KHR_extension_608&quot;
+//             Value: &quot;VK_ARM_shader_instrumentation&quot;
+//         Enum:
+//             Name: VK_OBJECT_TYPE_SHADER_INSTRUMENTATION_ARM
+//             Negative: false
+//             Extends: VkObjectType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INSTRUMENTATION_FEATURES_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INSTRUMENTATION_PROPERTIES_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_SHADER_INSTRUMENTATION_CREATE_INFO_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 2
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_SHADER_INSTRUMENTATION_METRIC_DESCRIPTION_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 3
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM
+//             Negative: false
+//             Bitpos: 39
+//             Extends: VkPipelineCreateFlagBits2
+//         Type:
+//             Name: VkPhysicalDeviceShaderInstrumentationFeaturesARM
+//         Type:
+//             Name: VkPhysicalDeviceShaderInstrumentationPropertiesARM
+//         Type:
+//             Name: VkShaderInstrumentationCreateInfoARM
+//         Type:
+//             Name: VkShaderInstrumentationMetricDescriptionARM
+//         Type:
+//             Name: VkShaderInstrumentationMetricDataHeaderARM
+//         Feature:
+//             Name: shaderInstrumentation
+//             Struct: VkPhysicalDeviceShaderInstrumentationFeaturesARM
+//         Type:
+//             Name: VkShaderInstrumentationARM
+//         Type:
+//             Name: VkShaderInstrumentationValuesFlagsARM
+//         Command:
+//             Name: vkEnumeratePhysicalDeviceShaderInstrumentationMetricsARM
+//         Command:
+//             Name: vkCreateShaderInstrumentationARM
+//         Command:
+//             Name: vkDestroyShaderInstrumentationARM
+//         Command:
+//             Name: vkCmdBeginShaderInstrumentationARM
+//         Command:
+//             Name: vkCmdEndShaderInstrumentationARM
+//         Command:
+//             Name: vkGetShaderInstrumentationValuesARM
+//         Command:
+//             Name: vkClearShaderInstrumentationMetricsARM
+//     Depends: VK_EXT_shader_object
+//         Enum:
+//             Name: VK_SHADER_CREATE_INSTRUMENT_SHADER_BIT_ARM
+//             Negative: false
+//             Bitpos: 11
+//             Extends: VkShaderCreateFlagBitsEXT
 pub const VK_EXT_vertex_attribute_robustness_name = "VK_EXT_vertex_attribute_robustness";
 // Extension: VK_EXT_vertex_attribute_robustness
 // Number: 609
@@ -74818,7 +80297,7 @@ pub const VK_VALVE_fragment_density_map_layered_name = "VK_VALVE_fragment_densit
 // Number: 612
 // Type: device
 // Author: VALVE
-// Depends: (VK_KHR_maintenance5,VK_VERSION_1_4)+VK_EXT_fragment_density_map
+// Depends: (VK_VERSION_1_4,VK_KHR_extended_flags,VK_KHR_maintenance5)+VK_EXT_fragment_density_map
 // Supported: supported
 // Unlocks:
 //         Enum:
@@ -74909,7 +80388,6 @@ pub const VK_NV_present_metering_name = "VK_NV_present_metering";
 // Type: device
 // Author: NV
 // Depends: VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
-// Platform: provisional
 // Supported: supported
 // Unlocks:
 //         Enum:
@@ -74972,26 +80450,44 @@ pub const VK_EXT_extension_616_name = "VK_EXT_extension_616";
 //             Negative: false
 //             Bitpos: 1
 //             Extends: VkInstanceCreateFlagBits
-pub const VK_EXT_extension_617_name = "VK_EXT_extension_617";
-// Extension: VK_EXT_extension_617
+pub const VK_EXT_multisampled_render_to_swapchain_name = "VK_EXT_multisampled_render_to_swapchain";
+// Extension: VK_EXT_multisampled_render_to_swapchain
 // Number: 617
-// Type: invalid
+// Type: device
 // Author: EXT
-// Supported: disabled
+// Depends: VK_KHR_swapchain+VK_EXT_multisampled_render_to_single_sampled
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_EXT_EXTENSION_617_SPEC_VERSION
+//             Name: VK_EXT_MULTISAMPLED_RENDER_TO_SWAPCHAIN_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_EXT_EXTENSION_617_EXTENSION_NAME
+//             Name: VK_EXT_MULTISAMPLED_RENDER_TO_SWAPCHAIN_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_EXT_extension_617&quot;
+//             Value: &quot;VK_EXT_multisampled_render_to_swapchain&quot;
 //         Enum:
-//             Name: VK_SWAPCHAIN_CREATE_RESERVED_8_BIT_EXT
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SWAPCHAIN_FEATURES_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_SWAPCHAIN_FLAGS_SURFACE_CAPABILITIES_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Enum:
+//             Name: VK_SWAPCHAIN_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT
 //             Negative: false
 //             Bitpos: 8
 //             Extends: VkSwapchainCreateFlagBitsKHR
+//         Type:
+//             Name: VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT
+//         Type:
+//             Name: VkSwapchainFlagsSurfaceCapabilitiesEXT
+//         Feature:
+//             Name: multisampledRenderToSwapchain
+//             Struct: VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT
 pub const VK_EXT_extension_618_name = "VK_EXT_extension_618";
 // Extension: VK_EXT_extension_618
 // Number: 618
@@ -75148,35 +80644,117 @@ pub const VK_EXT_extension_623_name = "VK_EXT_extension_623";
 //             Name: VK_EXT_EXTENSION_623_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_EXT_extension_623&quot;
-pub const VK_KHR_extension_624_name = "VK_KHR_extension_624";
-// Extension: VK_KHR_extension_624
+pub const VK_KHR_opacity_micromap_name = "VK_KHR_opacity_micromap";
+// Extension: VK_KHR_opacity_micromap
 // Number: 624
-// Type: invalid
+// Type: device
 // Author: KHR
-// Supported: disabled
+// Depends: VK_KHR_acceleration_structure+VK_KHR_device_address_commands
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_KHR_EXTENSION_624_SPEC_VERSION
+//             Name: VK_KHR_OPACITY_MICROMAP_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_KHR_EXTENSION_624_EXTENSION_NAME
+//             Name: VK_KHR_OPACITY_MICROMAP_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_KHR_extension_624&quot;
+//             Value: &quot;VK_KHR_opacity_micromap&quot;
 //         Enum:
-//             Name: VK_BUILD_ACCELERATION_STRUCTURE_RESERVED_10_BIT_KHR
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_FEATURES_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_PROPERTIES_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_MICROMAP_DATA_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 2
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_TRIANGLES_OPACITY_MICROMAP_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 3
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR
+//             Negative: false
+//             Bitpos: 24
+//             Extends: VkPipelineCreateFlagBits
+//         Enum:
+//             Name: VK_GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_KHR
+//             Negative: false
+//             Bitpos: 4
+//             Extends: VkGeometryInstanceFlagBitsKHR
+//         Enum:
+//             Name: VK_GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_KHR
+//             Negative: false
+//             Bitpos: 5
+//             Extends: VkGeometryInstanceFlagBitsKHR
+//         Enum:
+//             Name: VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_KHR
+//             Negative: false
+//             Bitpos: 6
+//             Extends: VkBuildAccelerationStructureFlagBitsKHR
+//         Enum:
+//             Name: VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_KHR
+//             Negative: false
+//             Bitpos: 7
+//             Extends: VkBuildAccelerationStructureFlagBitsKHR
+//         Enum:
+//             Name: VK_BUILD_ACCELERATION_STRUCTURE_MICROMAP_LOSSY_BIT_KHR
 //             Negative: false
 //             Bitpos: 10
 //             Extends: VkBuildAccelerationStructureFlagBitsKHR
-//     Depends: VK_KHR_maintenance5,VK_VERSION_1_4
 //         Enum:
-//             Name: VK_PIPELINE_CREATE_2_RESERVED_41_BIT_KHR
+//             Name: VK_ACCELERATION_STRUCTURE_TYPE_OPACITY_MICROMAP_KHR
+//             Negative: false
+//             Extends: VkAccelerationStructureTypeKHR
+//             Offset: 0
+//         Enum:
+//             Name: VK_GEOMETRY_TYPE_MICROMAP_KHR
+//             Negative: false
+//             Extends: VkGeometryTypeKHR
+//             Offset: 0
+//         Type:
+//             Name: VkAccelerationStructureGeometryMicromapDataKHR
+//         Type:
+//             Name: VkMicromapUsageKHR
+//         Type:
+//             Name: VkPhysicalDeviceOpacityMicromapFeaturesKHR
+//         Type:
+//             Name: VkPhysicalDeviceOpacityMicromapPropertiesKHR
+//         Type:
+//             Name: VkOpacityMicromapFormatKHR
+//         Type:
+//             Name: VkMicromapTriangleKHR
+//         Type:
+//             Name: VkAccelerationStructureTrianglesOpacityMicromapKHR
+//         Type:
+//             Name: VkOpacityMicromapSpecialIndexKHR
+//         Type:
+//             Name: VkAccelerationStructureSerializedBlockTypeKHR
+//         Feature:
+//             Name: micromap
+//             Struct: VkPhysicalDeviceOpacityMicromapFeaturesKHR
+//     Depends: VK_VERSION_1_4,VK_KHR_extended_flags,VK_KHR_maintenance5
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR
+//             Negative: false
+//             Bitpos: 24
+//             Extends: VkPipelineCreateFlagBits2
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR
 //             Negative: false
 //             Bitpos: 41
 //             Extends: VkPipelineCreateFlagBits2
 //     Depends: VK_EXT_shader_object
 //         Enum:
-//             Name: VK_SHADER_CREATE_RESERVED_12_BIT_EXT
+//             Name: VK_SHADER_CREATE_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_EXT
 //             Negative: false
 //             Bitpos: 12
 //             Extends: VkShaderCreateFlagBitsEXT
@@ -75371,15 +80949,15 @@ pub const VK_QCOM_data_graph_model_name = "VK_QCOM_data_graph_model";
 //             Extends: VkPhysicalDeviceDataGraphOperationTypeARM
 //             Offset: 0
 //         Enum:
-//             Name: VK_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_BUILTIN_MODEL_QCOM
-//             Negative: false
-//             Extends: VkPhysicalDeviceDataGraphOperationTypeARM
-//             Offset: 1
-//         Enum:
 //             Name: VK_PIPELINE_CACHE_HEADER_VERSION_DATA_GRAPH_QCOM
 //             Negative: false
 //             Extends: VkPipelineCacheHeaderVersion
 //             Offset: 0
+//         Enum:
+//             Name: VK_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_BUILTIN_MODEL_QCOM
+//             Negative: false
+//             Extends: VkPhysicalDeviceDataGraphOperationTypeARM
+//             Offset: 1
 //         Enum:
 //             Name: VK_DATA_GRAPH_MODEL_TOOLCHAIN_VERSION_LENGTH_QCOM
 //             Negative: false
@@ -75523,36 +81101,174 @@ pub const VK_KHR_maintenance10_name = "VK_KHR_maintenance10";
 //             Negative: false
 //             Bitpos: 1
 //             Extends: VkResolveImageFlagBitsKHR
-pub const VK_ARM_extension_632_name = "VK_ARM_extension_632";
-// Extension: VK_ARM_extension_632
+pub const VK_ARM_data_graph_optical_flow_name = "VK_ARM_data_graph_optical_flow";
+// Extension: VK_ARM_data_graph_optical_flow
 // Number: 632
-// Type: invalid
+// Type: device
 // Author: ARM
-// Supported: disabled
+// Depends: VK_ARM_data_graph
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_ARM_EXTENSION_632_SPEC_VERSION
+//             Name: VK_ARM_DATA_GRAPH_OPTICAL_FLOW_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_ARM_EXTENSION_632_EXTENSION_NAME
+//             Name: VK_ARM_DATA_GRAPH_OPTICAL_FLOW_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_ARM_extension_632&quot;
+//             Value: &quot;VK_ARM_data_graph_optical_flow&quot;
 //         Enum:
-//             Name: VK_FORMAT_FEATURE_2_RESERVED_56_BIT_ARM
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_OPTICAL_FLOW_FEATURES_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_OPTICAL_FLOW_PROPERTIES_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DATA_GRAPH_OPTICAL_FLOW_IMAGE_FORMAT_INFO_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 3
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DATA_GRAPH_OPTICAL_FLOW_IMAGE_FORMAT_PROPERTIES_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 4
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_OPTICAL_FLOW_DISPATCH_INFO_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 5
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_OPTICAL_FLOW_CREATE_INFO_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 2
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_RESOURCE_INFO_IMAGE_LAYOUT_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 6
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SINGLE_NODE_CREATE_INFO_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 7
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SINGLE_NODE_CONNECTION_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 8
+//         Enum:
+//             Name: VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM
 //             Negative: false
 //             Bitpos: 56
 //             Extends: VkFormatFeatureFlagBits2
 //         Enum:
-//             Name: VK_FORMAT_FEATURE_2_RESERVED_57_BIT_ARM
+//             Name: VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM
 //             Negative: false
 //             Bitpos: 57
 //             Extends: VkFormatFeatureFlagBits2
 //         Enum:
-//             Name: VK_FORMAT_FEATURE_2_RESERVED_58_BIT_ARM
+//             Name: VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM
 //             Negative: false
 //             Bitpos: 58
 //             Extends: VkFormatFeatureFlagBits2
+//         Enum:
+//             Name: VK_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_OPTICAL_FLOW_ARM
+//             Negative: false
+//             Extends: VkPhysicalDeviceDataGraphOperationTypeARM
+//             Offset: 0
+//         Enum:
+//             Name: VK_DATA_GRAPH_PIPELINE_NODE_CONNECTION_TYPE_OPTICAL_FLOW_INPUT_ARM
+//             Negative: false
+//             Extends: VkDataGraphPipelineNodeConnectionTypeARM
+//             Offset: 0
+//         Enum:
+//             Name: VK_DATA_GRAPH_PIPELINE_NODE_CONNECTION_TYPE_OPTICAL_FLOW_REFERENCE_ARM
+//             Negative: false
+//             Extends: VkDataGraphPipelineNodeConnectionTypeARM
+//             Offset: 1
+//         Enum:
+//             Name: VK_DATA_GRAPH_PIPELINE_NODE_CONNECTION_TYPE_OPTICAL_FLOW_HINT_ARM
+//             Negative: false
+//             Extends: VkDataGraphPipelineNodeConnectionTypeARM
+//             Offset: 2
+//         Enum:
+//             Name: VK_DATA_GRAPH_PIPELINE_NODE_CONNECTION_TYPE_OPTICAL_FLOW_FLOW_VECTOR_ARM
+//             Negative: false
+//             Extends: VkDataGraphPipelineNodeConnectionTypeARM
+//             Offset: 3
+//         Enum:
+//             Name: VK_DATA_GRAPH_PIPELINE_NODE_CONNECTION_TYPE_OPTICAL_FLOW_COST_ARM
+//             Negative: false
+//             Extends: VkDataGraphPipelineNodeConnectionTypeARM
+//             Offset: 4
+//         Enum:
+//             Name: VK_DATA_GRAPH_PIPELINE_NODE_TYPE_OPTICAL_FLOW_ARM
+//             Negative: false
+//             Extends: VkDataGraphPipelineNodeTypeARM
+//             Offset: 0
+//         Enum:
+//             Name: VK_DATA_GRAPH_PIPELINE_SESSION_CREATE_OPTICAL_FLOW_CACHE_BIT_ARM
+//             Negative: false
+//             Bitpos: 1
+//             Extends: VkDataGraphPipelineSessionCreateFlagBitsARM
+//         Enum:
+//             Name: VK_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_OPTICAL_FLOW_CACHE_ARM
+//             Negative: false
+//             Extends: VkDataGraphPipelineSessionBindPointARM
+//             Offset: 1
+//         Type:
+//             Name: VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM
+//         Type:
+//             Name: VkQueueFamilyDataGraphOpticalFlowPropertiesARM
+//         Type:
+//             Name: VkDataGraphPipelineOpticalFlowCreateInfoARM
+//         Type:
+//             Name: VkDataGraphOpticalFlowImageFormatPropertiesARM
+//         Type:
+//             Name: VkDataGraphOpticalFlowImageFormatInfoARM
+//         Type:
+//             Name: VkDataGraphOpticalFlowImageUsageFlagsARM
+//         Type:
+//             Name: VkDataGraphOpticalFlowImageUsageFlagBitsARM
+//         Type:
+//             Name: VkDataGraphOpticalFlowCreateFlagsARM
+//         Type:
+//             Name: VkDataGraphOpticalFlowCreateFlagBitsARM
+//         Type:
+//             Name: VkDataGraphOpticalFlowPerformanceLevelARM
+//         Type:
+//             Name: VkDataGraphOpticalFlowGridSizeFlagsARM
+//         Type:
+//             Name: VkDataGraphOpticalFlowGridSizeFlagBitsARM
+//         Type:
+//             Name: VkDataGraphPipelineOpticalFlowDispatchInfoARM
+//         Type:
+//             Name: VkDataGraphOpticalFlowExecuteFlagsARM
+//         Type:
+//             Name: VkDataGraphOpticalFlowExecuteFlagBitsARM
+//         Type:
+//             Name: VkDataGraphPipelineResourceInfoImageLayoutARM
+//         Type:
+//             Name: VkDataGraphPipelineSingleNodeCreateInfoARM
+//         Type:
+//             Name: VkDataGraphPipelineNodeTypeARM
+//         Type:
+//             Name: VkDataGraphPipelineSingleNodeConnectionARM
+//         Type:
+//             Name: VkDataGraphPipelineNodeConnectionTypeARM
+//         Command:
+//             Name: vkGetPhysicalDeviceQueueFamilyDataGraphOpticalFlowImageFormatsARM
+//         Command:
+//             Name: vkGetPhysicalDeviceQueueFamilyDataGraphEngineOperationPropertiesARM
+//         Feature:
+//             Name: dataGraphOpticalFlow
+//             Struct: VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM
 pub const VK_MTK_extension_633_name = "VK_MTK_extension_633";
 // Extension: VK_MTK_extension_633
 // Number: 633
@@ -75598,21 +81314,46 @@ pub const VK_MTK_extension_635_name = "VK_MTK_extension_635";
 //             Name: VK_MTK_EXTENSION_635_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_MTK_extension_635&quot;
-pub const VK_EXT_extension_636_name = "VK_EXT_extension_636";
-// Extension: VK_EXT_extension_636
+pub const VK_EXT_shader_long_vector_name = "VK_EXT_shader_long_vector";
+// Extension: VK_EXT_shader_long_vector
 // Number: 636
-// Type: invalid
+// Type: device
 // Author: EXT
-// Supported: disabled
+// Depends: VK_VERSION_1_2
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_EXT_EXTENSION_636_SPEC_VERSION
+//             Name: VK_EXT_SHADER_LONG_VECTOR_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_EXT_EXTENSION_636_EXTENSION_NAME
+//             Name: VK_EXT_SHADER_LONG_VECTOR_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_EXT_extension_636&quot;
+//             Value: &quot;VK_EXT_shader_long_vector&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_PROPERTIES_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Type:
+//             Name: VkPhysicalDeviceShaderLongVectorFeaturesEXT
+//         Type:
+//             Name: VkPhysicalDeviceShaderLongVectorPropertiesEXT
+//         Feature:
+//             Name: longVector
+//             Struct: VkPhysicalDeviceShaderLongVectorFeaturesEXT
+//         Feature:
+//             Name: scalarBlockLayout
+//             Struct: VkPhysicalDeviceVulkan12Features
+//     Depends: VK_KHR_workgroup_memory_explicit_layout
+//         Feature:
+//             Name: workgroupMemoryExplicitLayoutScalarBlockLayout
+//             Struct: VkPhysicalDeviceWorkgroupMemoryExplicitLayoutFeaturesKHR
 pub const VK_EXT_extension_637_name = "VK_EXT_extension_637";
 // Extension: VK_EXT_extension_637
 // Number: 637
@@ -75669,6 +81410,26 @@ pub const VK_EXT_extension_639_name = "VK_EXT_extension_639";
 //             Name: VK_EXT_EXTENSION_639_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_EXT_extension_639&quot;
+//         Enum:
+//             Name: VK_QUEUE_RESERVED_9_BIT_EXT
+//             Negative: false
+//             Bitpos: 9
+//             Extends: VkQueueFlagBits
+//         Enum:
+//             Name: VK_PIPELINE_STAGE_2_RESERVED_49_BIT_EXT
+//             Negative: false
+//             Bitpos: 49
+//             Extends: VkPipelineStageFlagBits2
+//         Enum:
+//             Name: VK_ACCESS_2_RESERVED_62_BIT_EXT
+//             Negative: false
+//             Bitpos: 62
+//             Extends: VkAccessFlagBits2
+//         Enum:
+//             Name: VK_ACCESS_2_RESERVED_63_BIT_EXT
+//             Negative: false
+//             Bitpos: 63
+//             Extends: VkAccessFlagBits2
 pub const VK_NV_extension_640_name = "VK_NV_extension_640";
 // Extension: VK_NV_extension_640
 // Number: 640
@@ -75704,6 +81465,21 @@ pub const VK_EXT_extension_641_name = "VK_EXT_extension_641";
 //             Negative: false
 //             Bitpos: 45
 //             Extends: VkPipelineCreateFlagBits2
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_RESERVED_18_BIT_EXT
+//             Negative: false
+//             Bitpos: 18
+//             Extends: VkBufferUsageFlagBits2
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_RESERVED_30_BIT_EXT
+//             Negative: false
+//             Bitpos: 30
+//             Extends: VkBufferUsageFlagBits2
+//         Enum:
+//             Name: VK_BUILD_ACCELERATION_STRUCTURE_RESERVED_15_BIT_EXT
+//             Negative: false
+//             Bitpos: 15
+//             Extends: VkBuildAccelerationStructureFlagBitsKHR
 pub const VK_EXT_extension_642_name = "VK_EXT_extension_642";
 // Extension: VK_EXT_extension_642
 // Number: 642
@@ -75719,6 +81495,11 @@ pub const VK_EXT_extension_642_name = "VK_EXT_extension_642";
 //             Name: VK_EXT_EXTENSION_642_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_EXT_extension_642&quot;
+//         Enum:
+//             Name: VK_BUILD_ACCELERATION_STRUCTURE_RESERVED_14_BIT_EXT
+//             Negative: false
+//             Bitpos: 14
+//             Extends: VkBuildAccelerationStructureFlagBitsKHR
 pub const VK_EXT_shader_uniform_buffer_unsized_array_name = "VK_EXT_shader_uniform_buffer_unsized_array";
 // Extension: VK_EXT_shader_uniform_buffer_unsized_array
 // Number: 643
@@ -75874,6 +81655,17 @@ pub const VK_KHR_extension_647_name = "VK_KHR_extension_647";
 //             Negative: false
 //             Bitpos: 30
 //             Extends: VkImageUsageFlagBits
+//     Depends: VK_KHR_extended_flags
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_RESERVED_29_BIT_KHR
+//             Negative: false
+//             Bitpos: 29
+//             Extends: VkImageUsageFlagBits2KHR
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_RESERVED_30_BIT_KHR
+//             Negative: false
+//             Bitpos: 30
+//             Extends: VkImageUsageFlagBits2KHR
 pub const VK_KHR_extension_648_name = "VK_KHR_extension_648";
 // Extension: VK_KHR_extension_648
 // Number: 648
@@ -75909,6 +81701,11 @@ pub const VK_AMD_extension_649_name = "VK_AMD_extension_649";
 //             Negative: false
 //             Bitpos: 47
 //             Extends: VkPipelineCreateFlagBits2
+//         Enum:
+//             Name: VK_BUILD_ACCELERATION_STRUCTURE_RESERVED_13_BIT_AMD
+//             Negative: false
+//             Bitpos: 13
+//             Extends: VkBuildAccelerationStructureFlagBitsKHR
 pub const VK_AMD_extension_650_name = "VK_AMD_extension_650";
 // Extension: VK_AMD_extension_650
 // Number: 650
@@ -75969,6 +81766,21 @@ pub const VK_AMD_extension_653_name = "VK_AMD_extension_653";
 //             Name: VK_AMD_EXTENSION_653_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_AMD_extension_653&quot;
+//         Enum:
+//             Name: VK_PIPELINE_STAGE_2_RESERVED_31_BIT_AMD
+//             Negative: false
+//             Bitpos: 31
+//             Extends: VkPipelineStageFlagBits2
+//         Enum:
+//             Name: VK_ACCESS_2_RESERVED_28_BIT_AMD
+//             Negative: false
+//             Bitpos: 28
+//             Extends: VkAccessFlagBits2
+//         Enum:
+//             Name: VK_ACCESS_2_RESERVED_29_BIT_AMD
+//             Negative: false
+//             Bitpos: 29
+//             Extends: VkAccessFlagBits2
 pub const VK_VALVE_extension_654_name = "VK_VALVE_extension_654";
 // Extension: VK_VALVE_extension_654
 // Number: 654
@@ -76029,32 +81841,67 @@ pub const VK_ARM_extension_657_name = "VK_ARM_extension_657";
 //             Name: VK_ARM_EXTENSION_657_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_ARM_extension_657&quot;
-pub const VK_KHR_extension_658_name = "VK_KHR_extension_658";
-// Extension: VK_KHR_extension_658
+pub const VK_KHR_maintenance11_name = "VK_KHR_maintenance11";
+// Extension: VK_KHR_maintenance11
 // Number: 658
 // Type: device
 // Author: KHR
-// Supported: disabled
+// Depends: VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_KHR_EXTENSION_658_SPEC_VERSION
+//             Name: VK_KHR_MAINTENANCE_11_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_KHR_EXTENSION_658_EXTENSION_NAME
+//             Name: VK_KHR_MAINTENANCE_11_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_KHR_extension_658&quot;
+//             Value: &quot;VK_KHR_maintenance11&quot;
 //         Enum:
-//             Name: VK_IMAGE_CREATE_RESERVED_22_BIT_KHR
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_QUEUE_FAMILY_OPTIMAL_IMAGE_TRANSFER_GRANULARITY_PROPERTIES_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Type:
+//             Name: VkPhysicalDeviceMaintenance11FeaturesKHR
+//         Type:
+//             Name: VkQueueFamilyOptimalImageTransferGranularityPropertiesKHR
+//         Enum:
+//             Name: VK_IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR
 //             Negative: false
 //             Bitpos: 22
 //             Extends: VkImageCreateFlagBits
+//         Feature:
+//             Name: maintenance11
+//             Struct: VkPhysicalDeviceMaintenance11FeaturesKHR
 //     Depends: VK_EXT_shader_object
 //         Enum:
-//             Name: VK_SHADER_CREATE_RESERVED_18_BIT_KHR
+//             Name: VK_SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR
 //             Negative: false
 //             Bitpos: 18
 //             Extends: VkShaderCreateFlagBitsEXT
+//         Enum:
+//             Name: VK_PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT
+//             Negative: false
+//             Bitpos: 1
+//             Extends: VkPipelineLayoutCreateFlagBits
+//     Depends: VK_EXT_shader_object+(VK_EXT_mesh_shader,VK_NV_mesh_shader)
+//         Enum:
+//             Name: VK_PIPELINE_LAYOUT_CREATE_NO_TASK_SHADER_BIT_KHR
+//             Negative: false
+//             Bitpos: 2
+//             Extends: VkPipelineLayoutCreateFlagBits
+//     Depends: VK_KHR_extended_flags
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR
+//             Negative: false
+//             Bitpos: 22
+//             Extends: VkImageCreateFlagBits2KHR
 pub const VK_ARM_extension_659_name = "VK_ARM_extension_659";
 // Extension: VK_ARM_extension_659
 // Number: 659
@@ -76140,21 +81987,37 @@ pub const VK_VALVE_extension_662_name = "VK_VALVE_extension_662";
 //             Name: VK_VALVE_EXTENSION_662_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_VALVE_extension_662&quot;
-pub const VK_EXT_extension_663_name = "VK_EXT_extension_663";
-// Extension: VK_EXT_extension_663
+pub const VK_EXT_shader_subgroup_partitioned_name = "VK_EXT_shader_subgroup_partitioned";
+// Extension: VK_EXT_shader_subgroup_partitioned
 // Number: 663
-// Type: invalid
+// Type: device
 // Author: EXT
-// Supported: disabled
+// Depends: VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_EXT_EXTENSION_663_SPEC_VERSION
+//             Name: VK_EXT_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_EXT_EXTENSION_663_EXTENSION_NAME
+//             Name: VK_EXT_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_EXT_extension_663&quot;
+//             Value: &quot;VK_EXT_shader_subgroup_partitioned&quot;
+//         Enum:
+//             Name: VK_SUBGROUP_FEATURE_PARTITIONED_BIT_EXT
+//             Negative: false
+//             Bitpos: 8
+//             Extends: VkSubgroupFeatureFlagBits
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Type:
+//             Name: VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT
+//         Feature:
+//             Name: shaderSubgroupPartitioned
+//             Struct: VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT
 pub const VK_EXT_extension_664_name = "VK_EXT_extension_664";
 // Extension: VK_EXT_extension_664
 // Number: 664
@@ -76186,7 +82049,7 @@ pub const VK_EXT_extension_664_name = "VK_EXT_extension_664";
 //             Bitpos: 16
 //             Extends: VkImageUsageFlagBits
 //         Enum:
-//             Name: VK_IMAGE_USAGE_RESERVED_27_BIT_HUAWEI
+//             Name: VK_IMAGE_USAGE_RESERVED_17_BIT_HUAWEI
 //             Negative: false
 //             Bitpos: 17
 //             Extends: VkImageUsageFlagBits
@@ -76215,21 +82078,47 @@ pub const VK_EXT_extension_664_name = "VK_EXT_extension_664";
 //             Negative: false
 //             Bitpos: 61
 //             Extends: VkFormatFeatureFlagBits2
-pub const VK_SEC_extension_665_name = "VK_SEC_extension_665";
-// Extension: VK_SEC_extension_665
+//     Depends: VK_KHR_extended_flags
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_RESERVED_16_BIT_HUAWEI
+//             Negative: false
+//             Bitpos: 16
+//             Extends: VkImageUsageFlagBits2KHR
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_RESERVED_27_BIT_HUAWEI
+//             Negative: false
+//             Bitpos: 17
+//             Extends: VkImageUsageFlagBits2KHR
+pub const VK_SEC_ubm_surface_name = "VK_SEC_ubm_surface";
+// Extension: VK_SEC_ubm_surface
 // Number: 665
-// Type: invalid
+// Type: instance
 // Author: SEC
-// Supported: disabled
+// Depends: VK_KHR_surface
+// Platform: ubm
+// Supported: supported
 // Unlocks:
 //         Enum:
-//             Name: VK_SEC_EXTENSION_665_SPEC_VERSION
+//             Name: VK_SEC_UBM_SURFACE_SPEC_VERSION
 //             Negative: false
-//             Value: 0
+//             Value: 1
 //         Enum:
-//             Name: VK_SEC_EXTENSION_665_EXTENSION_NAME
+//             Name: VK_SEC_UBM_SURFACE_EXTENSION_NAME
 //             Negative: false
-//             Value: &quot;VK_SEC_extension_665&quot;
+//             Value: &quot;VK_SEC_ubm_surface&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_UBM_SURFACE_CREATE_INFO_SEC
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Type:
+//             Name: VkUbmSurfaceCreateFlagsSEC
+//         Type:
+//             Name: VkUbmSurfaceCreateInfoSEC
+//         Command:
+//             Name: vkCreateUbmSurfaceSEC
+//         Command:
+//             Name: vkGetPhysicalDeviceUbmPresentationSupportSEC
 pub const VK_GOOGLE_extension_666_name = "VK_GOOGLE_extension_666";
 // Extension: VK_GOOGLE_extension_666
 // Number: 666
@@ -76280,3 +82169,1172 @@ pub const VK_NV_extension_668_name = "VK_NV_extension_668";
 //             Name: VK_NV_EXTENSION_668_EXTENSION_NAME
 //             Negative: false
 //             Value: &quot;VK_NV_extension_668&quot;
+pub const VK_KHR_extended_flags_name = "VK_KHR_extended_flags";
+// Extension: VK_KHR_extended_flags
+// Number: 669
+// Type: device
+// Author: KHR
+// Depends: VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
+// Supported: supported
+// Unlocks:
+//         Enum:
+//             Name: VK_KHR_EXTENDED_FLAGS_SPEC_VERSION
+//             Negative: false
+//             Value: 1
+//         Enum:
+//             Name: VK_KHR_EXTENDED_FLAGS_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_KHR_extended_flags&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_4_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_IMAGE_CREATE_FLAGS_2_CREATE_INFO_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_IMAGE_USAGE_FLAGS_2_CREATE_INFO_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 2
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_2_CREATE_INFO_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 3
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_FLAGS_FEATURES_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 4
+//         Type:
+//             Name: VkFormatFeatureFlags4KHR
+//         Type:
+//             Name: VkFormatFeatureFlagBits4KHR
+//         Type:
+//             Name: VkFormatProperties4KHR
+//         Type:
+//             Name: VkImageUsageFlags2KHR
+//         Type:
+//             Name: VkImageUsageFlagBits2KHR
+//         Type:
+//             Name: VkImageUsageFlags2CreateInfoKHR
+//         Type:
+//             Name: VkImageCreateFlags2KHR
+//         Type:
+//             Name: VkImageCreateFlagBits2KHR
+//         Type:
+//             Name: VkImageCreateFlags2CreateInfoKHR
+//         Type:
+//             Name: VkImageViewUsage2CreateInfoKHR
+//         Type:
+//             Name: VkPhysicalDeviceExtendedFlagsFeaturesKHR
+//         Feature:
+//             Name: extendedFlags
+//             Struct: VkPhysicalDeviceExtendedFlagsFeaturesKHR
+//     Depends: VK_VERSION_1_2,VK_EXT_separate_stencil_usage
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_2_CREATE_INFO_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 5
+//         Type:
+//             Name: VkImageStencilUsage2CreateInfoKHR
+//     Depends: VK_KHR_shared_presentable_image
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_2_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 6
+//         Type:
+//             Name: VkSharedPresentSurfaceCapabilities2KHR
+//     Depends: VK_VERSION_1_0
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_2D_ARRAY_COMPATIBLE_BIT_KHR
+//             Negative: false
+//             Bitpos: 5
+//             Extends: VkImageCreateFlagBits2KHR
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR
+//             Negative: false
+//             Bitpos: 6
+//             Extends: VkImageCreateFlagBits2KHR
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR
+//             Negative: false
+//             Bitpos: 7
+//             Extends: VkImageCreateFlagBits2KHR
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_EXTENDED_USAGE_BIT_KHR
+//             Negative: false
+//             Bitpos: 8
+//             Extends: VkImageCreateFlagBits2KHR
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_DISJOINT_BIT_KHR
+//             Negative: false
+//             Bitpos: 9
+//             Extends: VkImageCreateFlagBits2KHR
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_ALIAS_BIT_KHR
+//             Negative: false
+//             Bitpos: 10
+//             Extends: VkImageCreateFlagBits2KHR
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_PROTECTED_BIT_KHR
+//             Negative: false
+//             Bitpos: 11
+//             Extends: VkImageCreateFlagBits2KHR
+//     Depends: VK_EXT_sample_locations
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT
+//             Negative: false
+//             Bitpos: 12
+//             Extends: VkImageCreateFlagBits2KHR
+//     Depends: VK_NV_corner_sampled_image
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_CORNER_SAMPLED_BIT_NV
+//             Negative: false
+//             Bitpos: 13
+//             Extends: VkImageCreateFlagBits2KHR
+//     Depends: VK_EXT_fragment_density_map
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_SUBSAMPLED_BIT_EXT
+//             Negative: false
+//             Bitpos: 14
+//             Extends: VkImageCreateFlagBits2KHR
+//     Depends: VK_EXT_fragment_density_map_offset
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT
+//             Negative: false
+//             Bitpos: 15
+//             Extends: VkImageCreateFlagBits2KHR
+//     Depends: VK_EXT_descriptor_buffer
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT
+//             Negative: false
+//             Bitpos: 16
+//             Extends: VkImageCreateFlagBits2KHR
+//     Depends: VK_EXT_image_2d_view_of_3d
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_2D_VIEW_COMPATIBLE_BIT_EXT
+//             Negative: false
+//             Bitpos: 17
+//             Extends: VkImageCreateFlagBits2KHR
+//     Depends: VK_EXT_multisampled_render_to_single_sampled
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT
+//             Negative: false
+//             Bitpos: 18
+//             Extends: VkImageCreateFlagBits2KHR
+//     Depends: VK_KHR_video_maintenance1
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_VIDEO_PROFILE_INDEPENDENT_BIT_KHR
+//             Negative: false
+//             Bitpos: 20
+//             Extends: VkImageCreateFlagBits2KHR
+//     Depends: VK_KHR_fragment_shading_rate
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
+//             Negative: false
+//             Bitpos: 8
+//             Extends: VkImageUsageFlagBits2KHR
+//     Depends: VK_EXT_fragment_density_map
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_FRAGMENT_DENSITY_MAP_BIT_EXT
+//             Negative: false
+//             Bitpos: 9
+//             Extends: VkImageUsageFlagBits2KHR
+//     Depends: VK_KHR_video_decode_queue
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_VIDEO_DECODE_DST_BIT_KHR
+//             Negative: false
+//             Bitpos: 10
+//             Extends: VkImageUsageFlagBits2KHR
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR
+//             Negative: false
+//             Bitpos: 11
+//             Extends: VkImageUsageFlagBits2KHR
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_VIDEO_DECODE_DPB_BIT_KHR
+//             Negative: false
+//             Bitpos: 12
+//             Extends: VkImageUsageFlagBits2KHR
+//     Depends: VK_KHR_video_encode_queue
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR
+//             Negative: false
+//             Bitpos: 13
+//             Extends: VkImageUsageFlagBits2KHR
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR
+//             Negative: false
+//             Bitpos: 14
+//             Extends: VkImageUsageFlagBits2KHR
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_VIDEO_ENCODE_DPB_BIT_KHR
+//             Negative: false
+//             Bitpos: 15
+//             Extends: VkImageUsageFlagBits2KHR
+//     Depends: VK_HUAWEI_invocation_mask
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_INVOCATION_MASK_BIT_HUAWEI
+//             Negative: false
+//             Bitpos: 18
+//             Extends: VkImageUsageFlagBits2KHR
+//     Depends: VK_EXT_attachment_feedback_loop_layout
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
+//             Negative: false
+//             Bitpos: 19
+//             Extends: VkImageUsageFlagBits2KHR
+//     Depends: VK_QCOM_image_processing
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_SAMPLE_WEIGHT_BIT_QCOM
+//             Negative: false
+//             Bitpos: 20
+//             Extends: VkImageUsageFlagBits2KHR
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_SAMPLE_BLOCK_MATCH_BIT_QCOM
+//             Negative: false
+//             Bitpos: 21
+//             Extends: VkImageUsageFlagBits2KHR
+//     Depends: VK_VERSION_1_4
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_HOST_TRANSFER_BIT_KHR
+//             Negative: false
+//             Bitpos: 22
+//             Extends: VkImageUsageFlagBits2KHR
+//     Depends: VK_ARM_tensors
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_TENSOR_ALIASING_BIT_ARM
+//             Negative: false
+//             Bitpos: 23
+//             Extends: VkImageUsageFlagBits2KHR
+//     Depends: VK_KHR_video_encode_quantization_map
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR
+//             Negative: false
+//             Bitpos: 25
+//             Extends: VkImageUsageFlagBits2KHR
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR
+//             Negative: false
+//             Bitpos: 26
+//             Extends: VkImageUsageFlagBits2KHR
+//     Depends: VK_QCOM_tile_memory_heap
+//         Enum:
+//             Name: VK_IMAGE_USAGE_2_TILE_MEMORY_BIT_QCOM
+//             Negative: false
+//             Bitpos: 27
+//             Extends: VkImageUsageFlagBits2KHR
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT_KHR
+//             Negative: false
+//             Extends: VkPipelineCreateFlagBits2
+//             Alias: VK_PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT_KHR
+//             Negative: false
+//             Extends: VkPipelineCreateFlagBits2
+//             Alias: VK_PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_DERIVATIVE_BIT_KHR
+//             Negative: false
+//             Extends: VkPipelineCreateFlagBits2
+//             Alias: VK_PIPELINE_CREATE_2_DERIVATIVE_BIT
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT_KHR
+//             Negative: false
+//             Extends: VkPipelineCreateFlagBits2
+//             Alias: VK_PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_DISPATCH_BASE_BIT_KHR
+//             Negative: false
+//             Extends: VkPipelineCreateFlagBits2
+//             Alias: VK_PIPELINE_CREATE_2_DISPATCH_BASE_BIT
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_TRANSFER_SRC_BIT_KHR
+//             Negative: false
+//             Extends: VkBufferUsageFlagBits2
+//             Alias: VK_BUFFER_USAGE_2_TRANSFER_SRC_BIT
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_TRANSFER_DST_BIT_KHR
+//             Negative: false
+//             Extends: VkBufferUsageFlagBits2
+//             Alias: VK_BUFFER_USAGE_2_TRANSFER_DST_BIT
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT_KHR
+//             Negative: false
+//             Extends: VkBufferUsageFlagBits2
+//             Alias: VK_BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT_KHR
+//             Negative: false
+//             Extends: VkBufferUsageFlagBits2
+//             Alias: VK_BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_UNIFORM_BUFFER_BIT_KHR
+//             Negative: false
+//             Extends: VkBufferUsageFlagBits2
+//             Alias: VK_BUFFER_USAGE_2_UNIFORM_BUFFER_BIT
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_STORAGE_BUFFER_BIT_KHR
+//             Negative: false
+//             Extends: VkBufferUsageFlagBits2
+//             Alias: VK_BUFFER_USAGE_2_STORAGE_BUFFER_BIT
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_INDEX_BUFFER_BIT_KHR
+//             Negative: false
+//             Extends: VkBufferUsageFlagBits2
+//             Alias: VK_BUFFER_USAGE_2_INDEX_BUFFER_BIT
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_VERTEX_BUFFER_BIT_KHR
+//             Negative: false
+//             Extends: VkBufferUsageFlagBits2
+//             Alias: VK_BUFFER_USAGE_2_VERTEX_BUFFER_BIT
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_INDIRECT_BUFFER_BIT_KHR
+//             Negative: false
+//             Extends: VkBufferUsageFlagBits2
+//             Alias: VK_BUFFER_USAGE_2_INDIRECT_BUFFER_BIT
+//         Type:
+//             Name: VkPipelineCreateFlags2KHR
+//         Type:
+//             Name: VkPipelineCreateFlagBits2KHR
+//         Type:
+//             Name: VkPipelineCreateFlags2CreateInfoKHR
+//         Type:
+//             Name: VkBufferUsageFlags2KHR
+//         Type:
+//             Name: VkBufferUsageFlagBits2KHR
+//         Type:
+//             Name: VkBufferUsageFlags2CreateInfoKHR
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Alias: VK_STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO_KHR
+//             Negative: false
+//             Extends: VkStructureType
+//             Alias: VK_STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO
+//     Depends: VK_NV_ray_tracing
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_DEFER_COMPILE_BIT_NV
+//             Negative: false
+//             Bitpos: 5
+//             Extends: VkPipelineCreateFlagBits2
+//     Depends: VK_KHR_pipeline_executable_properties
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_CAPTURE_STATISTICS_BIT_KHR
+//             Negative: false
+//             Bitpos: 6
+//             Extends: VkPipelineCreateFlagBits2
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR
+//             Negative: false
+//             Bitpos: 7
+//             Extends: VkPipelineCreateFlagBits2
+//     Depends: VK_VERSION_1_3,VK_EXT_pipeline_creation_cache_control
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT_KHR
+//             Negative: false
+//             Extends: VkPipelineCreateFlagBits2
+//             Alias: VK_PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT_KHR
+//             Negative: false
+//             Extends: VkPipelineCreateFlagBits2
+//             Alias: VK_PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT
+//     Depends: VK_EXT_graphics_pipeline_library
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_LINK_TIME_OPTIMIZATION_BIT_EXT
+//             Negative: false
+//             Bitpos: 10
+//             Extends: VkPipelineCreateFlagBits2
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT
+//             Negative: false
+//             Bitpos: 23
+//             Extends: VkPipelineCreateFlagBits2
+//     Depends: VK_KHR_pipeline_library
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_LIBRARY_BIT_KHR
+//             Negative: false
+//             Bitpos: 11
+//             Extends: VkPipelineCreateFlagBits2
+//     Depends: VK_KHR_ray_tracing_pipeline
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR
+//             Negative: false
+//             Bitpos: 12
+//             Extends: VkPipelineCreateFlagBits2
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_AABBS_BIT_KHR
+//             Negative: false
+//             Bitpos: 13
+//             Extends: VkPipelineCreateFlagBits2
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR
+//             Negative: false
+//             Bitpos: 14
+//             Extends: VkPipelineCreateFlagBits2
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR
+//             Negative: false
+//             Bitpos: 15
+//             Extends: VkPipelineCreateFlagBits2
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR
+//             Negative: false
+//             Bitpos: 16
+//             Extends: VkPipelineCreateFlagBits2
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR
+//             Negative: false
+//             Bitpos: 17
+//             Extends: VkPipelineCreateFlagBits2
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR
+//             Negative: false
+//             Bitpos: 19
+//             Extends: VkPipelineCreateFlagBits2
+//     Depends: VK_NV_device_generated_commands
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_NV
+//             Negative: false
+//             Bitpos: 18
+//             Extends: VkPipelineCreateFlagBits2
+//     Depends: VK_NV_ray_tracing_motion_blur
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_RAY_TRACING_ALLOW_MOTION_BIT_NV
+//             Negative: false
+//             Bitpos: 20
+//             Extends: VkPipelineCreateFlagBits2
+//     Depends: (VK_KHR_dynamic_rendering,VK_VERSION_1_3)+VK_KHR_fragment_shading_rate
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR
+//             Negative: false
+//             Bitpos: 21
+//             Extends: VkPipelineCreateFlagBits2
+//     Depends: (VK_KHR_dynamic_rendering,VK_VERSION_1_3)+VK_EXT_fragment_density_map
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT
+//             Negative: false
+//             Bitpos: 22
+//             Extends: VkPipelineCreateFlagBits2
+//     Depends: VK_EXT_opacity_micromap
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT
+//             Negative: false
+//             Extends: VkPipelineCreateFlagBits2
+//             Alias: VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR
+//     Depends: VK_EXT_attachment_feedback_loop_layout
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
+//             Negative: false
+//             Bitpos: 25
+//             Extends: VkPipelineCreateFlagBits2
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT
+//             Negative: false
+//             Bitpos: 26
+//             Extends: VkPipelineCreateFlagBits2
+//     Depends: VK_NV_displacement_micromap
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV
+//             Negative: false
+//             Bitpos: 28
+//             Extends: VkPipelineCreateFlagBits2
+//     Depends: VK_EXT_descriptor_buffer
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_DESCRIPTOR_BUFFER_BIT_EXT
+//             Negative: false
+//             Bitpos: 29
+//             Extends: VkPipelineCreateFlagBits2
+//     Depends: VK_EXT_conditional_rendering
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT
+//             Negative: false
+//             Bitpos: 9
+//             Extends: VkBufferUsageFlagBits2
+//     Depends: VK_KHR_ray_tracing_pipeline
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR
+//             Negative: false
+//             Bitpos: 10
+//             Extends: VkBufferUsageFlagBits2
+//     Depends: VK_EXT_transform_feedback
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT
+//             Negative: false
+//             Bitpos: 11
+//             Extends: VkBufferUsageFlagBits2
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT
+//             Negative: false
+//             Bitpos: 12
+//             Extends: VkBufferUsageFlagBits2
+//     Depends: VK_KHR_video_decode_queue
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR
+//             Negative: false
+//             Bitpos: 13
+//             Extends: VkBufferUsageFlagBits2
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_VIDEO_DECODE_DST_BIT_KHR
+//             Negative: false
+//             Bitpos: 14
+//             Extends: VkBufferUsageFlagBits2
+//     Depends: VK_KHR_video_encode_queue
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR
+//             Negative: false
+//             Bitpos: 15
+//             Extends: VkBufferUsageFlagBits2
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR
+//             Negative: false
+//             Bitpos: 16
+//             Extends: VkBufferUsageFlagBits2
+//     Depends: VK_VERSION_1_2,VK_KHR_buffer_device_address,VK_EXT_buffer_device_address
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT_KHR
+//             Negative: false
+//             Extends: VkBufferUsageFlagBits2
+//             Alias: VK_BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT
+//     Depends: VK_KHR_acceleration_structure
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR
+//             Negative: false
+//             Bitpos: 19
+//             Extends: VkBufferUsageFlagBits2
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR
+//             Negative: false
+//             Bitpos: 20
+//             Extends: VkBufferUsageFlagBits2
+//     Depends: VK_EXT_descriptor_buffer
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT
+//             Negative: false
+//             Bitpos: 21
+//             Extends: VkBufferUsageFlagBits2
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT
+//             Negative: false
+//             Bitpos: 22
+//             Extends: VkBufferUsageFlagBits2
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT
+//             Negative: false
+//             Bitpos: 26
+//             Extends: VkBufferUsageFlagBits2
+//     Depends: VK_EXT_opacity_micromap
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT
+//             Negative: false
+//             Bitpos: 23
+//             Extends: VkBufferUsageFlagBits2
+//         Enum:
+//             Name: VK_BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT
+//             Negative: false
+//             Bitpos: 24
+//             Extends: VkBufferUsageFlagBits2
+//     Depends: VK_ARM_pipeline_opacity_micromap
+//         Enum:
+//             Name: VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM
+//             Negative: false
+//             Bitpos: 37
+//             Extends: VkPipelineCreateFlagBits2
+pub const VK_NV_extension_670_name = "VK_NV_extension_670";
+// Extension: VK_NV_extension_670
+// Number: 670
+// Type: invalid
+// Author: NV
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_NV_EXTENSION_670_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_NV_EXTENSION_670_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_NV_extension_670&quot;
+pub const VK_ARM_extension_671_name = "VK_ARM_extension_671";
+// Extension: VK_ARM_extension_671
+// Number: 671
+// Type: invalid
+// Author: ARM
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_ARM_EXTENSION_671_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_ARM_EXTENSION_671_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_ARM_extension_671&quot;
+pub const VK_KHR_extension_672_name = "VK_KHR_extension_672";
+// Extension: VK_KHR_extension_672
+// Number: 672
+// Type: invalid
+// Author: KHR
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_KHR_EXTENSION_672_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_KHR_EXTENSION_672_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_KHR_extension_672&quot;
+pub const VK_EXT_shader_ocp_microscaling_types_name = "VK_EXT_shader_ocp_microscaling_types";
+// Extension: VK_EXT_shader_ocp_microscaling_types
+// Number: 673
+// Type: device
+// Author: EXT
+// Depends: VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
+// Supported: supported
+// Unlocks:
+//         Enum:
+//             Name: VK_EXT_SHADER_OCP_MICROSCALING_TYPES_SPEC_VERSION
+//             Negative: false
+//             Value: 1
+//         Enum:
+//             Name: VK_EXT_SHADER_OCP_MICROSCALING_TYPES_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_EXT_shader_ocp_microscaling_types&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Type:
+//             Name: VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT
+//         Feature:
+//             Name: shaderFloat4,shaderFloat6,shaderFloat8UnsignedE8M0,shaderMXInt8
+//             Struct: VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT
+//     Depends: VK_KHR_cooperative_matrix
+//         Enum:
+//             Name: VK_COMPONENT_TYPE_FLOAT6_E2M3_EXT
+//             Negative: false
+//             Extends: VkComponentTypeKHR
+//             Offset: 0
+//         Enum:
+//             Name: VK_COMPONENT_TYPE_FLOAT6_E3M2_EXT
+//             Negative: false
+//             Extends: VkComponentTypeKHR
+//             Offset: 1
+//         Enum:
+//             Name: VK_COMPONENT_TYPE_FLOAT4_E2M1_EXT
+//             Negative: false
+//             Extends: VkComponentTypeKHR
+//             Offset: 2
+//         Enum:
+//             Name: VK_COMPONENT_TYPE_FLOAT8_UNSIGNED_E8M0_EXT
+//             Negative: false
+//             Extends: VkComponentTypeKHR
+//             Offset: 3
+//         Enum:
+//             Name: VK_COMPONENT_TYPE_MXINT8_EXT
+//             Negative: false
+//             Extends: VkComponentTypeKHR
+//             Offset: 4
+pub const VK_VALVE_shader_mixed_float_dot_product_name = "VK_VALVE_shader_mixed_float_dot_product";
+// Extension: VK_VALVE_shader_mixed_float_dot_product
+// Number: 674
+// Type: device
+// Author: VALVE
+// Depends: (VK_KHR_get_physical_device_properties2,VK_VERSION_1_1)+(VK_KHR_shader_float16_int8,VK_VERSION_1_2)
+// Supported: supported
+// Unlocks:
+//         Enum:
+//             Name: VK_VALVE_SHADER_MIXED_FLOAT_DOT_PRODUCT_SPEC_VERSION
+//             Negative: false
+//             Value: 1
+//         Enum:
+//             Name: VK_VALVE_SHADER_MIXED_FLOAT_DOT_PRODUCT_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_VALVE_shader_mixed_float_dot_product&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Type:
+//             Name: VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE
+//         Feature:
+//             Name: shaderMixedFloatDotProductFloat16AccFloat32
+//             Struct: VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE
+pub const VK_SEC_throttle_hint_name = "VK_SEC_throttle_hint";
+// Extension: VK_SEC_throttle_hint
+// Number: 675
+// Type: device
+// Author: SEC
+// Supported: supported
+// Unlocks:
+//         Enum:
+//             Name: VK_SEC_THROTTLE_HINT_SPEC_VERSION
+//             Negative: false
+//             Value: 1
+//         Enum:
+//             Name: VK_SEC_THROTTLE_HINT_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_SEC_throttle_hint&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_THROTTLE_HINT_FEATURES_SEC
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_THROTTLE_HINT_SUBMIT_INFO_SEC
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Type:
+//             Name: VkThrottleHintTypeSEC
+//         Type:
+//             Name: VkThrottleHintSubmitInfoSEC
+//         Type:
+//             Name: VkPhysicalDeviceThrottleHintFeaturesSEC
+//         Feature:
+//             Name: throttleHint
+//             Struct: VkPhysicalDeviceThrottleHintFeaturesSEC
+pub const VK_EXT_extension_676_name = "VK_EXT_extension_676";
+// Extension: VK_EXT_extension_676
+// Number: 676
+// Type: invalid
+// Author: EXT
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_EXT_EXTENSION_676_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_EXT_EXTENSION_676_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_EXT_extension_676&quot;
+pub const VK_ARM_data_graph_neural_accelerator_statistics_name = "VK_ARM_data_graph_neural_accelerator_statistics";
+// Extension: VK_ARM_data_graph_neural_accelerator_statistics
+// Number: 677
+// Type: device
+// Author: ARM
+// Supported: supported
+// Unlocks:
+//         Enum:
+//             Name: VK_ARM_DATA_GRAPH_NEURAL_ACCELERATOR_STATISTICS_SPEC_VERSION
+//             Negative: false
+//             Value: 1
+//         Enum:
+//             Name: VK_ARM_DATA_GRAPH_NEURAL_ACCELERATOR_STATISTICS_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_ARM_data_graph_neural_accelerator_statistics&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_NEURAL_STATISTICS_CREATE_INFO_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_NEURAL_STATISTICS_CREATE_INFO_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 1
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_NEURAL_ACCELERATOR_STATISTICS_FEATURES_ARM
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 2
+//         Enum:
+//             Name: VK_DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_DEBUG_DATABASE_ARM
+//             Negative: false
+//             Extends: VkDataGraphPipelinePropertyARM
+//             Offset: 0
+//         Enum:
+//             Name: VK_DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_STATISTICS_INFO_ARM
+//             Negative: false
+//             Extends: VkDataGraphPipelinePropertyARM
+//             Offset: 1
+//         Enum:
+//             Name: VK_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_NEURAL_ACCELERATOR_STATISTICS_ARM
+//             Negative: false
+//             Extends: VkDataGraphPipelineSessionBindPointARM
+//             Offset: 0
+//         Type:
+//             Name: VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM
+//         Type:
+//             Name: VkDataGraphPipelineNeuralStatisticsCreateInfoARM
+//         Type:
+//             Name: VkDataGraphPipelineSessionNeuralStatisticsCreateInfoARM
+//         Type:
+//             Name: VkNeuralAcceleratorStatisticsModeARM
+//         Feature:
+//             Name: dataGraphNeuralAcceleratorStatistics
+//             Struct: VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM
+pub const VK_EXT_extension_678_name = "VK_EXT_extension_678";
+// Extension: VK_EXT_extension_678
+// Number: 678
+// Type: invalid
+// Author: EXT
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_EXT_EXTENSION_678_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_EXT_EXTENSION_678_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_EXT_extension_678&quot;
+pub const VK_EXT_primitive_restart_index_name = "VK_EXT_primitive_restart_index";
+// Extension: VK_EXT_primitive_restart_index
+// Number: 679
+// Type: device
+// Author: EXT
+// Depends: VK_KHR_get_physical_device_properties2,VK_VERSION_1_1
+// Supported: supported
+// Unlocks:
+//         Enum:
+//             Name: VK_EXT_PRIMITIVE_RESTART_INDEX_SPEC_VERSION
+//             Negative: false
+//             Value: 1
+//         Enum:
+//             Name: VK_EXT_PRIMITIVE_RESTART_INDEX_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_EXT_primitive_restart_index&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Type:
+//             Name: VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT
+//         Command:
+//             Name: vkCmdSetPrimitiveRestartIndexEXT
+//         Feature:
+//             Name: primitiveRestartIndex
+//             Struct: VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT
+pub const VK_EXT_extension_680_name = "VK_EXT_extension_680";
+// Extension: VK_EXT_extension_680
+// Number: 680
+// Type: device
+// Author: EXT
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_EXT_EXTENSION_680_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_EXT_EXTENSION_680_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_EXT_extension_680&quot;
+pub const VK_KHR_extension_681_name = "VK_KHR_extension_681";
+// Extension: VK_KHR_extension_681
+// Number: 681
+// Type: device
+// Author: KHR
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_KHR_EXTENSION_681_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_KHR_EXTENSION_681_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_KHR_extension_681&quot;
+pub const VK_VALVE_extension_682_name = "VK_VALVE_extension_682";
+// Extension: VK_VALVE_extension_682
+// Number: 682
+// Type: device
+// Author: VALVE
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_VALVE_EXTENSION_682_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_VALVE_EXTENSION_682_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_VALVE_extension_682&quot;
+//         Enum:
+//             Name: VK_RENDERING_RESERVED_10_BIT_VALVE
+//             Negative: false
+//             Bitpos: 10
+//             Extends: VkRenderingFlagBits
+//         Enum:
+//             Name: VK_RENDERING_RESERVED_11_BIT_VALVE
+//             Negative: false
+//             Bitpos: 11
+//             Extends: VkRenderingFlagBits
+//         Enum:
+//             Name: VK_RENDERING_RESERVED_12_BIT_VALVE
+//             Negative: false
+//             Bitpos: 12
+//             Extends: VkRenderingFlagBits
+pub const VK_EXT_extension_683_name = "VK_EXT_extension_683";
+// Extension: VK_EXT_extension_683
+// Number: 683
+// Type: invalid
+// Author: EXT
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_EXT_EXTENSION_683_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_EXT_EXTENSION_683_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_EXT_extension_683&quot;
+pub const VK_AMD_extension_684_name = "VK_AMD_extension_684";
+// Extension: VK_AMD_extension_684
+// Number: 684
+// Type: invalid
+// Author: AMD
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_AMD_EXTENSION_684_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_AMD_EXTENSION_684_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_AMD_extension_684&quot;
+pub const VK_AMD_extension_685_name = "VK_AMD_extension_685";
+// Extension: VK_AMD_extension_685
+// Number: 685
+// Type: invalid
+// Author: AMD
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_AMD_EXTENSION_685_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_AMD_EXTENSION_685_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_AMD_extension_685&quot;
+pub const VK_AMD_extension_687_name = "VK_AMD_extension_687";
+// Extension: VK_AMD_extension_687
+// Number: 687
+// Type: invalid
+// Author: AMD
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_AMD_EXTENSION_687_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_AMD_EXTENSION_687_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_AMD_extension_687&quot;
+pub const VK_AMD_extension_688_name = "VK_AMD_extension_688";
+// Extension: VK_AMD_extension_688
+// Number: 688
+// Type: invalid
+// Author: AMD
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_AMD_EXTENSION_688_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_AMD_EXTENSION_688_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_AMD_extension_688&quot;
+pub const VK_AMD_extension_689_name = "VK_AMD_extension_689";
+// Extension: VK_AMD_extension_689
+// Number: 689
+// Type: invalid
+// Author: AMD
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_AMD_EXTENSION_689_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_AMD_EXTENSION_689_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_AMD_extension_689&quot;
+pub const VK_NV_cooperative_matrix_decode_vector_name = "VK_NV_cooperative_matrix_decode_vector";
+// Extension: VK_NV_cooperative_matrix_decode_vector
+// Number: 690
+// Type: device
+// Author: NV
+// Depends: VK_NV_cooperative_matrix2
+// Supported: supported
+// Unlocks:
+//         Enum:
+//             Name: VK_NV_COOPERATIVE_MATRIX_DECODE_VECTOR_SPEC_VERSION
+//             Negative: false
+//             Value: 1
+//         Enum:
+//             Name: VK_NV_COOPERATIVE_MATRIX_DECODE_VECTOR_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_NV_cooperative_matrix_decode_vector&quot;
+//         Enum:
+//             Name: VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_DECODE_VECTOR_FEATURES_NV
+//             Negative: false
+//             Extends: VkStructureType
+//             Offset: 0
+//         Type:
+//             Name: VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV
+//         Feature:
+//             Name: cooperativeMatrixDecodeVector
+//             Struct: VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV
+//         Feature:
+//             Name: cooperativeMatrixBlockLoads
+//             Struct: VkPhysicalDeviceCooperativeMatrix2FeaturesNV
+pub const VK_MESA_fragment_coverage_mask_name = "VK_MESA_fragment_coverage_mask";
+// Extension: VK_MESA_fragment_coverage_mask
+// Number: 691
+// Type: device
+// Author: MESA
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_MESA_FRAGMENT_COVERAGE_MASK_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_MESA_FRAGMENT_COVERAGE_MASK_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_MESA_fragment_coverage_mask&quot;
+pub const VK_EXT_extension_692_name = "VK_EXT_extension_692";
+// Extension: VK_EXT_extension_692
+// Number: 692
+// Type: invalid
+// Author: EXT
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_EXT_EXTENSION_692_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_EXT_EXTENSION_692_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_EXT_extension_692&quot;
+pub const VK_EXT_extension_693_name = "VK_EXT_extension_693";
+// Extension: VK_EXT_extension_693
+// Number: 693
+// Type: invalid
+// Author: EXT
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_EXT_EXTENSION_693_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_EXT_EXTENSION_693_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_EXT_extension_693&quot;
+pub const VK_EXT_extension_694_name = "VK_EXT_extension_694";
+// Extension: VK_EXT_extension_694
+// Number: 694
+// Type: invalid
+// Author: KHR
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_EXT_EXTENSION_694_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_EXT_EXTENSION_694_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_EXT_extension_694&quot;
+pub const VK_QCOM_extension_695_name = "VK_QCOM_extension_695";
+// Extension: VK_QCOM_extension_695
+// Number: 695
+// Type: invalid
+// Author: QCOM
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_QCOM_EXTENSION_695_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_QCOM_EXTENSION_695_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_QCOM_extension_695&quot;
+pub const VK_EXT_extension_696_name = "VK_EXT_extension_696";
+// Extension: VK_EXT_extension_696
+// Number: 696
+// Type: invalid
+// Author: EXT
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_EXT_EXTENSION_696_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_EXT_EXTENSION_696_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_EXT_extension_696&quot;
+pub const VK_NV_extension_697_name = "VK_NV_extension_697";
+// Extension: VK_NV_extension_697
+// Number: 697
+// Type: invalid
+// Author: NV
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_NV_EXTENSION_697_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_NV_EXTENSION_697_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_NV_extension_697&quot;
+//         Enum:
+//             Name: VK_IMAGE_CREATE_RESERVED_19_BIT_NV
+//             Negative: false
+//             Bitpos: 19
+//             Extends: VkImageCreateFlagBits
+//     Depends: VK_KHR_extended_flags
+//         Enum:
+//             Name: VK_IMAGE_CREATE_2_RESERVED_19_BIT_NV
+//             Negative: false
+//             Bitpos: 19
+//             Extends: VkImageCreateFlagBits2KHR
+pub const VK_HUAWEI_extension_698_name = "VK_HUAWEI_extension_698";
+// Extension: VK_HUAWEI_extension_698
+// Number: 698
+// Type: invalid
+// Author: HUAWEI
+// Supported: disabled
+// Unlocks:
+//         Enum:
+//             Name: VK_HUAWEI_EXTENSION_698_SPEC_VERSION
+//             Negative: false
+//             Value: 0
+//         Enum:
+//             Name: VK_HUAWEI_EXTENSION_698_EXTENSION_NAME
+//             Negative: false
+//             Value: &quot;VK_HUAWEI_extension_698&quot;
+//         Enum:
+//             Name: VK_SWAPCHAIN_CREATE_RESERVED_10_BIT_HUAWEI
+//             Negative: false
+//             Bitpos: 10
+//             Extends: VkSwapchainCreateFlagBitsKHR

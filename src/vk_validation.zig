@@ -6,7 +6,7 @@ const log = @import("log.zig");
 const Allocator = std.mem.Allocator;
 
 pub const Extensions = struct {
-    instance: packed struct(u43) {
+    instance: packed struct(u44) {
         VK_KHR_surface: bool = false,
         VK_KHR_display: bool = false,
         VK_KHR_xlib_surface: bool = false,
@@ -50,8 +50,9 @@ pub const Extensions = struct {
         VK_EXT_layer_settings: bool = false,
         VK_NV_display_stereo: bool = false,
         VK_OHOS_surface: bool = false,
+        VK_SEC_ubm_surface: bool = false,
     } = .{},
-    device: packed struct(u401) {
+    device: packed struct(u433) {
         VK_KHR_swapchain: bool = false,
         VK_KHR_display_swapchain: bool = false,
         VK_NV_glsl_shader: bool = false,
@@ -137,7 +138,9 @@ pub const Extensions = struct {
         VK_EXT_sampler_filter_minmax: bool = false,
         VK_KHR_storage_buffer_storage_class: bool = false,
         VK_AMD_gpu_shader_int16: bool = false,
+        VK_AMD_gpa_interface: bool = false,
         VK_AMDX_shader_enqueue: bool = false,
+        VK_EXT_descriptor_heap: bool = false,
         VK_AMD_mixed_attachment_samples: bool = false,
         VK_AMD_shader_fragment_mask: bool = false,
         VK_EXT_inline_uniform_block: bool = false,
@@ -170,6 +173,8 @@ pub const Extensions = struct {
         VK_KHR_draw_indirect_count: bool = false,
         VK_EXT_filter_cubic: bool = false,
         VK_QCOM_render_pass_shader_resolve: bool = false,
+        VK_QCOM_cooperative_matrix_conversion: bool = false,
+        VK_QCOM_elapsed_timer_query: bool = false,
         VK_EXT_global_priority: bool = false,
         VK_KHR_shader_subgroup_extended_types: bool = false,
         VK_KHR_8bit_storage: bool = false,
@@ -213,7 +218,9 @@ pub const Extensions = struct {
         VK_KHR_fragment_shading_rate: bool = false,
         VK_AMD_shader_core_properties2: bool = false,
         VK_AMD_device_coherent_memory: bool = false,
+        VK_KHR_shader_constant_data: bool = false,
         VK_KHR_dynamic_rendering_local_read: bool = false,
+        VK_KHR_shader_abort: bool = false,
         VK_EXT_shader_image_atomic_int64: bool = false,
         VK_KHR_shader_quad_control: bool = false,
         VK_KHR_spirv_1_4: bool = false,
@@ -255,6 +262,7 @@ pub const Extensions = struct {
         VK_EXT_device_memory_report: bool = false,
         VK_EXT_robustness2: bool = false,
         VK_EXT_custom_border_color: bool = false,
+        VK_EXT_texture_compression_astc_3d: bool = false,
         VK_GOOGLE_user_type: bool = false,
         VK_KHR_pipeline_library: bool = false,
         VK_NV_present_barrier: bool = false,
@@ -265,6 +273,10 @@ pub const Extensions = struct {
         VK_KHR_video_encode_queue: bool = false,
         VK_NV_device_diagnostics_config: bool = false,
         VK_QCOM_render_pass_store_ops: bool = false,
+        VK_QCOM_queue_perf_hint: bool = false,
+        VK_QCOM_image_processing3: bool = false,
+        VK_QCOM_shader_multiple_wait_queues: bool = false,
+        VK_EXT_shader_split_barrier: bool = false,
         VK_NV_cuda_kernel_launch: bool = false,
         VK_KHR_object_refresh: bool = false,
         VK_QCOM_tile_shading: bool = false,
@@ -272,6 +284,7 @@ pub const Extensions = struct {
         VK_EXT_metal_objects: bool = false,
         VK_KHR_synchronization2: bool = false,
         VK_EXT_descriptor_buffer: bool = false,
+        VK_KHR_device_address_commands: bool = false,
         VK_EXT_graphics_pipeline_library: bool = false,
         VK_AMD_shader_early_and_late_fragment_tests: bool = false,
         VK_KHR_fragment_shader_barycentric: bool = false,
@@ -380,9 +393,11 @@ pub const Extensions = struct {
         VK_ARM_shader_core_builtins: bool = false,
         VK_EXT_pipeline_library_group_handles: bool = false,
         VK_EXT_dynamic_rendering_unused_attachments: bool = false,
+        VK_KHR_internally_synchronized_queues: bool = false,
         VK_NV_low_latency2: bool = false,
         VK_KHR_cooperative_matrix: bool = false,
         VK_ARM_data_graph: bool = false,
+        VK_ARM_data_graph_instruction_set_tosa: bool = false,
         VK_QCOM_multiview_per_view_render_areas: bool = false,
         VK_KHR_compute_shader_derivatives: bool = false,
         VK_KHR_video_decode_av1: bool = false,
@@ -419,40 +434,58 @@ pub const Extensions = struct {
         VK_KHR_maintenance7: bool = false,
         VK_NV_shader_atomic_float16_vector: bool = false,
         VK_EXT_shader_replicated_composites: bool = false,
+        VK_ARM_tensor_controls: bool = false,
         VK_EXT_shader_float8: bool = false,
         VK_NV_ray_tracing_validation: bool = false,
         VK_NV_cluster_acceleration_structure: bool = false,
         VK_NV_partitioned_acceleration_structure: bool = false,
         VK_EXT_device_generated_commands: bool = false,
+        VK_KHR_device_fault: bool = false,
         VK_KHR_maintenance8: bool = false,
         VK_MESA_image_alignment_control: bool = false,
         VK_KHR_shader_fma: bool = false,
+        VK_NV_push_constant_bank: bool = false,
         VK_EXT_ray_tracing_invocation_reorder: bool = false,
         VK_EXT_depth_clamp_control: bool = false,
         VK_KHR_maintenance9: bool = false,
         VK_KHR_video_maintenance2: bool = false,
-        VK_OHOS_native_buffer: bool = false,
         VK_HUAWEI_hdr_vivid: bool = false,
         VK_NV_cooperative_matrix2: bool = false,
         VK_ARM_pipeline_opacity_micromap: bool = false,
+        VK_KHR_video_encode_feedback2: bool = false,
+        VK_IMG_filter_linear_2d: bool = false,
         VK_EXT_external_memory_metal: bool = false,
         VK_KHR_depth_clamp_zero_one: bool = false,
         VK_ARM_performance_counters_by_region: bool = false,
+        VK_ARM_shader_instrumentation: bool = false,
         VK_EXT_vertex_attribute_robustness: bool = false,
         VK_ARM_format_pack: bool = false,
         VK_VALVE_fragment_density_map_layered: bool = false,
         VK_KHR_robustness2: bool = false,
         VK_NV_present_metering: bool = false,
+        VK_EXT_multisampled_render_to_swapchain: bool = false,
         VK_EXT_fragment_density_map_offset: bool = false,
         VK_EXT_zero_initialize_device_memory: bool = false,
         VK_KHR_present_mode_fifo_latest_ready: bool = false,
+        VK_KHR_opacity_micromap: bool = false,
         VK_EXT_shader_64bit_indexing: bool = false,
         VK_EXT_custom_resolve: bool = false,
         VK_QCOM_data_graph_model: bool = false,
         VK_KHR_maintenance10: bool = false,
+        VK_ARM_data_graph_optical_flow: bool = false,
+        VK_EXT_shader_long_vector: bool = false,
         VK_SEC_pipeline_cache_incremental_mode: bool = false,
         VK_EXT_shader_uniform_buffer_unsized_array: bool = false,
         VK_NV_compute_occupancy_priority: bool = false,
+        VK_KHR_maintenance11: bool = false,
+        VK_EXT_shader_subgroup_partitioned: bool = false,
+        VK_KHR_extended_flags: bool = false,
+        VK_EXT_shader_ocp_microscaling_types: bool = false,
+        VK_VALVE_shader_mixed_float_dot_product: bool = false,
+        VK_SEC_throttle_hint: bool = false,
+        VK_ARM_data_graph_neural_accelerator_statistics: bool = false,
+        VK_EXT_primitive_restart_index: bool = false,
+        VK_NV_cooperative_matrix_decode_vector: bool = false,
     } = .{},
 
     const Self = @This();
@@ -798,7 +831,7 @@ pub const Extensions = struct {
             }
         }
         for (ie) |ext| {
-            if (std.mem.eql(u8, ext, "VK_KHR_surface_maintenance1") and (self.instance.VK_KHR_surface or self.instance.VK_KHR_get_surface_capabilities2)) {
+            if (std.mem.eql(u8, ext, "VK_KHR_surface_maintenance1") and (self.instance.VK_KHR_surface and self.instance.VK_KHR_get_surface_capabilities2)) {
                 self.instance.VK_KHR_surface_maintenance1 = true;
                 break;
             }
@@ -818,6 +851,12 @@ pub const Extensions = struct {
         for (ie) |ext| {
             if (std.mem.eql(u8, ext, "VK_OHOS_surface") and (self.instance.VK_KHR_surface)) {
                 self.instance.VK_OHOS_surface = true;
+                break;
+            }
+        }
+        for (ie) |ext| {
+            if (std.mem.eql(u8, ext, "VK_SEC_ubm_surface") and (self.instance.VK_KHR_surface)) {
+                self.instance.VK_SEC_ubm_surface = true;
                 break;
             }
         }
@@ -1333,8 +1372,20 @@ pub const Extensions = struct {
             }
         }
         for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_AMD_gpa_interface") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
+                self.device.VK_AMD_gpa_interface = true;
+                break;
+            }
+        }
+        for (de) |ext| {
             if (std.mem.eql(u8, ext, "VK_AMDX_shader_enqueue") and (((self.device.VK_KHR_synchronization2 and self.device.VK_KHR_spirv_1_4 and self.device.VK_EXT_extended_dynamic_state) or !api_version.less(vk.VK_API_VERSION_1_3)) and self.device.VK_KHR_maintenance5 and self.device.VK_KHR_pipeline_library)) {
                 self.device.VK_AMDX_shader_enqueue = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_EXT_descriptor_heap") and (((self.device.VK_KHR_extended_flags or self.device.VK_KHR_maintenance5) and (self.device.VK_KHR_buffer_device_address or !api_version.less(vk.VK_API_VERSION_1_2)) or !api_version.less(vk.VK_API_VERSION_1_4)))) {
+                self.device.VK_EXT_descriptor_heap = true;
                 break;
             }
         }
@@ -1527,6 +1578,18 @@ pub const Extensions = struct {
         for (de) |ext| {
             if (std.mem.eql(u8, ext, "VK_QCOM_render_pass_shader_resolve")) {
                 self.device.VK_QCOM_render_pass_shader_resolve = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_QCOM_cooperative_matrix_conversion") and (self.device.VK_KHR_cooperative_matrix)) {
+                self.device.VK_QCOM_cooperative_matrix_conversion = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_QCOM_elapsed_timer_query") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
+                self.device.VK_QCOM_elapsed_timer_query = true;
                 break;
             }
         }
@@ -1789,8 +1852,20 @@ pub const Extensions = struct {
             }
         }
         for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_KHR_shader_constant_data") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
+                self.device.VK_KHR_shader_constant_data = true;
+                break;
+            }
+        }
+        for (de) |ext| {
             if (std.mem.eql(u8, ext, "VK_KHR_dynamic_rendering_local_read") and (self.device.VK_KHR_dynamic_rendering or !api_version.less(vk.VK_API_VERSION_1_3))) {
                 self.device.VK_KHR_dynamic_rendering_local_read = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_KHR_shader_abort") and (self.device.VK_KHR_device_fault and self.device.VK_KHR_shader_constant_data)) {
+                self.device.VK_KHR_shader_abort = true;
                 break;
             }
         }
@@ -2041,6 +2116,12 @@ pub const Extensions = struct {
             }
         }
         for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_EXT_texture_compression_astc_3d") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
+                self.device.VK_EXT_texture_compression_astc_3d = true;
+                break;
+            }
+        }
+        for (de) |ext| {
             if (std.mem.eql(u8, ext, "VK_GOOGLE_user_type")) {
                 self.device.VK_GOOGLE_user_type = true;
                 break;
@@ -2065,7 +2146,7 @@ pub const Extensions = struct {
             }
         }
         for (de) |ext| {
-            if (std.mem.eql(u8, ext, "VK_KHR_present_id") and (self.device.VK_KHR_swapchain and self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
+            if (std.mem.eql(u8, ext, "VK_KHR_present_id") and (self.device.VK_KHR_swapchain and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1)))) {
                 self.device.VK_KHR_present_id = true;
                 break;
             }
@@ -2101,6 +2182,30 @@ pub const Extensions = struct {
             }
         }
         for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_QCOM_queue_perf_hint") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
+                self.device.VK_QCOM_queue_perf_hint = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_QCOM_image_processing3") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
+                self.device.VK_QCOM_image_processing3 = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_QCOM_shader_multiple_wait_queues") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
+                self.device.VK_QCOM_shader_multiple_wait_queues = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_EXT_shader_split_barrier") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
+                self.device.VK_EXT_shader_split_barrier = true;
+                break;
+            }
+        }
+        for (de) |ext| {
             if (std.mem.eql(u8, ext, "VK_NV_cuda_kernel_launch") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
                 self.device.VK_NV_cuda_kernel_launch = true;
                 break;
@@ -2113,7 +2218,7 @@ pub const Extensions = struct {
             }
         }
         for (de) |ext| {
-            if (std.mem.eql(u8, ext, "VK_QCOM_tile_shading") and (self.device.VK_QCOM_tile_properties or self.instance.VK_KHR_get_physical_device_properties2)) {
+            if (std.mem.eql(u8, ext, "VK_QCOM_tile_shading") and (self.device.VK_QCOM_tile_properties)) {
                 self.device.VK_QCOM_tile_shading = true;
                 break;
             }
@@ -2139,6 +2244,12 @@ pub const Extensions = struct {
         for (de) |ext| {
             if (std.mem.eql(u8, ext, "VK_EXT_descriptor_buffer") and (((((self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1)) and self.device.VK_KHR_buffer_device_address and self.device.VK_EXT_descriptor_indexing) or !api_version.less(vk.VK_API_VERSION_1_2)) and self.device.VK_KHR_synchronization2) or !api_version.less(vk.VK_API_VERSION_1_3))) {
                 self.device.VK_EXT_descriptor_buffer = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_KHR_device_address_commands") and (((((self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1)) and self.device.VK_KHR_buffer_device_address) or !api_version.less(vk.VK_API_VERSION_1_2)) and self.device.VK_KHR_synchronization2 and self.device.VK_EXT_extended_dynamic_state) or !api_version.less(vk.VK_API_VERSION_1_3))) {
+                self.device.VK_KHR_device_address_commands = true;
                 break;
             }
         }
@@ -2677,7 +2788,7 @@ pub const Extensions = struct {
             }
         }
         for (de) |ext| {
-            if (std.mem.eql(u8, ext, "VK_AMDX_dense_geometry_format") and (self.device.VK_KHR_acceleration_structure and (self.device.VK_KHR_maintenance5 or !api_version.less(vk.VK_API_VERSION_1_4)))) {
+            if (std.mem.eql(u8, ext, "VK_AMDX_dense_geometry_format") and (self.device.VK_KHR_acceleration_structure and (!api_version.less(vk.VK_API_VERSION_1_4) or self.device.VK_KHR_extended_flags or self.device.VK_KHR_maintenance5))) {
                 self.device.VK_AMDX_dense_geometry_format = true;
                 break;
             }
@@ -2707,7 +2818,7 @@ pub const Extensions = struct {
             }
         }
         for (de) |ext| {
-            if (std.mem.eql(u8, ext, "VK_KHR_pipeline_binary") and (self.device.VK_KHR_maintenance5 or !api_version.less(vk.VK_API_VERSION_1_4))) {
+            if (std.mem.eql(u8, ext, "VK_KHR_pipeline_binary") and (!api_version.less(vk.VK_API_VERSION_1_4) or self.device.VK_KHR_extended_flags or self.device.VK_KHR_maintenance5)) {
                 self.device.VK_KHR_pipeline_binary = true;
                 break;
             }
@@ -2725,7 +2836,7 @@ pub const Extensions = struct {
             }
         }
         for (de) |ext| {
-            if (std.mem.eql(u8, ext, "VK_KHR_swapchain_maintenance1") and (self.device.VK_KHR_swapchain or self.instance.VK_KHR_surface_maintenance1 or self.instance.VK_KHR_get_physical_device_properties2)) {
+            if (std.mem.eql(u8, ext, "VK_KHR_swapchain_maintenance1") and (self.device.VK_KHR_swapchain and self.instance.VK_KHR_surface_maintenance1 and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1)))) {
                 self.device.VK_KHR_swapchain_maintenance1 = true;
                 break;
             }
@@ -2791,6 +2902,12 @@ pub const Extensions = struct {
             }
         }
         for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_KHR_internally_synchronized_queues") and (!api_version.less(vk.VK_API_VERSION_1_1))) {
+                self.device.VK_KHR_internally_synchronized_queues = true;
+                break;
+            }
+        }
+        for (de) |ext| {
             if (std.mem.eql(u8, ext, "VK_NV_low_latency2") and ((!api_version.less(vk.VK_API_VERSION_1_2) or self.device.VK_KHR_timeline_semaphore) and (self.device.VK_KHR_present_id or self.device.VK_KHR_present_id2))) {
                 self.device.VK_NV_low_latency2 = true;
                 break;
@@ -2803,8 +2920,14 @@ pub const Extensions = struct {
             }
         }
         for (de) |ext| {
-            if (std.mem.eql(u8, ext, "VK_ARM_data_graph") and (!api_version.less(vk.VK_API_VERSION_1_3) and self.device.VK_KHR_maintenance5 and self.device.VK_KHR_deferred_host_operations)) {
+            if (std.mem.eql(u8, ext, "VK_ARM_data_graph") and (!api_version.less(vk.VK_API_VERSION_1_3) and (self.device.VK_KHR_extended_flags or self.device.VK_KHR_maintenance5) and self.device.VK_KHR_deferred_host_operations)) {
                 self.device.VK_ARM_data_graph = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_ARM_data_graph_instruction_set_tosa") and (self.device.VK_ARM_data_graph)) {
+                self.device.VK_ARM_data_graph_instruction_set_tosa = true;
                 break;
             }
         }
@@ -3025,6 +3148,12 @@ pub const Extensions = struct {
             }
         }
         for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_ARM_tensor_controls") and (self.device.VK_ARM_tensors)) {
+                self.device.VK_ARM_tensor_controls = true;
+                break;
+            }
+        }
+        for (de) |ext| {
             if (std.mem.eql(u8, ext, "VK_EXT_shader_float8") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
                 self.device.VK_EXT_shader_float8 = true;
                 break;
@@ -3049,8 +3178,14 @@ pub const Extensions = struct {
             }
         }
         for (de) |ext| {
-            if (std.mem.eql(u8, ext, "VK_EXT_device_generated_commands") and (((self.device.VK_KHR_buffer_device_address or !api_version.less(vk.VK_API_VERSION_1_2)) and self.device.VK_KHR_maintenance5) or !api_version.less(vk.VK_API_VERSION_1_3))) {
+            if (std.mem.eql(u8, ext, "VK_EXT_device_generated_commands") and (((self.device.VK_KHR_buffer_device_address or !api_version.less(vk.VK_API_VERSION_1_2)) and (self.device.VK_KHR_extended_flags or self.device.VK_KHR_maintenance5)) or !api_version.less(vk.VK_API_VERSION_1_3))) {
                 self.device.VK_EXT_device_generated_commands = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_KHR_device_fault") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
+                self.device.VK_KHR_device_fault = true;
                 break;
             }
         }
@@ -3069,6 +3204,12 @@ pub const Extensions = struct {
         for (de) |ext| {
             if (std.mem.eql(u8, ext, "VK_KHR_shader_fma") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
                 self.device.VK_KHR_shader_fma = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_NV_push_constant_bank")) {
+                self.device.VK_NV_push_constant_bank = true;
                 break;
             }
         }
@@ -3097,12 +3238,6 @@ pub const Extensions = struct {
             }
         }
         for (de) |ext| {
-            if (std.mem.eql(u8, ext, "VK_OHOS_native_buffer")) {
-                self.device.VK_OHOS_native_buffer = true;
-                break;
-            }
-        }
-        for (de) |ext| {
             if (std.mem.eql(u8, ext, "VK_HUAWEI_hdr_vivid") and ((self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1)) and self.device.VK_KHR_swapchain and self.device.VK_EXT_hdr_metadata)) {
                 self.device.VK_HUAWEI_hdr_vivid = true;
                 break;
@@ -3117,6 +3252,18 @@ pub const Extensions = struct {
         for (de) |ext| {
             if (std.mem.eql(u8, ext, "VK_ARM_pipeline_opacity_micromap") and (self.device.VK_EXT_opacity_micromap)) {
                 self.device.VK_ARM_pipeline_opacity_micromap = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_KHR_video_encode_feedback2") and (self.device.VK_KHR_video_encode_queue)) {
+                self.device.VK_KHR_video_encode_feedback2 = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_IMG_filter_linear_2d") and (self.device.VK_KHR_format_feature_flags2 or !api_version.less(vk.VK_API_VERSION_1_3))) {
+                self.device.VK_IMG_filter_linear_2d = true;
                 break;
             }
         }
@@ -3139,6 +3286,12 @@ pub const Extensions = struct {
             }
         }
         for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_ARM_shader_instrumentation") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
+                self.device.VK_ARM_shader_instrumentation = true;
+                break;
+            }
+        }
+        for (de) |ext| {
             if (std.mem.eql(u8, ext, "VK_EXT_vertex_attribute_robustness") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
                 self.device.VK_EXT_vertex_attribute_robustness = true;
                 break;
@@ -3151,7 +3304,7 @@ pub const Extensions = struct {
             }
         }
         for (de) |ext| {
-            if (std.mem.eql(u8, ext, "VK_VALVE_fragment_density_map_layered") and ((self.device.VK_KHR_maintenance5 or !api_version.less(vk.VK_API_VERSION_1_4)) and self.device.VK_EXT_fragment_density_map)) {
+            if (std.mem.eql(u8, ext, "VK_VALVE_fragment_density_map_layered") and ((!api_version.less(vk.VK_API_VERSION_1_4) or self.device.VK_KHR_extended_flags or self.device.VK_KHR_maintenance5) and self.device.VK_EXT_fragment_density_map)) {
                 self.device.VK_VALVE_fragment_density_map_layered = true;
                 break;
             }
@@ -3165,6 +3318,12 @@ pub const Extensions = struct {
         for (de) |ext| {
             if (std.mem.eql(u8, ext, "VK_NV_present_metering") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
                 self.device.VK_NV_present_metering = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_EXT_multisampled_render_to_swapchain") and (self.device.VK_KHR_swapchain and self.device.VK_EXT_multisampled_render_to_single_sampled)) {
+                self.device.VK_EXT_multisampled_render_to_swapchain = true;
                 break;
             }
         }
@@ -3183,6 +3342,12 @@ pub const Extensions = struct {
         for (de) |ext| {
             if (std.mem.eql(u8, ext, "VK_KHR_present_mode_fifo_latest_ready") and (self.device.VK_KHR_swapchain)) {
                 self.device.VK_KHR_present_mode_fifo_latest_ready = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_KHR_opacity_micromap") and (self.device.VK_KHR_acceleration_structure and self.device.VK_KHR_device_address_commands)) {
+                self.device.VK_KHR_opacity_micromap = true;
                 break;
             }
         }
@@ -3211,6 +3376,18 @@ pub const Extensions = struct {
             }
         }
         for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_ARM_data_graph_optical_flow") and (self.device.VK_ARM_data_graph)) {
+                self.device.VK_ARM_data_graph_optical_flow = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_EXT_shader_long_vector") and (!api_version.less(vk.VK_API_VERSION_1_2))) {
+                self.device.VK_EXT_shader_long_vector = true;
+                break;
+            }
+        }
+        for (de) |ext| {
             if (std.mem.eql(u8, ext, "VK_SEC_pipeline_cache_incremental_mode") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
                 self.device.VK_SEC_pipeline_cache_incremental_mode = true;
                 break;
@@ -3225,6 +3402,60 @@ pub const Extensions = struct {
         for (de) |ext| {
             if (std.mem.eql(u8, ext, "VK_NV_compute_occupancy_priority") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
                 self.device.VK_NV_compute_occupancy_priority = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_KHR_maintenance11") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
+                self.device.VK_KHR_maintenance11 = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_EXT_shader_subgroup_partitioned") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
+                self.device.VK_EXT_shader_subgroup_partitioned = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_KHR_extended_flags") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
+                self.device.VK_KHR_extended_flags = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_EXT_shader_ocp_microscaling_types") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
+                self.device.VK_EXT_shader_ocp_microscaling_types = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_VALVE_shader_mixed_float_dot_product") and ((self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1)) and (self.device.VK_KHR_shader_float16_int8 or !api_version.less(vk.VK_API_VERSION_1_2)))) {
+                self.device.VK_VALVE_shader_mixed_float_dot_product = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_SEC_throttle_hint")) {
+                self.device.VK_SEC_throttle_hint = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_ARM_data_graph_neural_accelerator_statistics")) {
+                self.device.VK_ARM_data_graph_neural_accelerator_statistics = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_EXT_primitive_restart_index") and (self.instance.VK_KHR_get_physical_device_properties2 or !api_version.less(vk.VK_API_VERSION_1_1))) {
+                self.device.VK_EXT_primitive_restart_index = true;
+                break;
+            }
+        }
+        for (de) |ext| {
+            if (std.mem.eql(u8, ext, "VK_NV_cooperative_matrix_decode_vector") and (self.device.VK_NV_cooperative_matrix2)) {
+                self.device.VK_NV_cooperative_matrix_decode_vector = true;
                 break;
             }
         }
@@ -3443,6 +3674,9 @@ pub fn validate_VkDeviceCreateInfo(extensions: *const Extensions, item: *const v
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV,
             => if (!validate_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_FEATURES_NV,
+            => if (!validate_VkPhysicalDevicePushConstantBankFeaturesNV(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_COMPUTE_FEATURES_NV,
             => if (!validate_VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV(extensions, @ptrCast(next), false))
                 return false,
@@ -3530,6 +3764,9 @@ pub fn validate_VkDeviceCreateInfo(extensions: *const Extensions, item: *const v
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_FEATURES_KHR,
             => if (!validate_VkPhysicalDeviceMaintenance9FeaturesKHR(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceMaintenance11FeaturesKHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_FEATURES_KHR,
             => if (!validate_VkPhysicalDeviceMaintenance10FeaturesKHR(extensions, @ptrCast(next), false))
                 return false,
@@ -3541,6 +3778,9 @@ pub fn validate_VkDeviceCreateInfo(extensions: *const Extensions, item: *const v
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES,
             => if (!validate_VkPhysicalDeviceHostQueryResetFeatures(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ELAPSED_TIMER_QUERY_FEATURES_QCOM,
+            => if (!validate_VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES,
             => if (!validate_VkPhysicalDeviceGlobalPriorityQueryFeatures(extensions, @ptrCast(next), false))
@@ -3746,6 +3986,9 @@ pub fn validate_VkDeviceCreateInfo(extensions: *const Extensions, item: *const v
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COHERENT_MEMORY_FEATURES_AMD,
             => if (!validate_VkPhysicalDeviceCoherentMemoryFeaturesAMD(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_FEATURES_AMD,
+            => if (!validate_VkPhysicalDeviceGpaFeaturesAMD(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_FAULT_CALLBACK_INFO,
             => if (!validate_VkFaultCallbackInfo(extensions, @ptrCast(next), false))
                 return false,
@@ -3763,6 +4006,9 @@ pub fn validate_VkDeviceCreateInfo(extensions: *const Extensions, item: *const v
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_FEATURES_EXT,
             => if (!validate_VkPhysicalDeviceExtendedDynamicState3FeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_FLAGS_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceExtendedFlagsFeaturesKHR(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PARTITIONED_ACCELERATION_STRUCTURE_FEATURES_NV,
             => if (!validate_VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV(extensions, @ptrCast(next), false))
@@ -3878,6 +4124,9 @@ pub fn validate_VkDeviceCreateInfo(extensions: *const Extensions, item: *const v
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_FEATURES_EXT,
             => if (!validate_VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SWAPCHAIN_FEATURES_EXT,
+            => if (!validate_VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES,
             => if (!validate_VkPhysicalDevicePipelineProtectedAccessFeatures(extensions, @ptrCast(next), false))
                 return false,
@@ -3892,6 +4141,9 @@ pub fn validate_VkDeviceCreateInfo(extensions: *const Extensions, item: *const v
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_QUANTIZATION_MAP_FEATURES_KHR,
             => if (!validate_VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_FEEDBACK_2_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_AV1_FEATURES_KHR,
             => if (!validate_VkPhysicalDeviceVideoEncodeAV1FeaturesKHR(extensions, @ptrCast(next), false))
@@ -3953,6 +4205,9 @@ pub fn validate_VkDeviceCreateInfo(extensions: *const Extensions, item: *const v
             vk.VkStructureType.VK_STRUCTURE_TYPE_DEVICE_PIPELINE_BINARY_INTERNAL_CACHE_CONTROL_KHR,
             => if (!validate_VkDevicePipelineBinaryInternalCacheControlKHR(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_NEURAL_ACCELERATOR_STATISTICS_FEATURES_ARM,
+            => if (!validate_VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_SET_HOST_MAPPING_FEATURES_VALVE,
             => if (!validate_VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE(extensions, @ptrCast(next), false))
                 return false,
@@ -3971,6 +4226,9 @@ pub fn validate_VkDeviceCreateInfo(extensions: *const Extensions, item: *const v
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_MERGE_FEEDBACK_FEATURES_EXT,
             => if (!validate_VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceOpacityMicromapFeaturesKHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_FEATURES_EXT,
             => if (!validate_VkPhysicalDeviceOpacityMicromapFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
@@ -3988,6 +4246,9 @@ pub fn validate_VkDeviceCreateInfo(extensions: *const Extensions, item: *const v
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES,
             => if (!validate_VkPhysicalDevicePipelineRobustnessFeatures(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MULTIPLE_WAIT_QUEUES_FEATURES_QCOM,
+            => if (!validate_VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_FEATURES_QCOM,
             => if (!validate_VkPhysicalDeviceImageProcessingFeaturesQCOM(extensions, @ptrCast(next), false))
@@ -4010,6 +4271,9 @@ pub fn validate_VkDeviceCreateInfo(extensions: *const Extensions, item: *const v
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_EXT,
             => if (!validate_VkPhysicalDeviceFaultFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceFaultFeaturesKHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT,
             => if (!validate_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
@@ -4021,6 +4285,9 @@ pub fn validate_VkDeviceCreateInfo(extensions: *const Extensions, item: *const v
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT,
             => if (!validate_VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_KHR,
             => if (!validate_VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR(extensions, @ptrCast(next), false))
@@ -4058,6 +4325,9 @@ pub fn validate_VkDeviceCreateInfo(extensions: *const Extensions, item: *const v
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_KHR,
             => if (!validate_VkPhysicalDeviceCooperativeMatrixFeaturesKHR(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_CONVERSION_FEATURES_QCOM,
+            => if (!validate_VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ENQUEUE_FEATURES_AMDX,
             => if (!validate_VkPhysicalDeviceShaderEnqueueFeaturesAMDX(extensions, @ptrCast(next), false))
                 return false,
@@ -4078,6 +4348,9 @@ pub fn validate_VkDeviceCreateInfo(extensions: *const Extensions, item: *const v
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_2_FEATURES_QCOM,
             => if (!validate_VkPhysicalDeviceImageProcessing2FeaturesQCOM(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_3_FEATURES_QCOM,
+            => if (!validate_VkPhysicalDeviceImageProcessing3FeaturesQCOM(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_POOL_OVERALLOCATION_FEATURES_NV,
             => if (!validate_VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV(extensions, @ptrCast(next), false))
@@ -4151,6 +4424,9 @@ pub fn validate_VkDeviceCreateInfo(extensions: *const Extensions, item: *const v
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_2_FEATURES_NV,
             => if (!validate_VkPhysicalDeviceCooperativeMatrix2FeaturesNV(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_DECODE_VECTOR_FEATURES_NV,
+            => if (!validate_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HDR_VIVID_FEATURES_HUAWEI,
             => if (!validate_VkPhysicalDeviceHdrVividFeaturesHUAWEI(extensions, @ptrCast(next), false))
                 return false,
@@ -4181,8 +4457,17 @@ pub fn validate_VkDeviceCreateInfo(extensions: *const Extensions, item: *const v
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNIFORM_BUFFER_UNSIZED_ARRAY_FEATURES_EXT,
             => if (!validate_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE,
+            => if (!validate_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT,
+            => if (!validate_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FORMAT_PACK_FEATURES_ARM,
             => if (!validate_VkPhysicalDeviceFormatPackFeaturesARM(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_THROTTLE_HINT_FEATURES_SEC,
+            => if (!validate_VkPhysicalDeviceThrottleHintFeaturesSEC(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TENSOR_FEATURES_ARM,
             => if (!validate_VkPhysicalDeviceTensorFeaturesARM(extensions, @ptrCast(next), false))
@@ -4211,11 +4496,47 @@ pub fn validate_VkDeviceCreateInfo(extensions: *const Extensions, item: *const v
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_64_BIT_INDEXING_FEATURES_EXT,
             => if (!validate_VkPhysicalDeviceShader64BitIndexingFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_PERF_HINT_FEATURES_QCOM,
+            => if (!validate_VkPhysicalDeviceQueuePerfHintFeaturesQCOM(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_COUNTERS_BY_REGION_FEATURES_ARM,
             => if (!validate_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV,
             => if (!validate_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT,
+            => if (!validate_VkPhysicalDeviceShaderLongVectorFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_3D_FEATURES_EXT,
+            => if (!validate_VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT,
+            => if (!validate_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SPLIT_BARRIER_FEATURES_EXT,
+            => if (!validate_VkPhysicalDeviceShaderSplitBarrierFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_FEATURES_EXT,
+            => if (!validate_VkPhysicalDeviceDescriptorHeapFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INSTRUMENTATION_FEATURES_ARM,
+            => if (!validate_VkPhysicalDeviceShaderInstrumentationFeaturesARM(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_ADDRESS_COMMANDS_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CONSTANT_DATA_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceShaderConstantDataFeaturesKHR(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ABORT_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceShaderAbortFeaturesKHR(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_OPTICAL_FLOW_FEATURES_ARM,
+            => if (!validate_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT,
+            => if (!validate_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkDeviceCreateInfo: {d}", .{v});
@@ -4766,6 +5087,12 @@ pub fn validate_VkImageCreateInfo(extensions: *const Extensions, item: *const vk
     while (pnext) |next| {
         pnext = next.pNext;
         switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_CREATE_FLAGS_2_CREATE_INFO_KHR,
+            => if (!validate_VkImageCreateFlags2CreateInfoKHR(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_USAGE_FLAGS_2_CREATE_INFO_KHR,
+            => if (!validate_VkImageUsageFlags2CreateInfoKHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV,
             => if (!validate_VkDedicatedAllocationImageCreateInfoNV(extensions, @ptrCast(next), false))
                 return false,
@@ -4792,6 +5119,9 @@ pub fn validate_VkImageCreateInfo(extensions: *const Extensions, item: *const vk
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO,
             => if (!validate_VkImageStencilUsageCreateInfo(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_2_CREATE_INFO_KHR,
+            => if (!validate_VkImageStencilUsage2CreateInfoKHR(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_VIDEO_PROFILE_LIST_INFO_KHR,
             => if (!validate_VkVideoProfileListInfoKHR(extensions, @ptrCast(next), false))
@@ -4823,17 +5153,57 @@ pub fn validate_VkImageCreateInfo(extensions: *const Extensions, item: *const vk
             vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_ALIGNMENT_CONTROL_CREATE_INFO_MESA,
             => if (!validate_VkImageAlignmentControlCreateInfoMESA(extensions, @ptrCast(next), false))
                 return false,
-            vk.VkStructureType.VK_STRUCTURE_TYPE_NATIVE_BUFFER_OHOS,
-            => if (!validate_VkNativeBufferOHOS(extensions, @ptrCast(next), false))
-                return false,
-            vk.VkStructureType.VK_STRUCTURE_TYPE_SWAPCHAIN_IMAGE_CREATE_INFO_OHOS,
-            => if (!validate_VkSwapchainImageCreateInfoOHOS(extensions, @ptrCast(next), false))
-                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_OHOS,
             => if (!validate_VkExternalFormatOHOS(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_OPAQUE_CAPTURE_DATA_CREATE_INFO_EXT,
+            => if (!validate_VkOpaqueCaptureDataCreateInfoEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_OPTICAL_FLOW_IMAGE_FORMAT_INFO_ARM,
+            => if (!validate_VkDataGraphOpticalFlowImageFormatInfoARM(extensions, @ptrCast(next), false))
+                return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkImageCreateInfo: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkImageCreateFlags2CreateInfoKHR(extensions: *const Extensions, item: *const vk.VkImageCreateFlags2CreateInfoKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkImageCreateFlags2CreateInfoKHR.STYPE)
+        return false;
+    if (!validate_VkImageCreateFlags2KHR(extensions, &item.flags))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkImageCreateFlags2CreateInfoKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkImageUsageFlags2CreateInfoKHR(extensions: *const Extensions, item: *const vk.VkImageUsageFlags2CreateInfoKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkImageUsageFlags2CreateInfoKHR.STYPE)
+        return false;
+    if (!validate_VkImageUsageFlags2KHR(extensions, &item.usage))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkImageUsageFlags2CreateInfoKHR: {d}", .{v});
                 return false;
             },
         }
@@ -4869,6 +5239,9 @@ pub fn validate_VkImageViewCreateInfo(extensions: *const Extensions, item: *cons
         switch (next.sType) {
             vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO,
             => if (!validate_VkImageViewUsageCreateInfo(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_2_CREATE_INFO_KHR,
+            => if (!validate_VkImageViewUsage2CreateInfoKHR(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_VIEW_SLICED_CREATE_INFO_EXT,
             => if (!validate_VkImageViewSlicedCreateInfoEXT(extensions, @ptrCast(next), false))
@@ -5313,6 +5686,9 @@ pub fn validate_VkPipelineShaderStageCreateInfo(extensions: *const Extensions, i
             vk.VkStructureType.VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
             => if (!validate_VkShaderModuleCreateInfo(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT,
+            => if (!validate_VkValidationFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT,
             => if (!validate_VkShaderModuleValidationCacheCreateInfoEXT(extensions, @ptrCast(next), false))
                 return false,
@@ -5330,6 +5706,9 @@ pub fn validate_VkPipelineShaderStageCreateInfo(extensions: *const Extensions, i
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_NODE_CREATE_INFO_AMDX,
             => if (!validate_VkPipelineShaderStageNodeCreateInfoAMDX(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_SHADER_DESCRIPTOR_SET_AND_BINDING_MAPPING_INFO_EXT,
+            => if (!validate_VkShaderDescriptorSetAndBindingMappingInfoEXT(extensions, @ptrCast(next), false))
                 return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkPipelineShaderStageCreateInfo: {d}", .{v});
@@ -5361,6 +5740,9 @@ pub fn validate_VkComputePipelineCreateInfo(extensions: *const Extensions, item:
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_BINARY_INFO_KHR,
             => if (!validate_VkPipelineBinaryInfoKHR(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT,
+            => if (!validate_VkValidationFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO,
             => if (!validate_VkPipelineCreationFeedbackCreateInfo(extensions, @ptrCast(next), false))
@@ -5830,6 +6212,9 @@ pub fn validate_VkGraphicsPipelineCreateInfo(extensions: *const Extensions, item
             vk.VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_BINARY_INFO_KHR,
             => if (!validate_VkPipelineBinaryInfoKHR(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT,
+            => if (!validate_VkValidationFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_SHADER_GROUPS_CREATE_INFO_NV,
             => if (!validate_VkGraphicsPipelineShaderGroupsCreateInfoNV(extensions, @ptrCast(next), false))
                 return false,
@@ -6188,6 +6573,9 @@ pub fn validate_VkSamplerCreateInfo(extensions: *const Extensions, item: *const 
             vk.VkStructureType.VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO,
             => if (!validate_VkSamplerReductionModeCreateInfo(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+            => if (!validate_VkDebugUtilsObjectNameInfoEXT(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_CREATE_INFO_EXT,
             => if (!validate_VkSamplerCustomBorderColorCreateInfoEXT(extensions, @ptrCast(next), false))
                 return false,
@@ -6202,6 +6590,9 @@ pub fn validate_VkSamplerCreateInfo(extensions: *const Extensions, item: *const 
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_SAMPLER_BLOCK_MATCH_WINDOW_CREATE_INFO_QCOM,
             => if (!validate_VkSamplerBlockMatchWindowCreateInfoQCOM(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_INDEX_CREATE_INFO_EXT,
+            => if (!validate_VkSamplerCustomBorderColorIndexCreateInfoEXT(extensions, @ptrCast(next), false))
                 return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkSamplerCreateInfo: {d}", .{v});
@@ -6309,6 +6700,9 @@ pub fn validate_VkCommandBufferInheritanceInfo(extensions: *const Extensions, it
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_OHOS,
             => if (!validate_VkExternalFormatOHOS(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_DESCRIPTOR_HEAP_INFO_EXT,
+            => if (!validate_VkCommandBufferInheritanceDescriptorHeapInfoEXT(extensions, @ptrCast(next), false))
                 return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkCommandBufferInheritanceInfo: {d}", .{v});
@@ -6711,6 +7105,9 @@ pub fn validate_VkQueryPoolCreateInfo(extensions: *const Extensions, item: *cons
             vk.VkStructureType.VK_STRUCTURE_TYPE_QUERY_POOL_VIDEO_ENCODE_FEEDBACK_CREATE_INFO_KHR,
             => if (!validate_VkQueryPoolVideoEncodeFeedbackCreateInfoKHR(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_QUERY_POOL_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_CREATE_INFO_KHR,
+            => if (!validate_VkQueryPoolVideoEncodePerPartitionFeedbackCreateInfoKHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_VIDEO_ENCODE_H264_PROFILE_INFO_KHR,
             => if (!validate_VkVideoEncodeH264ProfileInfoKHR(extensions, @ptrCast(next), false))
                 return false,
@@ -6831,6 +7228,9 @@ pub fn validate_VkSubmitInfo(extensions: *const Extensions, item: *const vk.VkSu
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_LATENCY_SUBMISSION_PRESENT_ID_NV,
             => if (!validate_VkLatencySubmissionPresentIdNV(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_THROTTLE_HINT_SUBMIT_INFO_SEC,
+            => if (!validate_VkThrottleHintSubmitInfoSEC(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_FRAME_BOUNDARY_TENSORS_ARM,
             => if (!validate_VkFrameBoundaryTensorsARM(extensions, @ptrCast(next), false))
@@ -7071,6 +7471,26 @@ pub fn validate_VkWaylandSurfaceCreateInfoKHR(extensions: *const Extensions, ite
     return true;
 }
 
+pub fn validate_VkUbmSurfaceCreateInfoSEC(extensions: *const Extensions, item: *const vk.VkUbmSurfaceCreateInfoSEC, validate_pnext: bool) bool {
+    if (item.sType != vk.VkUbmSurfaceCreateInfoSEC.STYPE)
+        return false;
+    if (!validate_VkUbmSurfaceCreateFlagsSEC(extensions, &item.flags))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkUbmSurfaceCreateInfoSEC: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
 pub fn validate_VkWin32SurfaceCreateInfoKHR(extensions: *const Extensions, item: *const vk.VkWin32SurfaceCreateInfoKHR, validate_pnext: bool) bool {
     if (item.sType != vk.VkWin32SurfaceCreateInfoKHR.STYPE)
         return false;
@@ -7247,6 +7667,9 @@ pub fn validate_VkSwapchainCreateInfoKHR(extensions: *const Extensions, item: *c
     while (pnext) |next| {
         pnext = next.pNext;
         switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_USAGE_FLAGS_2_CREATE_INFO_KHR,
+            => if (!validate_VkImageUsageFlags2CreateInfoKHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_SWAPCHAIN_COUNTER_CREATE_INFO_EXT,
             => if (!validate_VkSwapchainCounterCreateInfoEXT(extensions, @ptrCast(next), false))
                 return false,
@@ -7839,6 +8262,63 @@ pub fn validate_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV(extensions: *c
     return true;
 }
 
+pub fn validate_VkPushConstantBankInfoNV(extensions: *const Extensions, item: *const vk.VkPushConstantBankInfoNV, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPushConstantBankInfoNV.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPushConstantBankInfoNV: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDevicePushConstantBankFeaturesNV(extensions: *const Extensions, item: *const vk.VkPhysicalDevicePushConstantBankFeaturesNV, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDevicePushConstantBankFeaturesNV.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDevicePushConstantBankFeaturesNV: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDevicePushConstantBankPropertiesNV(extensions: *const Extensions, item: *const vk.VkPhysicalDevicePushConstantBankPropertiesNV, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDevicePushConstantBankPropertiesNV.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDevicePushConstantBankPropertiesNV: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
 pub fn validate_VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV, validate_pnext: bool) bool {
     if (item.sType != vk.VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV.STYPE)
         return false;
@@ -8294,6 +8774,9 @@ pub fn validate_VkIndirectCommandsLayoutTokenNV(extensions: *const Extensions, i
     while (pnext) |next| {
         pnext = next.pNext;
         switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_PUSH_DATA_TOKEN_NV,
+            => if (!validate_VkIndirectCommandsLayoutPushDataTokenNV(extensions, @ptrCast(next), false))
+                return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkIndirectCommandsLayoutTokenNV: {d}", .{v});
                 return false;
@@ -8421,6 +8904,9 @@ pub fn validate_VkPhysicalDeviceFeatures2(extensions: *const Extensions, item: *
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_FEATURES_NV,
             => if (!validate_VkPhysicalDeviceDeviceGeneratedCommandsFeaturesNV(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_FEATURES_NV,
+            => if (!validate_VkPhysicalDevicePushConstantBankFeaturesNV(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_COMPUTE_FEATURES_NV,
             => if (!validate_VkPhysicalDeviceDeviceGeneratedCommandsComputeFeaturesNV(extensions, @ptrCast(next), false))
                 return false,
@@ -8496,6 +8982,9 @@ pub fn validate_VkPhysicalDeviceFeatures2(extensions: *const Extensions, item: *
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_9_FEATURES_KHR,
             => if (!validate_VkPhysicalDeviceMaintenance9FeaturesKHR(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceMaintenance11FeaturesKHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_10_FEATURES_KHR,
             => if (!validate_VkPhysicalDeviceMaintenance10FeaturesKHR(extensions, @ptrCast(next), false))
                 return false,
@@ -8507,6 +8996,9 @@ pub fn validate_VkPhysicalDeviceFeatures2(extensions: *const Extensions, item: *
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES,
             => if (!validate_VkPhysicalDeviceHostQueryResetFeatures(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ELAPSED_TIMER_QUERY_FEATURES_QCOM,
+            => if (!validate_VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES,
             => if (!validate_VkPhysicalDeviceGlobalPriorityQueryFeatures(extensions, @ptrCast(next), false))
@@ -8703,6 +9195,9 @@ pub fn validate_VkPhysicalDeviceFeatures2(extensions: *const Extensions, item: *
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COHERENT_MEMORY_FEATURES_AMD,
             => if (!validate_VkPhysicalDeviceCoherentMemoryFeaturesAMD(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_FEATURES_AMD,
+            => if (!validate_VkPhysicalDeviceGpaFeaturesAMD(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_FEATURES_EXT,
             => if (!validate_VkPhysicalDeviceCustomBorderColorFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
@@ -8717,6 +9212,9 @@ pub fn validate_VkPhysicalDeviceFeatures2(extensions: *const Extensions, item: *
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_FEATURES_EXT,
             => if (!validate_VkPhysicalDeviceExtendedDynamicState3FeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_FLAGS_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceExtendedFlagsFeaturesKHR(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PARTITIONED_ACCELERATION_STRUCTURE_FEATURES_NV,
             => if (!validate_VkPhysicalDevicePartitionedAccelerationStructureFeaturesNV(extensions, @ptrCast(next), false))
@@ -8826,6 +9324,9 @@ pub fn validate_VkPhysicalDeviceFeatures2(extensions: *const Extensions, item: *
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_FEATURES_EXT,
             => if (!validate_VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SWAPCHAIN_FEATURES_EXT,
+            => if (!validate_VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_PROTECTED_ACCESS_FEATURES,
             => if (!validate_VkPhysicalDevicePipelineProtectedAccessFeatures(extensions, @ptrCast(next), false))
                 return false,
@@ -8840,6 +9341,9 @@ pub fn validate_VkPhysicalDeviceFeatures2(extensions: *const Extensions, item: *
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_QUANTIZATION_MAP_FEATURES_KHR,
             => if (!validate_VkPhysicalDeviceVideoEncodeQuantizationMapFeaturesKHR(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_FEEDBACK_2_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_AV1_FEATURES_KHR,
             => if (!validate_VkPhysicalDeviceVideoEncodeAV1FeaturesKHR(extensions, @ptrCast(next), false))
@@ -8898,6 +9402,9 @@ pub fn validate_VkPhysicalDeviceFeatures2(extensions: *const Extensions, item: *
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_BINARY_FEATURES_KHR,
             => if (!validate_VkPhysicalDevicePipelineBinaryFeaturesKHR(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_NEURAL_ACCELERATOR_STATISTICS_FEATURES_ARM,
+            => if (!validate_VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_SET_HOST_MAPPING_FEATURES_VALVE,
             => if (!validate_VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE(extensions, @ptrCast(next), false))
                 return false,
@@ -8916,6 +9423,9 @@ pub fn validate_VkPhysicalDeviceFeatures2(extensions: *const Extensions, item: *
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBPASS_MERGE_FEEDBACK_FEATURES_EXT,
             => if (!validate_VkPhysicalDeviceSubpassMergeFeedbackFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceOpacityMicromapFeaturesKHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_FEATURES_EXT,
             => if (!validate_VkPhysicalDeviceOpacityMicromapFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
@@ -8933,6 +9443,9 @@ pub fn validate_VkPhysicalDeviceFeatures2(extensions: *const Extensions, item: *
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_FEATURES,
             => if (!validate_VkPhysicalDevicePipelineRobustnessFeatures(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MULTIPLE_WAIT_QUEUES_FEATURES_QCOM,
+            => if (!validate_VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_FEATURES_QCOM,
             => if (!validate_VkPhysicalDeviceImageProcessingFeaturesQCOM(extensions, @ptrCast(next), false))
@@ -8955,6 +9468,9 @@ pub fn validate_VkPhysicalDeviceFeatures2(extensions: *const Extensions, item: *
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_EXT,
             => if (!validate_VkPhysicalDeviceFaultFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceFaultFeaturesKHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_LIBRARY_GROUP_HANDLES_FEATURES_EXT,
             => if (!validate_VkPhysicalDevicePipelineLibraryGroupHandlesFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
@@ -8966,6 +9482,9 @@ pub fn validate_VkPhysicalDeviceFeatures2(extensions: *const Extensions, item: *
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT,
             => if (!validate_VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_KHR,
             => if (!validate_VkPhysicalDeviceSwapchainMaintenance1FeaturesKHR(extensions, @ptrCast(next), false))
@@ -9003,6 +9522,9 @@ pub fn validate_VkPhysicalDeviceFeatures2(extensions: *const Extensions, item: *
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_KHR,
             => if (!validate_VkPhysicalDeviceCooperativeMatrixFeaturesKHR(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_CONVERSION_FEATURES_QCOM,
+            => if (!validate_VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ENQUEUE_FEATURES_AMDX,
             => if (!validate_VkPhysicalDeviceShaderEnqueueFeaturesAMDX(extensions, @ptrCast(next), false))
                 return false,
@@ -9023,6 +9545,9 @@ pub fn validate_VkPhysicalDeviceFeatures2(extensions: *const Extensions, item: *
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_2_FEATURES_QCOM,
             => if (!validate_VkPhysicalDeviceImageProcessing2FeaturesQCOM(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_3_FEATURES_QCOM,
+            => if (!validate_VkPhysicalDeviceImageProcessing3FeaturesQCOM(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_POOL_OVERALLOCATION_FEATURES_NV,
             => if (!validate_VkPhysicalDeviceDescriptorPoolOverallocationFeaturesNV(extensions, @ptrCast(next), false))
@@ -9093,6 +9618,9 @@ pub fn validate_VkPhysicalDeviceFeatures2(extensions: *const Extensions, item: *
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_2_FEATURES_NV,
             => if (!validate_VkPhysicalDeviceCooperativeMatrix2FeaturesNV(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_DECODE_VECTOR_FEATURES_NV,
+            => if (!validate_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HDR_VIVID_FEATURES_HUAWEI,
             => if (!validate_VkPhysicalDeviceHdrVividFeaturesHUAWEI(extensions, @ptrCast(next), false))
                 return false,
@@ -9120,8 +9648,17 @@ pub fn validate_VkPhysicalDeviceFeatures2(extensions: *const Extensions, item: *
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNIFORM_BUFFER_UNSIZED_ARRAY_FEATURES_EXT,
             => if (!validate_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE,
+            => if (!validate_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT,
+            => if (!validate_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FORMAT_PACK_FEATURES_ARM,
             => if (!validate_VkPhysicalDeviceFormatPackFeaturesARM(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_THROTTLE_HINT_FEATURES_SEC,
+            => if (!validate_VkPhysicalDeviceThrottleHintFeaturesSEC(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TENSOR_FEATURES_ARM,
             => if (!validate_VkPhysicalDeviceTensorFeaturesARM(extensions, @ptrCast(next), false))
@@ -9150,11 +9687,47 @@ pub fn validate_VkPhysicalDeviceFeatures2(extensions: *const Extensions, item: *
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_64_BIT_INDEXING_FEATURES_EXT,
             => if (!validate_VkPhysicalDeviceShader64BitIndexingFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_PERF_HINT_FEATURES_QCOM,
+            => if (!validate_VkPhysicalDeviceQueuePerfHintFeaturesQCOM(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_COUNTERS_BY_REGION_FEATURES_ARM,
             => if (!validate_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV,
             => if (!validate_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT,
+            => if (!validate_VkPhysicalDeviceShaderLongVectorFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_3D_FEATURES_EXT,
+            => if (!validate_VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT,
+            => if (!validate_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SPLIT_BARRIER_FEATURES_EXT,
+            => if (!validate_VkPhysicalDeviceShaderSplitBarrierFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_FEATURES_EXT,
+            => if (!validate_VkPhysicalDeviceDescriptorHeapFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INSTRUMENTATION_FEATURES_ARM,
+            => if (!validate_VkPhysicalDeviceShaderInstrumentationFeaturesARM(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_ADDRESS_COMMANDS_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CONSTANT_DATA_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceShaderConstantDataFeaturesKHR(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ABORT_FEATURES_KHR,
+            => if (!validate_VkPhysicalDeviceShaderAbortFeaturesKHR(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_OPTICAL_FLOW_FEATURES_ARM,
+            => if (!validate_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT,
+            => if (!validate_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(extensions, @ptrCast(next), false))
                 return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceFeatures2: {d}", .{v});
@@ -9176,6 +9749,9 @@ pub fn validate_VkPhysicalDeviceProperties2(extensions: *const Extensions, item:
     while (pnext) |next| {
         pnext = next.pNext;
         switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_PROPERTIES_NV,
+            => if (!validate_VkPhysicalDevicePushConstantBankPropertiesNV(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_GENERATED_COMMANDS_PROPERTIES_NV,
             => if (!validate_VkPhysicalDeviceDeviceGeneratedCommandsPropertiesNV(extensions, @ptrCast(next), false))
                 return false,
@@ -9356,6 +9932,12 @@ pub fn validate_VkPhysicalDeviceProperties2(extensions: *const Extensions, item:
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_4_PROPERTIES,
             => if (!validate_VkPhysicalDeviceVulkan14Properties(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_PROPERTIES_AMD,
+            => if (!validate_VkPhysicalDeviceGpaPropertiesAMD(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_PROPERTIES_2_AMD,
+            => if (!validate_VkPhysicalDeviceGpaProperties2AMD(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_PROPERTIES_EXT,
             => if (!validate_VkPhysicalDeviceCustomBorderColorPropertiesEXT(extensions, @ptrCast(next), false))
                 return false,
@@ -9419,6 +10001,9 @@ pub fn validate_VkPhysicalDeviceProperties2(extensions: *const Extensions, item:
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MODULE_IDENTIFIER_PROPERTIES_EXT,
             => if (!validate_VkPhysicalDeviceShaderModuleIdentifierPropertiesEXT(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_PROPERTIES_KHR,
+            => if (!validate_VkPhysicalDeviceOpacityMicromapPropertiesKHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_PROPERTIES_EXT,
             => if (!validate_VkPhysicalDeviceOpacityMicromapPropertiesEXT(extensions, @ptrCast(next), false))
                 return false,
@@ -9428,11 +10013,17 @@ pub fn validate_VkPhysicalDeviceProperties2(extensions: *const Extensions, item:
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_ROBUSTNESS_PROPERTIES,
             => if (!validate_VkPhysicalDevicePipelineRobustnessProperties(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MULTIPLE_WAIT_QUEUES_PROPERTIES_QCOM,
+            => if (!validate_VkPhysicalDeviceShaderMultipleWaitQueuesPropertiesQCOM(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_PROPERTIES_QCOM,
             => if (!validate_VkPhysicalDeviceImageProcessingPropertiesQCOM(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPTICAL_FLOW_PROPERTIES_NV,
             => if (!validate_VkPhysicalDeviceOpticalFlowPropertiesNV(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_PROPERTIES_KHR,
+            => if (!validate_VkPhysicalDeviceFaultPropertiesKHR(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_BUILTINS_PROPERTIES_ARM,
             => if (!validate_VkPhysicalDeviceShaderCoreBuiltinsPropertiesARM(extensions, @ptrCast(next), false))
@@ -9479,6 +10070,9 @@ pub fn validate_VkPhysicalDeviceProperties2(extensions: *const Extensions, item:
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM,
             => if (!validate_VkPhysicalDeviceSchedulingControlsPropertiesARM(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_PROPERTIES_ARM,
+            => if (!validate_VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RENDER_PASS_STRIPED_PROPERTIES_ARM,
             => if (!validate_VkPhysicalDeviceRenderPassStripedPropertiesARM(extensions, @ptrCast(next), false))
                 return false,
@@ -9509,11 +10103,29 @@ pub fn validate_VkPhysicalDeviceProperties2(extensions: *const Extensions, item:
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_BUFFER_TENSOR_PROPERTIES_ARM,
             => if (!validate_VkPhysicalDeviceDescriptorBufferTensorPropertiesARM(extensions, @ptrCast(next), false))
                 return false,
-            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENTATION_PROPERTIES_OHOS,
-            => if (!validate_VkPhysicalDevicePresentationPropertiesOHOS(extensions, @ptrCast(next), false))
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_PERF_HINT_PROPERTIES_QCOM,
+            => if (!validate_VkPhysicalDeviceQueuePerfHintPropertiesQCOM(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PERFORMANCE_COUNTERS_BY_REGION_PROPERTIES_ARM,
             => if (!validate_VkPhysicalDevicePerformanceCountersByRegionPropertiesARM(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_PROPERTIES_EXT,
+            => if (!validate_VkPhysicalDeviceShaderLongVectorPropertiesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SPLIT_BARRIER_PROPERTIES_EXT,
+            => if (!validate_VkPhysicalDeviceShaderSplitBarrierPropertiesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_PROPERTIES_EXT,
+            => if (!validate_VkPhysicalDeviceDescriptorHeapPropertiesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_TENSOR_PROPERTIES_ARM,
+            => if (!validate_VkPhysicalDeviceDescriptorHeapTensorPropertiesARM(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INSTRUMENTATION_PROPERTIES_ARM,
+            => if (!validate_VkPhysicalDeviceShaderInstrumentationPropertiesARM(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ABORT_PROPERTIES_KHR,
+            => if (!validate_VkPhysicalDeviceShaderAbortPropertiesKHR(extensions, @ptrCast(next), false))
                 return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceProperties2: {d}", .{v});
@@ -9544,8 +10156,14 @@ pub fn validate_VkFormatProperties2(extensions: *const Extensions, item: *const 
             vk.VkStructureType.VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_3,
             => if (!validate_VkFormatProperties3(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_4_KHR,
+            => if (!validate_VkFormatProperties4KHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_2_EXT,
             => if (!validate_VkDrmFormatModifierPropertiesList2EXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_TENSOR_EXPLICIT_TILING_FORMAT_PROPERTIES_ARM,
+            => if (!validate_VkTensorExplicitTilingFormatPropertiesARM(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_TENSOR_FORMAT_PROPERTIES_ARM,
             => if (!validate_VkTensorFormatPropertiesARM(extensions, @ptrCast(next), false))
@@ -9594,6 +10212,9 @@ pub fn validate_VkImageFormatProperties2(extensions: *const Extensions, item: *c
             vk.VkStructureType.VK_STRUCTURE_TYPE_NATIVE_BUFFER_USAGE_OHOS,
             => if (!validate_VkNativeBufferUsageOHOS(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_SUBSAMPLED_IMAGE_FORMAT_PROPERTIES_EXT,
+            => if (!validate_VkSubsampledImageFormatPropertiesEXT(extensions, @ptrCast(next), false))
+                return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkImageFormatProperties2: {d}", .{v});
                 return false;
@@ -9622,6 +10243,12 @@ pub fn validate_VkPhysicalDeviceImageFormatInfo2(extensions: *const Extensions, 
     while (pnext) |next| {
         pnext = next.pNext;
         switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_CREATE_FLAGS_2_CREATE_INFO_KHR,
+            => if (!validate_VkImageCreateFlags2CreateInfoKHR(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_USAGE_FLAGS_2_CREATE_INFO_KHR,
+            => if (!validate_VkImageUsageFlags2CreateInfoKHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO,
             => if (!validate_VkPhysicalDeviceExternalImageFormatInfo(extensions, @ptrCast(next), false))
                 return false,
@@ -9634,6 +10261,9 @@ pub fn validate_VkPhysicalDeviceImageFormatInfo2(extensions: *const Extensions, 
             vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO,
             => if (!validate_VkImageStencilUsageCreateInfo(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_2_CREATE_INFO_KHR,
+            => if (!validate_VkImageStencilUsage2CreateInfoKHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT,
             => if (!validate_VkPhysicalDeviceImageViewImageFormatInfoEXT(extensions, @ptrCast(next), false))
                 return false,
@@ -9645,6 +10275,9 @@ pub fn validate_VkPhysicalDeviceImageFormatInfo2(extensions: *const Extensions, 
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_OPTICAL_FLOW_IMAGE_FORMAT_INFO_NV,
             => if (!validate_VkOpticalFlowImageFormatInfoNV(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_OPTICAL_FLOW_IMAGE_FORMAT_INFO_ARM,
+            => if (!validate_VkDataGraphOpticalFlowImageFormatInfoARM(extensions, @ptrCast(next), false))
                 return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceImageFormatInfo2: {d}", .{v});
@@ -9668,6 +10301,9 @@ pub fn validate_VkQueueFamilyProperties2(extensions: *const Extensions, item: *c
         switch (next.sType) {
             vk.VkStructureType.VK_STRUCTURE_TYPE_QUEUE_FAMILY_OWNERSHIP_TRANSFER_PROPERTIES_KHR,
             => if (!validate_VkQueueFamilyOwnershipTransferPropertiesKHR(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_QUEUE_FAMILY_OPTIMAL_IMAGE_TRANSFER_GRANULARITY_PROPERTIES_KHR,
+            => if (!validate_VkQueueFamilyOptimalImageTransferGranularityPropertiesKHR(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES,
             => if (!validate_VkQueueFamilyGlobalPriorityProperties(extensions, @ptrCast(next), false))
@@ -9755,6 +10391,9 @@ pub fn validate_VkPhysicalDeviceSparseImageFormatInfo2(extensions: *const Extens
     while (pnext) |next| {
         pnext = next.pNext;
         switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_USAGE_FLAGS_2_CREATE_INFO_KHR,
+            => if (!validate_VkImageUsageFlags2CreateInfoKHR(extensions, @ptrCast(next), false))
+                return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceSparseImageFormatInfo2: {d}", .{v});
                 return false;
@@ -11233,9 +11872,6 @@ pub fn validate_VkBindImageMemoryInfo(extensions: *const Extensions, item: *cons
             vk.VkStructureType.VK_STRUCTURE_TYPE_BIND_MEMORY_STATUS,
             => if (!validate_VkBindMemoryStatus(extensions, @ptrCast(next), false))
                 return false,
-            vk.VkStructureType.VK_STRUCTURE_TYPE_NATIVE_BUFFER_OHOS,
-            => if (!validate_VkNativeBufferOHOS(extensions, @ptrCast(next), false))
-                return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkBindImageMemoryInfo: {d}", .{v});
                 return false;
@@ -12286,6 +12922,9 @@ pub fn validate_VkSurfaceCapabilities2KHR(extensions: *const Extensions, item: *
     while (pnext) |next| {
         pnext = next.pNext;
         switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_USAGE_FLAGS_2_CREATE_INFO_KHR,
+            => if (!validate_VkImageUsageFlags2CreateInfoKHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PRESENT_TIMING_SURFACE_CAPABILITIES_EXT,
             => if (!validate_VkPresentTimingSurfaceCapabilitiesEXT(extensions, @ptrCast(next), false))
                 return false,
@@ -12294,6 +12933,12 @@ pub fn validate_VkSurfaceCapabilities2KHR(extensions: *const Extensions, item: *
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR,
             => if (!validate_VkSharedPresentSurfaceCapabilitiesKHR(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_SWAPCHAIN_FLAGS_SURFACE_CAPABILITIES_EXT,
+            => if (!validate_VkSwapchainFlagsSurfaceCapabilitiesEXT(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_2_KHR,
+            => if (!validate_VkSharedPresentSurfaceCapabilities2KHR(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR,
             => if (!validate_VkSurfaceProtectedCapabilitiesKHR(extensions, @ptrCast(next), false))
@@ -12485,6 +13130,46 @@ pub fn validate_VkSharedPresentSurfaceCapabilitiesKHR(extensions: *const Extensi
         switch (next.sType) {
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkSharedPresentSurfaceCapabilitiesKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkSwapchainFlagsSurfaceCapabilitiesEXT(extensions: *const Extensions, item: *const vk.VkSwapchainFlagsSurfaceCapabilitiesEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkSwapchainFlagsSurfaceCapabilitiesEXT.STYPE)
+        return false;
+    if (!validate_VkSwapchainCreateFlagsKHR(extensions, &item.swapchainSupportedFlags))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkSwapchainFlagsSurfaceCapabilitiesEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkSharedPresentSurfaceCapabilities2KHR(extensions: *const Extensions, item: *const vk.VkSharedPresentSurfaceCapabilities2KHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkSharedPresentSurfaceCapabilities2KHR.STYPE)
+        return false;
+    if (!validate_VkImageUsageFlags2KHR(extensions, &item.sharedPresentSupportedUsageFlags))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkSharedPresentSurfaceCapabilities2KHR: {d}", .{v});
                 return false;
             },
         }
@@ -12774,6 +13459,26 @@ pub fn validate_VkImageViewUsageCreateInfo(extensions: *const Extensions, item: 
         switch (next.sType) {
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkImageViewUsageCreateInfo: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkImageViewUsage2CreateInfoKHR(extensions: *const Extensions, item: *const vk.VkImageViewUsage2CreateInfoKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkImageViewUsage2CreateInfoKHR.STYPE)
+        return false;
+    if (!validate_VkImageUsageFlags2KHR(extensions, &item.usage))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkImageViewUsage2CreateInfoKHR: {d}", .{v});
                 return false;
             },
         }
@@ -13811,6 +14516,25 @@ pub fn validate_VkPhysicalDeviceMaintenance9PropertiesKHR(extensions: *const Ext
     return true;
 }
 
+pub fn validate_VkPhysicalDeviceMaintenance11FeaturesKHR(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceMaintenance11FeaturesKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceMaintenance11FeaturesKHR.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceMaintenance11FeaturesKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
 pub fn validate_VkPhysicalDeviceMaintenance10PropertiesKHR(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceMaintenance10PropertiesKHR, validate_pnext: bool) bool {
     if (item.sType != vk.VkPhysicalDeviceMaintenance10PropertiesKHR.STYPE)
         return false;
@@ -13865,6 +14589,26 @@ pub fn validate_VkQueueFamilyOwnershipTransferPropertiesKHR(extensions: *const E
         }
     }
     _ = extensions;
+    return true;
+}
+
+pub fn validate_VkQueueFamilyOptimalImageTransferGranularityPropertiesKHR(extensions: *const Extensions, item: *const vk.VkQueueFamilyOptimalImageTransferGranularityPropertiesKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkQueueFamilyOptimalImageTransferGranularityPropertiesKHR.STYPE)
+        return false;
+    if (!validate_VkExtent3D(extensions, &item.optimalImageTransferGranularity, false))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkQueueFamilyOptimalImageTransferGranularityPropertiesKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
     return true;
 }
 
@@ -14009,6 +14753,25 @@ pub fn validate_VkShaderStatisticsInfoAMD(extensions: *const Extensions, item: *
     if (!validate_VkShaderResourceUsageAMD(extensions, &item.resourceUsage, false))
         return false;
     _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceElapsedTimerQueryFeaturesQCOM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
     return true;
 }
 
@@ -16078,6 +16841,9 @@ pub fn validate_VkRayTracingPipelineCreateInfoKHR(extensions: *const Extensions,
             vk.VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_BINARY_INFO_KHR,
             => if (!validate_VkPipelineBinaryInfoKHR(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT,
+            => if (!validate_VkValidationFeaturesEXT(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CLUSTER_ACCELERATION_STRUCTURE_CREATE_INFO_NV,
             => if (!validate_VkRayTracingPipelineClusterAccelerationStructureCreateInfoNV(extensions, @ptrCast(next), false))
                 return false,
@@ -16177,6 +16943,8 @@ pub fn validate_VkAccelerationStructureInfoNV(extensions: *const Extensions, ite
     if (item.sType != vk.VkAccelerationStructureInfoNV.STYPE)
         return false;
     if (!validate_VkAccelerationStructureTypeKHR(extensions, &item.type))
+        return false;
+    if (!validate_VkBuildAccelerationStructureFlagsKHR(extensions, &item.flags))
         return false;
     if (item.pGeometries) |v| {
         for (v[0..item.geometryCount]) |*vv| {
@@ -16579,6 +17347,26 @@ pub fn validate_VkImageStencilUsageCreateInfo(extensions: *const Extensions, ite
         switch (next.sType) {
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkImageStencilUsageCreateInfo: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkImageStencilUsage2CreateInfoKHR(extensions: *const Extensions, item: *const vk.VkImageStencilUsage2CreateInfoKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkImageStencilUsage2CreateInfoKHR.STYPE)
+        return false;
+    if (!validate_VkImageUsageFlags2KHR(extensions, &item.stencilUsage))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkImageStencilUsage2CreateInfoKHR: {d}", .{v});
                 return false;
             },
         }
@@ -17136,6 +17924,12 @@ pub fn validate_VkFramebufferAttachmentImageInfo(extensions: *const Extensions, 
     while (pnext) |next| {
         pnext = next.pNext;
         switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_CREATE_FLAGS_2_CREATE_INFO_KHR,
+            => if (!validate_VkImageCreateFlags2CreateInfoKHR(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_USAGE_FLAGS_2_CREATE_INFO_KHR,
+            => if (!validate_VkImageUsageFlags2CreateInfoKHR(extensions, @ptrCast(next), false))
+                return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkFramebufferAttachmentImageInfo: {d}", .{v});
                 return false;
@@ -18673,6 +19467,176 @@ pub fn validate_VkPhysicalDeviceCoherentMemoryFeaturesAMD(extensions: *const Ext
     return true;
 }
 
+pub fn validate_VkGpaPerfBlockPropertiesAMD(extensions: *const Extensions, item: *const vk.VkGpaPerfBlockPropertiesAMD, validate_pnext: bool) bool {
+    if (!validate_VkGpaPerfBlockAMD(extensions, &item.blockType))
+        return false;
+    if (!validate_VkGpaPerfBlockPropertiesFlagsAMD(extensions, &item.flags))
+        return false;
+    _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceGpaFeaturesAMD(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceGpaFeaturesAMD, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceGpaFeaturesAMD.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceGpaFeaturesAMD: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceGpaPropertiesAMD(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceGpaPropertiesAMD, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceGpaPropertiesAMD.STYPE)
+        return false;
+    if (!validate_VkPhysicalDeviceGpaPropertiesFlagsAMD(extensions, &item.flags))
+        return false;
+    if (item.pPerfBlocks) |v| {
+        for (v[0..item.perfBlockCount]) |*vv| {
+            if (!validate_VkGpaPerfBlockPropertiesAMD(extensions, vv, false))
+                return false;
+        }
+    }
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceGpaPropertiesAMD: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceGpaProperties2AMD(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceGpaProperties2AMD, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceGpaProperties2AMD.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceGpaProperties2AMD: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkGpaPerfCounterAMD(extensions: *const Extensions, item: *const vk.VkGpaPerfCounterAMD, validate_pnext: bool) bool {
+    if (!validate_VkGpaPerfBlockAMD(extensions, &item.blockType))
+        return false;
+    _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkGpaSampleBeginInfoAMD(extensions: *const Extensions, item: *const vk.VkGpaSampleBeginInfoAMD, validate_pnext: bool) bool {
+    if (item.sType != vk.VkGpaSampleBeginInfoAMD.STYPE)
+        return false;
+    if (!validate_VkGpaSampleTypeAMD(extensions, &item.sampleType))
+        return false;
+    if (!validate_VkGpaSqShaderStageFlagsAMD(extensions, &item.sqShaderMask))
+        return false;
+    if (item.pPerfCounters) |v| {
+        for (v[0..item.perfCounterCount]) |*vv| {
+            if (!validate_VkGpaPerfCounterAMD(extensions, vv, false))
+                return false;
+        }
+    }
+    if (!validate_VkPipelineStageFlags(extensions, &item.timingPreSample))
+        return false;
+    if (!validate_VkPipelineStageFlags(extensions, &item.timingPostSample))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkGpaSampleBeginInfoAMD: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkGpaDeviceClockModeInfoAMD(extensions: *const Extensions, item: *const vk.VkGpaDeviceClockModeInfoAMD, validate_pnext: bool) bool {
+    if (item.sType != vk.VkGpaDeviceClockModeInfoAMD.STYPE)
+        return false;
+    if (!validate_VkGpaDeviceClockModeAMD(extensions, &item.clockMode))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkGpaDeviceClockModeInfoAMD: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkGpaDeviceGetClockInfoAMD(extensions: *const Extensions, item: *const vk.VkGpaDeviceGetClockInfoAMD, validate_pnext: bool) bool {
+    if (item.sType != vk.VkGpaDeviceGetClockInfoAMD.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkGpaDeviceGetClockInfoAMD: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkGpaSessionCreateInfoAMD(extensions: *const Extensions, item: *const vk.VkGpaSessionCreateInfoAMD, validate_pnext: bool) bool {
+    if (item.sType != vk.VkGpaSessionCreateInfoAMD.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkGpaSessionCreateInfoAMD: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
 pub fn validate_VkFaultData(extensions: *const Extensions, item: *const vk.VkFaultData, validate_pnext: bool) bool {
     if (item.sType != vk.VkFaultData.STYPE)
         return false;
@@ -18852,6 +19816,9 @@ pub fn validate_VkAccelerationStructureGeometryTrianglesDataKHR(extensions: *con
             vk.VkStructureType.VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_MOTION_TRIANGLES_DATA_NV,
             => if (!validate_VkAccelerationStructureGeometryMotionTrianglesDataNV(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_TRIANGLES_OPACITY_MICROMAP_KHR,
+            => if (!validate_VkAccelerationStructureTrianglesOpacityMicromapKHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_TRIANGLES_OPACITY_MICROMAP_EXT,
             => if (!validate_VkAccelerationStructureTrianglesOpacityMicromapEXT(extensions, @ptrCast(next), false))
                 return false,
@@ -18975,6 +19942,9 @@ pub fn validate_VkAccelerationStructureGeometryKHR(extensions: *const Extensions
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_SPHERES_DATA_NV,
             => if (!validate_VkAccelerationStructureGeometrySpheresDataNV(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_MICROMAP_DATA_KHR,
+            => if (!validate_VkAccelerationStructureGeometryMicromapDataKHR(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_DENSE_GEOMETRY_FORMAT_TRIANGLES_DATA_AMDX,
             => if (!validate_VkAccelerationStructureDenseGeometryFormatTrianglesDataAMDX(extensions, @ptrCast(next), false))
@@ -19311,6 +20281,25 @@ pub fn validate_VkPhysicalDeviceExtendedDynamicState3PropertiesEXT(extensions: *
         switch (next.sType) {
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceExtendedDynamicState3PropertiesEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceExtendedFlagsFeaturesKHR(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceExtendedFlagsFeaturesKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceExtendedFlagsFeaturesKHR.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceExtendedFlagsFeaturesKHR: {d}", .{v});
                 return false;
             },
         }
@@ -20941,6 +21930,9 @@ pub fn validate_VkIndirectCommandsLayoutTokenEXT(extensions: *const Extensions, 
     while (pnext) |next| {
         pnext = next.pNext;
         switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PUSH_CONSTANT_BANK_INFO_NV,
+            => if (!validate_VkPushConstantBankInfoNV(extensions, @ptrCast(next), false))
+                return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkIndirectCommandsLayoutTokenEXT: {d}", .{v});
                 return false;
@@ -21353,6 +22345,9 @@ pub fn validate_VkDependencyInfo(extensions: *const Extensions, item: *const vk.
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_TENSOR_DEPENDENCY_INFO_ARM,
             => if (!validate_VkTensorDependencyInfoARM(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_MEMORY_RANGE_BARRIERS_INFO_KHR,
+            => if (!validate_VkMemoryRangeBarriersInfoKHR(extensions, @ptrCast(next), false))
                 return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkDependencyInfo: {d}", .{v});
@@ -22042,6 +23037,25 @@ pub fn validate_VkMultisampledRenderToSingleSampledInfoEXT(extensions: *const Ex
     return true;
 }
 
+pub fn validate_VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceMultisampledRenderToSwapchainFeaturesEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
 pub fn validate_VkPhysicalDevicePipelineProtectedAccessFeatures(extensions: *const Extensions, item: *const vk.VkPhysicalDevicePipelineProtectedAccessFeatures, validate_pnext: bool) bool {
     if (item.sType != vk.VkPhysicalDevicePipelineProtectedAccessFeatures.STYPE)
         return false;
@@ -22135,6 +23149,9 @@ pub fn validate_VkPhysicalDeviceVideoFormatInfoKHR(extensions: *const Extensions
     while (pnext) |next| {
         pnext = next.pNext;
         switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_USAGE_FLAGS_2_CREATE_INFO_KHR,
+            => if (!validate_VkImageUsageFlags2CreateInfoKHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_VIDEO_PROFILE_LIST_INFO_KHR,
             => if (!validate_VkVideoProfileListInfoKHR(extensions, @ptrCast(next), false))
                 return false,
@@ -22168,6 +23185,12 @@ pub fn validate_VkVideoFormatPropertiesKHR(extensions: *const Extensions, item: 
     while (pnext) |next| {
         pnext = next.pNext;
         switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_CREATE_FLAGS_2_CREATE_INFO_KHR,
+            => if (!validate_VkImageCreateFlags2CreateInfoKHR(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_IMAGE_USAGE_FLAGS_2_CREATE_INFO_KHR,
+            => if (!validate_VkImageUsageFlags2CreateInfoKHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_VIDEO_FORMAT_QUANTIZATION_MAP_PROPERTIES_KHR,
             => if (!validate_VkVideoFormatQuantizationMapPropertiesKHR(extensions, @ptrCast(next), false))
                 return false,
@@ -22427,6 +23450,9 @@ pub fn validate_VkVideoCapabilitiesKHR(extensions: *const Extensions, item: *con
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_VIDEO_ENCODE_CAPABILITIES_KHR,
             => if (!validate_VkVideoEncodeCapabilitiesKHR(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_VIDEO_ENCODE_FEEDBACK_2_CAPABILITIES_KHR,
+            => if (!validate_VkVideoEncodeFeedback2CapabilitiesKHR(extensions, @ptrCast(next), false))
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_VIDEO_ENCODE_H264_CAPABILITIES_KHR,
             => if (!validate_VkVideoEncodeH264CapabilitiesKHR(extensions, @ptrCast(next), false))
@@ -23743,6 +24769,65 @@ pub fn validate_VkVideoEncodeCapabilitiesKHR(extensions: *const Extensions, item
         switch (next.sType) {
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkVideoEncodeCapabilitiesKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceVideoEncodeFeedback2FeaturesKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkVideoEncodeFeedback2CapabilitiesKHR(extensions: *const Extensions, item: *const vk.VkVideoEncodeFeedback2CapabilitiesKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkVideoEncodeFeedback2CapabilitiesKHR.STYPE)
+        return false;
+    if (!validate_VkVideoEncodePerPartitionFeedbackFlagsKHR(extensions, &item.supportedPerPartitionEncodeFeedbackFlags))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkVideoEncodeFeedback2CapabilitiesKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkQueryPoolVideoEncodePerPartitionFeedbackCreateInfoKHR(extensions: *const Extensions, item: *const vk.VkQueryPoolVideoEncodePerPartitionFeedbackCreateInfoKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkQueryPoolVideoEncodePerPartitionFeedbackCreateInfoKHR.STYPE)
+        return false;
+    if (!validate_VkVideoEncodePerPartitionFeedbackFlagsKHR(extensions, &item.perPartitionEncodeFeedbackFlags))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkQueryPoolVideoEncodePerPartitionFeedbackCreateInfoKHR: {d}", .{v});
                 return false;
             },
         }
@@ -25748,6 +26833,30 @@ pub fn validate_VkFormatProperties3(extensions: *const Extensions, item: *const 
     return true;
 }
 
+pub fn validate_VkFormatProperties4KHR(extensions: *const Extensions, item: *const vk.VkFormatProperties4KHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkFormatProperties4KHR.STYPE)
+        return false;
+    if (!validate_VkFormatFeatureFlags4KHR(extensions, &item.linearTilingFeatures))
+        return false;
+    if (!validate_VkFormatFeatureFlags4KHR(extensions, &item.optimalTilingFeatures))
+        return false;
+    if (!validate_VkFormatFeatureFlags4KHR(extensions, &item.bufferFeatures))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkFormatProperties4KHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
 pub fn validate_VkDrmFormatModifierPropertiesList2EXT(extensions: *const Extensions, item: *const vk.VkDrmFormatModifierPropertiesList2EXT, validate_pnext: bool) bool {
     if (item.sType != vk.VkDrmFormatModifierPropertiesList2EXT.STYPE)
         return false;
@@ -26289,6 +27398,111 @@ pub fn validate_VkGraphicsPipelineLibraryCreateInfoEXT(extensions: *const Extens
     return true;
 }
 
+pub fn validate_VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceDataGraphNeuralAcceleratorStatisticsFeaturesARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkDataGraphPipelineNeuralStatisticsCreateInfoARM(extensions: *const Extensions, item: *const vk.VkDataGraphPipelineNeuralStatisticsCreateInfoARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDataGraphPipelineNeuralStatisticsCreateInfoARM.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDataGraphPipelineNeuralStatisticsCreateInfoARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkDataGraphPipelineSessionNeuralStatisticsCreateInfoARM(extensions: *const Extensions, item: *const vk.VkDataGraphPipelineSessionNeuralStatisticsCreateInfoARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDataGraphPipelineSessionNeuralStatisticsCreateInfoARM.STYPE)
+        return false;
+    if (!validate_VkNeuralAcceleratorStatisticsModeARM(extensions, &item.mode))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDataGraphPipelineSessionNeuralStatisticsCreateInfoARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkTensorExplicitTilingFormatPropertiesARM(extensions: *const Extensions, item: *const vk.VkTensorExplicitTilingFormatPropertiesARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkTensorExplicitTilingFormatPropertiesARM.STYPE)
+        return false;
+    if (!validate_VkFormatFeatureFlags2(extensions, &item.brick16TilingTensorFeatures))
+        return false;
+    if (!validate_VkFormatFeatureFlags2(extensions, &item.brick8TilingTensorFeatures))
+        return false;
+    if (!validate_VkFormatFeatureFlags2(extensions, &item.brick4TilingTensorFeatures))
+        return false;
+    if (!validate_VkFormatFeatureFlags2(extensions, &item.blockUTilingTensorFeatures))
+        return false;
+    if (!validate_VkFormatFeatureFlags2(extensions, &item.blockU64kTilingTensorFeatures))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkTensorExplicitTilingFormatPropertiesARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkTensorRollingBackingCreateInfoARM(extensions: *const Extensions, item: *const vk.VkTensorRollingBackingCreateInfoARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkTensorRollingBackingCreateInfoARM.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkTensorRollingBackingCreateInfoARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
 pub fn validate_VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE, validate_pnext: bool) bool {
     if (item.sType != vk.VkPhysicalDeviceDescriptorSetHostMappingFeaturesVALVE.STYPE)
         return false;
@@ -26718,6 +27932,30 @@ pub fn validate_VkMicromapBuildInfoEXT(extensions: *const Extensions, item: *con
     return true;
 }
 
+pub fn validate_VkAccelerationStructureGeometryMicromapDataKHR(extensions: *const Extensions, item: *const vk.VkAccelerationStructureGeometryMicromapDataKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkAccelerationStructureGeometryMicromapDataKHR.STYPE)
+        return false;
+    if (item.pUsageCounts) |v| {
+        for (v[0..item.usageCountsCount]) |*vv| {
+            if (!validate_VkMicromapUsageKHR(extensions, vv, false))
+                return false;
+        }
+    }
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkAccelerationStructureGeometryMicromapDataKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
 pub fn validate_VkMicromapCreateInfoEXT(extensions: *const Extensions, item: *const vk.VkMicromapCreateInfoEXT, validate_pnext: bool) bool {
     if (item.sType != vk.VkMicromapCreateInfoEXT.STYPE)
         return false;
@@ -26838,6 +28076,13 @@ pub fn validate_VkMicromapBuildSizesInfoEXT(extensions: *const Extensions, item:
     return true;
 }
 
+pub fn validate_VkMicromapUsageKHR(extensions: *const Extensions, item: *const vk.VkMicromapUsageKHR, validate_pnext: bool) bool {
+    if (!validate_VkOpacityMicromapFormatKHR(extensions, &item.format))
+        return false;
+    _ = validate_pnext;
+    return true;
+}
+
 pub fn validate_VkMicromapUsageEXT(extensions: *const Extensions, item: *const vk.VkMicromapUsageEXT, validate_pnext: bool) bool {
     _ = item;
     _ = extensions;
@@ -26845,10 +28090,29 @@ pub fn validate_VkMicromapUsageEXT(extensions: *const Extensions, item: *const v
     return true;
 }
 
-pub fn validate_VkMicromapTriangleEXT(extensions: *const Extensions, item: *const vk.VkMicromapTriangleEXT, validate_pnext: bool) bool {
+pub fn validate_VkMicromapTriangleKHR(extensions: *const Extensions, item: *const vk.VkMicromapTriangleKHR, validate_pnext: bool) bool {
     _ = item;
     _ = extensions;
     _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceOpacityMicromapFeaturesKHR(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceOpacityMicromapFeaturesKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceOpacityMicromapFeaturesKHR.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceOpacityMicromapFeaturesKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
     return true;
 }
 
@@ -26863,6 +28127,25 @@ pub fn validate_VkPhysicalDeviceOpacityMicromapFeaturesEXT(extensions: *const Ex
         switch (next.sType) {
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceOpacityMicromapFeaturesEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceOpacityMicromapPropertiesKHR(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceOpacityMicromapPropertiesKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceOpacityMicromapPropertiesKHR.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceOpacityMicromapPropertiesKHR: {d}", .{v});
                 return false;
             },
         }
@@ -26887,6 +28170,26 @@ pub fn validate_VkPhysicalDeviceOpacityMicromapPropertiesEXT(extensions: *const 
         }
     }
     _ = extensions;
+    return true;
+}
+
+pub fn validate_VkAccelerationStructureTrianglesOpacityMicromapKHR(extensions: *const Extensions, item: *const vk.VkAccelerationStructureTrianglesOpacityMicromapKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkAccelerationStructureTrianglesOpacityMicromapKHR.STYPE)
+        return false;
+    if (!validate_VkIndexType(extensions, &item.indexType))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkAccelerationStructureTrianglesOpacityMicromapKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
     return true;
 }
 
@@ -27420,6 +28723,44 @@ pub fn validate_VkImageViewSampleWeightCreateInfoQCOM(extensions: *const Extensi
     return true;
 }
 
+pub fn validate_VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceShaderMultipleWaitQueuesFeaturesQCOM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceShaderMultipleWaitQueuesPropertiesQCOM(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceShaderMultipleWaitQueuesPropertiesQCOM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceShaderMultipleWaitQueuesPropertiesQCOM.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceShaderMultipleWaitQueuesPropertiesQCOM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
 pub fn validate_VkPhysicalDeviceImageProcessingFeaturesQCOM(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceImageProcessingFeaturesQCOM, validate_pnext: bool) bool {
     if (item.sType != vk.VkPhysicalDeviceImageProcessingFeaturesQCOM.STYPE)
         return false;
@@ -27866,17 +29207,64 @@ pub fn validate_VkPhysicalDeviceFaultFeaturesEXT(extensions: *const Extensions, 
     return true;
 }
 
-pub fn validate_VkDeviceFaultAddressInfoEXT(extensions: *const Extensions, item: *const vk.VkDeviceFaultAddressInfoEXT, validate_pnext: bool) bool {
-    if (!validate_VkDeviceFaultAddressTypeEXT(extensions, &item.addressType))
+pub fn validate_VkDeviceFaultAddressInfoKHR(extensions: *const Extensions, item: *const vk.VkDeviceFaultAddressInfoKHR, validate_pnext: bool) bool {
+    if (!validate_VkDeviceFaultAddressTypeKHR(extensions, &item.addressType))
         return false;
     _ = validate_pnext;
     return true;
 }
 
-pub fn validate_VkDeviceFaultVendorInfoEXT(extensions: *const Extensions, item: *const vk.VkDeviceFaultVendorInfoEXT, validate_pnext: bool) bool {
+pub fn validate_VkDeviceFaultVendorInfoKHR(extensions: *const Extensions, item: *const vk.VkDeviceFaultVendorInfoKHR, validate_pnext: bool) bool {
     _ = item;
     _ = extensions;
     _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkDeviceFaultInfoKHR(extensions: *const Extensions, item: *const vk.VkDeviceFaultInfoKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDeviceFaultInfoKHR.STYPE)
+        return false;
+    if (!validate_VkDeviceFaultFlagsKHR(extensions, &item.flags))
+        return false;
+    if (!validate_VkDeviceFaultAddressInfoKHR(extensions, &item.faultAddressInfo, false))
+        return false;
+    if (!validate_VkDeviceFaultAddressInfoKHR(extensions, &item.instructionAddressInfo, false))
+        return false;
+    if (!validate_VkDeviceFaultVendorInfoKHR(extensions, &item.vendorInfo, false))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDeviceFaultInfoKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkDeviceFaultDebugInfoKHR(extensions: *const Extensions, item: *const vk.VkDeviceFaultDebugInfoKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDeviceFaultDebugInfoKHR.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_DEVICE_FAULT_SHADER_ABORT_MESSAGE_INFO_KHR,
+            => if (!validate_VkDeviceFaultShaderAbortMessageInfoKHR(extensions, @ptrCast(next), false))
+                return false,
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDeviceFaultDebugInfoKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
     return true;
 }
 
@@ -27903,11 +29291,11 @@ pub fn validate_VkDeviceFaultInfoEXT(extensions: *const Extensions, item: *const
     if (item.sType != vk.VkDeviceFaultInfoEXT.STYPE)
         return false;
     if (item.pAddressInfos) |v| {
-        if (!validate_VkDeviceFaultAddressInfoEXT(extensions, v, false))
+        if (!validate_VkDeviceFaultAddressInfoKHR(extensions, v, false))
             return false;
     }
     if (item.pVendorInfos) |v| {
-        if (!validate_VkDeviceFaultVendorInfoEXT(extensions, v, false))
+        if (!validate_VkDeviceFaultVendorInfoKHR(extensions, v, false))
             return false;
     }
     if (!validate_pnext) return true;
@@ -27925,10 +29313,48 @@ pub fn validate_VkDeviceFaultInfoEXT(extensions: *const Extensions, item: *const
     return true;
 }
 
-pub fn validate_VkDeviceFaultVendorBinaryHeaderVersionOneEXT(extensions: *const Extensions, item: *const vk.VkDeviceFaultVendorBinaryHeaderVersionOneEXT, validate_pnext: bool) bool {
-    if (!validate_VkDeviceFaultVendorBinaryHeaderVersionEXT(extensions, &item.headerVersion))
+pub fn validate_VkDeviceFaultVendorBinaryHeaderVersionOneKHR(extensions: *const Extensions, item: *const vk.VkDeviceFaultVendorBinaryHeaderVersionOneKHR, validate_pnext: bool) bool {
+    if (!validate_VkDeviceFaultVendorBinaryHeaderVersionKHR(extensions, &item.headerVersion))
         return false;
     _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceFaultFeaturesKHR(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceFaultFeaturesKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceFaultFeaturesKHR.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceFaultFeaturesKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceFaultPropertiesKHR(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceFaultPropertiesKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceFaultPropertiesKHR.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceFaultPropertiesKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
     return true;
 }
 
@@ -27993,8 +29419,8 @@ pub fn validate_VkDepthBiasRepresentationInfoEXT(extensions: *const Extensions, 
 }
 
 pub fn validate_VkDecompressMemoryRegionNV(extensions: *const Extensions, item: *const vk.VkDecompressMemoryRegionNV, validate_pnext: bool) bool {
-    _ = item;
-    _ = extensions;
+    if (!validate_VkMemoryDecompressionMethodFlagsEXT(extensions, &item.decompressionMethod))
+        return false;
     _ = validate_pnext;
     return true;
 }
@@ -28120,6 +29546,25 @@ pub fn validate_VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT(ext
         switch (next.sType) {
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceDynamicRenderingUnusedAttachmentsFeaturesEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceInternallySynchronizedQueuesFeaturesKHR: {d}", .{v});
                 return false;
             },
         }
@@ -28775,6 +30220,9 @@ pub fn validate_VkShaderCreateInfoEXT(extensions: *const Extensions, item: *cons
             vk.VkStructureType.VK_STRUCTURE_TYPE_CUSTOM_RESOLVE_CREATE_INFO_EXT,
             => if (!validate_VkCustomResolveCreateInfoEXT(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_SHADER_DESCRIPTOR_SET_AND_BINDING_MAPPING_INFO_EXT,
+            => if (!validate_VkShaderDescriptorSetAndBindingMappingInfoEXT(extensions, @ptrCast(next), false))
+                return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkShaderCreateInfoEXT: {d}", .{v});
                 return false;
@@ -28996,6 +30444,25 @@ pub fn validate_VkPhysicalDeviceCooperativeMatrixPropertiesKHR(extensions: *cons
             },
         }
     }
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
     return true;
 }
 
@@ -29323,6 +30790,9 @@ pub fn validate_VkPushConstantsInfo(extensions: *const Extensions, item: *const 
             vk.VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
             => if (!validate_VkPipelineLayoutCreateInfo(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PUSH_CONSTANT_BANK_INFO_NV,
+            => if (!validate_VkPushConstantBankInfoNV(extensions, @ptrCast(next), false))
+                return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkPushConstantsInfo: {d}", .{v});
                 return false;
@@ -29602,6 +31072,25 @@ pub fn validate_VkSamplerBlockMatchWindowCreateInfoQCOM(extensions: *const Exten
             },
         }
     }
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceImageProcessing3FeaturesQCOM(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceImageProcessing3FeaturesQCOM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceImageProcessing3FeaturesQCOM.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceImageProcessing3FeaturesQCOM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
     return true;
 }
 
@@ -30000,6 +31489,44 @@ pub fn validate_VkPhysicalDeviceSchedulingControlsPropertiesARM(extensions: *con
             },
         }
     }
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceSchedulingControlsDispatchParametersPropertiesARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkDispatchParametersARM(extensions: *const Extensions, item: *const vk.VkDispatchParametersARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDispatchParametersARM.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDispatchParametersARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
     return true;
 }
 
@@ -30601,6 +32128,25 @@ pub fn validate_VkCooperativeMatrixFlexibleDimensionsPropertiesNV(extensions: *c
     return true;
 }
 
+pub fn validate_VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceCooperativeMatrixDecodeVectorFeaturesNV: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
 pub fn validate_VkPhysicalDeviceHdrVividFeaturesHUAWEI(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceHdrVividFeaturesHUAWEI, validate_pnext: bool) bool {
     if (item.sType != vk.VkPhysicalDeviceHdrVividFeaturesHUAWEI.STYPE)
         return false;
@@ -30669,6 +32215,9 @@ pub fn validate_VkAccelerationStructureDenseGeometryFormatTrianglesDataAMDX(exte
     while (pnext) |next| {
         pnext = next.pNext;
         switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_TRIANGLES_OPACITY_MICROMAP_KHR,
+            => if (!validate_VkAccelerationStructureTrianglesOpacityMicromapKHR(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_TRIANGLES_OPACITY_MICROMAP_EXT,
             => if (!validate_VkAccelerationStructureTrianglesOpacityMicromapEXT(extensions, @ptrCast(next), false))
                 return false,
@@ -31103,6 +32652,44 @@ pub fn validate_VkPhysicalDeviceShaderUniformBufferUnsizedArrayFeaturesEXT(exten
     return true;
 }
 
+pub fn validate_VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceShaderMixedFloatDotProductFeaturesVALVE: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT(extensions: *const Extensions, item: *const vk.VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDevicePrimitiveRestartIndexFeaturesEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
 pub fn validate_VkPhysicalDeviceFormatPackFeaturesARM(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceFormatPackFeaturesARM, validate_pnext: bool) bool {
     if (item.sType != vk.VkPhysicalDeviceFormatPackFeaturesARM.STYPE)
         return false;
@@ -31119,6 +32706,45 @@ pub fn validate_VkPhysicalDeviceFormatPackFeaturesARM(extensions: *const Extensi
         }
     }
     _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceThrottleHintFeaturesSEC(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceThrottleHintFeaturesSEC, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceThrottleHintFeaturesSEC.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceThrottleHintFeaturesSEC: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkThrottleHintSubmitInfoSEC(extensions: *const Extensions, item: *const vk.VkThrottleHintSubmitInfoSEC, validate_pnext: bool) bool {
+    if (item.sType != vk.VkThrottleHintSubmitInfoSEC.STYPE)
+        return false;
+    if (!validate_VkThrottleHintTypeSEC(extensions, &item.throttleHint))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkThrottleHintSubmitInfoSEC: {d}", .{v});
+                return false;
+            },
+        }
+    }
     return true;
 }
 
@@ -31166,8 +32792,14 @@ pub fn validate_VkTensorCreateInfoARM(extensions: *const Extensions, item: *cons
             vk.VkStructureType.VK_STRUCTURE_TYPE_OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT,
             => if (!validate_VkOpaqueCaptureDescriptorDataCreateInfoEXT(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_TENSOR_ROLLING_BACKING_CREATE_INFO_ARM,
+            => if (!validate_VkTensorRollingBackingCreateInfoARM(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_TENSOR_CREATE_INFO_ARM,
             => if (!validate_VkExternalMemoryTensorCreateInfoARM(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_OPAQUE_CAPTURE_DATA_CREATE_INFO_EXT,
+            => if (!validate_VkOpaqueCaptureDataCreateInfoEXT(extensions, @ptrCast(next), false))
                 return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkTensorCreateInfoARM: {d}", .{v});
@@ -31332,8 +32964,10 @@ pub fn validate_VkTensorDependencyInfoARM(extensions: *const Extensions, item: *
     if (item.sType != vk.VkTensorDependencyInfoARM.STYPE)
         return false;
     if (item.pTensorMemoryBarriers) |v| {
-        if (!validate_VkTensorMemoryBarrierARM(extensions, v, false))
-            return false;
+        for (v[0..item.tensorMemoryBarrierCount]) |*vv| {
+            if (!validate_VkTensorMemoryBarrierARM(extensions, vv, false))
+                return false;
+        }
     }
     if (!validate_pnext) return true;
 
@@ -31746,8 +33380,31 @@ pub fn validate_VkDataGraphPipelineResourceInfoARM(extensions: *const Extensions
             vk.VkStructureType.VK_STRUCTURE_TYPE_TENSOR_DESCRIPTION_ARM,
             => if (!validate_VkTensorDescriptionARM(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_RESOURCE_INFO_IMAGE_LAYOUT_ARM,
+            => if (!validate_VkDataGraphPipelineResourceInfoImageLayoutARM(extensions, @ptrCast(next), false))
+                return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkDataGraphPipelineResourceInfoARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkDataGraphPipelineResourceInfoImageLayoutARM(extensions: *const Extensions, item: *const vk.VkDataGraphPipelineResourceInfoImageLayoutARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDataGraphPipelineResourceInfoImageLayoutARM.STYPE)
+        return false;
+    if (!validate_VkImageLayout(extensions, &item.layout))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDataGraphPipelineResourceInfoImageLayoutARM: {d}", .{v});
                 return false;
             },
         }
@@ -31777,6 +33434,8 @@ pub fn validate_VkDataGraphPipelineCompilerControlCreateInfoARM(extensions: *con
 pub fn validate_VkDataGraphPipelineCreateInfoARM(extensions: *const Extensions, item: *const vk.VkDataGraphPipelineCreateInfoARM, validate_pnext: bool) bool {
     if (item.sType != vk.VkDataGraphPipelineCreateInfoARM.STYPE)
         return false;
+    if (!validate_VkPipelineCreateFlags2(extensions, &item.flags))
+        return false;
     if (item.pResourceInfos) |v| {
         for (v[0..item.resourceInfoCount]) |*vv| {
             if (!validate_VkDataGraphPipelineResourceInfoARM(extensions, vv, false))
@@ -31795,6 +33454,9 @@ pub fn validate_VkDataGraphPipelineCreateInfoARM(extensions: *const Extensions, 
             vk.VkStructureType.VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO,
             => if (!validate_VkPipelineCreationFeedbackCreateInfo(extensions, @ptrCast(next), false))
                 return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_NEURAL_STATISTICS_CREATE_INFO_ARM,
+            => if (!validate_VkDataGraphPipelineNeuralStatisticsCreateInfoARM(extensions, @ptrCast(next), false))
+                return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_COMPILER_CONTROL_CREATE_INFO_ARM,
             => if (!validate_VkDataGraphPipelineCompilerControlCreateInfoARM(extensions, @ptrCast(next), false))
                 return false,
@@ -31809,6 +33471,12 @@ pub fn validate_VkDataGraphPipelineCreateInfoARM(extensions: *const Extensions, 
                 return false,
             vk.VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_BUILTIN_MODEL_CREATE_INFO_QCOM,
             => if (!validate_VkDataGraphPipelineBuiltinModelCreateInfoQCOM(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SINGLE_NODE_CREATE_INFO_ARM,
+            => if (!validate_VkDataGraphPipelineSingleNodeCreateInfoARM(extensions, @ptrCast(next), false))
+                return false,
+            vk.VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_OPTICAL_FLOW_CREATE_INFO_ARM,
+            => if (!validate_VkDataGraphPipelineOpticalFlowCreateInfoARM(extensions, @ptrCast(next), false))
                 return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkDataGraphPipelineCreateInfoARM: {d}", .{v});
@@ -31858,6 +33526,9 @@ pub fn validate_VkDataGraphPipelineSessionCreateInfoARM(extensions: *const Exten
     while (pnext) |next| {
         pnext = next.pNext;
         switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_NEURAL_STATISTICS_CREATE_INFO_ARM,
+            => if (!validate_VkDataGraphPipelineSessionNeuralStatisticsCreateInfoARM(extensions, @ptrCast(next), false))
+                return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkDataGraphPipelineSessionCreateInfoARM: {d}", .{v});
                 return false;
@@ -32017,6 +33688,9 @@ pub fn validate_VkDataGraphPipelineDispatchInfoARM(extensions: *const Extensions
     while (pnext) |next| {
         pnext = next.pNext;
         switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_OPTICAL_FLOW_DISPATCH_INFO_ARM,
+            => if (!validate_VkDataGraphPipelineOpticalFlowDispatchInfoARM(extensions, @ptrCast(next), false))
+                return false,
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkDataGraphPipelineDispatchInfoARM: {d}", .{v});
                 return false;
@@ -32199,64 +33873,6 @@ pub fn validate_VkPhysicalDeviceShaderUntypedPointersFeaturesKHR(extensions: *co
         switch (next.sType) {
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceShaderUntypedPointersFeaturesKHR: {d}", .{v});
-                return false;
-            },
-        }
-    }
-    _ = extensions;
-    return true;
-}
-
-pub fn validate_VkNativeBufferOHOS(extensions: *const Extensions, item: *const vk.VkNativeBufferOHOS, validate_pnext: bool) bool {
-    if (item.sType != vk.VkNativeBufferOHOS.STYPE)
-        return false;
-    if (!validate_pnext) return true;
-
-    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
-    while (pnext) |next| {
-        pnext = next.pNext;
-        switch (next.sType) {
-            else => |v| {
-                log.debug(@src(), "Invalid pNext chain item for VkNativeBufferOHOS: {d}", .{v});
-                return false;
-            },
-        }
-    }
-    _ = extensions;
-    return true;
-}
-
-pub fn validate_VkSwapchainImageCreateInfoOHOS(extensions: *const Extensions, item: *const vk.VkSwapchainImageCreateInfoOHOS, validate_pnext: bool) bool {
-    if (item.sType != vk.VkSwapchainImageCreateInfoOHOS.STYPE)
-        return false;
-    if (!validate_VkSwapchainImageUsageFlagsOHOS(extensions, &item.usage))
-        return false;
-    if (!validate_pnext) return true;
-
-    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
-    while (pnext) |next| {
-        pnext = next.pNext;
-        switch (next.sType) {
-            else => |v| {
-                log.debug(@src(), "Invalid pNext chain item for VkSwapchainImageCreateInfoOHOS: {d}", .{v});
-                return false;
-            },
-        }
-    }
-    return true;
-}
-
-pub fn validate_VkPhysicalDevicePresentationPropertiesOHOS(extensions: *const Extensions, item: *const vk.VkPhysicalDevicePresentationPropertiesOHOS, validate_pnext: bool) bool {
-    if (item.sType != vk.VkPhysicalDevicePresentationPropertiesOHOS.STYPE)
-        return false;
-    if (!validate_pnext) return true;
-
-    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
-    while (pnext) |next| {
-        pnext = next.pNext;
-        switch (next.sType) {
-            else => |v| {
-                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDevicePresentationPropertiesOHOS: {d}", .{v});
                 return false;
             },
         }
@@ -32503,6 +34119,65 @@ pub fn validate_VkExternalFormatOHOS(extensions: *const Extensions, item: *const
     return true;
 }
 
+pub fn validate_VkPerfHintInfoQCOM(extensions: *const Extensions, item: *const vk.VkPerfHintInfoQCOM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPerfHintInfoQCOM.STYPE)
+        return false;
+    if (!validate_VkPerfHintTypeQCOM(extensions, &item.type))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPerfHintInfoQCOM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceQueuePerfHintFeaturesQCOM(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceQueuePerfHintFeaturesQCOM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceQueuePerfHintFeaturesQCOM.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceQueuePerfHintFeaturesQCOM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceQueuePerfHintPropertiesQCOM(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceQueuePerfHintPropertiesQCOM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceQueuePerfHintPropertiesQCOM.STYPE)
+        return false;
+    if (!validate_VkQueueFlags(extensions, &item.supportedQueues))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceQueuePerfHintPropertiesQCOM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
 pub fn validate_VkPhysicalDevicePerformanceCountersByRegionFeaturesARM(extensions: *const Extensions, item: *const vk.VkPhysicalDevicePerformanceCountersByRegionFeaturesARM, validate_pnext: bool) bool {
     if (item.sType != vk.VkPhysicalDevicePerformanceCountersByRegionFeaturesARM.STYPE)
         return false;
@@ -32630,6 +34305,1315 @@ pub fn validate_VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV(extensions: *
         switch (next.sType) {
             else => |v| {
                 log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceComputeOccupancyPriorityFeaturesNV: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceShaderLongVectorFeaturesEXT(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceShaderLongVectorFeaturesEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceShaderLongVectorFeaturesEXT.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceShaderLongVectorFeaturesEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceShaderLongVectorPropertiesEXT(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceShaderLongVectorPropertiesEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceShaderLongVectorPropertiesEXT.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceShaderLongVectorPropertiesEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceShaderSubgroupPartitionedFeaturesEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkHostAddressRangeEXT(extensions: *const Extensions, item: *const vk.VkHostAddressRangeEXT, validate_pnext: bool) bool {
+    _ = item;
+    _ = extensions;
+    _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkHostAddressRangeConstEXT(extensions: *const Extensions, item: *const vk.VkHostAddressRangeConstEXT, validate_pnext: bool) bool {
+    _ = item;
+    _ = extensions;
+    _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkTexelBufferDescriptorInfoEXT(extensions: *const Extensions, item: *const vk.VkTexelBufferDescriptorInfoEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkTexelBufferDescriptorInfoEXT.STYPE)
+        return false;
+    if (!validate_VkFormat(extensions, &item.format))
+        return false;
+    if (!validate_VkDeviceAddressRangeKHR(extensions, &item.addressRange, false))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkTexelBufferDescriptorInfoEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkImageDescriptorInfoEXT(extensions: *const Extensions, item: *const vk.VkImageDescriptorInfoEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkImageDescriptorInfoEXT.STYPE)
+        return false;
+    if (item.pView) |v| {
+        if (!validate_VkImageViewCreateInfo(extensions, v, false))
+            return false;
+    }
+    if (!validate_VkImageLayout(extensions, &item.layout))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkImageDescriptorInfoEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkResourceDescriptorInfoEXT(extensions: *const Extensions, item: *const vk.VkResourceDescriptorInfoEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkResourceDescriptorInfoEXT.STYPE)
+        return false;
+    if (!validate_VkDescriptorType(extensions, &item.type))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT,
+            => if (!validate_VkDebugUtilsObjectNameInfoEXT(extensions, @ptrCast(next), false))
+                return false,
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkResourceDescriptorInfoEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkBindHeapInfoEXT(extensions: *const Extensions, item: *const vk.VkBindHeapInfoEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkBindHeapInfoEXT.STYPE)
+        return false;
+    if (!validate_VkDeviceAddressRangeKHR(extensions, &item.heapRange, false))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkBindHeapInfoEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkPushDataInfoEXT(extensions: *const Extensions, item: *const vk.VkPushDataInfoEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPushDataInfoEXT.STYPE)
+        return false;
+    if (!validate_VkHostAddressRangeConstEXT(extensions, &item.data, false))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PUSH_CONSTANT_BANK_INFO_NV,
+            => if (!validate_VkPushConstantBankInfoNV(extensions, @ptrCast(next), false))
+                return false,
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPushDataInfoEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkDescriptorMappingSourceConstantOffsetEXT(extensions: *const Extensions, item: *const vk.VkDescriptorMappingSourceConstantOffsetEXT, validate_pnext: bool) bool {
+    if (item.pEmbeddedSampler) |v| {
+        if (!validate_VkSamplerCreateInfo(extensions, v, false))
+            return false;
+    }
+    _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkDescriptorMappingSourcePushIndexEXT(extensions: *const Extensions, item: *const vk.VkDescriptorMappingSourcePushIndexEXT, validate_pnext: bool) bool {
+    if (item.pEmbeddedSampler) |v| {
+        if (!validate_VkSamplerCreateInfo(extensions, v, false))
+            return false;
+    }
+    _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkDescriptorMappingSourceIndirectIndexEXT(extensions: *const Extensions, item: *const vk.VkDescriptorMappingSourceIndirectIndexEXT, validate_pnext: bool) bool {
+    if (item.pEmbeddedSampler) |v| {
+        if (!validate_VkSamplerCreateInfo(extensions, v, false))
+            return false;
+    }
+    _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkDescriptorMappingSourceIndirectIndexArrayEXT(extensions: *const Extensions, item: *const vk.VkDescriptorMappingSourceIndirectIndexArrayEXT, validate_pnext: bool) bool {
+    if (item.pEmbeddedSampler) |v| {
+        if (!validate_VkSamplerCreateInfo(extensions, v, false))
+            return false;
+    }
+    _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkDescriptorMappingSourceHeapDataEXT(extensions: *const Extensions, item: *const vk.VkDescriptorMappingSourceHeapDataEXT, validate_pnext: bool) bool {
+    _ = item;
+    _ = extensions;
+    _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkDescriptorMappingSourceShaderRecordIndexEXT(extensions: *const Extensions, item: *const vk.VkDescriptorMappingSourceShaderRecordIndexEXT, validate_pnext: bool) bool {
+    if (item.pEmbeddedSampler) |v| {
+        if (!validate_VkSamplerCreateInfo(extensions, v, false))
+            return false;
+    }
+    _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkDescriptorMappingSourceIndirectAddressEXT(extensions: *const Extensions, item: *const vk.VkDescriptorMappingSourceIndirectAddressEXT, validate_pnext: bool) bool {
+    _ = item;
+    _ = extensions;
+    _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkDescriptorSetAndBindingMappingEXT(extensions: *const Extensions, item: *const vk.VkDescriptorSetAndBindingMappingEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDescriptorSetAndBindingMappingEXT.STYPE)
+        return false;
+    if (!validate_VkSpirvResourceTypeFlagsEXT(extensions, &item.resourceMask))
+        return false;
+    if (!validate_VkDescriptorMappingSourceEXT(extensions, &item.source))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_PUSH_CONSTANT_BANK_INFO_NV,
+            => if (!validate_VkPushConstantBankInfoNV(extensions, @ptrCast(next), false))
+                return false,
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDescriptorSetAndBindingMappingEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkShaderDescriptorSetAndBindingMappingInfoEXT(extensions: *const Extensions, item: *const vk.VkShaderDescriptorSetAndBindingMappingInfoEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkShaderDescriptorSetAndBindingMappingInfoEXT.STYPE)
+        return false;
+    if (item.pMappings) |v| {
+        for (v[0..item.mappingCount]) |*vv| {
+            if (!validate_VkDescriptorSetAndBindingMappingEXT(extensions, vv, false))
+                return false;
+        }
+    }
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkShaderDescriptorSetAndBindingMappingInfoEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkSamplerCustomBorderColorIndexCreateInfoEXT(extensions: *const Extensions, item: *const vk.VkSamplerCustomBorderColorIndexCreateInfoEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkSamplerCustomBorderColorIndexCreateInfoEXT.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkSamplerCustomBorderColorIndexCreateInfoEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkOpaqueCaptureDataCreateInfoEXT(extensions: *const Extensions, item: *const vk.VkOpaqueCaptureDataCreateInfoEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkOpaqueCaptureDataCreateInfoEXT.STYPE)
+        return false;
+    if (item.pData) |v| {
+        if (!validate_VkHostAddressRangeConstEXT(extensions, v, false))
+            return false;
+    }
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkOpaqueCaptureDataCreateInfoEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkIndirectCommandsLayoutPushDataTokenNV(extensions: *const Extensions, item: *const vk.VkIndirectCommandsLayoutPushDataTokenNV, validate_pnext: bool) bool {
+    if (item.sType != vk.VkIndirectCommandsLayoutPushDataTokenNV.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkIndirectCommandsLayoutPushDataTokenNV: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkSubsampledImageFormatPropertiesEXT(extensions: *const Extensions, item: *const vk.VkSubsampledImageFormatPropertiesEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkSubsampledImageFormatPropertiesEXT.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkSubsampledImageFormatPropertiesEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceShaderSplitBarrierFeaturesEXT(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceShaderSplitBarrierFeaturesEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceShaderSplitBarrierFeaturesEXT.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceShaderSplitBarrierFeaturesEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceShaderSplitBarrierPropertiesEXT(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceShaderSplitBarrierPropertiesEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceShaderSplitBarrierPropertiesEXT.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceShaderSplitBarrierPropertiesEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceDescriptorHeapFeaturesEXT(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceDescriptorHeapFeaturesEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceDescriptorHeapFeaturesEXT.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceDescriptorHeapFeaturesEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceDescriptorHeapPropertiesEXT(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceDescriptorHeapPropertiesEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceDescriptorHeapPropertiesEXT.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceDescriptorHeapPropertiesEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkCommandBufferInheritanceDescriptorHeapInfoEXT(extensions: *const Extensions, item: *const vk.VkCommandBufferInheritanceDescriptorHeapInfoEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkCommandBufferInheritanceDescriptorHeapInfoEXT.STYPE)
+        return false;
+    if (item.pSamplerHeapBindInfo) |v| {
+        if (!validate_VkBindHeapInfoEXT(extensions, v, false))
+            return false;
+    }
+    if (item.pResourceHeapBindInfo) |v| {
+        if (!validate_VkBindHeapInfoEXT(extensions, v, false))
+            return false;
+    }
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkCommandBufferInheritanceDescriptorHeapInfoEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceDescriptorHeapTensorPropertiesARM(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceDescriptorHeapTensorPropertiesARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceDescriptorHeapTensorPropertiesARM.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceDescriptorHeapTensorPropertiesARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceShaderInstrumentationFeaturesARM(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceShaderInstrumentationFeaturesARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceShaderInstrumentationFeaturesARM.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceShaderInstrumentationFeaturesARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceShaderInstrumentationPropertiesARM(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceShaderInstrumentationPropertiesARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceShaderInstrumentationPropertiesARM.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceShaderInstrumentationPropertiesARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkShaderInstrumentationCreateInfoARM(extensions: *const Extensions, item: *const vk.VkShaderInstrumentationCreateInfoARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkShaderInstrumentationCreateInfoARM.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkShaderInstrumentationCreateInfoARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkShaderInstrumentationMetricDescriptionARM(extensions: *const Extensions, item: *const vk.VkShaderInstrumentationMetricDescriptionARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkShaderInstrumentationMetricDescriptionARM.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkShaderInstrumentationMetricDescriptionARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkShaderInstrumentationMetricDataHeaderARM(extensions: *const Extensions, item: *const vk.VkShaderInstrumentationMetricDataHeaderARM, validate_pnext: bool) bool {
+    if (!validate_VkShaderStageFlags(extensions, &item.stages))
+        return false;
+    _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkDeviceAddressRangeKHR(extensions: *const Extensions, item: *const vk.VkDeviceAddressRangeKHR, validate_pnext: bool) bool {
+    _ = item;
+    _ = extensions;
+    _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkDeviceMemoryCopyKHR(extensions: *const Extensions, item: *const vk.VkDeviceMemoryCopyKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDeviceMemoryCopyKHR.STYPE)
+        return false;
+    if (!validate_VkDeviceAddressRangeKHR(extensions, &item.srcRange, false))
+        return false;
+    if (!validate_VkAddressCommandFlagsKHR(extensions, &item.srcFlags))
+        return false;
+    if (!validate_VkDeviceAddressRangeKHR(extensions, &item.dstRange, false))
+        return false;
+    if (!validate_VkAddressCommandFlagsKHR(extensions, &item.dstFlags))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDeviceMemoryCopyKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkCopyDeviceMemoryInfoKHR(extensions: *const Extensions, item: *const vk.VkCopyDeviceMemoryInfoKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkCopyDeviceMemoryInfoKHR.STYPE)
+        return false;
+    if (item.pRegions) |v| {
+        for (v[0..item.regionCount]) |*vv| {
+            if (!validate_VkDeviceMemoryCopyKHR(extensions, vv, false))
+                return false;
+        }
+    }
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkCopyDeviceMemoryInfoKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkDeviceMemoryImageCopyKHR(extensions: *const Extensions, item: *const vk.VkDeviceMemoryImageCopyKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDeviceMemoryImageCopyKHR.STYPE)
+        return false;
+    if (!validate_VkDeviceAddressRangeKHR(extensions, &item.addressRange, false))
+        return false;
+    if (!validate_VkAddressCommandFlagsKHR(extensions, &item.addressFlags))
+        return false;
+    if (!validate_VkImageSubresourceLayers(extensions, &item.imageSubresource, false))
+        return false;
+    if (!validate_VkImageLayout(extensions, &item.imageLayout))
+        return false;
+    if (!validate_VkOffset3D(extensions, &item.imageOffset, false))
+        return false;
+    if (!validate_VkExtent3D(extensions, &item.imageExtent, false))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_COPY_COMMAND_TRANSFORM_INFO_QCOM,
+            => if (!validate_VkCopyCommandTransformInfoQCOM(extensions, @ptrCast(next), false))
+                return false,
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDeviceMemoryImageCopyKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkCopyDeviceMemoryImageInfoKHR(extensions: *const Extensions, item: *const vk.VkCopyDeviceMemoryImageInfoKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkCopyDeviceMemoryImageInfoKHR.STYPE)
+        return false;
+    if (item.pRegions) |v| {
+        for (v[0..item.regionCount]) |*vv| {
+            if (!validate_VkDeviceMemoryImageCopyKHR(extensions, vv, false))
+                return false;
+        }
+    }
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkCopyDeviceMemoryImageInfoKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkMemoryRangeBarriersInfoKHR(extensions: *const Extensions, item: *const vk.VkMemoryRangeBarriersInfoKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkMemoryRangeBarriersInfoKHR.STYPE)
+        return false;
+    if (item.pMemoryRangeBarriers) |v| {
+        for (v[0..item.memoryRangeBarrierCount]) |*vv| {
+            if (!validate_VkMemoryRangeBarrierKHR(extensions, vv, false))
+                return false;
+        }
+    }
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_MEMORY_BARRIER_ACCESS_FLAGS_3_KHR,
+            => if (!validate_VkMemoryBarrierAccessFlags3KHR(extensions, @ptrCast(next), false))
+                return false,
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkMemoryRangeBarriersInfoKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkMemoryRangeBarrierKHR(extensions: *const Extensions, item: *const vk.VkMemoryRangeBarrierKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkMemoryRangeBarrierKHR.STYPE)
+        return false;
+    if (!validate_VkPipelineStageFlags2(extensions, &item.srcStageMask))
+        return false;
+    if (!validate_VkAccessFlags2(extensions, &item.srcAccessMask))
+        return false;
+    if (!validate_VkPipelineStageFlags2(extensions, &item.dstStageMask))
+        return false;
+    if (!validate_VkAccessFlags2(extensions, &item.dstAccessMask))
+        return false;
+    if (!validate_VkDeviceAddressRangeKHR(extensions, &item.addressRange, false))
+        return false;
+    if (!validate_VkAddressCommandFlagsKHR(extensions, &item.addressFlags))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkMemoryRangeBarrierKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceDeviceAddressCommandsFeaturesKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkConditionalRenderingBeginInfo2EXT(extensions: *const Extensions, item: *const vk.VkConditionalRenderingBeginInfo2EXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkConditionalRenderingBeginInfo2EXT.STYPE)
+        return false;
+    if (!validate_VkDeviceAddressRangeKHR(extensions, &item.addressRange, false))
+        return false;
+    if (!validate_VkAddressCommandFlagsKHR(extensions, &item.addressFlags))
+        return false;
+    if (!validate_VkConditionalRenderingFlagsEXT(extensions, &item.flags))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkConditionalRenderingBeginInfo2EXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkAccelerationStructureCreateInfo2KHR(extensions: *const Extensions, item: *const vk.VkAccelerationStructureCreateInfo2KHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkAccelerationStructureCreateInfo2KHR.STYPE)
+        return false;
+    if (!validate_VkAccelerationStructureCreateFlagsKHR(extensions, &item.createFlags))
+        return false;
+    if (!validate_VkDeviceAddressRangeKHR(extensions, &item.addressRange, false))
+        return false;
+    if (!validate_VkAddressCommandFlagsKHR(extensions, &item.addressFlags))
+        return false;
+    if (!validate_VkAccelerationStructureTypeKHR(extensions, &item.type))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            vk.VkStructureType.VK_STRUCTURE_TYPE_OPAQUE_CAPTURE_DESCRIPTOR_DATA_CREATE_INFO_EXT,
+            => if (!validate_VkOpaqueCaptureDescriptorDataCreateInfoEXT(extensions, @ptrCast(next), false))
+                return false,
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkAccelerationStructureCreateInfo2KHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkBindIndexBuffer3InfoKHR(extensions: *const Extensions, item: *const vk.VkBindIndexBuffer3InfoKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkBindIndexBuffer3InfoKHR.STYPE)
+        return false;
+    if (!validate_VkDeviceAddressRangeKHR(extensions, &item.addressRange, false))
+        return false;
+    if (!validate_VkAddressCommandFlagsKHR(extensions, &item.addressFlags))
+        return false;
+    if (!validate_VkIndexType(extensions, &item.indexType))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkBindIndexBuffer3InfoKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkBindVertexBuffer3InfoKHR(extensions: *const Extensions, item: *const vk.VkBindVertexBuffer3InfoKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkBindVertexBuffer3InfoKHR.STYPE)
+        return false;
+    if (!validate_VkStridedDeviceAddressRangeKHR(extensions, &item.addressRange, false))
+        return false;
+    if (!validate_VkAddressCommandFlagsKHR(extensions, &item.addressFlags))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkBindVertexBuffer3InfoKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkDrawIndirect2InfoKHR(extensions: *const Extensions, item: *const vk.VkDrawIndirect2InfoKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDrawIndirect2InfoKHR.STYPE)
+        return false;
+    if (!validate_VkStridedDeviceAddressRangeKHR(extensions, &item.addressRange, false))
+        return false;
+    if (!validate_VkAddressCommandFlagsKHR(extensions, &item.addressFlags))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDrawIndirect2InfoKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkDrawIndirectCount2InfoKHR(extensions: *const Extensions, item: *const vk.VkDrawIndirectCount2InfoKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDrawIndirectCount2InfoKHR.STYPE)
+        return false;
+    if (!validate_VkStridedDeviceAddressRangeKHR(extensions, &item.addressRange, false))
+        return false;
+    if (!validate_VkAddressCommandFlagsKHR(extensions, &item.addressFlags))
+        return false;
+    if (!validate_VkDeviceAddressRangeKHR(extensions, &item.countAddressRange, false))
+        return false;
+    if (!validate_VkAddressCommandFlagsKHR(extensions, &item.countAddressFlags))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDrawIndirectCount2InfoKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkDispatchIndirect2InfoKHR(extensions: *const Extensions, item: *const vk.VkDispatchIndirect2InfoKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDispatchIndirect2InfoKHR.STYPE)
+        return false;
+    if (!validate_VkDeviceAddressRangeKHR(extensions, &item.addressRange, false))
+        return false;
+    if (!validate_VkAddressCommandFlagsKHR(extensions, &item.addressFlags))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDispatchIndirect2InfoKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkBindTransformFeedbackBuffer2InfoEXT(extensions: *const Extensions, item: *const vk.VkBindTransformFeedbackBuffer2InfoEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkBindTransformFeedbackBuffer2InfoEXT.STYPE)
+        return false;
+    if (!validate_VkDeviceAddressRangeKHR(extensions, &item.addressRange, false))
+        return false;
+    if (!validate_VkAddressCommandFlagsKHR(extensions, &item.addressFlags))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkBindTransformFeedbackBuffer2InfoEXT: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkMemoryMarkerInfoAMD(extensions: *const Extensions, item: *const vk.VkMemoryMarkerInfoAMD, validate_pnext: bool) bool {
+    if (item.sType != vk.VkMemoryMarkerInfoAMD.STYPE)
+        return false;
+    if (!validate_VkDeviceAddressRangeKHR(extensions, &item.dstRange, false))
+        return false;
+    if (!validate_VkAddressCommandFlagsKHR(extensions, &item.dstFlags))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkMemoryMarkerInfoAMD: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceShaderConstantDataFeaturesKHR(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceShaderConstantDataFeaturesKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceShaderConstantDataFeaturesKHR.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceShaderConstantDataFeaturesKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceShaderAbortFeaturesKHR(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceShaderAbortFeaturesKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceShaderAbortFeaturesKHR.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceShaderAbortFeaturesKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceShaderAbortPropertiesKHR(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceShaderAbortPropertiesKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceShaderAbortPropertiesKHR.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceShaderAbortPropertiesKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkDeviceFaultShaderAbortMessageInfoKHR(extensions: *const Extensions, item: *const vk.VkDeviceFaultShaderAbortMessageInfoKHR, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDeviceFaultShaderAbortMessageInfoKHR.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDeviceFaultShaderAbortMessageInfoKHR: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkDataGraphTOSANameQualityARM(extensions: *const Extensions, item: *const vk.VkDataGraphTOSANameQualityARM, validate_pnext: bool) bool {
+    if (!validate_VkDataGraphTOSAQualityFlagsARM(extensions, &item.qualityFlags))
+        return false;
+    _ = validate_pnext;
+    return true;
+}
+
+pub fn validate_VkQueueFamilyDataGraphTOSAPropertiesARM(extensions: *const Extensions, item: *const vk.VkQueueFamilyDataGraphTOSAPropertiesARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkQueueFamilyDataGraphTOSAPropertiesARM.STYPE)
+        return false;
+    if (item.pProfiles) |v| {
+        for (v[0..item.profileCount]) |*vv| {
+            if (!validate_VkDataGraphTOSANameQualityARM(extensions, vv, false))
+                return false;
+        }
+    }
+    if (item.pExtensions) |v| {
+        for (v[0..item.extensionCount]) |*vv| {
+            if (!validate_VkDataGraphTOSANameQualityARM(extensions, vv, false))
+                return false;
+        }
+    }
+    if (!validate_VkDataGraphTOSALevelARM(extensions, &item.level))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkQueueFamilyDataGraphTOSAPropertiesARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkDataGraphPipelineSingleNodeConnectionARM(extensions: *const Extensions, item: *const vk.VkDataGraphPipelineSingleNodeConnectionARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDataGraphPipelineSingleNodeConnectionARM.STYPE)
+        return false;
+    if (!validate_VkDataGraphPipelineNodeConnectionTypeARM(extensions, &item.connection))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDataGraphPipelineSingleNodeConnectionARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceDataGraphOpticalFlowFeaturesARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkQueueFamilyDataGraphOpticalFlowPropertiesARM(extensions: *const Extensions, item: *const vk.VkQueueFamilyDataGraphOpticalFlowPropertiesARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkQueueFamilyDataGraphOpticalFlowPropertiesARM.STYPE)
+        return false;
+    if (!validate_VkDataGraphOpticalFlowGridSizeFlagsARM(extensions, &item.supportedOutputGridSizes))
+        return false;
+    if (!validate_VkDataGraphOpticalFlowGridSizeFlagsARM(extensions, &item.supportedHintGridSizes))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkQueueFamilyDataGraphOpticalFlowPropertiesARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkDataGraphOpticalFlowImageFormatInfoARM(extensions: *const Extensions, item: *const vk.VkDataGraphOpticalFlowImageFormatInfoARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDataGraphOpticalFlowImageFormatInfoARM.STYPE)
+        return false;
+    if (!validate_VkDataGraphOpticalFlowImageUsageFlagsARM(extensions, &item.usage))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDataGraphOpticalFlowImageFormatInfoARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkDataGraphOpticalFlowImageFormatPropertiesARM(extensions: *const Extensions, item: *const vk.VkDataGraphOpticalFlowImageFormatPropertiesARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDataGraphOpticalFlowImageFormatPropertiesARM.STYPE)
+        return false;
+    if (!validate_VkFormat(extensions, &item.format))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDataGraphOpticalFlowImageFormatPropertiesARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkDataGraphPipelineSingleNodeCreateInfoARM(extensions: *const Extensions, item: *const vk.VkDataGraphPipelineSingleNodeCreateInfoARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDataGraphPipelineSingleNodeCreateInfoARM.STYPE)
+        return false;
+    if (!validate_VkDataGraphPipelineNodeTypeARM(extensions, &item.nodeType))
+        return false;
+    if (item.pConnections) |v| {
+        for (v[0..item.connectionCount]) |*vv| {
+            if (!validate_VkDataGraphPipelineSingleNodeConnectionARM(extensions, vv, false))
+                return false;
+        }
+    }
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDataGraphPipelineSingleNodeCreateInfoARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkDataGraphPipelineOpticalFlowCreateInfoARM(extensions: *const Extensions, item: *const vk.VkDataGraphPipelineOpticalFlowCreateInfoARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDataGraphPipelineOpticalFlowCreateInfoARM.STYPE)
+        return false;
+    if (!validate_VkFormat(extensions, &item.imageFormat))
+        return false;
+    if (!validate_VkFormat(extensions, &item.flowVectorFormat))
+        return false;
+    if (!validate_VkFormat(extensions, &item.costFormat))
+        return false;
+    if (!validate_VkDataGraphOpticalFlowGridSizeFlagsARM(extensions, &item.outputGridSize))
+        return false;
+    if (!validate_VkDataGraphOpticalFlowGridSizeFlagsARM(extensions, &item.hintGridSize))
+        return false;
+    if (!validate_VkDataGraphOpticalFlowPerformanceLevelARM(extensions, &item.performanceLevel))
+        return false;
+    if (!validate_VkDataGraphOpticalFlowCreateFlagsARM(extensions, &item.flags))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDataGraphPipelineOpticalFlowCreateInfoARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkDataGraphPipelineOpticalFlowDispatchInfoARM(extensions: *const Extensions, item: *const vk.VkDataGraphPipelineOpticalFlowDispatchInfoARM, validate_pnext: bool) bool {
+    if (item.sType != vk.VkDataGraphPipelineOpticalFlowDispatchInfoARM.STYPE)
+        return false;
+    if (!validate_VkDataGraphOpticalFlowExecuteFlagsARM(extensions, &item.flags))
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkDataGraphPipelineOpticalFlowDispatchInfoARM: {d}", .{v});
+                return false;
+            },
+        }
+    }
+    return true;
+}
+
+pub fn validate_VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT, validate_pnext: bool) bool {
+    if (item.sType != vk.VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT.STYPE)
+        return false;
+    if (!validate_pnext) return true;
+
+    var pnext: ?*const vk.VkBaseInStructure = @ptrCast(@alignCast(item.pNext));
+    while (pnext) |next| {
+        pnext = next.pNext;
+        switch (next.sType) {
+            else => |v| {
+                log.debug(@src(), "Invalid pNext chain item for VkPhysicalDeviceShaderOCPMicroscalingTypesFeaturesEXT: {d}", .{v});
                 return false;
             },
         }
@@ -32808,6 +35792,8 @@ pub fn validate_VkQueryType(extensions: *const Extensions, item: *const vk.VkQue
     if (extensions.device.VK_KHR_acceleration_structure and item.* == .VK_QUERY_TYPE_ACCELERATION_STRUCTURE_SERIALIZATION_SIZE_KHR)
         return true;
     if (extensions.device.VK_NV_ray_tracing and item.* == .VK_QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV)
+        return true;
+    if (extensions.device.VK_QCOM_elapsed_timer_query and item.* == .VK_QUERY_TYPE_TIME_ELAPSED_QCOM)
         return true;
     if (extensions.device.VK_INTEL_performance_query and item.* == .VK_QUERY_TYPE_PERFORMANCE_QUERY_INTEL)
         return true;
@@ -33160,15 +36146,15 @@ pub fn validate_VkFormat(extensions: *const Extensions, item: *const vk.VkFormat
         return true;
     if (extensions.device.VK_EXT_texture_compression_astc_hdr and item.* == .VK_FORMAT_ASTC_4x4_SFLOAT_BLOCK)
         return true;
-    if (extensions.device.VK_EXT_texture_compression_astc_hdr and item.* == .VK_FORMAT_ASTC_5x4_SFLOAT_BLOCK)
+    if (extensions.device.VK_EXT_texture_compression_astc_hdr and item.* == .VK_FORMAT_ASTC_8x5_SFLOAT_BLOCK)
         return true;
-    if (extensions.device.VK_EXT_texture_compression_astc_hdr and item.* == .VK_FORMAT_ASTC_8x8_SFLOAT_BLOCK)
+    if (extensions.device.VK_EXT_texture_compression_astc_hdr and item.* == .VK_FORMAT_ASTC_10x6_SFLOAT_BLOCK)
         return true;
     if (extensions.device.VK_EXT_texture_compression_astc_hdr and item.* == .VK_FORMAT_ASTC_10x8_SFLOAT_BLOCK)
         return true;
-    if (extensions.device.VK_EXT_texture_compression_astc_hdr and item.* == .VK_FORMAT_ASTC_10x10_SFLOAT_BLOCK)
-        return true;
     if (extensions.device.VK_EXT_texture_compression_astc_hdr and item.* == .VK_FORMAT_ASTC_12x10_SFLOAT_BLOCK)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_hdr and item.* == .VK_FORMAT_ASTC_12x12_SFLOAT_BLOCK)
         return true;
     if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_G8B8G8R8_422_UNORM)
         return true;
@@ -33178,17 +36164,23 @@ pub fn validate_VkFormat(extensions: *const Extensions, item: *const vk.VkFormat
         return true;
     if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16)
         return true;
-    if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16)
-        return true;
     if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16)
         return true;
     if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16)
         return true;
-    if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_R12X4_UNORM_PACK16)
+    if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16)
+        return true;
+    if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16)
+        return true;
+    if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16)
+        return true;
+    if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16)
         return true;
     if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16)
         return true;
-    if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_B16G16R16G16_422_UNORM)
+    if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16)
+        return true;
+    if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_G16B16G16R16_422_UNORM)
         return true;
     if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM)
         return true;
@@ -33196,11 +36188,75 @@ pub fn validate_VkFormat(extensions: *const Extensions, item: *const vk.VkFormat
         return true;
     if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM)
         return true;
+    if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_G16_B16R16_2PLANE_422_UNORM)
+        return true;
     if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_3x3x3_UNORM_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_3x3x3_SRGB_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_3x3x3_SFLOAT_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_4x3x3_UNORM_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_4x3x3_SRGB_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_4x3x3_SFLOAT_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_4x4x3_UNORM_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_4x4x3_SRGB_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_4x4x3_SFLOAT_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_4x4x4_UNORM_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_4x4x4_SRGB_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_4x4x4_SFLOAT_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_5x4x4_UNORM_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_5x4x4_SRGB_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_5x4x4_SFLOAT_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_5x5x4_UNORM_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_5x5x4_SRGB_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_5x5x4_SFLOAT_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_5x5x5_UNORM_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_5x5x5_SRGB_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_5x5x5_SFLOAT_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_6x5x5_UNORM_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_6x5x5_SRGB_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_6x5x5_SFLOAT_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_6x6x5_UNORM_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_6x6x5_SRGB_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_6x6x5_SFLOAT_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_6x6x6_UNORM_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_6x6x6_SRGB_BLOCK_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_FORMAT_ASTC_6x6x6_SFLOAT_BLOCK_EXT)
         return true;
     if (extensions.device.VK_EXT_ycbcr_2plane_444_formats and item.* == .VK_FORMAT_G8_B8R8_2PLANE_444_UNORM)
         return true;
     if (extensions.device.VK_EXT_ycbcr_2plane_444_formats and item.* == .VK_FORMAT_G10X6_B10X6R10X6_2PLANE_444_UNORM_3PACK16)
+        return true;
+    if (extensions.device.VK_EXT_ycbcr_2plane_444_formats and item.* == .VK_FORMAT_G12X4_B12X4R12X4_2PLANE_444_UNORM_3PACK16)
         return true;
     if (extensions.device.VK_EXT_ycbcr_2plane_444_formats and item.* == .VK_FORMAT_G16_B16R16_2PLANE_444_UNORM)
         return true;
@@ -33209,6 +36265,12 @@ pub fn validate_VkFormat(extensions: *const Extensions, item: *const vk.VkFormat
     if (extensions.device.VK_EXT_4444_formats and item.* == .VK_FORMAT_A4B4G4R4_UNORM_PACK16)
         return true;
     if (extensions.device.VK_ARM_tensors and item.* == .VK_FORMAT_R8_BOOL_ARM)
+        return true;
+    if (extensions.device.VK_ARM_tensors and item.* == .VK_FORMAT_R16_SFLOAT_FPENCODING_BFLOAT16_ARM)
+        return true;
+    if (extensions.device.VK_ARM_tensors and item.* == .VK_FORMAT_R8_SFLOAT_FPENCODING_FLOAT8E4M3_ARM)
+        return true;
+    if (extensions.device.VK_ARM_tensors and item.* == .VK_FORMAT_R8_SFLOAT_FPENCODING_FLOAT8E5M2_ARM)
         return true;
     if (extensions.device.VK_NV_optical_flow and item.* == .VK_FORMAT_R16G16_SFIXED5_NV)
         return true;
@@ -33249,7 +36311,7 @@ pub fn validate_VkFormat(extensions: *const Extensions, item: *const vk.VkFormat
 
 pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.VkStructureType) bool {
     const min = 0;
-    const max = 1000685000;
+    const max = 1000689000;
     const v: i32 = @intFromEnum(item.*);
     if (v < min or max < v)
         return false;
@@ -33419,10 +36481,6 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_KHR_dynamic_rendering and item.* == .VK_STRUCTURE_TYPE_RENDERING_INFO)
         return true;
-    if (extensions.device.VK_KHR_dynamic_rendering and item.* == .VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO)
-        return true;
-    if (extensions.device.VK_KHR_dynamic_rendering and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES)
-        return true;
     if (extensions.device.VK_KHR_fragment_shading_rate and item.* == .VK_STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR)
         return true;
     if (extensions.device.VK_EXT_fragment_density_map and item.* == .VK_STRUCTURE_TYPE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_INFO_EXT)
@@ -33437,9 +36495,9 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_NV_private_vendor_info and item.* == .VK_STRUCTURE_TYPE_PRIVATE_VENDOR_INFO_PLACEHOLDER_OFFSET_0_NV)
         return true;
-    if (extensions.device.VK_KHR_multiview and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES)
+    if (extensions.device.VK_KHR_multiview and item.* == .VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO)
         return true;
-    if (extensions.device.VK_KHR_multiview and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES)
+    if (extensions.device.VK_KHR_multiview and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES)
         return true;
     if (extensions.device.VK_NV_external_memory and item.* == .VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV)
         return true;
@@ -33451,7 +36509,15 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_NV_win32_keyed_mutex and item.* == .VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV)
         return true;
-    if (extensions.instance.VK_KHR_get_physical_device_properties2 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2)
+    if (extensions.instance.VK_KHR_get_physical_device_properties2 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2)
+        return true;
+    if (extensions.instance.VK_KHR_get_physical_device_properties2 and item.* == .VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2)
+        return true;
+    if (extensions.instance.VK_KHR_get_physical_device_properties2 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2)
+        return true;
+    if (extensions.device.VK_KHR_device_group and item.* == .VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO)
+        return true;
+    if (extensions.device.VK_KHR_device_group and item.* == .VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO)
         return true;
     if (extensions.device.VK_KHR_device_group and item.* == .VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO)
         return true;
@@ -33467,6 +36533,8 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_KHR_swapchain and item.* == .VK_STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR)
         return true;
+    if (extensions.device.VK_KHR_device_group and item.* == .VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO)
+        return true;
     if (extensions.instance.VK_EXT_validation_flags and item.* == .VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT)
         return true;
     if (extensions.instance.VK_NN_vi_surface and item.* == .VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN)
@@ -33477,7 +36545,13 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_EXT_astc_decode_mode and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT)
         return true;
-    if (extensions.instance.VK_KHR_device_group_creation and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES)
+    if (extensions.instance.VK_KHR_external_memory_capabilities and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO)
+        return true;
+    if (extensions.instance.VK_KHR_external_memory_capabilities and item.* == .VK_STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES)
+        return true;
+    if (extensions.instance.VK_KHR_external_memory_capabilities and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO)
+        return true;
+    if (extensions.instance.VK_KHR_external_memory_capabilities and item.* == .VK_STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES)
         return true;
     if (extensions.instance.VK_KHR_external_fence_capabilities and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES)
         return true;
@@ -33503,6 +36577,8 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_KHR_win32_keyed_mutex and item.* == .VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR)
         return true;
+    if (extensions.device.VK_KHR_external_semaphore and item.* == .VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO)
+        return true;
     if (extensions.device.VK_KHR_external_semaphore_win32 and item.* == .VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR)
         return true;
     if (extensions.device.VK_KHR_external_semaphore_win32 and item.* == .VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR)
@@ -33520,6 +36596,8 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
     if (extensions.device.VK_EXT_conditional_rendering and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT)
         return true;
     if (extensions.device.VK_EXT_conditional_rendering and item.* == .VK_STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT)
+        return true;
+    if (extensions.device.VK_KHR_16bit_storage and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES)
         return true;
     if (extensions.device.VK_KHR_incremental_present and item.* == .VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR)
         return true;
@@ -33561,19 +36639,17 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_KHR_imageless_framebuffer and item.* == .VK_STRUCTURE_TYPE_RENDER_PASS_ATTACHMENT_BEGIN_INFO)
         return true;
-    if (extensions.device.VK_KHR_create_renderpass2 and item.* == .VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2)
-        return true;
     if (extensions.device.VK_KHR_create_renderpass2 and item.* == .VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2)
         return true;
-    if (extensions.device.VK_KHR_create_renderpass2 and item.* == .VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2)
-        return true;
     if (extensions.device.VK_KHR_create_renderpass2 and item.* == .VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2)
+        return true;
+    if (extensions.device.VK_KHR_create_renderpass2 and item.* == .VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO)
         return true;
     if (extensions.device.VK_IMG_relaxed_line_rasterization and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RELAXED_LINE_RASTERIZATION_FEATURES_IMG)
         return true;
     if (extensions.device.VK_KHR_shared_presentable_image and item.* == .VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR)
         return true;
-    if (extensions.instance.VK_KHR_external_fence_capabilities and item.* == .VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES)
+    if (extensions.device.VK_KHR_external_fence and item.* == .VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO)
         return true;
     if (extensions.device.VK_KHR_external_fence_win32 and item.* == .VK_STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR)
         return true;
@@ -33605,8 +36681,6 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_KHR_maintenance2 and item.* == .VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO)
         return true;
-    if (extensions.device.VK_KHR_maintenance2 and item.* == .VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO)
-        return true;
     if (extensions.device.VK_KHR_maintenance2 and item.* == .VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO)
         return true;
     if (extensions.instance.VK_KHR_get_surface_capabilities2 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR)
@@ -33629,7 +36703,7 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.instance.VK_MVK_macos_surface and item.* == .VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK)
         return true;
-    if (extensions.device.VK_KHR_dedicated_allocation and item.* == .VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO)
+    if (extensions.device.VK_KHR_dedicated_allocation and item.* == .VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS)
         return true;
     if (extensions.instance.VK_EXT_debug_utils and item.* == .VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT)
         return true;
@@ -33655,6 +36729,22 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_ANDROID_external_memory_android_hardware_buffer and item.* == .VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_2_ANDROID)
         return true;
+    if (extensions.device.VK_EXT_sampler_filter_minmax and item.* == .VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO)
+        return true;
+    if (extensions.device.VK_AMD_gpa_interface and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_FEATURES_AMD)
+        return true;
+    if (extensions.device.VK_AMD_gpa_interface and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_PROPERTIES_AMD)
+        return true;
+    if (extensions.device.VK_AMD_gpa_interface and item.* == .VK_STRUCTURE_TYPE_GPA_SAMPLE_BEGIN_INFO_AMD)
+        return true;
+    if (extensions.device.VK_AMD_gpa_interface and item.* == .VK_STRUCTURE_TYPE_GPA_SESSION_CREATE_INFO_AMD)
+        return true;
+    if (extensions.device.VK_AMD_gpa_interface and item.* == .VK_STRUCTURE_TYPE_GPA_DEVICE_CLOCK_MODE_INFO_AMD)
+        return true;
+    if (extensions.device.VK_AMD_gpa_interface and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GPA_PROPERTIES_2_AMD)
+        return true;
+    if (extensions.device.VK_AMD_gpa_interface and item.* == .VK_STRUCTURE_TYPE_GPA_DEVICE_GET_CLOCK_INFO_AMD)
+        return true;
     if (extensions.device.VK_AMDX_shader_enqueue and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ENQUEUE_FEATURES_AMDX)
         return true;
     if (extensions.device.VK_AMDX_shader_enqueue and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ENQUEUE_PROPERTIES_AMDX)
@@ -33664,6 +36754,44 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
     if (extensions.device.VK_AMDX_shader_enqueue and item.* == .VK_STRUCTURE_TYPE_EXECUTION_GRAPH_PIPELINE_CREATE_INFO_AMDX)
         return true;
     if (extensions.device.VK_AMDX_shader_enqueue and item.* == .VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_NODE_CREATE_INFO_AMDX)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_STRUCTURE_TYPE_TEXEL_BUFFER_DESCRIPTOR_INFO_EXT)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_STRUCTURE_TYPE_IMAGE_DESCRIPTOR_INFO_EXT)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_STRUCTURE_TYPE_RESOURCE_DESCRIPTOR_INFO_EXT)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_STRUCTURE_TYPE_BIND_HEAP_INFO_EXT)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_STRUCTURE_TYPE_PUSH_DATA_INFO_EXT)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_STRUCTURE_TYPE_DESCRIPTOR_SET_AND_BINDING_MAPPING_EXT)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_STRUCTURE_TYPE_SHADER_DESCRIPTOR_SET_AND_BINDING_MAPPING_INFO_EXT)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_STRUCTURE_TYPE_OPAQUE_CAPTURE_DATA_CREATE_INFO_EXT)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_PROPERTIES_EXT)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_FEATURES_EXT)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_DESCRIPTOR_HEAP_INFO_EXT)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_INDEX_CREATE_INFO_EXT)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_PUSH_DATA_TOKEN_NV)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_STRUCTURE_TYPE_SUBSAMPLED_IMAGE_FORMAT_PROPERTIES_EXT)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_HEAP_TENSOR_PROPERTIES_ARM)
+        return true;
+    if (extensions.device.VK_EXT_inline_uniform_block and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES)
+        return true;
+    if (extensions.device.VK_EXT_inline_uniform_block and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES)
+        return true;
+    if (extensions.device.VK_EXT_inline_uniform_block and item.* == .VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK)
+        return true;
+    if (extensions.device.VK_EXT_inline_uniform_block and item.* == .VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO)
         return true;
     if (extensions.device.VK_KHR_shader_bfloat16 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_BFLOAT16_FEATURES_KHR)
         return true;
@@ -33678,8 +36806,6 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
     if (extensions.device.VK_EXT_sample_locations and item.* == .VK_STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT)
         return true;
     if (extensions.device.VK_KHR_get_memory_requirements2 and item.* == .VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2)
-        return true;
-    if (extensions.device.VK_KHR_image_format_list and item.* == .VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO)
         return true;
     if (extensions.device.VK_EXT_blend_operation_advanced and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT)
         return true;
@@ -33735,15 +36861,11 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO)
         return true;
-    if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO)
+    if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO)
         return true;
     if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES)
         return true;
     if (extensions.device.VK_KHR_sampler_ycbcr_conversion and item.* == .VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES)
-        return true;
-    if (extensions.device.VK_KHR_bind_memory2 and item.* == .VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO)
-        return true;
-    if (extensions.device.VK_KHR_bind_memory2 and item.* == .VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO)
         return true;
     if (extensions.device.VK_EXT_image_drm_format_modifier and item.* == .VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT)
         return true;
@@ -33762,6 +36884,10 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
     if (extensions.device.VK_EXT_validation_cache and item.* == .VK_STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT)
         return true;
     if (extensions.device.VK_EXT_descriptor_indexing and item.* == .VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_indexing and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_indexing and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES)
         return true;
     if (extensions.device.VK_EXT_descriptor_indexing and item.* == .VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO)
         return true;
@@ -33805,15 +36931,17 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_NV_representative_fragment_test and item.* == .VK_STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV)
         return true;
-    if (extensions.device.VK_KHR_maintenance3 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES)
-        return true;
     if (extensions.device.VK_KHR_maintenance3 and item.* == .VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT)
         return true;
     if (extensions.device.VK_EXT_filter_cubic and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT)
         return true;
     if (extensions.device.VK_EXT_filter_cubic and item.* == .VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT)
         return true;
-    if (extensions.device.VK_EXT_global_priority and item.* == .VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO)
+    if (extensions.device.VK_QCOM_cooperative_matrix_conversion and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_CONVERSION_FEATURES_QCOM)
+        return true;
+    if (extensions.device.VK_QCOM_elapsed_timer_query and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ELAPSED_TIMER_QUERY_FEATURES_QCOM)
+        return true;
+    if (extensions.device.VK_KHR_8bit_storage and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES)
         return true;
     if (extensions.device.VK_EXT_external_memory_host and item.* == .VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT)
         return true;
@@ -33847,11 +36975,21 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_EXT_vertex_attribute_divisor and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT)
         return true;
-    if (extensions.device.VK_KHR_vertex_attribute_divisor and item.* == .VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO)
+    if (extensions.device.VK_EXT_vertex_attribute_divisor and item.* == .VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO)
         return true;
-    if (extensions.device.VK_KHR_vertex_attribute_divisor and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES)
+    if (extensions.device.VK_EXT_vertex_attribute_divisor and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES)
         return true;
     if (extensions.device.VK_GGP_frame_token and item.* == .VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP)
+        return true;
+    if (extensions.device.VK_EXT_pipeline_creation_feedback and item.* == .VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO)
+        return true;
+    if (extensions.device.VK_KHR_driver_properties and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES)
+        return true;
+    if (extensions.device.VK_KHR_shader_float_controls and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES)
+        return true;
+    if (extensions.device.VK_KHR_depth_stencil_resolve and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES)
+        return true;
+    if (extensions.device.VK_KHR_depth_stencil_resolve and item.* == .VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE)
         return true;
     if (extensions.device.VK_KHR_compute_shader_derivatives and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_KHR)
         return true;
@@ -33872,6 +37010,8 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
     if (extensions.device.VK_NV_device_diagnostic_checkpoints and item.* == .VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV)
         return true;
     if (extensions.device.VK_KHR_timeline_semaphore and item.* == .VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO)
+        return true;
+    if (extensions.device.VK_KHR_timeline_semaphore and item.* == .VK_STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO)
         return true;
     if (extensions.device.VK_EXT_present_timing and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_TIMING_FEATURES_EXT)
         return true;
@@ -33925,13 +37065,7 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_EXT_fragment_density_map and item.* == .VK_STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT)
         return true;
-    if (extensions.device.VK_EXT_scalar_block_layout and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES)
-        return true;
-    if (extensions.device.VK_EXT_subgroup_size_control and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_PROPERTIES)
-        return true;
-    if (extensions.device.VK_EXT_subgroup_size_control and item.* == .VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO)
-        return true;
-    if (extensions.device.VK_EXT_subgroup_size_control and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_SIZE_CONTROL_FEATURES)
+    if (extensions.device.VK_EXT_shader_object and item.* == .VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_REQUIRED_SUBGROUP_SIZE_CREATE_INFO)
         return true;
     if (extensions.device.VK_KHR_fragment_shading_rate and item.* == .VK_STRUCTURE_TYPE_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR)
         return true;
@@ -33947,6 +37081,14 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_AMD_device_coherent_memory and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COHERENT_MEMORY_FEATURES_AMD)
         return true;
+    if (extensions.device.VK_KHR_shader_constant_data and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CONSTANT_DATA_FEATURES_KHR)
+        return true;
+    if (extensions.device.VK_KHR_shader_abort and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ABORT_FEATURES_KHR)
+        return true;
+    if (extensions.device.VK_KHR_shader_abort and item.* == .VK_STRUCTURE_TYPE_DEVICE_FAULT_SHADER_ABORT_MESSAGE_INFO_KHR)
+        return true;
+    if (extensions.device.VK_KHR_shader_abort and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ABORT_PROPERTIES_KHR)
+        return true;
     if (extensions.device.VK_EXT_shader_image_atomic_int64 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_ATOMIC_INT64_FEATURES_EXT)
         return true;
     if (extensions.device.VK_KHR_shader_quad_control and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_QUAD_CONTROL_FEATURES_KHR)
@@ -33961,6 +37103,8 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_NV_dedicated_allocation_image_aliasing and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEDICATED_ALLOCATION_IMAGE_ALIASING_FEATURES_NV)
         return true;
+    if (extensions.device.VK_KHR_separate_depth_stencil_layouts and item.* == .VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_STENCIL_LAYOUT)
+        return true;
     if (extensions.device.VK_KHR_separate_depth_stencil_layouts and item.* == .VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_STENCIL_LAYOUT)
         return true;
     if (extensions.device.VK_EXT_buffer_device_address and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT)
@@ -33968,8 +37112,6 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
     if (extensions.device.VK_EXT_buffer_device_address and item.* == .VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT)
         return true;
     if (extensions.device.VK_EXT_tooling_info and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TOOL_PROPERTIES)
-        return true;
-    if (extensions.device.VK_EXT_separate_stencil_usage and item.* == .VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO)
         return true;
     if (extensions.instance.VK_EXT_validation_features and item.* == .VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT)
         return true;
@@ -34007,19 +37149,27 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.instance.VK_EXT_headless_surface and item.* == .VK_STRUCTURE_TYPE_HEADLESS_SURFACE_CREATE_INFO_EXT)
         return true;
-    if (extensions.device.VK_KHR_line_rasterization and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES)
+    if (extensions.device.VK_KHR_buffer_device_address and item.* == .VK_STRUCTURE_TYPE_BUFFER_OPAQUE_CAPTURE_ADDRESS_CREATE_INFO)
+        return true;
+    if (extensions.device.VK_KHR_buffer_device_address and item.* == .VK_STRUCTURE_TYPE_MEMORY_OPAQUE_CAPTURE_ADDRESS_ALLOCATE_INFO)
+        return true;
+    if (extensions.device.VK_KHR_buffer_device_address and item.* == .VK_STRUCTURE_TYPE_DEVICE_MEMORY_OPAQUE_CAPTURE_ADDRESS_INFO)
+        return true;
+    if (extensions.device.VK_EXT_line_rasterization and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES)
+        return true;
+    if (extensions.device.VK_KHR_line_rasterization and item.* == .VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO)
         return true;
     if (extensions.device.VK_EXT_line_rasterization and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_PROPERTIES)
         return true;
     if (extensions.device.VK_EXT_shader_atomic_float and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_FEATURES_EXT)
         return true;
-    if (extensions.device.VK_EXT_host_query_reset and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES)
+    if (extensions.device.VK_KHR_index_type_uint8 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INDEX_TYPE_UINT8_FEATURES)
         return true;
     if (extensions.device.VK_EXT_extended_dynamic_state and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_FEATURES_EXT)
         return true;
     if (extensions.device.VK_KHR_pipeline_executable_properties and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_EXECUTABLE_PROPERTIES_FEATURES_KHR)
         return true;
-    if (extensions.device.VK_EXT_pipeline_properties and item.* == .VK_STRUCTURE_TYPE_PIPELINE_INFO_KHR)
+    if (extensions.device.VK_KHR_pipeline_executable_properties and item.* == .VK_STRUCTURE_TYPE_PIPELINE_INFO_KHR)
         return true;
     if (extensions.device.VK_KHR_pipeline_executable_properties and item.* == .VK_STRUCTURE_TYPE_PIPELINE_EXECUTABLE_PROPERTIES_KHR)
         return true;
@@ -34031,11 +37181,9 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_EXT_host_image_copy and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_FEATURES)
         return true;
-    if (extensions.device.VK_EXT_host_image_copy and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_IMAGE_COPY_PROPERTIES)
+    if (extensions.device.VK_EXT_host_image_copy and item.* == .VK_STRUCTURE_TYPE_IMAGE_TO_MEMORY_COPY)
         return true;
-    if (extensions.device.VK_EXT_host_image_copy and item.* == .VK_STRUCTURE_TYPE_SUBRESOURCE_HOST_MEMCPY_SIZE)
-        return true;
-    if (extensions.device.VK_EXT_host_image_copy and item.* == .VK_STRUCTURE_TYPE_HOST_IMAGE_COPY_DEVICE_PERFORMANCE_QUERY)
+    if (extensions.device.VK_EXT_host_image_copy and item.* == .VK_STRUCTURE_TYPE_COPY_IMAGE_TO_MEMORY_INFO)
         return true;
     if (extensions.device.VK_EXT_map_memory_placed and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAP_MEMORY_PLACED_FEATURES_EXT)
         return true;
@@ -34083,9 +37231,11 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_NV_inherited_viewport_scissor and item.* == .VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_VIEWPORT_SCISSOR_INFO_NV)
         return true;
-    if (extensions.device.VK_KHR_shader_integer_dot_product and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES)
+    if (extensions.device.VK_KHR_shader_integer_dot_product and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_PROPERTIES)
         return true;
     if (extensions.device.VK_EXT_texel_buffer_alignment and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_FEATURES_EXT)
+        return true;
+    if (extensions.device.VK_EXT_texel_buffer_alignment and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXEL_BUFFER_ALIGNMENT_PROPERTIES)
         return true;
     if (extensions.device.VK_QCOM_render_pass_transform and item.* == .VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_RENDER_PASS_TRANSFORM_INFO_QCOM)
         return true;
@@ -34113,6 +37263,8 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_EXT_custom_border_color and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_FEATURES_EXT)
         return true;
+    if (extensions.device.VK_EXT_texture_compression_astc_3d and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TEXTURE_COMPRESSION_ASTC_3D_FEATURES_EXT)
+        return true;
     if (extensions.device.VK_KHR_pipeline_library and item.* == .VK_STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR)
         return true;
     if (extensions.device.VK_NV_present_barrier and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_BARRIER_FEATURES_NV)
@@ -34124,6 +37276,12 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
     if (extensions.device.VK_KHR_present_id and item.* == .VK_STRUCTURE_TYPE_PRESENT_ID_KHR)
         return true;
     if (extensions.device.VK_KHR_present_id and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_ID_FEATURES_KHR)
+        return true;
+    if (extensions.device.VK_EXT_private_data and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIVATE_DATA_FEATURES)
+        return true;
+    if (extensions.device.VK_EXT_private_data and item.* == .VK_STRUCTURE_TYPE_DEVICE_PRIVATE_DATA_CREATE_INFO)
+        return true;
+    if (extensions.device.VK_EXT_pipeline_creation_cache_control and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES)
         return true;
     if (extensions.device.VK_KHR_video_encode_queue and item.* == .VK_STRUCTURE_TYPE_VIDEO_ENCODE_INFO_KHR)
         return true;
@@ -34150,6 +37308,22 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
     if (extensions.device.VK_NV_device_diagnostics_config and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DIAGNOSTICS_CONFIG_FEATURES_NV)
         return true;
     if (extensions.device.VK_NV_device_diagnostics_config and item.* == .VK_STRUCTURE_TYPE_DEVICE_DIAGNOSTICS_CONFIG_CREATE_INFO_NV)
+        return true;
+    if (extensions.device.VK_QCOM_queue_perf_hint and item.* == .VK_STRUCTURE_TYPE_PERF_HINT_INFO_QCOM)
+        return true;
+    if (extensions.device.VK_QCOM_queue_perf_hint and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_PERF_HINT_FEATURES_QCOM)
+        return true;
+    if (extensions.device.VK_QCOM_queue_perf_hint and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_PERF_HINT_PROPERTIES_QCOM)
+        return true;
+    if (extensions.device.VK_QCOM_image_processing3 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_PROCESSING_3_FEATURES_QCOM)
+        return true;
+    if (extensions.device.VK_QCOM_shader_multiple_wait_queues and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MULTIPLE_WAIT_QUEUES_FEATURES_QCOM)
+        return true;
+    if (extensions.device.VK_QCOM_shader_multiple_wait_queues and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MULTIPLE_WAIT_QUEUES_PROPERTIES_QCOM)
+        return true;
+    if (extensions.device.VK_EXT_shader_split_barrier and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SPLIT_BARRIER_FEATURES_EXT)
+        return true;
+    if (extensions.device.VK_EXT_shader_split_barrier and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SPLIT_BARRIER_PROPERTIES_EXT)
         return true;
     if (extensions.device.VK_NV_cuda_kernel_launch and item.* == .VK_STRUCTURE_TYPE_CUDA_MODULE_CREATE_INFO_NV)
         return true;
@@ -34203,6 +37377,18 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_KHR_synchronization2 and item.* == .VK_STRUCTURE_TYPE_MEMORY_BARRIER_2)
         return true;
+    if (extensions.device.VK_KHR_synchronization2 and item.* == .VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER_2)
+        return true;
+    if (extensions.device.VK_KHR_synchronization2 and item.* == .VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2)
+        return true;
+    if (extensions.device.VK_KHR_synchronization2 and item.* == .VK_STRUCTURE_TYPE_DEPENDENCY_INFO)
+        return true;
+    if (extensions.device.VK_KHR_synchronization2 and item.* == .VK_STRUCTURE_TYPE_SUBMIT_INFO_2)
+        return true;
+    if (extensions.device.VK_KHR_synchronization2 and item.* == .VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO)
+        return true;
+    if (extensions.device.VK_KHR_synchronization2 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SYNCHRONIZATION_2_FEATURES)
+        return true;
     if (extensions.device.VK_NV_device_diagnostic_checkpoints and item.* == .VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_2_NV)
         return true;
     if (extensions.device.VK_NV_device_diagnostic_checkpoints and item.* == .VK_STRUCTURE_TYPE_CHECKPOINT_DATA_2_NV)
@@ -34232,6 +37418,38 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
     if (extensions.device.VK_EXT_descriptor_buffer and item.* == .VK_STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_INFO_EXT)
         return true;
     if (extensions.device.VK_EXT_descriptor_buffer and item.* == .VK_STRUCTURE_TYPE_DESCRIPTOR_BUFFER_BINDING_PUSH_DESCRIPTOR_BUFFER_HANDLE_EXT)
+        return true;
+    if (extensions.device.VK_KHR_device_address_commands and item.* == .VK_STRUCTURE_TYPE_DEVICE_MEMORY_COPY_KHR)
+        return true;
+    if (extensions.device.VK_KHR_device_address_commands and item.* == .VK_STRUCTURE_TYPE_COPY_DEVICE_MEMORY_INFO_KHR)
+        return true;
+    if (extensions.device.VK_KHR_device_address_commands and item.* == .VK_STRUCTURE_TYPE_DEVICE_MEMORY_IMAGE_COPY_KHR)
+        return true;
+    if (extensions.device.VK_KHR_device_address_commands and item.* == .VK_STRUCTURE_TYPE_COPY_DEVICE_MEMORY_IMAGE_INFO_KHR)
+        return true;
+    if (extensions.device.VK_KHR_device_address_commands and item.* == .VK_STRUCTURE_TYPE_MEMORY_RANGE_BARRIERS_INFO_KHR)
+        return true;
+    if (extensions.device.VK_KHR_device_address_commands and item.* == .VK_STRUCTURE_TYPE_MEMORY_RANGE_BARRIER_KHR)
+        return true;
+    if (extensions.device.VK_KHR_device_address_commands and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEVICE_ADDRESS_COMMANDS_FEATURES_KHR)
+        return true;
+    if (extensions.device.VK_KHR_device_address_commands and item.* == .VK_STRUCTURE_TYPE_BIND_INDEX_BUFFER_3_INFO_KHR)
+        return true;
+    if (extensions.device.VK_KHR_device_address_commands and item.* == .VK_STRUCTURE_TYPE_BIND_VERTEX_BUFFER_3_INFO_KHR)
+        return true;
+    if (extensions.device.VK_KHR_device_address_commands and item.* == .VK_STRUCTURE_TYPE_DRAW_INDIRECT_2_INFO_KHR)
+        return true;
+    if (extensions.device.VK_KHR_device_address_commands and item.* == .VK_STRUCTURE_TYPE_DRAW_INDIRECT_COUNT_2_INFO_KHR)
+        return true;
+    if (extensions.device.VK_KHR_device_address_commands and item.* == .VK_STRUCTURE_TYPE_DISPATCH_INDIRECT_2_INFO_KHR)
+        return true;
+    if (extensions.device.VK_KHR_device_address_commands and item.* == .VK_STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_2_EXT)
+        return true;
+    if (extensions.device.VK_KHR_device_address_commands and item.* == .VK_STRUCTURE_TYPE_BIND_TRANSFORM_FEEDBACK_BUFFER_2_INFO_EXT)
+        return true;
+    if (extensions.device.VK_KHR_device_address_commands and item.* == .VK_STRUCTURE_TYPE_MEMORY_MARKER_INFO_AMD)
+        return true;
+    if (extensions.device.VK_KHR_device_address_commands and item.* == .VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_2_KHR)
         return true;
     if (extensions.device.VK_EXT_graphics_pipeline_library and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GRAPHICS_PIPELINE_LIBRARY_FEATURES_EXT)
         return true;
@@ -34277,15 +37495,19 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_KHR_copy_commands2 and item.* == .VK_STRUCTURE_TYPE_COPY_IMAGE_TO_BUFFER_INFO_2)
         return true;
-    if (extensions.device.VK_KHR_copy_commands2 and item.* == .VK_STRUCTURE_TYPE_IMAGE_RESOLVE_2)
+    if (extensions.device.VK_KHR_copy_commands2 and item.* == .VK_STRUCTURE_TYPE_RESOLVE_IMAGE_INFO_2)
+        return true;
+    if (extensions.device.VK_KHR_copy_commands2 and item.* == .VK_STRUCTURE_TYPE_BUFFER_COPY_2)
+        return true;
+    if (extensions.device.VK_KHR_copy_commands2 and item.* == .VK_STRUCTURE_TYPE_IMAGE_COPY_2)
+        return true;
+    if (extensions.device.VK_KHR_copy_commands2 and item.* == .VK_STRUCTURE_TYPE_IMAGE_BLIT_2)
+        return true;
+    if (extensions.device.VK_KHR_copy_commands2 and item.* == .VK_STRUCTURE_TYPE_BUFFER_IMAGE_COPY_2)
         return true;
     if (extensions.device.VK_EXT_image_compression_control and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_COMPRESSION_CONTROL_FEATURES_EXT)
         return true;
     if (extensions.device.VK_EXT_image_compression_control and item.* == .VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_CONTROL_EXT)
-        return true;
-    if (extensions.device.VK_KHR_maintenance5 and item.* == .VK_STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2)
-        return true;
-    if (extensions.device.VK_KHR_maintenance5 and item.* == .VK_STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2)
         return true;
     if (extensions.device.VK_EXT_image_compression_control and item.* == .VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT)
         return true;
@@ -34387,7 +37609,7 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_NV_external_sci_sync2 and item.* == .VK_STRUCTURE_TYPE_FENCE_GET_SCI_SYNC_INFO_NV)
         return true;
-    if (extensions.device.VK_NV_external_sci_sync2 and item.* == .VK_STRUCTURE_TYPE_SCI_SYNC_ATTRIBUTES_INFO_NV)
+    if (extensions.device.VK_NV_external_sci_sync and item.* == .VK_STRUCTURE_TYPE_SCI_SYNC_ATTRIBUTES_INFO_NV)
         return true;
     if (extensions.device.VK_NV_external_sci_sync and item.* == .VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_SCI_SYNC_INFO_NV)
         return true;
@@ -34430,10 +37652,6 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
     if (extensions.device.VK_KHR_ray_tracing_maintenance1 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_MAINTENANCE_1_FEATURES_KHR)
         return true;
     if (extensions.device.VK_KHR_shader_untyped_pointers and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNTYPED_POINTERS_FEATURES_KHR)
-        return true;
-    if (extensions.device.VK_KHR_global_priority and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES)
-        return true;
-    if (extensions.device.VK_KHR_global_priority and item.* == .VK_STRUCTURE_TYPE_QUEUE_FAMILY_GLOBAL_PRIORITY_PROPERTIES)
         return true;
     if (extensions.device.VK_VALVE_video_encode_rgb_conversion and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_RGB_CONVERSION_FEATURES_VALVE)
         return true;
@@ -34497,10 +37715,6 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_KHR_maintenance4 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES)
         return true;
-    if (extensions.device.VK_KHR_maintenance4 and item.* == .VK_STRUCTURE_TYPE_DEVICE_BUFFER_MEMORY_REQUIREMENTS)
-        return true;
-    if (extensions.device.VK_KHR_maintenance4 and item.* == .VK_STRUCTURE_TYPE_DEVICE_IMAGE_MEMORY_REQUIREMENTS)
-        return true;
     if (extensions.device.VK_ARM_shader_core_properties and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_ARM)
         return true;
     if (extensions.device.VK_ARM_scheduling_controls and item.* == .VK_STRUCTURE_TYPE_DEVICE_QUEUE_SHADER_CORE_CONTROL_CREATE_INFO_ARM)
@@ -34508,6 +37722,10 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
     if (extensions.device.VK_ARM_scheduling_controls and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_FEATURES_ARM)
         return true;
     if (extensions.device.VK_ARM_scheduling_controls and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_PROPERTIES_ARM)
+        return true;
+    if (extensions.device.VK_ARM_scheduling_controls and item.* == .VK_STRUCTURE_TYPE_DISPATCH_PARAMETERS_ARM)
+        return true;
+    if (extensions.device.VK_ARM_scheduling_controls and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_PROPERTIES_ARM)
         return true;
     if (extensions.device.VK_EXT_image_sliced_view_of_3d and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_SLICED_VIEW_OF_3D_FEATURES_EXT)
         return true;
@@ -34590,12 +37808,6 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
     if (extensions.device.VK_OHOS_external_memory and item.* == .VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_OHOS)
         return true;
     if (extensions.device.VK_EXT_external_memory_acquire_unmodified and item.* == .VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_ACQUIRE_UNMODIFIED_EXT)
-        return true;
-    if (extensions.device.VK_OHOS_native_buffer and item.* == .VK_STRUCTURE_TYPE_NATIVE_BUFFER_OHOS)
-        return true;
-    if (extensions.device.VK_OHOS_native_buffer and item.* == .VK_STRUCTURE_TYPE_SWAPCHAIN_IMAGE_CREATE_INFO_OHOS)
-        return true;
-    if (extensions.device.VK_OHOS_native_buffer and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENTATION_PROPERTIES_OHOS)
         return true;
     if (extensions.device.VK_EXT_extended_dynamic_state3 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_FEATURES_EXT)
         return true;
@@ -34693,15 +37905,11 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_KHR_maintenance5 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES)
         return true;
-    if (extensions.device.VK_KHR_maintenance5 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_PROPERTIES)
-        return true;
-    if (extensions.device.VK_KHR_maintenance5 and item.* == .VK_STRUCTURE_TYPE_RENDERING_AREA_INFO)
-        return true;
     if (extensions.device.VK_KHR_maintenance5 and item.* == .VK_STRUCTURE_TYPE_DEVICE_IMAGE_SUBRESOURCE_INFO)
         return true;
     if (extensions.device.VK_KHR_maintenance5 and item.* == .VK_STRUCTURE_TYPE_PIPELINE_CREATE_FLAGS_2_CREATE_INFO)
         return true;
-    if (extensions.device.VK_KHR_maintenance5 and item.* == .VK_STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO)
+    if (extensions.device.VK_KHR_extended_flags and item.* == .VK_STRUCTURE_TYPE_BUFFER_USAGE_FLAGS_2_CREATE_INFO)
         return true;
     if (extensions.device.VK_AMD_anti_lag and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ANTI_LAG_FEATURES_AMD)
         return true;
@@ -34801,6 +38009,8 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_EXT_dynamic_rendering_unused_attachments and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_UNUSED_ATTACHMENTS_FEATURES_EXT)
         return true;
+    if (extensions.device.VK_KHR_internally_synchronized_queues and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INTERNALLY_SYNCHRONIZED_QUEUES_FEATURES_KHR)
+        return true;
     if (extensions.device.VK_NV_low_latency2 and item.* == .VK_STRUCTURE_TYPE_LATENCY_SLEEP_MODE_INFO_NV)
         return true;
     if (extensions.device.VK_NV_low_latency2 and item.* == .VK_STRUCTURE_TYPE_LATENCY_SLEEP_INFO_NV)
@@ -34864,6 +38074,8 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
     if (extensions.device.VK_ARM_data_graph and item.* == .VK_STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_PROPERTIES_ARM)
         return true;
     if (extensions.device.VK_ARM_data_graph and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_QUEUE_FAMILY_DATA_GRAPH_PROCESSING_ENGINE_INFO_ARM)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_instruction_set_tosa and item.* == .VK_STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_TOSA_PROPERTIES_ARM)
         return true;
     if (extensions.device.VK_QCOM_multiview_per_view_render_areas and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_RENDER_AREAS_FEATURES_QCOM)
         return true;
@@ -34953,15 +38165,13 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_MSFT_layered_driver and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LAYERED_DRIVER_PROPERTIES_MSFT)
         return true;
-    if (extensions.device.VK_KHR_maintenance6 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_FEATURES)
-        return true;
     if (extensions.device.VK_KHR_maintenance6 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_6_PROPERTIES)
         return true;
     if (extensions.device.VK_KHR_maintenance6 and item.* == .VK_STRUCTURE_TYPE_BIND_MEMORY_STATUS)
         return true;
-    if (extensions.device.VK_KHR_maintenance6 and item.* == .VK_STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_INFO)
+    if (extensions.device.VK_KHR_maintenance6 and item.* == .VK_STRUCTURE_TYPE_BIND_DESCRIPTOR_SETS_INFO)
         return true;
-    if (extensions.device.VK_KHR_maintenance6 and item.* == .VK_STRUCTURE_TYPE_PUSH_DESCRIPTOR_SET_WITH_TEMPLATE_INFO)
+    if (extensions.device.VK_KHR_maintenance6 and item.* == .VK_STRUCTURE_TYPE_PUSH_CONSTANTS_INFO)
         return true;
     if (extensions.device.VK_KHR_maintenance6 and item.* == .VK_STRUCTURE_TYPE_SET_DESCRIPTOR_BUFFER_OFFSETS_INFO_EXT)
         return true;
@@ -35049,6 +38259,10 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_EXT_shader_replicated_composites and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_REPLICATED_COMPOSITES_FEATURES_EXT)
         return true;
+    if (extensions.device.VK_ARM_tensor_controls and item.* == .VK_STRUCTURE_TYPE_TENSOR_EXPLICIT_TILING_FORMAT_PROPERTIES_ARM)
+        return true;
+    if (extensions.device.VK_ARM_tensor_controls and item.* == .VK_STRUCTURE_TYPE_TENSOR_ROLLING_BACKING_CREATE_INFO_ARM)
+        return true;
     if (extensions.device.VK_EXT_shader_float8 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT8_FEATURES_EXT)
         return true;
     if (extensions.device.VK_NV_ray_tracing_validation and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_VALIDATION_FEATURES_NV)
@@ -35109,6 +38323,14 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_EXT_device_generated_commands and item.* == .VK_STRUCTURE_TYPE_GENERATED_COMMANDS_SHADER_INFO_EXT)
         return true;
+    if (extensions.device.VK_KHR_device_fault and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_FEATURES_KHR)
+        return true;
+    if (extensions.device.VK_KHR_device_fault and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FAULT_PROPERTIES_KHR)
+        return true;
+    if (extensions.device.VK_KHR_device_fault and item.* == .VK_STRUCTURE_TYPE_DEVICE_FAULT_INFO_KHR)
+        return true;
+    if (extensions.device.VK_KHR_device_fault and item.* == .VK_STRUCTURE_TYPE_DEVICE_FAULT_DEBUG_INFO_KHR)
+        return true;
     if (extensions.device.VK_KHR_maintenance8 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_8_FEATURES_KHR)
         return true;
     if (extensions.device.VK_KHR_maintenance8 and item.* == .VK_STRUCTURE_TYPE_MEMORY_BARRIER_ACCESS_FLAGS_3_KHR)
@@ -35120,6 +38342,12 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
     if (extensions.device.VK_MESA_image_alignment_control and item.* == .VK_STRUCTURE_TYPE_IMAGE_ALIGNMENT_CONTROL_CREATE_INFO_MESA)
         return true;
     if (extensions.device.VK_KHR_shader_fma and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FMA_FEATURES_KHR)
+        return true;
+    if (extensions.device.VK_NV_push_constant_bank and item.* == .VK_STRUCTURE_TYPE_PUSH_CONSTANT_BANK_INFO_NV)
+        return true;
+    if (extensions.device.VK_NV_push_constant_bank and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_FEATURES_NV)
+        return true;
+    if (extensions.device.VK_NV_push_constant_bank and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_CONSTANT_BANK_PROPERTIES_NV)
         return true;
     if (extensions.device.VK_EXT_ray_tracing_invocation_reorder and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_INVOCATION_REORDER_FEATURES_EXT)
         return true;
@@ -35155,6 +38383,12 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_ARM_pipeline_opacity_micromap and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_OPACITY_MICROMAP_FEATURES_ARM)
         return true;
+    if (extensions.device.VK_KHR_video_encode_feedback2 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VIDEO_ENCODE_FEEDBACK_2_FEATURES_KHR)
+        return true;
+    if (extensions.device.VK_KHR_video_encode_feedback2 and item.* == .VK_STRUCTURE_TYPE_VIDEO_ENCODE_FEEDBACK_2_CAPABILITIES_KHR)
+        return true;
+    if (extensions.device.VK_KHR_video_encode_feedback2 and item.* == .VK_STRUCTURE_TYPE_QUERY_POOL_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_CREATE_INFO_KHR)
+        return true;
     if (extensions.device.VK_EXT_external_memory_metal and item.* == .VK_STRUCTURE_TYPE_IMPORT_MEMORY_METAL_HANDLE_INFO_EXT)
         return true;
     if (extensions.device.VK_EXT_external_memory_metal and item.* == .VK_STRUCTURE_TYPE_MEMORY_METAL_HANDLE_PROPERTIES_EXT)
@@ -35171,6 +38405,14 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_ARM_performance_counters_by_region and item.* == .VK_STRUCTURE_TYPE_RENDER_PASS_PERFORMANCE_COUNTERS_BY_REGION_BEGIN_INFO_ARM)
         return true;
+    if (extensions.device.VK_ARM_shader_instrumentation and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INSTRUMENTATION_FEATURES_ARM)
+        return true;
+    if (extensions.device.VK_ARM_shader_instrumentation and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INSTRUMENTATION_PROPERTIES_ARM)
+        return true;
+    if (extensions.device.VK_ARM_shader_instrumentation and item.* == .VK_STRUCTURE_TYPE_SHADER_INSTRUMENTATION_CREATE_INFO_ARM)
+        return true;
+    if (extensions.device.VK_ARM_shader_instrumentation and item.* == .VK_STRUCTURE_TYPE_SHADER_INSTRUMENTATION_METRIC_DESCRIPTION_ARM)
+        return true;
     if (extensions.device.VK_EXT_vertex_attribute_robustness and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_ROBUSTNESS_FEATURES_EXT)
         return true;
     if (extensions.device.VK_ARM_format_pack and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FORMAT_PACK_FEATURES_ARM)
@@ -35185,9 +38427,21 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_NV_present_metering and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRESENT_METERING_FEATURES_NV)
         return true;
+    if (extensions.device.VK_EXT_multisampled_render_to_swapchain and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SWAPCHAIN_FEATURES_EXT)
+        return true;
+    if (extensions.device.VK_EXT_multisampled_render_to_swapchain and item.* == .VK_STRUCTURE_TYPE_SWAPCHAIN_FLAGS_SURFACE_CAPABILITIES_EXT)
+        return true;
     if (extensions.device.VK_KHR_maintenance10 and item.* == .VK_STRUCTURE_TYPE_RENDERING_END_INFO_KHR)
         return true;
     if (extensions.device.VK_EXT_zero_initialize_device_memory and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ZERO_INITIALIZE_DEVICE_MEMORY_FEATURES_EXT)
+        return true;
+    if (extensions.device.VK_KHR_opacity_micromap and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_FEATURES_KHR)
+        return true;
+    if (extensions.device.VK_KHR_opacity_micromap and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_OPACITY_MICROMAP_PROPERTIES_KHR)
+        return true;
+    if (extensions.device.VK_KHR_opacity_micromap and item.* == .VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_MICROMAP_DATA_KHR)
+        return true;
+    if (extensions.device.VK_KHR_opacity_micromap and item.* == .VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_TRIANGLES_OPACITY_MICROMAP_KHR)
         return true;
     if (extensions.device.VK_EXT_shader_64bit_indexing and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_64_BIT_INDEXING_FEATURES_EXT)
         return true;
@@ -35209,6 +38463,28 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_KHR_maintenance10 and item.* == .VK_STRUCTURE_TYPE_RESOLVE_IMAGE_MODE_INFO_KHR)
         return true;
+    if (extensions.device.VK_ARM_data_graph_optical_flow and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_OPTICAL_FLOW_FEATURES_ARM)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_optical_flow and item.* == .VK_STRUCTURE_TYPE_QUEUE_FAMILY_DATA_GRAPH_OPTICAL_FLOW_PROPERTIES_ARM)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_optical_flow and item.* == .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_OPTICAL_FLOW_CREATE_INFO_ARM)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_optical_flow and item.* == .VK_STRUCTURE_TYPE_DATA_GRAPH_OPTICAL_FLOW_IMAGE_FORMAT_INFO_ARM)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_optical_flow and item.* == .VK_STRUCTURE_TYPE_DATA_GRAPH_OPTICAL_FLOW_IMAGE_FORMAT_PROPERTIES_ARM)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_optical_flow and item.* == .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_OPTICAL_FLOW_DISPATCH_INFO_ARM)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_optical_flow and item.* == .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_RESOURCE_INFO_IMAGE_LAYOUT_ARM)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_optical_flow and item.* == .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SINGLE_NODE_CREATE_INFO_ARM)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_optical_flow and item.* == .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SINGLE_NODE_CONNECTION_ARM)
+        return true;
+    if (extensions.device.VK_EXT_shader_long_vector and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_FEATURES_EXT)
+        return true;
+    if (extensions.device.VK_EXT_shader_long_vector and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_LONG_VECTOR_PROPERTIES_EXT)
+        return true;
     if (extensions.device.VK_SEC_pipeline_cache_incremental_mode and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CACHE_INCREMENTAL_MODE_FEATURES_SEC)
         return true;
     if (extensions.device.VK_EXT_shader_uniform_buffer_unsized_array and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_UNIFORM_BUFFER_UNSIZED_ARRAY_FEATURES_EXT)
@@ -35217,7 +38493,47 @@ pub fn validate_VkStructureType(extensions: *const Extensions, item: *const vk.V
         return true;
     if (extensions.device.VK_NV_compute_occupancy_priority and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_OCCUPANCY_PRIORITY_FEATURES_NV)
         return true;
+    if (extensions.device.VK_KHR_maintenance11 and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_11_FEATURES_KHR)
+        return true;
+    if (extensions.device.VK_KHR_maintenance11 and item.* == .VK_STRUCTURE_TYPE_QUEUE_FAMILY_OPTIMAL_IMAGE_TRANSFER_GRANULARITY_PROPERTIES_KHR)
+        return true;
+    if (extensions.device.VK_EXT_shader_subgroup_partitioned and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_SUBGROUP_PARTITIONED_FEATURES_EXT)
+        return true;
+    if (extensions.instance.VK_SEC_ubm_surface and item.* == .VK_STRUCTURE_TYPE_UBM_SURFACE_CREATE_INFO_SEC)
+        return true;
+    if (extensions.device.VK_KHR_extended_flags and item.* == .VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_4_KHR)
+        return true;
+    if (extensions.device.VK_KHR_extended_flags and item.* == .VK_STRUCTURE_TYPE_IMAGE_CREATE_FLAGS_2_CREATE_INFO_KHR)
+        return true;
+    if (extensions.device.VK_KHR_extended_flags and item.* == .VK_STRUCTURE_TYPE_IMAGE_USAGE_FLAGS_2_CREATE_INFO_KHR)
+        return true;
+    if (extensions.device.VK_KHR_extended_flags and item.* == .VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_2_CREATE_INFO_KHR)
+        return true;
+    if (extensions.device.VK_KHR_extended_flags and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_FLAGS_FEATURES_KHR)
+        return true;
+    if (extensions.device.VK_KHR_extended_flags and item.* == .VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_2_CREATE_INFO_KHR)
+        return true;
+    if (extensions.device.VK_KHR_extended_flags and item.* == .VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_2_KHR)
+        return true;
+    if (extensions.device.VK_EXT_shader_ocp_microscaling_types and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_OCP_MICROSCALING_TYPES_FEATURES_EXT)
+        return true;
+    if (extensions.device.VK_VALVE_shader_mixed_float_dot_product and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_MIXED_FLOAT_DOT_PRODUCT_FEATURES_VALVE)
+        return true;
+    if (extensions.device.VK_SEC_throttle_hint and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_THROTTLE_HINT_FEATURES_SEC)
+        return true;
+    if (extensions.device.VK_SEC_throttle_hint and item.* == .VK_STRUCTURE_TYPE_THROTTLE_HINT_SUBMIT_INFO_SEC)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_neural_accelerator_statistics and item.* == .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_NEURAL_STATISTICS_CREATE_INFO_ARM)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_neural_accelerator_statistics and item.* == .VK_STRUCTURE_TYPE_DATA_GRAPH_PIPELINE_SESSION_NEURAL_STATISTICS_CREATE_INFO_ARM)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_neural_accelerator_statistics and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DATA_GRAPH_NEURAL_ACCELERATOR_STATISTICS_FEATURES_ARM)
+        return true;
+    if (extensions.device.VK_EXT_primitive_restart_index and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_RESTART_INDEX_FEATURES_EXT)
+        return true;
     if (extensions.instance.VK_OHOS_surface and item.* == .VK_STRUCTURE_TYPE_SURFACE_CREATE_INFO_OHOS)
+        return true;
+    if (extensions.device.VK_NV_cooperative_matrix_decode_vector and item.* == .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_DECODE_VECTOR_FEATURES_NV)
         return true;
     return true;
 }
@@ -35442,7 +38758,7 @@ pub fn validate_VkDescriptorUpdateTemplateType(extensions: *const Extensions, it
 
 pub fn validate_VkObjectType(extensions: *const Extensions, item: *const vk.VkObjectType) bool {
     const min = 0;
-    const max = 1000572001;
+    const max = 1000607000;
     const v: i32 = @intFromEnum(item.*);
     if (v < min or max < v)
         return false;
@@ -35467,6 +38783,8 @@ pub fn validate_VkObjectType(extensions: *const Extensions, item: *const vk.VkOb
     if (extensions.device.VK_KHR_descriptor_update_template and item.* == .VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE)
         return true;
     if (extensions.instance.VK_EXT_debug_utils and item.* == .VK_OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT)
+        return true;
+    if (extensions.device.VK_AMD_gpa_interface and item.* == .VK_OBJECT_TYPE_GPA_SESSION_AMD)
         return true;
     if (extensions.device.VK_KHR_acceleration_structure and item.* == .VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_KHR)
         return true;
@@ -35511,6 +38829,8 @@ pub fn validate_VkObjectType(extensions: *const Extensions, item: *const vk.VkOb
     if (extensions.device.VK_EXT_device_generated_commands and item.* == .VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_EXT)
         return true;
     if (extensions.device.VK_EXT_device_generated_commands and item.* == .VK_OBJECT_TYPE_INDIRECT_EXECUTION_SET_EXT)
+        return true;
+    if (extensions.device.VK_ARM_shader_instrumentation and item.* == .VK_OBJECT_TYPE_SHADER_INSTRUMENTATION_ARM)
         return true;
     return true;
 }
@@ -35799,6 +39119,8 @@ pub fn validate_VkIndirectCommandsTokenTypeNV(extensions: *const Extensions, ite
     const v: i32 = @intFromEnum(item.*);
     if (v < min or max < v)
         return false;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_DATA_NV)
+        return true;
     if (extensions.device.VK_EXT_mesh_shader and item.* == .VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV)
         return true;
     if (extensions.device.VK_NV_device_generated_commands_compute and item.* == .VK_INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NV)
@@ -36025,7 +39347,7 @@ pub fn validate_VkConservativeRasterizationModeEXT(extensions: *const Extensions
 
 pub fn validate_VkVendorId(extensions: *const Extensions, item: *const vk.VkVendorId) bool {
     const min = 65536;
-    const max = 65543;
+    const max = 65544;
     const v: i32 = @intFromEnum(item.*);
     if (v < min or max < v)
         return false;
@@ -36035,7 +39357,7 @@ pub fn validate_VkVendorId(extensions: *const Extensions, item: *const vk.VkVend
 
 pub fn validate_VkDriverId(extensions: *const Extensions, item: *const vk.VkDriverId) bool {
     const min = 1;
-    const max = 28;
+    const max = 30;
     const v: i32 = @intFromEnum(item.*);
     if (v < min or max < v)
         return false;
@@ -36115,7 +39437,7 @@ pub fn validate_VkBuildAccelerationStructureModeKHR(extensions: *const Extension
 
 pub fn validate_VkAccelerationStructureTypeKHR(extensions: *const Extensions, item: *const vk.VkAccelerationStructureTypeKHR) bool {
     const min = 0;
-    const max = 2;
+    const max = 1000623000;
     const v: i32 = @intFromEnum(item.*);
     if (v < min or max < v)
         return false;
@@ -36123,12 +39445,14 @@ pub fn validate_VkAccelerationStructureTypeKHR(extensions: *const Extensions, it
         return true;
     if (extensions.device.VK_NV_ray_tracing and item.* == .VK_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR)
         return true;
+    if (extensions.device.VK_KHR_opacity_micromap and item.* == .VK_ACCELERATION_STRUCTURE_TYPE_OPACITY_MICROMAP_KHR)
+        return true;
     return true;
 }
 
 pub fn validate_VkGeometryTypeKHR(extensions: *const Extensions, item: *const vk.VkGeometryTypeKHR) bool {
     const min = 0;
-    const max = 1000478000;
+    const max = 1000623000;
     const v: i32 = @intFromEnum(item.*);
     if (v < min or max < v)
         return false;
@@ -36141,6 +39465,8 @@ pub fn validate_VkGeometryTypeKHR(extensions: *const Extensions, item: *const vk
     if (extensions.device.VK_NV_ray_tracing_linear_swept_spheres and item.* == .VK_GEOMETRY_TYPE_LINEAR_SWEPT_SPHERES_NV)
         return true;
     if (extensions.device.VK_AMDX_dense_geometry_format and item.* == .VK_GEOMETRY_TYPE_DENSE_GEOMETRY_FORMAT_TRIANGLES_AMDX)
+        return true;
+    if (extensions.device.VK_KHR_opacity_micromap and item.* == .VK_GEOMETRY_TYPE_MICROMAP_KHR)
         return true;
     return true;
 }
@@ -36618,17 +39944,20 @@ pub fn validate_VkBuildMicromapModeEXT(extensions: *const Extensions, item: *con
     return true;
 }
 
-pub fn validate_VkOpacityMicromapFormatEXT(extensions: *const Extensions, item: *const vk.VkOpacityMicromapFormatEXT) bool {
+pub fn validate_VkOpacityMicromapFormatKHR(extensions: *const Extensions, item: *const vk.VkOpacityMicromapFormatKHR) bool {
     const min = 1;
     const max = 2;
     const v: i32 = @intFromEnum(item.*);
     if (v < min or max < v)
         return false;
-    _ = extensions;
+    if (extensions.device.VK_EXT_opacity_micromap and item.* == .VK_OPACITY_MICROMAP_FORMAT_2_STATE_KHR)
+        return true;
+    if (extensions.device.VK_EXT_opacity_micromap and item.* == .VK_OPACITY_MICROMAP_FORMAT_4_STATE_KHR)
+        return true;
     return true;
 }
 
-pub fn validate_VkOpacityMicromapSpecialIndexEXT(extensions: *const Extensions, item: *const vk.VkOpacityMicromapSpecialIndexEXT) bool {
+pub fn validate_VkOpacityMicromapSpecialIndexKHR(extensions: *const Extensions, item: *const vk.VkOpacityMicromapSpecialIndexKHR) bool {
     const min = -5;
     const max = -1;
     const v: i32 = @intFromEnum(item.*);
@@ -36636,6 +39965,24 @@ pub fn validate_VkOpacityMicromapSpecialIndexEXT(extensions: *const Extensions, 
         return false;
     if (extensions.device.VK_NV_cluster_acceleration_structure and item.* == .VK_OPACITY_MICROMAP_SPECIAL_INDEX_CLUSTER_GEOMETRY_DISABLE_OPACITY_MICROMAP_NV)
         return true;
+    if (extensions.device.VK_EXT_opacity_micromap and item.* == .VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_OPAQUE_KHR)
+        return true;
+    if (extensions.device.VK_EXT_opacity_micromap and item.* == .VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_UNKNOWN_TRANSPARENT_KHR)
+        return true;
+    if (extensions.device.VK_EXT_opacity_micromap and item.* == .VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_OPAQUE_KHR)
+        return true;
+    if (extensions.device.VK_EXT_opacity_micromap and item.* == .VK_OPACITY_MICROMAP_SPECIAL_INDEX_FULLY_TRANSPARENT_KHR)
+        return true;
+    return true;
+}
+
+pub fn validate_VkAccelerationStructureSerializedBlockTypeKHR(extensions: *const Extensions, item: *const vk.VkAccelerationStructureSerializedBlockTypeKHR) bool {
+    const min = 0;
+    const max = 0;
+    const v: i32 = @intFromEnum(item.*);
+    if (v < min or max < v)
+        return false;
+    _ = extensions;
     return true;
 }
 
@@ -36649,17 +39996,30 @@ pub fn validate_VkDepthBiasRepresentationEXT(extensions: *const Extensions, item
     return true;
 }
 
-pub fn validate_VkDeviceFaultAddressTypeEXT(extensions: *const Extensions, item: *const vk.VkDeviceFaultAddressTypeEXT) bool {
+pub fn validate_VkDeviceFaultAddressTypeKHR(extensions: *const Extensions, item: *const vk.VkDeviceFaultAddressTypeKHR) bool {
     const min = 0;
     const max = 6;
     const v: i32 = @intFromEnum(item.*);
     if (v < min or max < v)
         return false;
-    _ = extensions;
+    if (extensions.device.VK_EXT_device_fault and item.* == .VK_DEVICE_FAULT_ADDRESS_TYPE_NONE_KHR)
+        return true;
+    if (extensions.device.VK_EXT_device_fault and item.* == .VK_DEVICE_FAULT_ADDRESS_TYPE_READ_INVALID_KHR)
+        return true;
+    if (extensions.device.VK_EXT_device_fault and item.* == .VK_DEVICE_FAULT_ADDRESS_TYPE_WRITE_INVALID_KHR)
+        return true;
+    if (extensions.device.VK_EXT_device_fault and item.* == .VK_DEVICE_FAULT_ADDRESS_TYPE_EXECUTE_INVALID_KHR)
+        return true;
+    if (extensions.device.VK_EXT_device_fault and item.* == .VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_UNKNOWN_KHR)
+        return true;
+    if (extensions.device.VK_EXT_device_fault and item.* == .VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_INVALID_KHR)
+        return true;
+    if (extensions.device.VK_EXT_device_fault and item.* == .VK_DEVICE_FAULT_ADDRESS_TYPE_INSTRUCTION_POINTER_FAULT_KHR)
+        return true;
     return true;
 }
 
-pub fn validate_VkDeviceFaultVendorBinaryHeaderVersionEXT(extensions: *const Extensions, item: *const vk.VkDeviceFaultVendorBinaryHeaderVersionEXT) bool {
+pub fn validate_VkDeviceFaultVendorBinaryHeaderVersionKHR(extensions: *const Extensions, item: *const vk.VkDeviceFaultVendorBinaryHeaderVersionKHR) bool {
     const min = 1;
     const max = 1;
     const v: i32 = @intFromEnum(item.*);
@@ -36685,6 +40045,10 @@ pub fn validate_VkIndirectCommandsTokenTypeEXT(extensions: *const Extensions, it
     const v: i32 = @intFromEnum(item.*);
     if (v < min or max < v)
         return false;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_DATA_EXT)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_DATA_SEQUENCE_INDEX_EXT)
+        return true;
     if (extensions.device.VK_NV_mesh_shader and item.* == .VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_NV_EXT)
         return true;
     if (extensions.device.VK_NV_mesh_shader and item.* == .VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_MESH_TASKS_COUNT_NV_EXT)
@@ -36737,7 +40101,7 @@ pub fn validate_VkScopeKHR(extensions: *const Extensions, item: *const vk.VkScop
 
 pub fn validate_VkComponentTypeKHR(extensions: *const Extensions, item: *const vk.VkComponentTypeKHR) bool {
     const min = 0;
-    const max = 1000491003;
+    const max = 1000672004;
     const v: i32 = @intFromEnum(item.*);
     if (v < min or max < v)
         return false;
@@ -36772,6 +40136,16 @@ pub fn validate_VkComponentTypeKHR(extensions: *const Extensions, item: *const v
     if (extensions.device.VK_EXT_shader_float8 and item.* == .VK_COMPONENT_TYPE_FLOAT8_E4M3_EXT)
         return true;
     if (extensions.device.VK_EXT_shader_float8 and item.* == .VK_COMPONENT_TYPE_FLOAT8_E5M2_EXT)
+        return true;
+    if (extensions.device.VK_EXT_shader_ocp_microscaling_types and item.* == .VK_COMPONENT_TYPE_FLOAT6_E2M3_EXT)
+        return true;
+    if (extensions.device.VK_EXT_shader_ocp_microscaling_types and item.* == .VK_COMPONENT_TYPE_FLOAT6_E3M2_EXT)
+        return true;
+    if (extensions.device.VK_EXT_shader_ocp_microscaling_types and item.* == .VK_COMPONENT_TYPE_FLOAT4_E2M1_EXT)
+        return true;
+    if (extensions.device.VK_EXT_shader_ocp_microscaling_types and item.* == .VK_COMPONENT_TYPE_FLOAT8_UNSIGNED_E8M0_EXT)
+        return true;
+    if (extensions.device.VK_EXT_shader_ocp_microscaling_types and item.* == .VK_COMPONENT_TYPE_MXINT8_EXT)
         return true;
     return true;
 }
@@ -36868,11 +40242,20 @@ pub fn validate_VkCooperativeVectorMatrixLayoutNV(extensions: *const Extensions,
 
 pub fn validate_VkTensorTilingARM(extensions: *const Extensions, item: *const vk.VkTensorTilingARM) bool {
     const min = 0;
-    const max = 1;
+    const max = 1000565004;
     const v: i32 = @intFromEnum(item.*);
     if (v < min or max < v)
         return false;
-    _ = extensions;
+    if (extensions.device.VK_ARM_tensor_controls and item.* == .VK_TENSOR_TILING_BRICK_16_WIDE_ARM)
+        return true;
+    if (extensions.device.VK_ARM_tensor_controls and item.* == .VK_TENSOR_TILING_BRICK_8_WIDE_ARM)
+        return true;
+    if (extensions.device.VK_ARM_tensor_controls and item.* == .VK_TENSOR_TILING_BRICK_4_WIDE_ARM)
+        return true;
+    if (extensions.device.VK_ARM_tensor_controls and item.* == .VK_TENSOR_TILING_BLOCK_U_INTERLEAVED_ARM)
+        return true;
+    if (extensions.device.VK_ARM_tensor_controls and item.* == .VK_TENSOR_TILING_BLOCK_U_INTERLEAVED_64K_ARM)
+        return true;
     return true;
 }
 
@@ -36888,11 +40271,14 @@ pub fn validate_VkDefaultVertexAttributeValueKHR(extensions: *const Extensions, 
 
 pub fn validate_VkDataGraphPipelineSessionBindPointARM(extensions: *const Extensions, item: *const vk.VkDataGraphPipelineSessionBindPointARM) bool {
     const min = 0;
-    const max = 0;
+    const max = 1000676000;
     const v: i32 = @intFromEnum(item.*);
     if (v < min or max < v)
         return false;
-    _ = extensions;
+    if (extensions.device.VK_ARM_data_graph_optical_flow and item.* == .VK_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_OPTICAL_FLOW_CACHE_ARM)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_neural_accelerator_statistics and item.* == .VK_DATA_GRAPH_PIPELINE_SESSION_BIND_POINT_NEURAL_ACCELERATOR_STATISTICS_ARM)
+        return true;
     return true;
 }
 
@@ -36908,11 +40294,14 @@ pub fn validate_VkDataGraphPipelineSessionBindPointTypeARM(extensions: *const Ex
 
 pub fn validate_VkDataGraphPipelinePropertyARM(extensions: *const Extensions, item: *const vk.VkDataGraphPipelinePropertyARM) bool {
     const min = 0;
-    const max = 1;
+    const max = 1000676001;
     const v: i32 = @intFromEnum(item.*);
     if (v < min or max < v)
         return false;
-    _ = extensions;
+    if (extensions.device.VK_ARM_data_graph_neural_accelerator_statistics and item.* == .VK_DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_DEBUG_DATABASE_ARM)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_neural_accelerator_statistics and item.* == .VK_DATA_GRAPH_PIPELINE_PROPERTY_NEURAL_ACCELERATOR_STATISTICS_INFO_ARM)
+        return true;
     return true;
 }
 
@@ -36931,7 +40320,7 @@ pub fn validate_VkPhysicalDeviceDataGraphProcessingEngineTypeARM(extensions: *co
 
 pub fn validate_VkPhysicalDeviceDataGraphOperationTypeARM(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceDataGraphOperationTypeARM) bool {
     const min = 0;
-    const max = 1000629001;
+    const max = 1000631000;
     const v: i32 = @intFromEnum(item.*);
     if (v < min or max < v)
         return false;
@@ -36939,12 +40328,139 @@ pub fn validate_VkPhysicalDeviceDataGraphOperationTypeARM(extensions: *const Ext
         return true;
     if (extensions.device.VK_QCOM_data_graph_model and item.* == .VK_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_BUILTIN_MODEL_QCOM)
         return true;
+    if (extensions.device.VK_ARM_data_graph_optical_flow and item.* == .VK_PHYSICAL_DEVICE_DATA_GRAPH_OPERATION_TYPE_OPTICAL_FLOW_ARM)
+        return true;
     return true;
 }
 
 pub fn validate_VkDataGraphModelCacheTypeQCOM(extensions: *const Extensions, item: *const vk.VkDataGraphModelCacheTypeQCOM) bool {
     const min = 0;
     const max = 0;
+    const v: i32 = @intFromEnum(item.*);
+    if (v < min or max < v)
+        return false;
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkPerfHintTypeQCOM(extensions: *const Extensions, item: *const vk.VkPerfHintTypeQCOM) bool {
+    const min = 0;
+    const max = 3;
+    const v: i32 = @intFromEnum(item.*);
+    if (v < min or max < v)
+        return false;
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkThrottleHintTypeSEC(extensions: *const Extensions, item: *const vk.VkThrottleHintTypeSEC) bool {
+    const min = 0;
+    const max = 2;
+    const v: i32 = @intFromEnum(item.*);
+    if (v < min or max < v)
+        return false;
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkDescriptorMappingSourceEXT(extensions: *const Extensions, item: *const vk.VkDescriptorMappingSourceEXT) bool {
+    const min = 0;
+    const max = 10;
+    const v: i32 = @intFromEnum(item.*);
+    if (v < min or max < v)
+        return false;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_DESCRIPTOR_MAPPING_SOURCE_HEAP_WITH_SHADER_RECORD_INDEX_EXT)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_DATA_EXT)
+        return true;
+    if (extensions.device.VK_EXT_descriptor_heap and item.* == .VK_DESCRIPTOR_MAPPING_SOURCE_SHADER_RECORD_ADDRESS_EXT)
+        return true;
+    return true;
+}
+
+pub fn validate_VkGpaPerfBlockAMD(extensions: *const Extensions, item: *const vk.VkGpaPerfBlockAMD) bool {
+    const min = 0;
+    const max = 56;
+    const v: i32 = @intFromEnum(item.*);
+    if (v < min or max < v)
+        return false;
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkGpaSampleTypeAMD(extensions: *const Extensions, item: *const vk.VkGpaSampleTypeAMD) bool {
+    const min = 0;
+    const max = 2;
+    const v: i32 = @intFromEnum(item.*);
+    if (v < min or max < v)
+        return false;
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkGpaDeviceClockModeAMD(extensions: *const Extensions, item: *const vk.VkGpaDeviceClockModeAMD) bool {
+    const min = 0;
+    const max = 5;
+    const v: i32 = @intFromEnum(item.*);
+    if (v < min or max < v)
+        return false;
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkDataGraphTOSALevelARM(extensions: *const Extensions, item: *const vk.VkDataGraphTOSALevelARM) bool {
+    const min = 0;
+    const max = 1;
+    const v: i32 = @intFromEnum(item.*);
+    if (v < min or max < v)
+        return false;
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkDataGraphOpticalFlowPerformanceLevelARM(extensions: *const Extensions, item: *const vk.VkDataGraphOpticalFlowPerformanceLevelARM) bool {
+    const min = 0;
+    const max = 3;
+    const v: i32 = @intFromEnum(item.*);
+    if (v < min or max < v)
+        return false;
+    _ = extensions;
+    return true;
+}
+
+pub fn validate_VkDataGraphPipelineNodeConnectionTypeARM(extensions: *const Extensions, item: *const vk.VkDataGraphPipelineNodeConnectionTypeARM) bool {
+    const min = 1000631000;
+    const max = 1000631004;
+    const v: i32 = @intFromEnum(item.*);
+    if (v < min or max < v)
+        return false;
+    if (extensions.device.VK_ARM_data_graph_optical_flow and item.* == .VK_DATA_GRAPH_PIPELINE_NODE_CONNECTION_TYPE_OPTICAL_FLOW_INPUT_ARM)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_optical_flow and item.* == .VK_DATA_GRAPH_PIPELINE_NODE_CONNECTION_TYPE_OPTICAL_FLOW_REFERENCE_ARM)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_optical_flow and item.* == .VK_DATA_GRAPH_PIPELINE_NODE_CONNECTION_TYPE_OPTICAL_FLOW_HINT_ARM)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_optical_flow and item.* == .VK_DATA_GRAPH_PIPELINE_NODE_CONNECTION_TYPE_OPTICAL_FLOW_FLOW_VECTOR_ARM)
+        return true;
+    if (extensions.device.VK_ARM_data_graph_optical_flow and item.* == .VK_DATA_GRAPH_PIPELINE_NODE_CONNECTION_TYPE_OPTICAL_FLOW_COST_ARM)
+        return true;
+    return true;
+}
+
+pub fn validate_VkDataGraphPipelineNodeTypeARM(extensions: *const Extensions, item: *const vk.VkDataGraphPipelineNodeTypeARM) bool {
+    const min = 1000631000;
+    const max = 1000631000;
+    const v: i32 = @intFromEnum(item.*);
+    if (v < min or max < v)
+        return false;
+    if (extensions.device.VK_ARM_data_graph_optical_flow and item.* == .VK_DATA_GRAPH_PIPELINE_NODE_TYPE_OPTICAL_FLOW_ARM)
+        return true;
+    return true;
+}
+
+pub fn validate_VkNeuralAcceleratorStatisticsModeARM(extensions: *const Extensions, item: *const vk.VkNeuralAcceleratorStatisticsModeARM) bool {
+    const min = 0;
+    const max = 2;
     const v: i32 = @intFromEnum(item.*);
     if (v < min or max < v)
         return false;
@@ -36991,7 +40507,8 @@ pub fn validate_VkSamplerCreateFlags(extensions: *const Extensions, item: *const
 
 pub fn validate_VkPipelineLayoutCreateFlags(extensions: *const Extensions, item: *const vk.VkPipelineLayoutCreateFlags) bool {
     const valid_value: vk.VkPipelineLayoutCreateFlags = .{
-        .VK_PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT = extensions.device.VK_EXT_graphics_pipeline_library    };
+        .VK_PIPELINE_LAYOUT_CREATE_INDEPENDENT_SETS_BIT_EXT = extensions.device.VK_EXT_graphics_pipeline_library or extensions.device.VK_KHR_maintenance11,
+        .VK_PIPELINE_LAYOUT_CREATE_NO_TASK_SHADER_BIT_KHR = extensions.device.VK_KHR_maintenance11    };
     const valid_bits: u32 = @bitCast(valid_value);
     const current_bits: u32 = @bitCast(item.*);
     return (current_bits & ~valid_bits) == 0;
@@ -37139,8 +40656,8 @@ pub fn validate_VkDeviceCreateFlags(extensions: *const Extensions, item: *const 
 
 pub fn validate_VkDeviceQueueCreateFlags(extensions: *const Extensions, item: *const vk.VkDeviceQueueCreateFlags) bool {
     const valid_value: vk.VkDeviceQueueCreateFlags = .{
-        .VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT = true    };
-    _ = extensions;
+        .VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT = true,
+        .VK_DEVICE_QUEUE_CREATE_INTERNALLY_SYNCHRONIZED_BIT_KHR = extensions.device.VK_KHR_internally_synchronized_queues    };
     const valid_bits: u32 = @bitCast(valid_value);
     const current_bits: u32 = @bitCast(item.*);
     return (current_bits & ~valid_bits) == 0;
@@ -37252,7 +40769,8 @@ pub fn validate_VkBufferUsageFlags(extensions: *const Extensions, item: *const v
         .VK_BUFFER_USAGE_MICROMAP_STORAGE_BIT_EXT = extensions.device.VK_EXT_opacity_micromap,
         .VK_BUFFER_USAGE_EXECUTION_GRAPH_SCRATCH_BIT_AMDX = extensions.device.VK_AMDX_shader_enqueue,
         .VK_BUFFER_USAGE_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT = extensions.device.VK_EXT_descriptor_buffer,
-        .VK_BUFFER_USAGE_TILE_MEMORY_BIT_QCOM = extensions.device.VK_QCOM_tile_memory_heap    };
+        .VK_BUFFER_USAGE_TILE_MEMORY_BIT_QCOM = extensions.device.VK_QCOM_tile_memory_heap,
+        .VK_BUFFER_USAGE_DESCRIPTOR_HEAP_BIT_EXT = extensions.device.VK_EXT_descriptor_heap    };
     const valid_bits: u32 = @bitCast(valid_value);
     const current_bits: u32 = @bitCast(item.*);
     return (current_bits & ~valid_bits) == 0;
@@ -37334,21 +40852,22 @@ pub fn validate_VkImageCreateFlags(extensions: *const Extensions, item: *const v
         .VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = true,
         .VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = true,
         .VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = true,
-        .VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT = true or extensions.device.VK_KHR_maintenance1,
-        .VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT = extensions.device.VK_KHR_device_group or true,
+        .VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT = extensions.device.VK_KHR_maintenance1 or true,
+        .VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT = true or extensions.device.VK_KHR_device_group,
         .VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT = true or extensions.device.VK_KHR_maintenance2,
-        .VK_IMAGE_CREATE_EXTENDED_USAGE_BIT = extensions.device.VK_KHR_maintenance2 or true,
-        .VK_IMAGE_CREATE_DISJOINT_BIT = extensions.device.VK_KHR_sampler_ycbcr_conversion or true,
+        .VK_IMAGE_CREATE_EXTENDED_USAGE_BIT = true or extensions.device.VK_KHR_maintenance2,
+        .VK_IMAGE_CREATE_DISJOINT_BIT = true or extensions.device.VK_KHR_sampler_ycbcr_conversion,
         .VK_IMAGE_CREATE_ALIAS_BIT = true or extensions.device.VK_KHR_bind_memory2,
         .VK_IMAGE_CREATE_PROTECTED_BIT = true,
         .VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT = extensions.device.VK_EXT_sample_locations,
         .VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV = extensions.device.VK_NV_corner_sampled_image,
         .VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT = extensions.device.VK_EXT_fragment_density_map,
         .VK_IMAGE_CREATE_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT = extensions.device.VK_EXT_fragment_density_map_offset,
-        .VK_IMAGE_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = extensions.device.VK_EXT_descriptor_buffer,
+        .VK_IMAGE_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_EXT = extensions.device.VK_EXT_descriptor_heap or extensions.device.VK_EXT_descriptor_buffer,
         .VK_IMAGE_CREATE_2D_VIEW_COMPATIBLE_BIT_EXT = extensions.device.VK_EXT_image_2d_view_of_3d,
         .VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT = extensions.device.VK_EXT_multisampled_render_to_single_sampled,
-        .VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR = extensions.device.VK_KHR_video_maintenance1    };
+        .VK_IMAGE_CREATE_VIDEO_PROFILE_INDEPENDENT_BIT_KHR = extensions.device.VK_KHR_video_maintenance1,
+        .VK_IMAGE_CREATE_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR = extensions.device.VK_KHR_maintenance11    };
     const valid_bits: u32 = @bitCast(valid_value);
     const current_bits: u32 = @bitCast(item.*);
     return (current_bits & ~valid_bits) == 0;
@@ -37390,7 +40909,7 @@ pub fn validate_VkPipelineCreateFlags(extensions: *const Extensions, item: *cons
         .VK_PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = extensions.device.VK_KHR_fragment_shading_rate or extensions.device.VK_KHR_fragment_shading_rate,
         .VK_PIPELINE_CREATE_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT = extensions.device.VK_EXT_fragment_density_map or extensions.device.VK_EXT_fragment_density_map,
         .VK_PIPELINE_CREATE_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT = extensions.device.VK_EXT_graphics_pipeline_library,
-        .VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT = extensions.device.VK_EXT_opacity_micromap,
+        .VK_PIPELINE_CREATE_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR = extensions.device.VK_KHR_opacity_micromap,
         .VK_PIPELINE_CREATE_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = extensions.device.VK_EXT_attachment_feedback_loop_layout,
         .VK_PIPELINE_CREATE_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = extensions.device.VK_EXT_attachment_feedback_loop_layout,
         .VK_PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT = true or extensions.device.VK_EXT_pipeline_protected_access,
@@ -37761,7 +41280,7 @@ pub fn validate_VkSubgroupFeatureFlags(extensions: *const Extensions, item: *con
         .VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT = true,
         .VK_SUBGROUP_FEATURE_CLUSTERED_BIT = true,
         .VK_SUBGROUP_FEATURE_QUAD_BIT = true,
-        .VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV = extensions.device.VK_NV_shader_subgroup_partitioned,
+        .VK_SUBGROUP_FEATURE_PARTITIONED_BIT_EXT = extensions.device.VK_EXT_shader_subgroup_partitioned,
         .VK_SUBGROUP_FEATURE_ROTATE_BIT = true or extensions.device.VK_KHR_shader_subgroup_rotate,
         .VK_SUBGROUP_FEATURE_ROTATE_CLUSTERED_BIT = true or extensions.device.VK_KHR_shader_subgroup_rotate    };
     const valid_bits: u32 = @bitCast(valid_value);
@@ -37804,8 +41323,8 @@ pub fn validate_VkGeometryInstanceFlagsKHR(extensions: *const Extensions, item: 
         .VK_GEOMETRY_INSTANCE_TRIANGLE_FLIP_FACING_BIT_KHR = true,
         .VK_GEOMETRY_INSTANCE_FORCE_OPAQUE_BIT_KHR = true or extensions.device.VK_NV_ray_tracing,
         .VK_GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_KHR = true or extensions.device.VK_NV_ray_tracing,
-        .VK_GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_EXT = extensions.device.VK_EXT_opacity_micromap or extensions.device.VK_EXT_opacity_micromap,
-        .VK_GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_EXT = extensions.device.VK_EXT_opacity_micromap or extensions.device.VK_EXT_opacity_micromap    };
+        .VK_GEOMETRY_INSTANCE_FORCE_OPACITY_MICROMAP_2_STATE_BIT_KHR = extensions.device.VK_KHR_opacity_micromap,
+        .VK_GEOMETRY_INSTANCE_DISABLE_OPACITY_MICROMAPS_BIT_KHR = extensions.device.VK_KHR_opacity_micromap    };
     const valid_bits: u32 = @bitCast(valid_value);
     const current_bits: u32 = @bitCast(item.*);
     return (current_bits & ~valid_bits) == 0;
@@ -37853,10 +41372,11 @@ pub fn validate_VkBuildAccelerationStructureFlagsKHR(extensions: *const Extensio
         .VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_KHR = true or extensions.device.VK_NV_ray_tracing,
         .VK_BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_KHR = true or extensions.device.VK_NV_ray_tracing,
         .VK_BUILD_ACCELERATION_STRUCTURE_MOTION_BIT_NV = extensions.device.VK_NV_ray_tracing_motion_blur,
-        .VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_EXT = extensions.device.VK_EXT_opacity_micromap or extensions.device.VK_EXT_opacity_micromap,
-        .VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_EXT = extensions.device.VK_EXT_opacity_micromap or extensions.device.VK_EXT_opacity_micromap,
+        .VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_UPDATE_BIT_KHR = extensions.device.VK_KHR_opacity_micromap,
+        .VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISABLE_OPACITY_MICROMAPS_BIT_KHR = extensions.device.VK_KHR_opacity_micromap,
         .VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_OPACITY_MICROMAP_DATA_UPDATE_BIT_EXT = extensions.device.VK_EXT_opacity_micromap or extensions.device.VK_EXT_opacity_micromap,
         .VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DISPLACEMENT_MICROMAP_UPDATE_BIT_NV = extensions.device.VK_NV_displacement_micromap or extensions.device.VK_NV_displacement_micromap,
+        .VK_BUILD_ACCELERATION_STRUCTURE_MICROMAP_LOSSY_BIT_KHR = extensions.device.VK_KHR_opacity_micromap,
         .VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_DATA_ACCESS_BIT_KHR = extensions.device.VK_KHR_ray_tracing_position_fetch or extensions.device.VK_KHR_ray_tracing_position_fetch,
         .VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_CLUSTER_OPACITY_MICROMAPS_BIT_NV = extensions.device.VK_NV_cluster_acceleration_structure    };
     const valid_bits: u32 = @bitCast(valid_value);
@@ -37970,7 +41490,7 @@ pub fn validate_VkRefreshObjectFlagsKHR(extensions: *const Extensions, item: *co
 
 pub fn validate_VkAccessFlags2(extensions: *const Extensions, item: *const vk.VkAccessFlags2) bool {
     const valid_value: vk.VkAccessFlags2 = .{
-        .VK_ACCESS_2_INDIRECT_COMMAND_READ_BIT = true or extensions.device.VK_KHR_synchronization2,
+        .VK_ACCESS_2_INDIRECT_COMMAND_READ_BIT = extensions.device.VK_KHR_synchronization2 or true,
         .VK_ACCESS_2_INDEX_READ_BIT = true or extensions.device.VK_KHR_synchronization2,
         .VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT = true or extensions.device.VK_KHR_synchronization2,
         .VK_ACCESS_2_UNIFORM_READ_BIT = true or extensions.device.VK_KHR_synchronization2,
@@ -37980,13 +41500,13 @@ pub fn validate_VkAccessFlags2(extensions: *const Extensions, item: *const vk.Vk
         .VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT = true or extensions.device.VK_KHR_synchronization2,
         .VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT = true or extensions.device.VK_KHR_synchronization2,
         .VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT = true or extensions.device.VK_KHR_synchronization2,
-        .VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = extensions.device.VK_KHR_synchronization2 or true,
-        .VK_ACCESS_2_TRANSFER_READ_BIT = extensions.device.VK_KHR_synchronization2 or true,
-        .VK_ACCESS_2_TRANSFER_WRITE_BIT = extensions.device.VK_KHR_synchronization2 or true,
-        .VK_ACCESS_2_HOST_READ_BIT = extensions.device.VK_KHR_synchronization2 or true,
+        .VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT = true or extensions.device.VK_KHR_synchronization2,
+        .VK_ACCESS_2_TRANSFER_READ_BIT = true or extensions.device.VK_KHR_synchronization2,
+        .VK_ACCESS_2_TRANSFER_WRITE_BIT = true or extensions.device.VK_KHR_synchronization2,
+        .VK_ACCESS_2_HOST_READ_BIT = true or extensions.device.VK_KHR_synchronization2,
         .VK_ACCESS_2_HOST_WRITE_BIT = extensions.device.VK_KHR_synchronization2 or true,
         .VK_ACCESS_2_MEMORY_READ_BIT = extensions.device.VK_KHR_synchronization2 or true,
-        .VK_ACCESS_2_MEMORY_WRITE_BIT = true or extensions.device.VK_KHR_synchronization2,
+        .VK_ACCESS_2_MEMORY_WRITE_BIT = extensions.device.VK_KHR_synchronization2 or true,
         .VK_ACCESS_2_COMMAND_PREPROCESS_READ_BIT_EXT = extensions.device.VK_KHR_synchronization2,
         .VK_ACCESS_2_COMMAND_PREPROCESS_WRITE_BIT_EXT = extensions.device.VK_KHR_synchronization2,
         .VK_ACCESS_2_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT = extensions.device.VK_KHR_synchronization2,
@@ -38017,7 +41537,9 @@ pub fn validate_VkAccessFlags2(extensions: *const Extensions, item: *const vk.Vk
         .VK_ACCESS_2_SHADER_TILE_ATTACHMENT_READ_BIT_QCOM = extensions.device.VK_QCOM_tile_shading,
         .VK_ACCESS_2_SHADER_TILE_ATTACHMENT_WRITE_BIT_QCOM = extensions.device.VK_QCOM_tile_shading,
         .VK_ACCESS_2_MEMORY_DECOMPRESSION_READ_BIT_EXT = extensions.device.VK_EXT_memory_decompression,
-        .VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT = extensions.device.VK_EXT_memory_decompression    };
+        .VK_ACCESS_2_MEMORY_DECOMPRESSION_WRITE_BIT_EXT = extensions.device.VK_EXT_memory_decompression,
+        .VK_ACCESS_2_SAMPLER_HEAP_READ_BIT_EXT = extensions.device.VK_EXT_descriptor_heap,
+        .VK_ACCESS_2_RESOURCE_HEAP_READ_BIT_EXT = extensions.device.VK_EXT_descriptor_heap    };
     const valid_bits: u64 = @bitCast(valid_value);
     const current_bits: u64 = @bitCast(item.*);
     return (current_bits & ~valid_bits) == 0;
@@ -38095,30 +41617,30 @@ pub fn validate_VkAccelerationStructureMotionInstanceFlagsNV(extensions: *const 
 
 pub fn validate_VkFormatFeatureFlags2(extensions: *const Extensions, item: *const vk.VkFormatFeatureFlags2) bool {
     const valid_value: vk.VkFormatFeatureFlags2 = .{
-        .VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
+        .VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
         .VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
         .VK_FORMAT_FEATURE_2_STORAGE_IMAGE_ATOMIC_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
         .VK_FORMAT_FEATURE_2_UNIFORM_TEXEL_BUFFER_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
         .VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
         .VK_FORMAT_FEATURE_2_STORAGE_TEXEL_BUFFER_ATOMIC_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
-        .VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
+        .VK_FORMAT_FEATURE_2_VERTEX_BUFFER_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
         .VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
         .VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BLEND_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
-        .VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
-        .VK_FORMAT_FEATURE_2_BLIT_SRC_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
+        .VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
+        .VK_FORMAT_FEATURE_2_BLIT_SRC_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
         .VK_FORMAT_FEATURE_2_BLIT_DST_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
         .VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
         .VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_CUBIC_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
         .VK_FORMAT_FEATURE_2_TRANSFER_SRC_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
         .VK_FORMAT_FEATURE_2_TRANSFER_DST_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
         .VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_MINMAX_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
-        .VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
-        .VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
-        .VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
+        .VK_FORMAT_FEATURE_2_MIDPOINT_CHROMA_SAMPLES_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
+        .VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
+        .VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
         .VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
         .VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
         .VK_FORMAT_FEATURE_2_DISJOINT_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
-        .VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
+        .VK_FORMAT_FEATURE_2_COSITED_CHROMA_SAMPLES_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
         .VK_FORMAT_FEATURE_2_FRAGMENT_DENSITY_MAP_BIT_EXT = extensions.device.VK_EXT_fragment_density_map,
         .VK_FORMAT_FEATURE_2_VIDEO_DECODE_OUTPUT_BIT_KHR = extensions.device.VK_KHR_video_decode_queue,
         .VK_FORMAT_FEATURE_2_VIDEO_DECODE_DPB_BIT_KHR = extensions.device.VK_KHR_video_decode_queue,
@@ -38126,9 +41648,9 @@ pub fn validate_VkFormatFeatureFlags2(extensions: *const Extensions, item: *cons
         .VK_FORMAT_FEATURE_2_VIDEO_ENCODE_DPB_BIT_KHR = extensions.device.VK_KHR_video_encode_queue,
         .VK_FORMAT_FEATURE_2_ACCELERATION_STRUCTURE_VERTEX_BUFFER_BIT_KHR = extensions.device.VK_KHR_acceleration_structure,
         .VK_FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = extensions.device.VK_KHR_fragment_shading_rate,
-        .VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
-        .VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
-        .VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
+        .VK_FORMAT_FEATURE_2_STORAGE_READ_WITHOUT_FORMAT_BIT = extensions.device.VK_KHR_format_feature_flags2 or true,
+        .VK_FORMAT_FEATURE_2_STORAGE_WRITE_WITHOUT_FORMAT_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
+        .VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_DEPTH_COMPARISON_BIT = true or extensions.device.VK_KHR_format_feature_flags2,
         .VK_FORMAT_FEATURE_2_WEIGHT_IMAGE_BIT_QCOM = extensions.device.VK_QCOM_image_processing,
         .VK_FORMAT_FEATURE_2_WEIGHT_SAMPLED_IMAGE_BIT_QCOM = extensions.device.VK_QCOM_image_processing,
         .VK_FORMAT_FEATURE_2_BLOCK_MATCHING_BIT_QCOM = extensions.device.VK_QCOM_image_processing,
@@ -38139,6 +41661,8 @@ pub fn validate_VkFormatFeatureFlags2(extensions: *const Extensions, item: *cons
         .VK_FORMAT_FEATURE_2_OPTICAL_FLOW_VECTOR_BIT_NV = extensions.device.VK_NV_optical_flow,
         .VK_FORMAT_FEATURE_2_OPTICAL_FLOW_COST_BIT_NV = extensions.device.VK_NV_optical_flow,
         .VK_FORMAT_FEATURE_2_TENSOR_IMAGE_ALIASING_BIT_ARM = extensions.device.VK_ARM_tensors,
+        .VK_FORMAT_FEATURE_2_BLOCK_MATCHING_SXD_BIT_QCOM = extensions.device.VK_QCOM_image_processing3,
+        .VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_FILTER_LINEAR_2D_BIT_IMG = extensions.device.VK_IMG_filter_linear_2d,
         .VK_FORMAT_FEATURE_2_HOST_IMAGE_TRANSFER_BIT = true or extensions.device.VK_EXT_host_image_copy,
         .VK_FORMAT_FEATURE_2_TENSOR_DATA_GRAPH_BIT_ARM = extensions.device.VK_ARM_data_graph,
         .VK_FORMAT_FEATURE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR = extensions.device.VK_KHR_video_encode_quantization_map,
@@ -38148,7 +41672,19 @@ pub fn validate_VkFormatFeatureFlags2(extensions: *const Extensions, item: *cons
         .VK_FORMAT_FEATURE_2_DEPTH_COPY_ON_TRANSFER_QUEUE_BIT_KHR = extensions.device.VK_KHR_maintenance10,
         .VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_COMPUTE_QUEUE_BIT_KHR = extensions.device.VK_KHR_maintenance10,
         .VK_FORMAT_FEATURE_2_STENCIL_COPY_ON_TRANSFER_QUEUE_BIT_KHR = extensions.device.VK_KHR_maintenance10,
+        .VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_IMAGE_BIT_ARM = extensions.device.VK_ARM_data_graph_optical_flow,
+        .VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_VECTOR_BIT_ARM = extensions.device.VK_ARM_data_graph_optical_flow,
+        .VK_FORMAT_FEATURE_2_DATA_GRAPH_OPTICAL_FLOW_COST_BIT_ARM = extensions.device.VK_ARM_data_graph_optical_flow,
         .VK_FORMAT_FEATURE_2_COPY_IMAGE_INDIRECT_DST_BIT_KHR = extensions.device.VK_KHR_copy_memory_indirect    };
+    const valid_bits: u64 = @bitCast(valid_value);
+    const current_bits: u64 = @bitCast(item.*);
+    return (current_bits & ~valid_bits) == 0;
+}
+
+pub fn validate_VkFormatFeatureFlags4KHR(extensions: *const Extensions, item: *const vk.VkFormatFeatureFlags4KHR) bool {
+    const valid_value: vk.VkFormatFeatureFlags4KHR = .{
+    };
+    _ = extensions;
     const valid_bits: u64 = @bitCast(valid_value);
     const current_bits: u64 = @bitCast(item.*);
     return (current_bits & ~valid_bits) == 0;
@@ -38176,6 +41712,20 @@ pub fn validate_VkMemoryDecompressionMethodFlagsEXT(extensions: *const Extension
     _ = extensions;
     const valid_bits: u64 = @bitCast(valid_value);
     const current_bits: u64 = @bitCast(item.*);
+    return (current_bits & ~valid_bits) == 0;
+}
+
+pub fn validate_VkDeviceFaultFlagsKHR(extensions: *const Extensions, item: *const vk.VkDeviceFaultFlagsKHR) bool {
+    const valid_value: vk.VkDeviceFaultFlagsKHR = .{
+        .VK_DEVICE_FAULT_FLAG_DEVICE_LOST_KHR = true,
+        .VK_DEVICE_FAULT_FLAG_MEMORY_ADDRESS_KHR = true,
+        .VK_DEVICE_FAULT_FLAG_INSTRUCTION_ADDRESS_KHR = true,
+        .VK_DEVICE_FAULT_FLAG_VENDOR_KHR = true,
+        .VK_DEVICE_FAULT_FLAG_WATCHDOG_TIMEOUT_KHR = true,
+        .VK_DEVICE_FAULT_FLAG_OVERFLOW_KHR = true    };
+    _ = extensions;
+    const valid_bits: u32 = @bitCast(valid_value);
+    const current_bits: u32 = @bitCast(item.*);
     return (current_bits & ~valid_bits) == 0;
 }
 
@@ -38230,44 +41780,47 @@ pub fn validate_VkDirectDriverLoadingFlagsLUNARG(extensions: *const Extensions, 
 
 pub fn validate_VkPipelineCreateFlags2(extensions: *const Extensions, item: *const vk.VkPipelineCreateFlags2) bool {
     const valid_value: vk.VkPipelineCreateFlags2 = .{
-        .VK_PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT = true or extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT = true or extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_DERIVATIVE_BIT = true or extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT = true or extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_DISPATCH_BASE_BIT = true or extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_DEFER_COMPILE_BIT_NV = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_CAPTURE_STATISTICS_BIT_KHR = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT = true or extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT = true or extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_LINK_TIME_OPTIMIZATION_BIT_EXT = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_LIBRARY_BIT_KHR = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_AABBS_BIT_KHR = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_NV = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_RAY_TRACING_ALLOW_MOTION_BIT_NV = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_EXT = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = extensions.device.VK_KHR_maintenance5,
+        .VK_PIPELINE_CREATE_2_DISABLE_OPTIMIZATION_BIT = extensions.device.VK_KHR_extended_flags or true or extensions.device.VK_KHR_maintenance5,
+        .VK_PIPELINE_CREATE_2_ALLOW_DERIVATIVES_BIT = true or extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_PIPELINE_CREATE_2_DERIVATIVE_BIT = true or extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_PIPELINE_CREATE_2_VIEW_INDEX_FROM_DEVICE_INDEX_BIT = true or extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_PIPELINE_CREATE_2_DISPATCH_BASE_BIT = true or extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_PIPELINE_CREATE_2_DEFER_COMPILE_BIT_NV = extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_PIPELINE_CREATE_2_CAPTURE_STATISTICS_BIT_KHR = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_PIPELINE_CREATE_2_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR = extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_PIPELINE_CREATE_2_FAIL_ON_PIPELINE_COMPILE_REQUIRED_BIT = extensions.device.VK_KHR_maintenance5 or true or extensions.device.VK_KHR_extended_flags,
+        .VK_PIPELINE_CREATE_2_EARLY_RETURN_ON_FAILURE_BIT = extensions.device.VK_KHR_maintenance5 or true or extensions.device.VK_KHR_extended_flags,
+        .VK_PIPELINE_CREATE_2_LINK_TIME_OPTIMIZATION_BIT_EXT = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_PIPELINE_CREATE_2_LIBRARY_BIT_KHR = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_TRIANGLES_BIT_KHR = extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_PIPELINE_CREATE_2_RAY_TRACING_SKIP_AABBS_BIT_KHR = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_ANY_HIT_SHADERS_BIT_KHR = extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_CLOSEST_HIT_SHADERS_BIT_KHR = extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_MISS_SHADERS_BIT_KHR = extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_PIPELINE_CREATE_2_RAY_TRACING_NO_NULL_INTERSECTION_SHADERS_BIT_KHR = extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_NV = extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_PIPELINE_CREATE_2_RAY_TRACING_SHADER_GROUP_HANDLE_CAPTURE_REPLAY_BIT_KHR = extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_PIPELINE_CREATE_2_RAY_TRACING_ALLOW_MOTION_BIT_NV = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_PIPELINE_CREATE_2_RENDERING_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_PIPELINE_CREATE_2_RETAIN_LINK_TIME_OPTIMIZATION_INFO_BIT_EXT = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_PIPELINE_CREATE_2_RAY_TRACING_OPACITY_MICROMAP_BIT_KHR = extensions.device.VK_KHR_opacity_micromap or extensions.device.VK_KHR_extended_flags,
+        .VK_PIPELINE_CREATE_2_COLOR_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_PIPELINE_CREATE_2_DEPTH_STENCIL_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
         .VK_PIPELINE_CREATE_2_NO_PROTECTED_ACCESS_BIT = true or extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV = extensions.device.VK_KHR_maintenance5,
-        .VK_PIPELINE_CREATE_2_DESCRIPTOR_BUFFER_BIT_EXT = extensions.device.VK_KHR_maintenance5,
+        .VK_PIPELINE_CREATE_2_RAY_TRACING_DISPLACEMENT_MICROMAP_BIT_NV = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_PIPELINE_CREATE_2_DESCRIPTOR_BUFFER_BIT_EXT = extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
         .VK_PIPELINE_CREATE_2_PROTECTED_ACCESS_ONLY_BIT = true or extensions.device.VK_KHR_maintenance5,
         .VK_PIPELINE_CREATE_2_CAPTURE_DATA_BIT_KHR = extensions.device.VK_KHR_pipeline_binary,
         .VK_PIPELINE_CREATE_2_EXECUTION_GRAPH_BIT_AMDX = extensions.device.VK_AMDX_shader_enqueue,
         .VK_PIPELINE_CREATE_2_RAY_TRACING_ALLOW_SPHERES_AND_LINEAR_SWEPT_SPHERES_BIT_NV = extensions.device.VK_NV_ray_tracing_linear_swept_spheres,
         .VK_PIPELINE_CREATE_2_ENABLE_LEGACY_DITHERING_BIT_EXT = extensions.device.VK_EXT_legacy_dithering,
-        .VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_ARM_pipeline_opacity_micromap,
+        .VK_PIPELINE_CREATE_2_DESCRIPTOR_HEAP_BIT_EXT = extensions.device.VK_EXT_descriptor_heap,
+        .VK_PIPELINE_CREATE_2_DISALLOW_OPACITY_MICROMAP_BIT_ARM = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_ARM_pipeline_opacity_micromap or extensions.device.VK_KHR_extended_flags,
         .VK_PIPELINE_CREATE_2_INDIRECT_BINDABLE_BIT_EXT = extensions.device.VK_EXT_device_generated_commands,
+        .VK_PIPELINE_CREATE_2_INSTRUMENT_SHADERS_BIT_ARM = extensions.device.VK_ARM_shader_instrumentation or extensions.device.VK_KHR_maintenance5,
         .VK_PIPELINE_CREATE_2_PER_LAYER_FRAGMENT_DENSITY_BIT_VALVE = extensions.device.VK_VALVE_fragment_density_map_layered,
+        .VK_PIPELINE_CREATE_2_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_KHR = extensions.device.VK_KHR_opacity_micromap,
         .VK_PIPELINE_CREATE_2_64_BIT_INDEXING_BIT_EXT = extensions.device.VK_EXT_shader_64bit_indexing    };
     const valid_bits: u64 = @bitCast(valid_value);
     const current_bits: u64 = @bitCast(item.*);
@@ -38276,37 +41829,98 @@ pub fn validate_VkPipelineCreateFlags2(extensions: *const Extensions, item: *con
 
 pub fn validate_VkBufferUsageFlags2(extensions: *const Extensions, item: *const vk.VkBufferUsageFlags2) bool {
     const valid_value: vk.VkBufferUsageFlags2 = .{
-        .VK_BUFFER_USAGE_2_TRANSFER_SRC_BIT = true or extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_TRANSFER_DST_BIT = true or extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT = true or extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT = true or extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_UNIFORM_BUFFER_BIT = extensions.device.VK_KHR_maintenance5 or true,
-        .VK_BUFFER_USAGE_2_STORAGE_BUFFER_BIT = true or extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_INDEX_BUFFER_BIT = true or extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_VERTEX_BUFFER_BIT = true or extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_INDIRECT_BUFFER_BIT = extensions.device.VK_KHR_maintenance5 or true,
-        .VK_BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT = extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT = extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT = extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR = extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_VIDEO_DECODE_DST_BIT_KHR = extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR = extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR = extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT = extensions.device.VK_KHR_maintenance5 or true,
-        .VK_BUFFER_USAGE_2_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR = extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR = extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT = extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT = extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT = extensions.device.VK_KHR_maintenance5,
-        .VK_BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT = extensions.device.VK_KHR_maintenance5,
+        .VK_BUFFER_USAGE_2_TRANSFER_SRC_BIT = true or extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_BUFFER_USAGE_2_TRANSFER_DST_BIT = true or extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_BUFFER_USAGE_2_UNIFORM_TEXEL_BUFFER_BIT = true or extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_BUFFER_USAGE_2_STORAGE_TEXEL_BUFFER_BIT = true or extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_BUFFER_USAGE_2_UNIFORM_BUFFER_BIT = true or extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_BUFFER_USAGE_2_STORAGE_BUFFER_BIT = true or extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_BUFFER_USAGE_2_INDEX_BUFFER_BIT = true or extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_BUFFER_USAGE_2_VERTEX_BUFFER_BIT = true or extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_BUFFER_USAGE_2_INDIRECT_BUFFER_BIT = extensions.device.VK_KHR_extended_flags or true or extensions.device.VK_KHR_maintenance5,
+        .VK_BUFFER_USAGE_2_CONDITIONAL_RENDERING_BIT_EXT = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_BUFFER_USAGE_2_SHADER_BINDING_TABLE_BIT_KHR = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_BUFFER_USAGE_2_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_BUFFER_USAGE_2_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_BUFFER_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR = extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_BUFFER_USAGE_2_VIDEO_DECODE_DST_BIT_KHR = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_BUFFER_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_BUFFER_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_BUFFER_USAGE_2_SHADER_DEVICE_ADDRESS_BIT = extensions.device.VK_KHR_extended_flags or true or extensions.device.VK_KHR_maintenance5,
+        .VK_BUFFER_USAGE_2_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR = extensions.device.VK_KHR_extended_flags or extensions.device.VK_KHR_maintenance5,
+        .VK_BUFFER_USAGE_2_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_BUFFER_USAGE_2_SAMPLER_DESCRIPTOR_BUFFER_BIT_EXT = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_BUFFER_USAGE_2_RESOURCE_DESCRIPTOR_BUFFER_BIT_EXT = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
+        .VK_BUFFER_USAGE_2_MICROMAP_BUILD_INPUT_READ_ONLY_BIT_EXT = extensions.device.VK_EXT_opacity_micromap or extensions.device.VK_KHR_extended_flags,
+        .VK_BUFFER_USAGE_2_MICROMAP_STORAGE_BIT_EXT = extensions.device.VK_EXT_opacity_micromap or extensions.device.VK_KHR_extended_flags,
         .VK_BUFFER_USAGE_2_EXECUTION_GRAPH_SCRATCH_BIT_AMDX = extensions.device.VK_AMDX_shader_enqueue,
-        .VK_BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT = extensions.device.VK_KHR_maintenance5,
+        .VK_BUFFER_USAGE_2_PUSH_DESCRIPTORS_DESCRIPTOR_BUFFER_BIT_EXT = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_KHR_extended_flags,
         .VK_BUFFER_USAGE_2_TILE_MEMORY_BIT_QCOM = extensions.device.VK_QCOM_tile_memory_heap,
+        .VK_BUFFER_USAGE_2_DESCRIPTOR_HEAP_BIT_EXT = extensions.device.VK_EXT_descriptor_heap,
         .VK_BUFFER_USAGE_2_DATA_GRAPH_FOREIGN_DESCRIPTOR_BIT_ARM = extensions.device.VK_ARM_data_graph,
         .VK_BUFFER_USAGE_2_PREPROCESS_BUFFER_BIT_EXT = extensions.device.VK_EXT_device_generated_commands,
         .VK_BUFFER_USAGE_2_MEMORY_DECOMPRESSION_BIT_EXT = extensions.device.VK_EXT_memory_decompression,
         .VK_BUFFER_USAGE_2_COMPRESSED_DATA_DGF1_BIT_AMDX = extensions.device.VK_AMDX_dense_geometry_format    };
+    const valid_bits: u64 = @bitCast(valid_value);
+    const current_bits: u64 = @bitCast(item.*);
+    return (current_bits & ~valid_bits) == 0;
+}
+
+pub fn validate_VkImageUsageFlags2KHR(extensions: *const Extensions, item: *const vk.VkImageUsageFlags2KHR) bool {
+    const valid_value: vk.VkImageUsageFlags2KHR = .{
+        .VK_IMAGE_USAGE_2_TRANSFER_SRC_BIT_KHR = true,
+        .VK_IMAGE_USAGE_2_TRANSFER_DST_BIT_KHR = true,
+        .VK_IMAGE_USAGE_2_SAMPLED_BIT_KHR = true,
+        .VK_IMAGE_USAGE_2_STORAGE_BIT_KHR = true,
+        .VK_IMAGE_USAGE_2_COLOR_ATTACHMENT_BIT_KHR = true,
+        .VK_IMAGE_USAGE_2_DEPTH_STENCIL_ATTACHMENT_BIT_KHR = true,
+        .VK_IMAGE_USAGE_2_TRANSIENT_ATTACHMENT_BIT_KHR = true,
+        .VK_IMAGE_USAGE_2_INPUT_ATTACHMENT_BIT_KHR = true,
+        .VK_IMAGE_USAGE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_USAGE_2_FRAGMENT_DENSITY_MAP_BIT_EXT = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_USAGE_2_VIDEO_DECODE_DST_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_USAGE_2_VIDEO_DECODE_SRC_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_USAGE_2_VIDEO_DECODE_DPB_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_USAGE_2_VIDEO_ENCODE_DST_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_USAGE_2_VIDEO_ENCODE_SRC_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_USAGE_2_VIDEO_ENCODE_DPB_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_USAGE_2_INVOCATION_MASK_BIT_HUAWEI = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_USAGE_2_ATTACHMENT_FEEDBACK_LOOP_BIT_EXT = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_USAGE_2_SAMPLE_WEIGHT_BIT_QCOM = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_USAGE_2_SAMPLE_BLOCK_MATCH_BIT_QCOM = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_USAGE_2_HOST_TRANSFER_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_USAGE_2_TENSOR_ALIASING_BIT_ARM = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_USAGE_2_VIDEO_ENCODE_QUANTIZATION_DELTA_MAP_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_USAGE_2_VIDEO_ENCODE_EMPHASIS_MAP_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_USAGE_2_TILE_MEMORY_BIT_QCOM = extensions.device.VK_KHR_extended_flags    };
+    const valid_bits: u64 = @bitCast(valid_value);
+    const current_bits: u64 = @bitCast(item.*);
+    return (current_bits & ~valid_bits) == 0;
+}
+
+pub fn validate_VkImageCreateFlags2KHR(extensions: *const Extensions, item: *const vk.VkImageCreateFlags2KHR) bool {
+    const valid_value: vk.VkImageCreateFlags2KHR = .{
+        .VK_IMAGE_CREATE_2_SPARSE_BINDING_BIT_KHR = true,
+        .VK_IMAGE_CREATE_2_SPARSE_RESIDENCY_BIT_KHR = true,
+        .VK_IMAGE_CREATE_2_SPARSE_ALIASED_BIT_KHR = true,
+        .VK_IMAGE_CREATE_2_MUTABLE_FORMAT_BIT_KHR = true,
+        .VK_IMAGE_CREATE_2_CUBE_COMPATIBLE_BIT_KHR = true,
+        .VK_IMAGE_CREATE_2_2D_ARRAY_COMPATIBLE_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_CREATE_2_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_CREATE_2_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_CREATE_2_EXTENDED_USAGE_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_CREATE_2_DISJOINT_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_CREATE_2_ALIAS_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_CREATE_2_PROTECTED_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_CREATE_2_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_CREATE_2_CORNER_SAMPLED_BIT_NV = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_CREATE_2_SUBSAMPLED_BIT_EXT = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_CREATE_2_FRAGMENT_DENSITY_MAP_OFFSET_BIT_EXT = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_CREATE_2_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_EXT = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_CREATE_2_2D_VIEW_COMPATIBLE_BIT_EXT = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_CREATE_2_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_CREATE_2_VIDEO_PROFILE_INDEPENDENT_BIT_KHR = extensions.device.VK_KHR_extended_flags,
+        .VK_IMAGE_CREATE_2_ALIAS_SINGLE_LAYER_DESCRIPTOR_BIT_KHR = extensions.device.VK_KHR_maintenance11    };
     const valid_bits: u64 = @bitCast(valid_value);
     const current_bits: u64 = @bitCast(item.*);
     return (current_bits & ~valid_bits) == 0;
@@ -38327,7 +41941,8 @@ pub fn validate_VkTensorCreateFlagsARM(extensions: *const Extensions, item: *con
     const valid_value: vk.VkTensorCreateFlagsARM = .{
         .VK_TENSOR_CREATE_MUTABLE_FORMAT_BIT_ARM = true,
         .VK_TENSOR_CREATE_PROTECTED_BIT_ARM = true,
-        .VK_TENSOR_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_ARM = extensions.device.VK_ARM_tensors    };
+        .VK_TENSOR_CREATE_DESCRIPTOR_BUFFER_CAPTURE_REPLAY_BIT_ARM = extensions.device.VK_ARM_tensors,
+        .VK_TENSOR_CREATE_DESCRIPTOR_HEAP_CAPTURE_REPLAY_BIT_ARM = extensions.device.VK_EXT_descriptor_heap    };
     const valid_bits: u64 = @bitCast(valid_value);
     const current_bits: u64 = @bitCast(item.*);
     return (current_bits & ~valid_bits) == 0;
@@ -38355,8 +41970,8 @@ pub fn validate_VkTensorViewCreateFlagsARM(extensions: *const Extensions, item: 
 
 pub fn validate_VkDataGraphPipelineSessionCreateFlagsARM(extensions: *const Extensions, item: *const vk.VkDataGraphPipelineSessionCreateFlagsARM) bool {
     const valid_value: vk.VkDataGraphPipelineSessionCreateFlagsARM = .{
-        .VK_DATA_GRAPH_PIPELINE_SESSION_CREATE_PROTECTED_BIT_ARM = true    };
-    _ = extensions;
+        .VK_DATA_GRAPH_PIPELINE_SESSION_CREATE_PROTECTED_BIT_ARM = true,
+        .VK_DATA_GRAPH_PIPELINE_SESSION_CREATE_OPTICAL_FLOW_CACHE_BIT_ARM = extensions.device.VK_ARM_data_graph_optical_flow    };
     const valid_bits: u64 = @bitCast(valid_value);
     const current_bits: u64 = @bitCast(item.*);
     return (current_bits & ~valid_bits) == 0;
@@ -38399,6 +42014,69 @@ pub fn validate_VkVideoEncodeRgbChromaOffsetFlagsVALVE(extensions: *const Extens
         .VK_VIDEO_ENCODE_RGB_CHROMA_OFFSET_COSITED_EVEN_BIT_VALVE = true,
         .VK_VIDEO_ENCODE_RGB_CHROMA_OFFSET_MIDPOINT_BIT_VALVE = true    };
     _ = extensions;
+    const valid_bits: u32 = @bitCast(valid_value);
+    const current_bits: u32 = @bitCast(item.*);
+    return (current_bits & ~valid_bits) == 0;
+}
+
+pub fn validate_VkSpirvResourceTypeFlagsEXT(extensions: *const Extensions, item: *const vk.VkSpirvResourceTypeFlagsEXT) bool {
+    const valid_value: vk.VkSpirvResourceTypeFlagsEXT = .{
+        .VK_SPIRV_RESOURCE_TYPE_SAMPLER_BIT_EXT = true,
+        .VK_SPIRV_RESOURCE_TYPE_SAMPLED_IMAGE_BIT_EXT = true,
+        .VK_SPIRV_RESOURCE_TYPE_READ_ONLY_IMAGE_BIT_EXT = true,
+        .VK_SPIRV_RESOURCE_TYPE_READ_WRITE_IMAGE_BIT_EXT = true,
+        .VK_SPIRV_RESOURCE_TYPE_COMBINED_SAMPLED_IMAGE_BIT_EXT = true,
+        .VK_SPIRV_RESOURCE_TYPE_UNIFORM_BUFFER_BIT_EXT = true,
+        .VK_SPIRV_RESOURCE_TYPE_READ_ONLY_STORAGE_BUFFER_BIT_EXT = true,
+        .VK_SPIRV_RESOURCE_TYPE_READ_WRITE_STORAGE_BUFFER_BIT_EXT = true,
+        .VK_SPIRV_RESOURCE_TYPE_ACCELERATION_STRUCTURE_BIT_EXT = extensions.device.VK_EXT_descriptor_heap,
+        .VK_SPIRV_RESOURCE_TYPE_TENSOR_BIT_ARM = extensions.device.VK_EXT_descriptor_heap    };
+    const valid_bits: u32 = @bitCast(valid_value);
+    const current_bits: u32 = @bitCast(item.*);
+    return (current_bits & ~valid_bits) == 0;
+}
+
+pub fn validate_VkGpaSqShaderStageFlagsAMD(extensions: *const Extensions, item: *const vk.VkGpaSqShaderStageFlagsAMD) bool {
+    const valid_value: vk.VkGpaSqShaderStageFlagsAMD = .{
+        .VK_GPA_SQ_SHADER_STAGE_PS_BIT_AMD = true,
+        .VK_GPA_SQ_SHADER_STAGE_VS_BIT_AMD = true,
+        .VK_GPA_SQ_SHADER_STAGE_GS_BIT_AMD = true,
+        .VK_GPA_SQ_SHADER_STAGE_ES_BIT_AMD = true,
+        .VK_GPA_SQ_SHADER_STAGE_HS_BIT_AMD = true,
+        .VK_GPA_SQ_SHADER_STAGE_LS_BIT_AMD = true,
+        .VK_GPA_SQ_SHADER_STAGE_CS_BIT_AMD = true    };
+    _ = extensions;
+    const valid_bits: u32 = @bitCast(valid_value);
+    const current_bits: u32 = @bitCast(item.*);
+    return (current_bits & ~valid_bits) == 0;
+}
+
+pub fn validate_VkGpaPerfBlockPropertiesFlagsAMD(extensions: *const Extensions, item: *const vk.VkGpaPerfBlockPropertiesFlagsAMD) bool {
+    const valid_value: vk.VkGpaPerfBlockPropertiesFlagsAMD = .{
+    };
+    _ = extensions;
+    const valid_bits: u32 = @bitCast(valid_value);
+    const current_bits: u32 = @bitCast(item.*);
+    return (current_bits & ~valid_bits) == 0;
+}
+
+pub fn validate_VkPhysicalDeviceGpaPropertiesFlagsAMD(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceGpaPropertiesFlagsAMD) bool {
+    const valid_value: vk.VkPhysicalDeviceGpaPropertiesFlagsAMD = .{
+    };
+    _ = extensions;
+    const valid_bits: u32 = @bitCast(valid_value);
+    const current_bits: u32 = @bitCast(item.*);
+    return (current_bits & ~valid_bits) == 0;
+}
+
+pub fn validate_VkAddressCommandFlagsKHR(extensions: *const Extensions, item: *const vk.VkAddressCommandFlagsKHR) bool {
+    const valid_value: vk.VkAddressCommandFlagsKHR = .{
+        .VK_ADDRESS_COMMAND_PROTECTED_BIT_KHR = true,
+        .VK_ADDRESS_COMMAND_FULLY_BOUND_BIT_KHR = true,
+        .VK_ADDRESS_COMMAND_STORAGE_BUFFER_USAGE_BIT_KHR = true,
+        .VK_ADDRESS_COMMAND_UNKNOWN_STORAGE_BUFFER_USAGE_BIT_KHR = true,
+        .VK_ADDRESS_COMMAND_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR = extensions.device.VK_KHR_device_address_commands,
+        .VK_ADDRESS_COMMAND_UNKNOWN_TRANSFORM_FEEDBACK_BUFFER_USAGE_BIT_KHR = extensions.device.VK_KHR_device_address_commands    };
     const valid_bits: u32 = @bitCast(valid_value);
     const current_bits: u32 = @bitCast(item.*);
     return (current_bits & ~valid_bits) == 0;
@@ -38453,6 +42131,7 @@ pub fn validate_VkSwapchainCreateFlagsKHR(extensions: *const Extensions, item: *
         .VK_SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_KHR = extensions.device.VK_KHR_swapchain_maintenance1,
         .VK_SWAPCHAIN_CREATE_PRESENT_ID_2_BIT_KHR = extensions.device.VK_KHR_present_id2,
         .VK_SWAPCHAIN_CREATE_PRESENT_WAIT_2_BIT_KHR = extensions.device.VK_KHR_present_wait2,
+        .VK_SWAPCHAIN_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT = extensions.device.VK_EXT_multisampled_render_to_swapchain,
         .VK_SWAPCHAIN_CREATE_PRESENT_TIMING_BIT_EXT = extensions.device.VK_EXT_present_timing    };
     const valid_bits: u32 = @bitCast(valid_value);
     const current_bits: u32 = @bitCast(item.*);
@@ -38497,6 +42176,15 @@ pub fn validate_VkViSurfaceCreateFlagsNN(extensions: *const Extensions, item: *c
 
 pub fn validate_VkWaylandSurfaceCreateFlagsKHR(extensions: *const Extensions, item: *const vk.VkWaylandSurfaceCreateFlagsKHR) bool {
     const valid_value: vk.VkWaylandSurfaceCreateFlagsKHR = .{
+    };
+    _ = extensions;
+    const valid_bits: u32 = @bitCast(valid_value);
+    const current_bits: u32 = @bitCast(item.*);
+    return (current_bits & ~valid_bits) == 0;
+}
+
+pub fn validate_VkUbmSurfaceCreateFlagsSEC(extensions: *const Extensions, item: *const vk.VkUbmSurfaceCreateFlagsSEC) bool {
+    const valid_value: vk.VkUbmSurfaceCreateFlagsSEC = .{
     };
     _ = extensions;
     const valid_bits: u32 = @bitCast(valid_value);
@@ -39222,7 +42910,11 @@ pub fn validate_VkShaderCreateFlagsEXT(extensions: *const Extensions, item: *con
         .VK_SHADER_CREATE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_EXT = extensions.device.VK_EXT_shader_object,
         .VK_SHADER_CREATE_FRAGMENT_DENSITY_MAP_ATTACHMENT_BIT_EXT = extensions.device.VK_EXT_shader_object,
         .VK_SHADER_CREATE_INDIRECT_BINDABLE_BIT_EXT = extensions.device.VK_EXT_device_generated_commands,
-        .VK_SHADER_CREATE_64_BIT_INDEXING_BIT_EXT = extensions.device.VK_EXT_shader_64bit_indexing    };
+        .VK_SHADER_CREATE_DESCRIPTOR_HEAP_BIT_EXT = extensions.device.VK_EXT_descriptor_heap,
+        .VK_SHADER_CREATE_INSTRUMENT_SHADER_BIT_ARM = extensions.device.VK_KHR_maintenance5 or extensions.device.VK_ARM_shader_instrumentation,
+        .VK_SHADER_CREATE_OPACITY_MICROMAP_DISALLOW_MIXED_SPECIAL_INDEX_BIT_EXT = extensions.device.VK_KHR_opacity_micromap,
+        .VK_SHADER_CREATE_64_BIT_INDEXING_BIT_EXT = extensions.device.VK_EXT_shader_64bit_indexing,
+        .VK_SHADER_CREATE_INDEPENDENT_SETS_BIT_KHR = extensions.device.VK_KHR_maintenance11    };
     const valid_bits: u32 = @bitCast(valid_value);
     const current_bits: u32 = @bitCast(item.*);
     return (current_bits & ~valid_bits) == 0;
@@ -39240,7 +42932,8 @@ pub fn validate_VkTileShadingRenderPassFlagsQCOM(extensions: *const Extensions, 
 
 pub fn validate_VkPhysicalDeviceSchedulingControlsFlagsARM(extensions: *const Extensions, item: *const vk.VkPhysicalDeviceSchedulingControlsFlagsARM) bool {
     const valid_value: vk.VkPhysicalDeviceSchedulingControlsFlagsARM = .{
-        .VK_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM = true    };
+        .VK_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_SHADER_CORE_COUNT_ARM = true,
+        .VK_PHYSICAL_DEVICE_SCHEDULING_CONTROLS_DISPATCH_PARAMETERS_ARM = true    };
     _ = extensions;
     const valid_bits: u64 = @bitCast(valid_value);
     const current_bits: u64 = @bitCast(item.*);
@@ -39300,6 +42993,75 @@ pub fn validate_VkSwapchainImageUsageFlagsOHOS(extensions: *const Extensions, it
 pub fn validate_VkPerformanceCounterDescriptionFlagsARM(extensions: *const Extensions, item: *const vk.VkPerformanceCounterDescriptionFlagsARM) bool {
     const valid_value: vk.VkPerformanceCounterDescriptionFlagsARM = .{
     };
+    _ = extensions;
+    const valid_bits: u32 = @bitCast(valid_value);
+    const current_bits: u32 = @bitCast(item.*);
+    return (current_bits & ~valid_bits) == 0;
+}
+
+pub fn validate_VkShaderInstrumentationValuesFlagsARM(extensions: *const Extensions, item: *const vk.VkShaderInstrumentationValuesFlagsARM) bool {
+    const valid_value: vk.VkShaderInstrumentationValuesFlagsARM = .{
+    };
+    _ = extensions;
+    const valid_bits: u32 = @bitCast(valid_value);
+    const current_bits: u32 = @bitCast(item.*);
+    return (current_bits & ~valid_bits) == 0;
+}
+
+pub fn validate_VkDataGraphTOSAQualityFlagsARM(extensions: *const Extensions, item: *const vk.VkDataGraphTOSAQualityFlagsARM) bool {
+    const valid_value: vk.VkDataGraphTOSAQualityFlagsARM = .{
+        .VK_DATA_GRAPH_TOSA_QUALITY_ACCELERATED_ARM = true,
+        .VK_DATA_GRAPH_TOSA_QUALITY_CONFORMANT_ARM = true,
+        .VK_DATA_GRAPH_TOSA_QUALITY_EXPERIMENTAL_ARM = true,
+        .VK_DATA_GRAPH_TOSA_QUALITY_DEPRECATED_ARM = true    };
+    _ = extensions;
+    const valid_bits: u32 = @bitCast(valid_value);
+    const current_bits: u32 = @bitCast(item.*);
+    return (current_bits & ~valid_bits) == 0;
+}
+
+pub fn validate_VkDataGraphOpticalFlowGridSizeFlagsARM(extensions: *const Extensions, item: *const vk.VkDataGraphOpticalFlowGridSizeFlagsARM) bool {
+    const valid_value: vk.VkDataGraphOpticalFlowGridSizeFlagsARM = .{
+        .VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_1X1_BIT_ARM = true,
+        .VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_2X2_BIT_ARM = true,
+        .VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_4X4_BIT_ARM = true,
+        .VK_DATA_GRAPH_OPTICAL_FLOW_GRID_SIZE_8X8_BIT_ARM = true    };
+    _ = extensions;
+    const valid_bits: u32 = @bitCast(valid_value);
+    const current_bits: u32 = @bitCast(item.*);
+    return (current_bits & ~valid_bits) == 0;
+}
+
+pub fn validate_VkDataGraphOpticalFlowImageUsageFlagsARM(extensions: *const Extensions, item: *const vk.VkDataGraphOpticalFlowImageUsageFlagsARM) bool {
+    const valid_value: vk.VkDataGraphOpticalFlowImageUsageFlagsARM = .{
+        .VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_INPUT_BIT_ARM = true,
+        .VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_OUTPUT_BIT_ARM = true,
+        .VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_HINT_BIT_ARM = true,
+        .VK_DATA_GRAPH_OPTICAL_FLOW_IMAGE_USAGE_COST_BIT_ARM = true    };
+    _ = extensions;
+    const valid_bits: u32 = @bitCast(valid_value);
+    const current_bits: u32 = @bitCast(item.*);
+    return (current_bits & ~valid_bits) == 0;
+}
+
+pub fn validate_VkDataGraphOpticalFlowCreateFlagsARM(extensions: *const Extensions, item: *const vk.VkDataGraphOpticalFlowCreateFlagsARM) bool {
+    const valid_value: vk.VkDataGraphOpticalFlowCreateFlagsARM = .{
+        .VK_DATA_GRAPH_OPTICAL_FLOW_CREATE_ENABLE_HINT_BIT_ARM = true,
+        .VK_DATA_GRAPH_OPTICAL_FLOW_CREATE_ENABLE_COST_BIT_ARM = true,
+        .VK_DATA_GRAPH_OPTICAL_FLOW_CREATE_RESERVED_30_BIT_ARM = true    };
+    _ = extensions;
+    const valid_bits: u32 = @bitCast(valid_value);
+    const current_bits: u32 = @bitCast(item.*);
+    return (current_bits & ~valid_bits) == 0;
+}
+
+pub fn validate_VkDataGraphOpticalFlowExecuteFlagsARM(extensions: *const Extensions, item: *const vk.VkDataGraphOpticalFlowExecuteFlagsARM) bool {
+    const valid_value: vk.VkDataGraphOpticalFlowExecuteFlagsARM = .{
+        .VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_DISABLE_TEMPORAL_HINTS_BIT_ARM = true,
+        .VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_INPUT_UNCHANGED_BIT_ARM = true,
+        .VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_REFERENCE_UNCHANGED_BIT_ARM = true,
+        .VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_INPUT_IS_PREVIOUS_REFERENCE_BIT_ARM = true,
+        .VK_DATA_GRAPH_OPTICAL_FLOW_EXECUTE_REFERENCE_IS_PREVIOUS_INPUT_BIT_ARM = true    };
     _ = extensions;
     const valid_bits: u32 = @bitCast(valid_value);
     const current_bits: u32 = @bitCast(item.*);
@@ -39467,7 +43229,24 @@ pub fn validate_VkVideoEncodeFeedbackFlagsKHR(extensions: *const Extensions, ite
     const valid_value: vk.VkVideoEncodeFeedbackFlagsKHR = .{
         .VK_VIDEO_ENCODE_FEEDBACK_BITSTREAM_BUFFER_OFFSET_BIT_KHR = true,
         .VK_VIDEO_ENCODE_FEEDBACK_BITSTREAM_BYTES_WRITTEN_BIT_KHR = true,
-        .VK_VIDEO_ENCODE_FEEDBACK_BITSTREAM_HAS_OVERRIDES_BIT_KHR = true    };
+        .VK_VIDEO_ENCODE_FEEDBACK_BITSTREAM_HAS_OVERRIDES_BIT_KHR = true,
+        .VK_VIDEO_ENCODE_FEEDBACK_AVERAGE_QUANTIZATION_BIT_KHR = extensions.device.VK_KHR_video_encode_feedback2,
+        .VK_VIDEO_ENCODE_FEEDBACK_MIN_QUANTIZATION_BIT_KHR = extensions.device.VK_KHR_video_encode_feedback2,
+        .VK_VIDEO_ENCODE_FEEDBACK_MAX_QUANTIZATION_BIT_KHR = extensions.device.VK_KHR_video_encode_feedback2,
+        .VK_VIDEO_ENCODE_FEEDBACK_INTRA_PIXELS_BIT_KHR = extensions.device.VK_KHR_video_encode_feedback2,
+        .VK_VIDEO_ENCODE_FEEDBACK_INTER_PIXELS_BIT_KHR = extensions.device.VK_KHR_video_encode_feedback2,
+        .VK_VIDEO_ENCODE_FEEDBACK_SKIPPED_PIXELS_BIT_KHR = extensions.device.VK_KHR_video_encode_feedback2,
+        .VK_VIDEO_ENCODE_FEEDBACK_PICTURE_PARTITION_COUNT_BIT_KHR = extensions.device.VK_KHR_video_encode_feedback2    };
+    const valid_bits: u32 = @bitCast(valid_value);
+    const current_bits: u32 = @bitCast(item.*);
+    return (current_bits & ~valid_bits) == 0;
+}
+
+pub fn validate_VkVideoEncodePerPartitionFeedbackFlagsKHR(extensions: *const Extensions, item: *const vk.VkVideoEncodePerPartitionFeedbackFlagsKHR) bool {
+    const valid_value: vk.VkVideoEncodePerPartitionFeedbackFlagsKHR = .{
+        .VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_STATUS_BIT_KHR = true,
+        .VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_BITSTREAM_BUFFER_OFFSET_BIT_KHR = true,
+        .VK_VIDEO_ENCODE_PER_PARTITION_FEEDBACK_BITSTREAM_BYTES_WRITTEN_BIT_KHR = true    };
     _ = extensions;
     const valid_bits: u32 = @bitCast(valid_value);
     const current_bits: u32 = @bitCast(item.*);
@@ -39826,6 +43605,7 @@ pub const AdditionalPDF = struct {
     VkPhysicalDeviceRayTracingPipelineFeaturesKHR: vk.VkPhysicalDeviceRayTracingPipelineFeaturesKHR = .{},
     VkPhysicalDeviceImageProcessingFeaturesQCOM: vk.VkPhysicalDeviceImageProcessingFeaturesQCOM = .{},
     VkPhysicalDeviceTileShadingFeaturesQCOM: vk.VkPhysicalDeviceTileShadingFeaturesQCOM = .{},
+    VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM: vk.VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM = .{},
     VkPhysicalDeviceImageProcessing2FeaturesQCOM: vk.VkPhysicalDeviceImageProcessing2FeaturesQCOM = .{},
     VkPhysicalDeviceShaderEnqueueFeaturesAMDX: vk.VkPhysicalDeviceShaderEnqueueFeaturesAMDX = .{},
     VkPhysicalDeviceShaderQuadControlFeaturesKHR: vk.VkPhysicalDeviceShaderQuadControlFeaturesKHR = .{},
@@ -40438,6 +44218,12 @@ pub const AdditionalPDF = struct {
                 pnext = &pdf.VkPhysicalDeviceTileShadingFeaturesQCOM;
                 continue;
             }
+            if ((std.mem.eql(u8, e, "VK_QCOM_cooperative_matrix_conversion")) and pdf.VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM.pNext == null)
+            {
+                pdf.VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM.pNext = pnext;
+                pnext = &pdf.VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM;
+                continue;
+            }
             if ((std.mem.eql(u8, e, "VK_QCOM_image_processing2")) and pdf.VkPhysicalDeviceImageProcessing2FeaturesQCOM.pNext == null)
             {
                 pdf.VkPhysicalDeviceImageProcessing2FeaturesQCOM.pNext = pnext;
@@ -40693,7 +44479,9 @@ pub fn validate_spirv_extension(validation: *const Validation, extension_name: [
     if (std.mem.eql(u8, extension_name, "SPV_NV_viewport_array2"))
         return validation.extensions.device.VK_NV_viewport_array2;
     if (std.mem.eql(u8, extension_name, "SPV_NV_shader_subgroup_partitioned"))
-        return validation.extensions.device.VK_NV_shader_subgroup_partitioned;
+        return validation.extensions.device.VK_EXT_shader_subgroup_partitioned;
+    if (std.mem.eql(u8, extension_name, "SPV_EXT_shader_subgroup_partitioned"))
+        return validation.extensions.device.VK_EXT_shader_subgroup_partitioned;
     if (std.mem.eql(u8, extension_name, "SPV_NV_shader_invocation_reorder"))
         return validation.extensions.device.VK_NV_ray_tracing_invocation_reorder;
     if (std.mem.eql(u8, extension_name, "SPV_EXT_shader_viewport_index_layer"))
@@ -40776,6 +44564,12 @@ pub fn validate_spirv_extension(validation: *const Validation, extension_name: [
         return validation.extensions.device.VK_QCOM_image_processing;
     if (std.mem.eql(u8, extension_name, "SPV_QCOM_image_processing2"))
         return validation.extensions.device.VK_QCOM_image_processing2;
+    if (std.mem.eql(u8, extension_name, "SPV_QCOM_image_processing3"))
+        return validation.extensions.device.VK_QCOM_image_processing3;
+    if (std.mem.eql(u8, extension_name, "SPV_QCOM_cooperative_matrix_conversion"))
+        return validation.extensions.device.VK_QCOM_cooperative_matrix_conversion;
+    if (std.mem.eql(u8, extension_name, "SPV_QCOM_multiple_wait_queues"))
+        return validation.extensions.device.VK_QCOM_shader_multiple_wait_queues;
     if (std.mem.eql(u8, extension_name, "SPV_EXT_mesh_shader"))
         return validation.extensions.device.VK_EXT_mesh_shader;
     if (std.mem.eql(u8, extension_name, "SPV_KHR_ray_tracing_position_fetch"))
@@ -40783,7 +44577,11 @@ pub fn validate_spirv_extension(validation: *const Validation, extension_name: [
     if (std.mem.eql(u8, extension_name, "SPV_EXT_shader_tile_image"))
         return validation.extensions.device.VK_EXT_shader_tile_image;
     if (std.mem.eql(u8, extension_name, "SPV_EXT_opacity_micromap"))
-        return validation.extensions.device.VK_EXT_opacity_micromap;
+        return validation.extensions.device.VK_KHR_opacity_micromap;
+    if (std.mem.eql(u8, extension_name, "SPV_KHR_opacity_micromap"))
+        return validation.extensions.device.VK_KHR_opacity_micromap;
+    if (std.mem.eql(u8, extension_name, "SPV_EXT_split_barrier"))
+        return validation.extensions.device.VK_EXT_shader_split_barrier;
     if (std.mem.eql(u8, extension_name, "SPV_KHR_cooperative_matrix"))
         return validation.extensions.device.VK_KHR_cooperative_matrix;
     if (std.mem.eql(u8, extension_name, "SPV_ARM_core_builtins"))
@@ -40818,6 +44616,8 @@ pub fn validate_spirv_extension(validation: *const Validation, extension_name: [
         return validation.extensions.device.VK_KHR_shader_relaxed_extended_instruction;
     if (std.mem.eql(u8, extension_name, "SPV_NV_cooperative_matrix2"))
         return validation.extensions.device.VK_NV_cooperative_matrix2;
+    if (std.mem.eql(u8, extension_name, "SPV_NV_cooperative_matrix_decode_vector"))
+        return validation.extensions.device.VK_NV_cooperative_matrix_decode_vector;
     if (std.mem.eql(u8, extension_name, "SPV_NV_tensor_addressing"))
         return validation.extensions.device.VK_NV_cooperative_matrix2;
     if (std.mem.eql(u8, extension_name, "SPV_NV_linear_swept_spheres"))
@@ -40826,6 +44626,8 @@ pub fn validate_spirv_extension(validation: *const Validation, extension_name: [
         return validation.extensions.device.VK_NV_cluster_acceleration_structure;
     if (std.mem.eql(u8, extension_name, "SPV_NV_cooperative_vector"))
         return validation.extensions.device.VK_NV_cooperative_vector;
+    if (std.mem.eql(u8, extension_name, "SPV_NV_push_constant_bank"))
+        return validation.extensions.device.VK_NV_push_constant_bank;
     if (std.mem.eql(u8, extension_name, "SPV_EXT_shader_invocation_reorder"))
         return validation.extensions.device.VK_EXT_ray_tracing_invocation_reorder;
     if (std.mem.eql(u8, extension_name, "SPV_QCOM_tile_shading"))
@@ -40840,6 +44642,18 @@ pub fn validate_spirv_extension(validation: *const Validation, extension_name: [
         return validation.extensions.device.VK_KHR_shader_untyped_pointers;
     if (std.mem.eql(u8, extension_name, "SPV_EXT_shader_64bit_indexing"))
         return validation.extensions.device.VK_EXT_shader_64bit_indexing;
+    if (std.mem.eql(u8, extension_name, "SPV_EXT_long_vector"))
+        return validation.extensions.device.VK_EXT_shader_long_vector;
+    if (std.mem.eql(u8, extension_name, "SPV_EXT_descriptor_heap"))
+        return validation.extensions.device.VK_EXT_descriptor_heap;
+    if (std.mem.eql(u8, extension_name, "SPV_VALVE_mixed_float_dot_product"))
+        return validation.extensions.device.VK_VALVE_shader_mixed_float_dot_product;
+    if (std.mem.eql(u8, extension_name, "SPV_KHR_abort"))
+        return validation.extensions.device.VK_KHR_shader_abort;
+    if (std.mem.eql(u8, extension_name, "SPV_KHR_constant_data"))
+        return validation.extensions.device.VK_KHR_shader_constant_data;
+    if (std.mem.eql(u8, extension_name, "SPV_EXT_ocp_microscaling_types"))
+        return validation.extensions.device.VK_EXT_shader_ocp_microscaling_types;
     return false;
 }
 
@@ -41243,6 +45057,10 @@ pub fn validate_spirv_capability(validation: *const Validation, capability: u32)
         4495 => {
             if (validation.additional_pdf.VkPhysicalDeviceTileShadingFeaturesQCOM.tileShading == vk.VK_TRUE) return true;
         },
+        // CooperativeMatrixConversionQCOM
+        4496 => {
+            if (validation.additional_pdf.VkPhysicalDeviceCooperativeMatrixConversionFeaturesQCOM.cooperativeMatrixConversion == vk.VK_TRUE) return true;
+        },
         // TextureBlockMatch2QCOM
         4498 => {
             if (validation.additional_pdf.VkPhysicalDeviceImageProcessing2FeaturesQCOM.textureBlockMatch2 == vk.VK_TRUE) return true;
@@ -41342,10 +45160,6 @@ pub fn validate_spirv_capability(validation: *const Validation, capability: u32)
         5291 => {
             if (validation.additional_pdf.VkPhysicalDeviceFragmentDensityMapFeaturesEXT.fragmentDensityMap == vk.VK_TRUE) return true;
             if (validation.additional_pdf.VkPhysicalDeviceShadingRateImageFeaturesNV.shadingRateImage == vk.VK_TRUE) return true;
-        },
-        // GroupNonUniformPartitionedNV
-        5297 => {
-            if (validation.additional_properties.VkPhysicalDeviceVulkan11Properties.subgroupSupportedOperations.VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV) return true;
         },
         // ShaderNonUniform
         5301 => {
@@ -41451,10 +45265,6 @@ pub fn validate_spirv_capability(validation: *const Validation, capability: u32)
         5379 => {
             if (validation.additional_pdf.VkPhysicalDeviceVulkan13Features.shaderDemoteToHelperInvocation == vk.VK_TRUE) return true;
             if (validation.additional_pdf.VkPhysicalDeviceShaderDemoteToHelperInvocationFeatures.shaderDemoteToHelperInvocation == vk.VK_TRUE) return true;
-        },
-        // RayTracingOpacityMicromapEXT
-        5381 => {
-            if (validation.extensions.device.VK_EXT_opacity_micromap) return true;
         },
         // ShaderInvocationReorderNV
         5383 => {

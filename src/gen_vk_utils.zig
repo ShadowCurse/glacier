@@ -164,7 +164,8 @@ fn write_print_struct(alloc: Allocator, w: *Writer, type_db: *const TypeDatabase
                                     , .{ .field_name = sf.name, .field_type = type_str });
                                 }
                             },
-                            .function_idx => {},
+                            // There must be no ray functions as types. All functions must be `*const` pointers
+                            .function_idx => unreachable,
                         }
                     },
                     .pointer => |pointer| {

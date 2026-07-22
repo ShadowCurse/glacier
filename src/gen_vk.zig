@@ -324,6 +324,10 @@ fn write_structs(alloc: Allocator, w: *Writer, type_db: *TypeDatabase) !void {
                         \\    // Length expression: {s}
                         \\
                     , .{len});
+                    if (field.other_struct_field_alias) |other_struct_field_alias| w.write(
+                        \\    //  Alias: {s}
+                        \\
+                    , .{other_struct_field_alias});
                     if (field.stride) |stride| w.write(
                         \\    // Stride field: {s}
                         \\
