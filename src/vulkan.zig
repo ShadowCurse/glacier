@@ -31,25 +31,21 @@ pub fn init(
     const get_proc = try load_vulkan();
     try load_basic_procs(get_proc);
 
-    const api_version = get_api_version();
-    log.info(@src(), "Supported vulkan version: {f}", .{api_version});
+    const instance_api_version = get_instance_api_version();
+    log.info(@src(), "Supported vulkan instance version: {f}", .{instance_api_version});
     const default_app_info: vk.VkApplicationInfo = .{
         .pApplicationName = "replayer",
         .applicationVersion = .{ .patch = 1 },
         .pEngineName = "replayer",
         .engineVersion = .{ .patch = 1 },
-        .apiVersion = api_version,
+        .apiVersion = instance_api_version,
         .pNext = null,
     };
     var app_info: *const vk.VkApplicationInfo = &default_app_info;
     var device_features2: ?*const vk.VkPhysicalDeviceFeatures2 = null;
     try configure_app_info(arena_alloc, tmp_alloc, db, &app_info, &device_features2);
 
-    const instance = try create_vk_instance(
-        tmp_alloc,
-        app_info,
-        enable_vulkan_validation_layers,
-    );
+    const instance = try create_vk_instance(tmp_alloc, app_info, enable_vulkan_validation_layers);
     try load_instance_procs(get_proc, instance.instance);
 
     if (enable_vulkan_validation_layers)
@@ -57,7 +53,7 @@ pub fn init(
 
     const physical_device = try select_physical_device(
         tmp_alloc,
-        instance.instance,
+        &instance,
         enable_vulkan_validation_layers,
     );
 
@@ -216,7 +212,7 @@ fn load_procs(
     }
 }
 
-fn get_api_version() vk.ApiVersion {
+fn get_instance_api_version() vk.ApiVersion {
     var version: vk.ApiVersion = vk.VK_API_VERSION_1_0;
     if (vkEnumerateInstanceVersion) |f| {
         if (f(@ptrCast(&version)) != .VK_SUCCESS)
@@ -568,14 +564,13 @@ pub const PhysicalDevice = struct {
 
 pub fn select_physical_device(
     arena_alloc: Allocator,
-    vk_instance: vk.VkInstance,
+    instance: *const Instance,
     enable_validation: bool,
 ) !PhysicalDevice {
     const prof_point = MEASUREMENTS.start(@src());
     defer MEASUREMENTS.end(prof_point);
 
-    const physical_devices = try get_physical_devices(arena_alloc, vk_instance);
-
+    const physical_devices = try get_physical_devices(arena_alloc, instance.instance);
     for (physical_devices) |physical_device| {
         var properties: vk.VkPhysicalDeviceProperties = undefined;
         vkGetPhysicalDeviceProperties(physical_device, &properties);
@@ -598,6 +593,15 @@ pub fn select_physical_device(
             properties.deviceID,
             properties.deviceType,
         });
+
+        if (api_version.less(instance.api_version)) {
+            log.debug(
+                @src(),
+                "GPU supported API version {f} is lower than requested API version {f}. Skipping",
+                .{ api_version, instance.api_version },
+            );
+            continue;
+        }
 
         const has_validation_cache = if (enable_validation) blk: {
             const layers = try get_physical_device_layers(arena_alloc, physical_device);
@@ -637,7 +641,10 @@ pub fn select_physical_device(
             }
         }
 
-        if (graphics_queue_family != null) {
+        if ((properties.deviceType == .VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU or
+            properties.deviceType == .VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU) and
+            graphics_queue_family != null)
+        {
             log.debug(
                 @src(),
                 "Selected device: {s} Graphics queue family: {d} Has validation cache: {}",
