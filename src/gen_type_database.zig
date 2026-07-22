@@ -231,6 +231,7 @@ pub const TypeDatabase = struct {
             stype_value: ?[]const u8 = null,
             len_expression: ?[]const u8 = null,
             // metadata
+            other_struct_field_alias: ?[]const u8 = null,
             api: ?[]const u8 = null,
             stride: ?[]const u8 = null,
             deprecated: ?[]const u8 = null,
@@ -911,6 +912,7 @@ pub const TypeDatabase = struct {
                             .type_idx = type_idx,
                             .stype_value = member.value,
                             .len_expression = member.len,
+                            .other_struct_field_alias = member.other_struct_field_alias,
                             .api = member.api,
                             .stride = member.stride,
                             .deprecated = member.deprecated,
@@ -1939,6 +1941,7 @@ pub const TypeDatabase = struct {
 
 test "filtered_database" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    defer arena.deinit();
     const alloc = arena.allocator();
 
     var db: TypeDatabase = .{ .alloc = alloc };
@@ -1959,8 +1962,8 @@ test "filtered_database" {
     const s0 = try db.add_struct(.{
         .name = "s0",
         .fields = &.{
-            .{ .name = "f0", .type_idx = try db.resolve_base("u32") },
-            .{ .name = "f1", .type_idx = try db.resolve_base("u64") },
+            .{ .single_field = .{ .name = "f0", .type_idx = try db.resolve_base("u32") } },
+            .{ .single_field = .{ .name = "f1", .type_idx = try db.resolve_base("u64") } },
         },
     });
     std.debug.print("s0 struct idx: {any}\n", .{s0});
@@ -2029,6 +2032,7 @@ test "filtered_database" {
 
 test "c_type_parts_to_type" {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    defer arena.deinit();
     const alloc = arena.allocator();
 
     var db: TypeDatabase = .{ .alloc = alloc };
@@ -2427,6 +2431,7 @@ pub const Xml = struct {
 
     test "parse_extension_require" {
         var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+        defer arena.deinit();
         const alloc = arena.allocator();
 
         {
@@ -2565,6 +2570,7 @@ pub const Xml = struct {
         ;
 
         var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+        defer arena.deinit();
         const alloc = arena.allocator();
 
         var parser: XmlParser = .init(text);
@@ -2612,6 +2618,7 @@ pub const Xml = struct {
         ;
 
         var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+        defer arena.deinit();
         const alloc = arena.allocator();
 
         var parser: XmlParser = .init(text);
@@ -2675,6 +2682,7 @@ pub const Xml = struct {
         ;
 
         var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+        defer arena.deinit();
         const alloc = arena.allocator();
 
         var parser: XmlParser = .init(text);
@@ -2978,196 +2986,427 @@ pub const Xml = struct {
             !std.mem.eql(u8, first_attr.value, "funcpointer"))
             return null;
 
-        _ = parser.skip_attributes();
-
-        // Everything starts with "typedef RETURN_TYPE (VKAPI_PTR *"
-        const preamble = parser.text() orelse return null;
-        const typedef_prefix = "typedef ";
-        const vkapi_suffix = " (VKAPI_PTR *";
-        if (!std.mem.startsWith(u8, preamble, typedef_prefix)) return null;
-        const after_typedef = preamble[typedef_prefix.len..];
-        const return_type_end = std.mem.indexOf(u8, after_typedef, vkapi_suffix) orelse return null;
-        var return_type = after_typedef[0..return_type_end];
-        // "void*" -> "u8_slice" since commands usually only have 1 part for return type, but
-        // here there are 2, so we cheat a bit
-        if (std.mem.eql(u8, return_type, "void*")) {
-            return_type = "u8_slice";
-        }
-
-        parser.skip_to_specific_element_start("name");
-        const full_name = parser.text() orelse return null;
-        parser.skip_to_specific_element_end("name");
-        if (!std.mem.startsWith(u8, full_name, "PFN_")) return null;
-        const name = full_name["PFN_".len..];
-
-        // Unfortunately the consistency is an imaginary concept and so arguments
-        // are defined a bit differently for funcpointers compared to normal commands.
-        //
-        // After </name>, the text contains ")(" followed by parameters or "(void);"
-        // Parameters are: [const] <type>T</type>[*] paramName[,]
-        // We track whether the next parameter has a "const" prefix from
-        // text that appears before its <type> element.
-        var parameters: std.ArrayListUnmanaged(Command.Parameter) = .empty;
-        var next_is_const: bool = false;
-        while (true) {
-            switch (parser.peek_next() orelse break) {
-                .element_end => break,
-                .element_start => |es| {
-                    if (!std.mem.eql(u8, es, "type")) break;
-
-                    var param: Command.Parameter = .{};
-                    if (next_is_const) {
-                        param.type_front = "const";
-                        next_is_const = false;
-                    }
-
-                    _ = parser.element_start();
-                    _ = parser.skip_attributes();
-                    param.type_middle = parser.text() orelse break;
-                    parser.skip_to_specific_element_end("type");
-
-                    // After </type>: text like "* paramName, const " or " paramName);"
-                    // Split at comma to separate current param info from next param prefix.
-                    if (parser.peek_text()) |after_type| {
-                        _ = parser.text();
-                        // Find the comma or ");" that ends this parameter
-                        var current_part = after_type;
-                        if (std.mem.indexOf(u8, after_type, ",")) |comma_idx| {
-                            current_part = after_type[0..comma_idx];
-                            // Check remainder after comma for "const" prefix
-                            const remainder = std.mem.trim(u8, after_type[comma_idx + 1 ..], " \n\r\t");
-                            if (std.mem.startsWith(u8, remainder, "const")) next_is_const = true;
-                        } else if (std.mem.indexOf(u8, after_type, ");")) |end_idx| {
-                            current_part = after_type[0..end_idx];
-                        }
-
-                        const trimmed = std.mem.trim(u8, current_part, " \n\r\t");
-                        if (std.mem.startsWith(u8, trimmed, "*")) {
-                            param.type_back = "*";
-                            param.name = std.mem.trim(u8, trimmed[1..], " \n\r\t");
-                        } else {
-                            param.name = trimmed;
-                        }
-                    }
-                    try parameters.append(alloc, param);
-                },
-                .text => {
-                    // Text between </name> and first <type>, or other inter-element text
-                    const t = parser.text() orelse break;
-                    const trimmed = std.mem.trim(u8, t, " \n\r\t,()");
-                    if (std.mem.startsWith(u8, trimmed, "const")) next_is_const = true;
-                },
-                else => _ = parser.next(),
+        var result: Command = .{};
+        parser.skip_to_specific_element_start("proto");
+        parser.skip_to_specific_element_start("type");
+        result.return_type = parser.text() orelse return null;
+        parser.skip_to_specific_element_end("type");
+        if (parser.peek_text()) |text| {
+            // "void*" -> "u8_slice" since commands usually only have 1 part for return type, but
+            // here there are 2, so we cheat a bit
+            if (text[0] == '*') {
+                result.return_type = "u8_slice";
             }
         }
-        parser.skip_to_specific_element_end("type");
+        parser.skip_to_specific_element_start("name");
+
+        // Functions must have their pure name (so without `PFN_` prefix)
+        // During addition of functions to the TypeDatabase, the additional
+        // pointer type will be added like `*const ...` to be an alias for
+        // other `PFN_*` usages within structs. This way when struct resolves
+        // it's `PFN_*` member type, it will get the `*const ...` pointer.
+        result.name = parser.text() orelse return null;
+        if (!std.mem.startsWith(u8, result.name, "PFN_")) return null;
+        result.name = result.name["PFN_".len..];
+
+        parser.skip_to_specific_element_end("proto");
+
+        var values: std.ArrayListUnmanaged(Command.Parameter) = .empty;
+        while (true) {
+            switch (parser.peek_next() orelse break) {
+                .element_end => |es| if (std.mem.eql(u8, es, "type")) break,
+                else => {},
+            }
+            if (parse_command_parameter(&parser)) |t| {
+                try values.append(alloc, t);
+            } else {
+                if (parser.peek_element_start()) |_|
+                    parser.skip_current_element()
+                else {
+                    parser.skip_to_specific_element_end("type");
+                    break;
+                }
+            }
+        }
+        _ = parser.next();
+        result.parameters = values.items;
 
         original_parser.* = parser;
-        return .{
-            .name = name,
-            .return_type = return_type,
-            .parameters = parameters.items,
-        };
+        return result;
     }
 
     test "parse_funcpointer" {
-        const alloc = std.testing.allocator;
+        var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+        defer arena.deinit();
+        const alloc = arena.allocator();
         {
-            // Simple funcpointer with no parameters
             const text =
-                \\<type category="funcpointer">typedef void (VKAPI_PTR *<name>PFN_vkVoidFunction</name>)(void);</type>----
+                \\<type category="funcpointer">
+                \\    <proto><type>void</type> <name>PFN_vkInternalAllocationNotification</name></proto>
+                \\    <param><type>void</type>*                       <name>pUserData</name></param>
+                \\    <param><type>size_t</type>                      <name>size</name></param>
+                \\    <param><type>VkInternalAllocationType</type>    <name>allocationType</name></param>
+                \\    <param><type>VkSystemAllocationScope</type>     <name>allocationScope</name></param>
+                \\</type>----
             ;
+
             var parser: XmlParser = .init(text);
             const f = (try parse_funcpointer(alloc, &parser)).?;
-            try std.testing.expectEqualSlices(u8, "----", parser.buffer);
-            try std.testing.expectEqualSlices(u8, "vkVoidFunction", f.name);
-            try std.testing.expectEqualSlices(u8, "void", f.return_type);
-            try std.testing.expectEqual(0, f.parameters.len);
+
+            const expected: Command = .{
+                .name = "vkInternalAllocationNotification",
+                .return_type = "void",
+                .parameters = &.{
+                    .{
+                        .name = "pUserData",
+                        .type_middle = "void",
+                        .type_back = "*                       ",
+                    },
+                    .{
+                        .name = "size",
+                        .type_middle = "size_t",
+                    },
+                    .{
+                        .name = "allocationType",
+                        .type_middle = "VkInternalAllocationType",
+                    },
+                    .{
+                        .name = "allocationScope",
+                        .type_middle = "VkSystemAllocationScope",
+                    },
+                },
+            };
+            try std.testing.expectEqualDeep(expected, f);
         }
         {
-            // Funcpointer with parameters
-            const text = "<type category=\"funcpointer\">typedef void (VKAPI_PTR *<name>PFN_vkFreeFunction</name>)(\n" ++
-                "    <type>void</type>*                                       pUserData,\n" ++
-                "    <type>void</type>*                                       pMemory);</type>----";
+            const text =
+                \\<type category="funcpointer">
+                \\    <proto><type>void</type> <name>PFN_vkInternalFreeNotification</name></proto>
+                \\    <param><type>void</type>*                       <name>pUserData</name></param>
+                \\    <param><type>size_t</type>                      <name>size</name></param>
+                \\    <param><type>VkInternalAllocationType</type>    <name>allocationType</name></param>
+                \\    <param><type>VkSystemAllocationScope</type>     <name>allocationScope</name></param>
+                \\</type>----
+            ;
+
             var parser: XmlParser = .init(text);
             const f = (try parse_funcpointer(alloc, &parser)).?;
-            try std.testing.expectEqualSlices(u8, "----", parser.buffer);
-            try std.testing.expectEqualSlices(u8, "vkFreeFunction", f.name);
-            try std.testing.expectEqualSlices(u8, "void", f.return_type);
-            try std.testing.expectEqual(2, f.parameters.len);
-            try std.testing.expectEqualSlices(u8, "pUserData", f.parameters[0].name);
-            try std.testing.expectEqualSlices(u8, "void", f.parameters[0].type_middle);
-            try std.testing.expectEqualSlices(u8, "*", f.parameters[0].type_back);
-            try std.testing.expectEqualSlices(u8, "pMemory", f.parameters[1].name);
+
+            const expected: Command = .{
+                .name = "vkInternalFreeNotification",
+                .return_type = "void",
+                .parameters = &.{
+                    .{
+                        .name = "pUserData",
+                        .type_middle = "void",
+                        .type_back = "*                       ",
+                    },
+                    .{
+                        .name = "size",
+                        .type_middle = "size_t",
+                    },
+                    .{
+                        .name = "allocationType",
+                        .type_middle = "VkInternalAllocationType",
+                    },
+                    .{
+                        .name = "allocationScope",
+                        .type_middle = "VkSystemAllocationScope",
+                    },
+                },
+            };
+            try std.testing.expectEqualDeep(expected, f);
         }
         {
-            // Funcpointer with const parameters
-            const text = "<type category=\"funcpointer\">typedef VkBool32 (VKAPI_PTR *<name>PFN_vkDebugReportCallbackEXT</name>)(\n" ++
-                "    <type>VkDebugReportFlagsEXT</type>                       flags,\n" ++
-                "    const <type>char</type>*                                 pLayerPrefix,\n" ++
-                "    <type>void</type>*                                       pUserData);</type>----";
+            const text =
+                \\<type category="funcpointer">
+                \\    <proto><type>void</type>* <name>PFN_vkReallocationFunction</name></proto>
+                \\    <param><type>void</type>*                       <name>pUserData</name></param>
+                \\    <param><type>void</type>*                       <name>pOriginal</name></param>
+                \\    <param><type>size_t</type>                      <name>size</name></param>
+                \\    <param><type>size_t</type>                      <name>alignment</name></param>
+                \\    <param><type>VkSystemAllocationScope</type>     <name>allocationScope</name></param>
+                \\</type>----
+            ;
+
             var parser: XmlParser = .init(text);
             const f = (try parse_funcpointer(alloc, &parser)).?;
-            try std.testing.expectEqualSlices(u8, "----", parser.buffer);
-            try std.testing.expectEqualSlices(u8, "vkDebugReportCallbackEXT", f.name);
-            try std.testing.expectEqualSlices(u8, "VkBool32", f.return_type);
-            try std.testing.expectEqual(3, f.parameters.len);
-            try std.testing.expectEqualSlices(u8, "flags", f.parameters[0].name);
-            try std.testing.expectEqualSlices(u8, "VkDebugReportFlagsEXT", f.parameters[0].type_middle);
-            try std.testing.expectEqualSlices(u8, &.{}, f.parameters[0].type_back);
-            try std.testing.expectEqualSlices(u8, "pLayerPrefix", f.parameters[1].name);
-            try std.testing.expectEqualSlices(u8, "const", f.parameters[1].type_front);
-            try std.testing.expectEqualSlices(u8, "char", f.parameters[1].type_middle);
-            try std.testing.expectEqualSlices(u8, "*", f.parameters[1].type_back);
-            try std.testing.expectEqualSlices(u8, "pUserData", f.parameters[2].name);
+
+            const expected: Command = .{
+                .name = "vkReallocationFunction",
+                .return_type = "u8_slice",
+                .parameters = &.{
+                    .{
+                        .name = "pUserData",
+                        .type_middle = "void",
+                        .type_back = "*                       ",
+                    },
+                    .{
+                        .name = "pOriginal",
+                        .type_middle = "void",
+                        .type_back = "*                       ",
+                    },
+                    .{
+                        .name = "size",
+                        .type_middle = "size_t",
+                    },
+                    .{
+                        .name = "alignment",
+                        .type_middle = "size_t",
+                    },
+                    .{
+                        .name = "allocationScope",
+                        .type_middle = "VkSystemAllocationScope",
+                    },
+                },
+            };
+            try std.testing.expectEqualDeep(expected, f);
         }
         {
-            // Funcpointer with void* return type
-            const text = "<type category=\"funcpointer\">typedef void* (VKAPI_PTR *<name>PFN_vkAllocationFunction</name>)(\n" ++
-                "    <type>void</type>*                                       pUserData,\n" ++
-                "    <type>size_t</type>                                      size);</type>----";
+            const text =
+                \\<type category="funcpointer">
+                \\    <proto><type>void</type>* <name>PFN_vkAllocationFunction</name></proto>
+                \\    <param><type>void</type>*                       <name>pUserData</name></param>
+                \\    <param><type>size_t</type>                      <name>size</name></param>
+                \\    <param><type>size_t</type>                      <name>alignment</name></param>
+                \\    <param><type>VkSystemAllocationScope</type>     <name>allocationScope</name></param>
+                \\</type>----
+            ;
+
             var parser: XmlParser = .init(text);
             const f = (try parse_funcpointer(alloc, &parser)).?;
-            try std.testing.expectEqualSlices(u8, "----", parser.buffer);
-            try std.testing.expectEqualSlices(u8, "vkAllocationFunction", f.name);
-            try std.testing.expectEqualSlices(u8, "u8_slice", f.return_type);
-            try std.testing.expectEqual(2, f.parameters.len);
+
+            const expected: Command = .{
+                .name = "vkAllocationFunction",
+                .return_type = "u8_slice",
+                .parameters = &.{
+                    .{
+                        .name = "pUserData",
+                        .type_middle = "void",
+                        .type_back = "*                       ",
+                    },
+                    .{
+                        .name = "size",
+                        .type_middle = "size_t",
+                    },
+                    .{
+                        .name = "alignment",
+                        .type_middle = "size_t",
+                    },
+                    .{
+                        .name = "allocationScope",
+                        .type_middle = "VkSystemAllocationScope",
+                    },
+                },
+            };
+            try std.testing.expectEqualDeep(expected, f);
         }
         {
-            // Funcpointer with PFN return type
-            const text = "<type category=\"funcpointer\" requires=\"VkInstance\">typedef PFN_vkVoidFunction (VKAPI_PTR *<name>PFN_vkGetInstanceProcAddrLUNARG</name>)(\n" ++
-                "    <type>VkInstance</type> instance, const <type>char</type>* pName);</type>----";
+            const text =
+                \\<type category="funcpointer">
+                \\    <proto><type>void</type> <name>PFN_vkFreeFunction</name></proto>
+                \\    <param><type>void</type>*                       <name>pUserData</name></param>
+                \\    <param><type>void</type>*                       <name>pMemory</name></param>
+                \\</type>----
+            ;
+
             var parser: XmlParser = .init(text);
             const f = (try parse_funcpointer(alloc, &parser)).?;
-            try std.testing.expectEqualSlices(u8, "----", parser.buffer);
-            try std.testing.expectEqualSlices(u8, "vkGetInstanceProcAddrLUNARG", f.name);
-            try std.testing.expectEqualSlices(u8, "PFN_vkVoidFunction", f.return_type);
-            try std.testing.expectEqual(2, f.parameters.len);
-            try std.testing.expectEqualSlices(u8, "instance", f.parameters[0].name);
-            try std.testing.expectEqualSlices(u8, "VkInstance", f.parameters[0].type_middle);
-            try std.testing.expectEqualSlices(u8, "pName", f.parameters[1].name);
-            try std.testing.expectEqualSlices(u8, "const", f.parameters[1].type_front);
-            try std.testing.expectEqualSlices(u8, "char", f.parameters[1].type_middle);
-            try std.testing.expectEqualSlices(u8, "*", f.parameters[1].type_back);
+
+            const expected: Command = .{
+                .name = "vkFreeFunction",
+                .return_type = "void",
+                .parameters = &.{
+                    .{
+                        .name = "pUserData",
+                        .type_middle = "void",
+                        .type_back = "*                       ",
+                    },
+                    .{
+                        .name = "pMemory",
+                        .type_middle = "void",
+                        .type_back = "*                       ",
+                    },
+                },
+            };
+            try std.testing.expectEqualDeep(expected, f);
         }
         {
-            // Funcpointer where first param is const (preceded only by ")(")
-            const text = "<type category=\"funcpointer\" requires=\"VkDeviceMemoryReportCallbackDataEXT\">typedef void (VKAPI_PTR *<name>PFN_vkDeviceMemoryReportCallbackEXT</name>)(\n" ++
-                "    const <type>VkDeviceMemoryReportCallbackDataEXT</type>*  pCallbackData,\n" ++
-                "    <type>void</type>*                                       pUserData);</type>----";
+            const text =
+                \\<type category="funcpointer">
+                \\    <proto><type>void</type> <name>PFN_vkVoidFunction</name></proto>
+                \\</type>----
+            ;
+
             var parser: XmlParser = .init(text);
             const f = (try parse_funcpointer(alloc, &parser)).?;
-            try std.testing.expectEqualSlices(u8, "----", parser.buffer);
-            try std.testing.expectEqualSlices(u8, "vkDeviceMemoryReportCallbackEXT", f.name);
-            try std.testing.expectEqual(2, f.parameters.len);
-            try std.testing.expectEqualSlices(u8, "pCallbackData", f.parameters[0].name);
-            try std.testing.expectEqualSlices(u8, "const", f.parameters[0].type_front);
-            try std.testing.expectEqualSlices(u8, "VkDeviceMemoryReportCallbackDataEXT", f.parameters[0].type_middle);
-            try std.testing.expectEqualSlices(u8, "*", f.parameters[0].type_back);
-            try std.testing.expectEqualSlices(u8, "pUserData", f.parameters[1].name);
-            try std.testing.expectEqualSlices(u8, &.{}, f.parameters[1].type_front);
-            try std.testing.expectEqualSlices(u8, "void", f.parameters[1].type_middle);
-            try std.testing.expectEqualSlices(u8, "*", f.parameters[1].type_back);
+
+            const expected: Command = .{
+                .name = "vkVoidFunction",
+                .return_type = "void",
+                .parameters = &.{},
+            };
+            try std.testing.expectEqualDeep(expected, f);
+        }
+        {
+            const text =
+                \\<type category="funcpointer">
+                \\    <proto><type>VkBool32</type> <name>PFN_vkDebugReportCallbackEXT</name></proto>
+                \\    <param><type>VkDebugReportFlagsEXT</type>       <name>flags</name></param>
+                \\    <param><type>VkDebugReportObjectTypeEXT</type>  <name>objectType</name></param>
+                \\    <param><type>uint64_t</type>                    <name>object</name></param>
+                \\    <param><type>size_t</type>                      <name>location</name></param>
+                \\    <param><type>int32_t</type>                     <name>messageCode</name></param>
+                \\    <param>const <type>char</type>*                 <name>pLayerPrefix</name></param>
+                \\    <param>const <type>char</type>*                 <name>pMessage</name></param>
+                \\    <param><type>void</type>*                       <name>pUserData</name></param>
+                \\</type>----
+            ;
+
+            var parser: XmlParser = .init(text);
+            const f = (try parse_funcpointer(alloc, &parser)).?;
+
+            const expected: Command = .{
+                .name = "vkDebugReportCallbackEXT",
+                .return_type = "VkBool32",
+                .parameters = &.{
+                    .{
+                        .name = "flags",
+                        .type_middle = "VkDebugReportFlagsEXT",
+                    },
+                    .{
+                        .name = "objectType",
+                        .type_middle = "VkDebugReportObjectTypeEXT",
+                    },
+                    .{
+                        .name = "object",
+                        .type_middle = "uint64_t",
+                    },
+                    .{
+                        .name = "location",
+                        .type_middle = "size_t",
+                    },
+                    .{
+                        .name = "messageCode",
+                        .type_middle = "int32_t",
+                    },
+                    .{
+                        .name = "pLayerPrefix",
+                        .type_front = "const ",
+                        .type_middle = "char",
+                        .type_back = "*                 ",
+                    },
+                    .{
+                        .name = "pMessage",
+                        .type_front = "const ",
+                        .type_middle = "char",
+                        .type_back = "*                 ",
+                    },
+                    .{
+                        .name = "pUserData",
+                        .type_middle = "void",
+                        .type_back = "*                       ",
+                    },
+                },
+            };
+            try std.testing.expectEqualDeep(expected, f);
+        }
+        {
+            const text =
+                \\<type category="funcpointer">
+                \\    <proto><type>void</type> <name>PFN_vkFaultCallbackFunction</name></proto>
+                \\    <param><type>VkBool32</type>                    <name>unrecordedFaults</name></param>
+                \\    <param><type>uint32_t</type>                    <name>faultCount</name></param>
+                \\    <param>const <type>VkFaultData</type>*          <name>pFaults</name></param>
+                \\</type>----
+            ;
+
+            var parser: XmlParser = .init(text);
+            const f = (try parse_funcpointer(alloc, &parser)).?;
+
+            const expected: Command = .{
+                .name = "vkFaultCallbackFunction",
+                .return_type = "void",
+                .parameters = &.{
+                    .{
+                        .name = "unrecordedFaults",
+                        .type_middle = "VkBool32",
+                    },
+                    .{
+                        .name = "faultCount",
+                        .type_middle = "uint32_t",
+                    },
+                    .{
+                        .name = "pFaults",
+                        .type_front = "const ",
+                        .type_middle = "VkFaultData",
+                        .type_back = "*          ",
+                    },
+                },
+            };
+            try std.testing.expectEqualDeep(expected, f);
+        }
+
+        {
+            const text =
+                \\<type category="funcpointer" requires="VkDeviceMemoryReportCallbackDataEXT">
+                \\    <proto><type>void</type> <name>PFN_vkDeviceMemoryReportCallbackEXT</name></proto>
+                \\    <param>const <type>VkDeviceMemoryReportCallbackDataEXT</type>*  <name>pCallbackData</name></param>
+                \\    <param><type>void</type>*                                       <name>pUserData</name></param>
+                \\</type>----
+            ;
+
+            var parser: XmlParser = .init(text);
+            const f = (try parse_funcpointer(alloc, &parser)).?;
+
+            const expected: Command = .{
+                .name = "vkDeviceMemoryReportCallbackEXT",
+                .return_type = "void",
+                .parameters = &.{
+                    .{
+                        .name = "pCallbackData",
+                        .type_front = "const ",
+                        .type_middle = "VkDeviceMemoryReportCallbackDataEXT",
+                        .type_back = "*  ",
+                    },
+                    .{
+                        .name = "pUserData",
+                        .type_middle = "void",
+                        .type_back = "*                                       ",
+                    },
+                },
+            };
+            try std.testing.expectEqualDeep(expected, f);
+        }
+        {
+            const text =
+                \\<type category="funcpointer" requires="VkInstance">
+                \\    <proto><type>PFN_vkVoidFunction</type> <name>PFN_vkGetInstanceProcAddrLUNARG</name></proto>
+                \\    <param><type>VkInstance</type>                  <name>instance</name></param>
+                \\    <param>const <type>char</type>*                 <name>pName</name></param>
+                \\</type>----
+            ;
+
+            var parser: XmlParser = .init(text);
+            const f = (try parse_funcpointer(alloc, &parser)).?;
+
+            const expected: Command = .{
+                .name = "vkGetInstanceProcAddrLUNARG",
+                .return_type = "PFN_vkVoidFunction",
+                .parameters = &.{
+                    .{
+                        .name = "instance",
+                        .type_middle = "VkInstance",
+                    },
+                    .{
+                        .name = "pName",
+                        .type_front = "const ",
+                        .type_middle = "char",
+                        .type_back = "*                 ",
+                    },
+                },
+            };
+            try std.testing.expectEqualDeep(expected, f);
         }
     }
 
@@ -3250,6 +3489,9 @@ pub const Xml = struct {
             // How to determine the length of the array of array of arrays
             len: ?[]const u8 = null,
 
+            // This is has a form of OTHER_TYPE::other_member as if C++ was the
+            // only thing missing from this xml
+            other_struct_field_alias: ?[]const u8 = null,
             value: ?[]const u8 = null,
             api: ?[]const u8 = null,
             stride: ?[]const u8 = null,
@@ -3314,6 +3556,11 @@ pub const Xml = struct {
             result.type_back = text;
 
         parser.skip_to_specific_element_start("name");
+        if (parser.peek_attribute()) |attr| {
+            if (std.mem.eql(u8, attr.name, "alias"))
+                result.other_struct_field_alias = attr.value;
+            _ = parser.skip_attributes();
+        }
         result.name = parser.text() orelse return null;
         parser.skip_to_specific_element_end("name");
 
@@ -3451,7 +3698,6 @@ pub const Xml = struct {
             };
             try std.testing.expectEqualDeep(expected, m);
         }
-
         {
             const text =
                 \\<member len="L,null-terminated" deprecated="I">const <type>T</type>* const*      <name>N</name><comment>C</comment></member>----
@@ -3521,6 +3767,20 @@ pub const Xml = struct {
             const m = parse_struct_member(&parser);
             try std.testing.expectEqual(null, m);
         }
+        {
+            const text =
+                \\<member><type>T</type><name alias="AAA::bbb">N</name></member>----
+            ;
+            var parser: XmlParser = .init(text);
+            const m = parse_struct_member(&parser).?;
+            try std.testing.expectEqualSlices(u8, "----", parser.buffer);
+            const expected: Struct.Member = .{
+                .name = "N",
+                .type_middle = "T",
+                .other_struct_field_alias = "AAA::bbb",
+            };
+            try std.testing.expectEqualDeep(expected, m);
+        }
     }
 
     pub fn parse_struct(alloc: Allocator, original_parser: *XmlParser) !?Struct {
@@ -3569,6 +3829,7 @@ pub const Xml = struct {
 
     test "parse_single_struct" {
         var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+        defer arena.deinit();
         const alloc = arena.allocator();
 
         {
@@ -3794,6 +4055,7 @@ pub const Xml = struct {
 
     test "parse_single_union" {
         var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+        defer arena.deinit();
         const alloc = arena.allocator();
 
         {
@@ -3887,6 +4149,7 @@ pub const Xml = struct {
         ;
 
         var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+        defer arena.deinit();
         const alloc = arena.allocator();
 
         var parser: XmlParser = .init(text);
@@ -4080,6 +4343,7 @@ pub const Xml = struct {
 
     test "parse_constants" {
         var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+        defer arena.deinit();
         const alloc = arena.allocator();
         {
             const text =
@@ -4288,6 +4552,7 @@ pub const Xml = struct {
 
     test "parse_enum" {
         var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+        defer arena.deinit();
         const alloc = arena.allocator();
         {
             const text =
@@ -4559,6 +4824,7 @@ pub const Xml = struct {
 
     test "parse_command" {
         var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+        defer arena.deinit();
         const alloc = arena.allocator();
         {
             const text =
@@ -4643,6 +4909,7 @@ pub const Xml = struct {
         ;
 
         var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+        defer arena.deinit();
         const alloc = arena.allocator();
 
         var parser: XmlParser = .init(text);
@@ -4845,6 +5112,7 @@ pub const Xml = struct {
 
     test "parse_spirv_capability" {
         var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+        defer arena.deinit();
         const alloc = arena.allocator();
         {
             const text =
@@ -4993,6 +5261,7 @@ pub const Xml = struct {
         ;
 
         var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+        defer arena.deinit();
         const alloc = arena.allocator();
 
         var parser: XmlParser = .init(text);
