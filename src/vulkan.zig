@@ -398,18 +398,16 @@ pub fn create_vk_instance(
         break :blk &VK_VALIDATION_LAYERS_NAMES;
     } else &.{};
 
-    {
-        log.info(
-            @src(),
-            "Creating instance with application name: {s} engine name: {s} engine version: {d} api version: {f}",
-            .{
-                app_info.pApplicationName.?,
-                app_info.pEngineName.?,
-                @as(u32, @bitCast(app_info.engineVersion)),
-                app_info.apiVersion,
-            },
-        );
-    }
+    log.info(
+        @src(),
+        "Creating instance with application name: {s} engine name: {s} engine version: {d} api version: {f}",
+        .{
+            app_info.pApplicationName.?,
+            app_info.pEngineName.?,
+            @as(u32, @bitCast(app_info.engineVersion)),
+            app_info.apiVersion,
+        },
+    );
     for (all_extension_names) |name|
         log.debug(@src(), "(Inastance) Enabled extension: {s}", .{name});
     for (enabled_layers) |name|
@@ -425,13 +423,11 @@ pub fn create_vk_instance(
 
     var vk_instance: vk.VkInstance = undefined;
     try check_result(vkCreateInstance(&instance_create_info, null, &vk_instance));
-    {
-        log.debug(
-            @src(),
-            "Created instance api version: {f} has_properties_2: {}",
-            .{ app_info.apiVersion, has_properties_2 },
-        );
-    }
+    log.debug(
+        @src(),
+        "Created instance api version: {f} has_properties_2: {}",
+        .{ app_info.apiVersion, has_properties_2 },
+    );
     return .{
         .instance = vk_instance,
         .api_version = app_info.apiVersion,
@@ -733,10 +729,57 @@ pub fn find_pnext(stype: vk.VkStructureType, item: ?*const anyopaque) ?*anyopaqu
     return null;
 }
 
+// Workaround for older dxvk/vkd3d databases, where robustness2 or VRS was not captured,
+// but we expect them to be present. New databases will capture robustness2.
+// In such case make a copy of the wanted_pdf2 (since the original is read-only) and add
+// robustnees and VRS to the chain
+pub fn pach_dxvk_vkd3d_missing_features(
+    engine_name: []const u8,
+    wanted_pdf2: *?*const vk.VkPhysicalDeviceFeatures2,
+    spare_pdf2: *vk.VkPhysicalDeviceFeatures2,
+    spare_robustness2: *vk.VkPhysicalDeviceRobustness2FeaturesEXT,
+    spare_fragment_shading_rate: *vk.VkPhysicalDeviceFragmentShadingRateFeaturesKHR,
+) void {
+    const wpdf2 = wanted_pdf2.*.?;
+
+    spare_pdf2.* = wanted_pdf2.*.?.*;
+    wanted_pdf2.* = spare_pdf2;
+
+    if ((std.mem.eql(u8, engine_name, "DXVK") or std.mem.eql(u8, engine_name, "vkd3d")) and
+        find_pnext(
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_KHR,
+            @ptrCast(wpdf2.pNext),
+        ) == null)
+    {
+        spare_robustness2.* = .{
+            .pNext = spare_pdf2.pNext,
+            .robustBufferAccess2 = wpdf2.features.robustBufferAccess,
+            .robustImageAccess2 = wpdf2.features.robustBufferAccess,
+            .nullDescriptor = vk.VK_TRUE,
+        };
+        spare_pdf2.pNext = spare_robustness2;
+    }
+
+    if (std.mem.eql(u8, engine_name, "vkd3d") and
+        find_pnext(
+            .VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_FEATURES_KHR,
+            @ptrCast(wpdf2.pNext),
+        ) == null)
+    {
+        spare_fragment_shading_rate.* = .{
+            .pNext = spare_pdf2.pNext,
+            .pipelineFragmentShadingRate = vk.VK_TRUE,
+            .primitiveFragmentShadingRate = vk.VK_TRUE,
+            .attachmentFragmentShadingRate = vk.VK_TRUE,
+        };
+        spare_pdf2.pNext = spare_fragment_shading_rate;
+    }
+}
+
 pub fn filter_features(
-    current_pdf: *vk.VkPhysicalDeviceFeatures2,
+    current_pdf2: *vk.VkPhysicalDeviceFeatures2,
     additional_pdf: *vv.AdditionalPDF,
-    wanted_pdf: ?*const vk.VkPhysicalDeviceFeatures2,
+    wanted_pdf2: ?*const vk.VkPhysicalDeviceFeatures2,
 ) void {
     const prof_point = MEASUREMENTS.start(@src());
     defer MEASUREMENTS.end(prof_point);
@@ -771,8 +814,9 @@ pub fn filter_features(
     }
 
     // Only enable robustness if requested since it affects compilation on most implementations.
-    if (wanted_pdf) |wf| {
-        current_pdf.features.robustBufferAccess = current_pdf.features.robustBufferAccess & wf.features.robustBufferAccess;
+    if (wanted_pdf2) |wpdf2| {
+        current_pdf2.features.robustBufferAccess = current_pdf2.features.robustBufferAccess &
+            wpdf2.features.robustBufferAccess;
         const PATCH_TYPES: []const struct { type, []const u8 } = &.{
             .{
                 vk.VkPhysicalDeviceRobustness2FeaturesKHR,
@@ -820,14 +864,14 @@ pub fn filter_features(
 
             if (find_pnext(
                 T.STYPE,
-                wf.pNext,
+                wpdf2.pNext,
             )) |item| {
                 const found: *const T = @ptrCast(@alignCast(item));
                 Inner.apply(T, &@field(additional_pdf, field), found);
             } else Inner.reset(&@field(additional_pdf, field));
         }
     } else {
-        current_pdf.features.robustBufferAccess = vk.VK_FALSE;
+        current_pdf2.features.robustBufferAccess = vk.VK_FALSE;
         Inner.reset(&additional_pdf.VkPhysicalDeviceRobustness2FeaturesKHR);
         Inner.reset(&additional_pdf.VkPhysicalDeviceImageRobustnessFeatures);
         Inner.reset(&additional_pdf.VkPhysicalDeviceFragmentShadingRateEnumsFeaturesNV);
@@ -954,7 +998,7 @@ pub fn create_vk_device(
     physical_device: *const PhysicalDevice,
     application_create_info: *const vk.VkApplicationInfo,
     wanted_physical_device_features2: ?*const vk.VkPhysicalDeviceFeatures2,
-    pdf: *vk.VkPhysicalDeviceFeatures2,
+    pdf2: *vk.VkPhysicalDeviceFeatures2,
     additional_pdf: *vv.AdditionalPDF,
     additional_properties: *vv.AdditionalProperties,
     enable_validation: bool,
@@ -989,62 +1033,39 @@ pub fn create_vk_device(
     }
     all_extension_names = all_extension_names[0..all_extensions_len];
 
-    pdf.* = .{};
+    pdf2.* = .{};
     var stats: vk.VkPhysicalDevicePipelineExecutablePropertiesFeaturesKHR = .{};
-    pdf.pNext = &stats;
+    pdf2.pNext = &stats;
     if (instance.has_properties_2) {
         additional_pdf.* = .{};
         stats.pNext = additional_pdf.chain_supported(all_extension_names);
-        vkGetPhysicalDeviceFeatures2KHR(physical_device.device, pdf);
+        vkGetPhysicalDeviceFeatures2KHR(physical_device.device, pdf2);
         stats.pipelineExecutableInfo = vk.VK_FALSE;
-    } else vkGetPhysicalDeviceFeatures(physical_device.device, &pdf.features);
+    } else vkGetPhysicalDeviceFeatures(physical_device.device, &pdf2.features);
 
     additional_properties.* = .{};
-    var pdp: vk.VkPhysicalDeviceProperties2 = .{};
+    var pdp2: vk.VkPhysicalDeviceProperties2 = .{};
     if (instance.has_properties_2) {
-        pdp.pNext = additional_properties.chain_supported(all_extension_names);
-        vkGetPhysicalDeviceProperties2KHR(physical_device.device, &pdp);
-    } else vkGetPhysicalDeviceProperties(physical_device.device, &pdp.properties);
+        pdp2.pNext = additional_properties.chain_supported(all_extension_names);
+        vkGetPhysicalDeviceProperties2KHR(physical_device.device, &pdp2);
+    } else vkGetPhysicalDeviceProperties(physical_device.device, &pdp2.properties);
 
-    // Workaround for older dxvk/vkd3d databases, where robustness2 or VRS was not captured,
-    // but we expect them to be present. New databases will capture robustness2.
-    var wpdf2: ?*const vk.VkPhysicalDeviceFeatures2 = wanted_physical_device_features2;
-    var updf2: vk.VkPhysicalDeviceFeatures2 = undefined;
+    var wanted_pdf2: ?*const vk.VkPhysicalDeviceFeatures2 = wanted_physical_device_features2;
+    var spare_pdf2: vk.VkPhysicalDeviceFeatures2 = undefined;
     var spare_robustness2: vk.VkPhysicalDeviceRobustness2FeaturesEXT = undefined;
-    var replacement_fragment_shading_rate: vk.VkPhysicalDeviceFragmentShadingRateFeaturesKHR = undefined;
-    if (wanted_physical_device_features2) |df2| {
-        const engine_name: []const u8 = std.mem.span(application_create_info.pEngineName.?);
-
-        updf2 = df2.*;
-        wpdf2 = &updf2;
-
-        if ((std.mem.eql(u8, engine_name, "DXVK") or std.mem.eql(u8, engine_name, "vkd3d")) and
-            find_pnext(.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_KHR, @ptrCast(df2.pNext)) == null)
-        {
-            spare_robustness2 = .{
-                .pNext = updf2.pNext,
-                .robustBufferAccess2 = df2.features.robustBufferAccess,
-                .robustImageAccess2 = df2.features.robustBufferAccess,
-                .nullDescriptor = vk.VK_TRUE,
-            };
-            updf2.pNext = &spare_robustness2;
-        }
-
-        if (std.mem.eql(u8, engine_name, "vkd3d") and
-            find_pnext(.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_FEATURES_KHR, @ptrCast(df2.pNext)) == null)
-        {
-            replacement_fragment_shading_rate = .{
-                .pNext = updf2.pNext,
-                .pipelineFragmentShadingRate = vk.VK_TRUE,
-                .primitiveFragmentShadingRate = vk.VK_TRUE,
-                .attachmentFragmentShadingRate = vk.VK_TRUE,
-            };
-            updf2.pNext = &replacement_fragment_shading_rate;
-        }
+    var spare_fragment_shading_rate: vk.VkPhysicalDeviceFragmentShadingRateFeaturesKHR = undefined;
+    if (wanted_pdf2 != null) {
+        pach_dxvk_vkd3d_missing_features(
+            std.mem.span(application_create_info.pEngineName.?),
+            &wanted_pdf2,
+            &spare_pdf2,
+            &spare_robustness2,
+            &spare_fragment_shading_rate,
+        );
     }
 
-    filter_features(pdf, additional_pdf, wpdf2);
-    all_extension_names = filter_active_extensions(pdf, all_extension_names);
+    filter_features(pdf2, additional_pdf, wanted_pdf2);
+    all_extension_names = filter_active_extensions(pdf2, all_extension_names);
 
     const queue_priority: f32 = 1.0;
     const queue_create_info = vk.VkDeviceQueueCreateInfo{
@@ -1065,8 +1086,8 @@ pub fn create_vk_device(
         .enabledLayerCount = @as(u32, @intCast(enabled_layers.len)),
         .ppEnabledExtensionNames = @ptrCast(all_extension_names.ptr),
         .enabledExtensionCount = @as(u32, @intCast(all_extension_names.len)),
-        .pEnabledFeatures = if (instance.has_properties_2) null else &pdf.features,
-        .pNext = if (instance.has_properties_2) pdf else null,
+        .pEnabledFeatures = if (instance.has_properties_2) null else &pdf2.features,
+        .pNext = if (instance.has_properties_2) pdf2 else null,
     };
 
     var vk_device: vk.VkDevice = undefined;
