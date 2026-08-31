@@ -154,6 +154,7 @@ pub fn create_miniz_module(
         .{ .MINIZ_EXPORT = void{} },
     );
     const miniz_header = b.addWriteFiles().add("translate_miniz.h",
+        \\#define MINIZ_NO_TIME
         \\#define MINIZ_NO_STDIO
         \\#define MINIZ_NO_MALLOC
         \\#define MINIZ_NO_ARCHIVE_APIS
@@ -161,6 +162,19 @@ pub fn create_miniz_module(
         \\#define MINIZ_LITTLE_ENDIAN 1
         \\#define MINIZ_HAS_64BIT_REGISTERS 1
         \\#include "miniz.h"
+        \\
+        \\void* memcpy(void* restrict dest, const void* restrict src, size_t n) {
+        \\    unsigned char*       d = (unsigned char*)dest;
+        \\    const unsigned char* s = (const unsigned char*)src;
+        \\    while (n--) *d++ = *s++;
+        \\    return dest;
+        \\}
+        \\
+        \\void* memset(void* s, int c, size_t n) {
+        \\    unsigned char *p = (unsigned char*)s;
+        \\    while (n--) *p++ = (unsigned char)c;
+        \\    return s;
+        \\}
     );
     const miniz_translate = b.addTranslateC(.{
         .target = target,
@@ -173,10 +187,10 @@ pub fn create_miniz_module(
         .root_source_file = miniz_translate.getOutput(),
         .target = target,
         .optimize = optimize,
-        .link_libc = true,
     });
     miniz_mod.addConfigHeader(miniz_config_header);
     miniz_mod.addIncludePath(b.path("thirdparty/miniz"));
+    miniz_mod.addCMacro("MINIZ_NO_TIME", "");
     miniz_mod.addCMacro("MINIZ_NO_STDIO", "");
     miniz_mod.addCMacro("MINIZ_NO_MALLOC", "");
     miniz_mod.addCMacro("MINIZ_NO_ARCHIVE_APIS", "");
