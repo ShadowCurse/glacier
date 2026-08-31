@@ -11,12 +11,14 @@ pub fn build(b: *std.Build) !void {
     const miniz_mod = create_miniz_module(b, target, optimize);
 
     const imports: []const std.Build.Module.Import = &.{.{ .name = "miniz", .module = miniz_mod }};
-    create_exe(b, target, optimize, &args, "replay", "src/bin_replay.zig", imports);
-    create_exe(b, target, optimize, &args, "print_entries", "src/bin_print_entries.zig", imports);
+    const sd_c = b.addWriteFiles().add("static_dynamic.c", "#include \"static_dynamic.h\"");
 
-    create_exe(b, target, optimize, &args, "gen_vk", "src/gen_vk.zig", &.{});
-    create_exe(b, target, optimize, &args, "gen_vk_utils", "src/gen_vk_utils.zig", &.{});
-    create_exe(b, target, optimize, &args, "gen_vk_validation", "src/gen_vk_validation.zig", &.{});
+    create_exe(b, target, optimize, &args, "replay", "src/bin_replay.zig", imports, sd_c);
+    create_exe(b, target, optimize, &args, "print_entries", "src/bin_print_entries.zig", imports, sd_c);
+
+    create_exe(b, target, optimize, &args, "gen_vk", "src/gen_vk.zig", &.{}, null);
+    create_exe(b, target, optimize, &args, "gen_vk_utils", "src/gen_vk_utils.zig", &.{}, null);
+    create_exe(b, target, optimize, &args, "gen_vk_validation", "src/gen_vk_validation.zig", &.{}, null);
 
     create_lib(b, target, optimize, &args, "fornax_capture_layer", "src/fornax_capture_layer.zig");
 }
@@ -64,6 +66,7 @@ fn create_exe(
     comptime name: []const u8,
     source_file: []const u8,
     imports: []const std.Build.Module.Import,
+    sd_c: ?std.Build.LazyPath,
 ) void {
     const build_options = b.addOptions();
     build_options.addOption(bool, "profile", args.profile);
@@ -77,6 +80,14 @@ fn create_exe(
         .imports = imports,
     });
     root_mudule.addOptions("build_options", build_options);
+
+    if (sd_c) |sd_c_path| {
+        root_mudule.addCSourceFile(.{
+            .file = sd_c_path,
+            .flags = &[_][]const u8{"-fno-stack-protector"},
+        });
+        root_mudule.addIncludePath(b.path("thirdparty"));
+    }
 
     const exe = b.addExecutable(.{
         .name = name,

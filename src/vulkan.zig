@@ -12,6 +12,7 @@ const profiler = @import("profiler.zig");
 const vv = @import("vk_validation.zig");
 const vu = @import("vk_utils.zig");
 const vk = @import("vk.zig");
+const sd = @import("static_dynamic.zig");
 
 const Allocator = std.mem.Allocator;
 const Database = @import("database.zig");
@@ -92,17 +93,18 @@ const VK_VALIDATION_LAYERS_NAMES = [_][*c]const u8{"VK_LAYER_KHRONOS_validation"
 const VK_ADDITIONAL_EXTENSIONS_NAMES = [_][*c]const u8{"VK_EXT_debug_utils"};
 
 fn load_vulkan() !*const vk.vkGetInstanceProcAddr {
-    var lib = std.c.dlopen("libvulkan.so.1", .{ .NOW = true });
+    var lib = sd.got.fns.dlopen("libvulkan.so.1", .{ .NOW = true });
     if (lib == null) {
         log.debug(@src(), "Cannot load libvulkan.so.1. Trying libvulkan.so", .{});
-        lib = std.c.dlopen("libvulkan.so", .{ .NOW = true });
+        lib = sd.got.fns.dlopen("libvulkan.so", .{ .NOW = true });
     }
     if (lib == null) {
         log.err(@src(), "Could not load libvulkan.so.1 or libvulkan.so", .{});
         return error.LoadVulkan;
     }
 
-    const instance_proc_addr: *const vk.vkGetInstanceProcAddr = @ptrCast(@alignCast(std.c.dlsym(lib, "vkGetInstanceProcAddr").?));
+    const instance_proc_addr: *const vk.vkGetInstanceProcAddr =
+        @ptrCast(@alignCast(sd.got.fns.dlsym(lib, "vkGetInstanceProcAddr").?));
     return instance_proc_addr;
 }
 

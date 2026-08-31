@@ -3,6 +3,7 @@
 
 const std = @import("std");
 const build_options = @import("build_options");
+const os = @import("os.zig");
 const log = @import("log.zig");
 const parsing = @import("parsing.zig");
 const control_block = @import("control_block.zig");
@@ -13,8 +14,21 @@ const vulkan = @import("vulkan.zig");
 
 const Allocator = std.mem.Allocator;
 const Validation = vv.Validation;
-const Database = @import("database.zig");
+const Thread = @import("thread.zig");
 const Barrier = @import("barrier.zig");
+const Database = @import("database.zig");
+
+pub fn create_minimal_init(argc: u64, argv: [*]const [*:0]const u8) std.process.Init.Minimal {
+    const c_envp: [*:null]const ?[*:0]const u8 = @ptrCast(argv + argc + 1);
+    var env_count: usize = 0;
+    while (c_envp[env_count] != null) : (env_count += 1) {}
+    const envp = c_envp[0..env_count :null];
+    const env_block: std.process.Environ.Block = .{ .slice = envp };
+    return .{
+        .args = .{ .vector = argv[0..argc] },
+        .environ = .{ .block = env_block },
+    };
+}
 
 const DryCreate = struct {
     const Self = @This();
@@ -203,11 +217,12 @@ pub fn init_contexts(
 
 pub fn spawn_threads(
     alloc: Allocator,
+    fns: *const Thread.LibcThreadFns,
     comptime function: fn (*Context) void,
     contexts: []Context,
-) ![]std.Thread {
-    const threads = try alloc.alloc(std.Thread, contexts.len);
-    for (threads, contexts) |*t, *c| t.* = try std.Thread.spawn(.{}, function, .{c});
+) ![]Thread {
+    const threads = try alloc.alloc(Thread, contexts.len);
+    for (threads, contexts) |*t, *c| t.* = try Thread.spawn(alloc, fns, .{}, function, .{c});
     return threads;
 }
 

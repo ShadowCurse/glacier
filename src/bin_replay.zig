@@ -15,7 +15,10 @@ const vk = @import("vk.zig");
 const vv = @import("vk_validation.zig");
 const vulkan = @import("vulkan.zig");
 
+const sd = @import("static_dynamic.zig");
+
 const Allocator = std.mem.Allocator;
+const Thread = @import("thread.zig");
 const Barrier = @import("barrier.zig");
 const Database = @import("database.zig");
 
@@ -80,13 +83,35 @@ const Args = struct {
     database_paths: args_parser.RemainingArgs = .{},
 };
 
-pub fn main(init: std.process.Init.Minimal) !void {
+// Disable default `_start` zig want to generate since `static_dynamic.h` already defines it.
+pub const _start = {};
+
+export fn main(argc: u64, argv: [*]const [*:0]const u8) callconv(.c) i32 {
+    sd.init(argc, argv);
+
+    if (sd.got.result.success == 0) {
+        log.err(@src(), "Cannot load dynamic linker: {t}. Aborting.", .{sd.got.result.@"error"});
+        return 1;
+    } else {
+        const init = root.create_minimal_init(argc, argv);
+        actual_main(init) catch |err| {
+            log.err(@src(), "Error: {t}", .{err});
+            return 1;
+        };
+        return 0;
+    }
+}
+
+pub fn actual_main(init: std.process.Init.Minimal) !void {
     profiler.start_measurement();
     defer profiler.print(ALL_MEASUREMENTS);
     defer profiler.end_measurement();
 
     const prof_point = MEASUREMENTS.start(@src());
     defer MEASUREMENTS.end(prof_point);
+
+    const libc = sd.got.fns.dlopen("libc.so.6", .{ .NOW = true }) orelse return error.CannotLoadLibc;
+    const libc_thread_fns = Thread.LibcThreadFns.init(libc) orelse return error.CannotLoadLibcThreadFns;
 
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const arena_alloc = arena.allocator();
@@ -145,11 +170,12 @@ pub fn main(init: std.process.Init.Minimal) !void {
 
     const secondary_threads = try root.spawn_threads(
         arena_alloc,
+        &libc_thread_fns,
         secondary_thread_process,
         contexts[1..],
     );
     process(&contexts[0]);
-    for (secondary_threads) |st| st.join();
+    for (secondary_threads) |st| st.join(&libc_thread_fns);
 
     // Don't set the completion because otherwise Steam will remember that everything
     // is replayed and will not try to replay shaders again.
